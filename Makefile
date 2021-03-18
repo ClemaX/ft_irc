@@ -1,4 +1,4 @@
-NAME = skeleton
+NAME = ft_irc
 
 # Compiler and linker
 CXX = clang++
@@ -23,13 +23,16 @@ LIBARS = $(notdir $(LIBS))
 INCS = $(LIBINCS) $(INCDIR)
 SRCS = $(addprefix $(SRCDIR)/,\
 	main.cpp\
+	atoi.cpp\
+	bzero.cpp\
+	SocketServer.cpp\
 )
 
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
 # Flags
-CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 $(INCS:%=-I%)
+CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 $(INCS:%=-I%) -g3
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
 LDFLAGS = $(LIBDIRS:%=-L%)
 LDLIBS = $(LIBARS:lib%.a=-l%)
@@ -62,7 +65,7 @@ include $(wildcard $(DEPS))
 # Binaries
 $(BINDIR)/$(NAME): $(OBJS) $(LIBS) | $(BINDIR)
 	@echo "LD $@ $(LIBARS:lib%.a=-l%)"
-	$(COMPILE.o) $< -o $@ $(LDLIBS)
+	$(COMPILE.o) $^ -o $@ $(LDLIBS)
 
 # Remove temporary objects
 clean:

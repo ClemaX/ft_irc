@@ -3,7 +3,7 @@
         {
             "name": "42",
             "includePath": [
-                "${workspaceRoot}/includes"
+                "${workspaceRoot}/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
