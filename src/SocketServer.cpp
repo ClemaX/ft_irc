@@ -1,4 +1,5 @@
 #include <SocketServer.hpp>
+#include <fcntl.h>
 
 namespace irc
 {
@@ -8,7 +9,7 @@ namespace irc
 		{
 			if (connectionFd != listenFd)
 				connectionFds[connectionFd] = address;
-			FD_SET(connectionFd, &connections);
+
 			if (connectionFd > highestFd)
 				highestFd = connectionFd;
 		}
@@ -24,9 +25,8 @@ namespace irc
 				if (connectionFds.empty())
 					highestFd = listenFd;
 				else
-					highestFd = connectionFds.end()->first;
+					highestFd = connectionFds.rbegin()->first;
 			}
-			FD_CLR(connectionFd, &connections);
 			close(connectionFd);
 		}
 	}
@@ -35,7 +35,7 @@ namespace irc
 	{
 		for (connectionMap::const_iterator it = connectionFds.begin();
 			it != connectionFds.end(); ++it)
-			removeConnection(it->first);
+			close(it->first);
 		connectionFds.clear();
 	}
 
@@ -63,19 +63,19 @@ namespace irc
 			<< '\'' << message << '\'' << std::endl;
 	}
 
-	void			SocketServer::checkActivity(
+	void	SocketServer::checkActivity(
 		std::pair<int, struct sockaddr_in> const& connection)
 	{
 		const int	connectionFd = connection.first;
 
 		if (FD_ISSET(connectionFd, &connections))
 		{
-			int	ret = read(connectionFd, buffer, sizeof(buffer) - 1);
+			int	ret = recv(connectionFd, buffer, sizeof(buffer) - 1, 0);
 
 			if (ret == 0)
 			{
-				removeConnection(connectionFd);
 				onDisconnection(connectionFd);
+				disconnectedFds.push(connectionFd);
 			}
 			else if (ret < 0)
 			{
@@ -111,9 +111,7 @@ namespace irc
 	}
 
 	SocketServer::~SocketServer()
-	{
-		stop();
-	}
+	{ stop(); }
 
 	void	SocketServer::start()
 	{
@@ -123,7 +121,8 @@ namespace irc
 			throw ServerException();
 
 		// Open a new socket
-		listenFd = socket(AF_INET, SOCK_STREAM, 0);
+		listenFd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+
 		if (listenFd < 0)
 		{
 			std::cerr << "socket: " << strerror(errno) << std::endl;
@@ -149,7 +148,7 @@ namespace irc
 		}
 
 		// Listen for new connections
-		if (listen(listenFd, 1) < 0)
+		if (listen(listenFd, 10) < 0)
 		{
 			int err = errno;
 			std::cerr << "listen: " << strerror(errno) << std::endl;
@@ -169,10 +168,19 @@ namespace irc
 
 		while (true)
 		{
+			FD_ZERO(&connections);
+			FD_SET(listenFd, &connections);
+			for (connectionMap::const_iterator it = connectionFds.begin();
+				it != connectionFds.end(); ++it)
+				FD_SET(it->first, &connections);
+
+			// Wait for incoming data
 			activity = select(highestFd + 1, &connections, NULL, NULL, NULL);
 
-			if ((activity < 0) && (errno != EINTR))
+			if ((activity < 0))
 			{
+				if (errno == EINTR)
+					break;
 				int	err = errno;
 				std::cerr << "select: " << strerror(err) << std::endl;
 				stop();
@@ -182,13 +190,20 @@ namespace irc
 			// Accept incoming connections
 			if (FD_ISSET(listenFd, &connections))
 			{
-				int	incomingFd = accept(listenFd,
-					reinterpret_cast<struct sockaddr*>(&clientAddr), &addrLen);
+				int	incomingFd;
+
+				incomingFd = accept(listenFd,
+					reinterpret_cast<struct sockaddr*>(&clientAddr),
+					&addrLen);
+
 				if (incomingFd < 0)
 				{
 					int	err = errno;
-					stop();
-					throw SocketAcceptException(err);
+					if (err != EWOULDBLOCK)
+					{
+						stop();
+						throw SocketAcceptException(err);
+					}
 				}
 				addConnection(incomingFd, clientAddr);
 				onConnection(incomingFd, clientAddr);
@@ -198,7 +213,15 @@ namespace irc
 			for (connectionMap::iterator it = connectionFds.begin();
 				it != connectionFds.end(); ++it)
 				checkActivity(*it);
+
+			// Remove disconnected sockets
+			for (size_t i = 0; i < disconnectedFds.size(); ++i)
+			{
+				removeConnection(disconnectedFds.front());
+				disconnectedFds.pop();
+			}
 		}
+		stop();
 	}
 
 	void	SocketServer::stop() throw()
@@ -209,6 +232,8 @@ namespace irc
 			clearConnections();
 			close(listenFd);
 			listenFd = 0;
+			for (size_t i = 0; i < disconnectedFds.size(); ++i)
+				disconnectedFds.pop();
 		}
 	}
 }

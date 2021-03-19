@@ -1,9 +1,15 @@
 #include <SocketServer.hpp>
+#include <csignal>
 
-int	main(void)
+static void	doNothing(int)
+{ }
+
+int			main(void)
 {
 	irc::SocketServer	server;
 	int					err = 0;
+
+	signal(SIGINT, doNothing);
 
 	try { server.start(); }
 	catch (irc::SocketException const& e)
