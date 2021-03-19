@@ -4,8 +4,9 @@
 #include <exception> // using std::exception
 #include <cstring> // using strerror
 #include <cerrno> // using errno
-#include <map>
-#include <algorithm>
+#include <map> // using std::map
+#include <queue> // using std::queue
+//#include <algorithm>
 
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -42,7 +43,7 @@ namespace irc
 		{ return "Could not open socket"; };
 	};
 
-	class	SocketOptionException	:	public	SocketException
+	class	SocketOptionException	:	public SocketException
 	{
 	public:
 		SocketOptionException(int err)	:	SocketException(err) { }
@@ -51,7 +52,7 @@ namespace irc
 		{ return "Could not set socket option"; }
 	};
 
-	class	SocketBindException	:	public	SocketException
+	class	SocketBindException	:	public SocketException
 	{
 	public:
 		SocketBindException(int err)	:	SocketException(err) { }
@@ -60,7 +61,7 @@ namespace irc
 		{ return "Could not bind socket"; }
 	};
 
-	class	SocketListenException	:	public	SocketException
+	class	SocketListenException	:	public SocketException
 	{
 	public:
 		SocketListenException(int err)	:	SocketException(err) { }
@@ -69,7 +70,7 @@ namespace irc
 		{ return "Could not listen on socket"; }
 	};
 
-	class	SocketSelectException	:	public	SocketException
+	class	SocketSelectException	:	public SocketException
 	{
 	public:
 		SocketSelectException(int err)	:	SocketException(err) { }
@@ -78,7 +79,7 @@ namespace irc
 		{ return "Could not select socket connections"; }
 	};
 
-	class	SocketAcceptException	:	public	SocketException
+	class	SocketAcceptException	:	public SocketException
 	{
 	public:
 		SocketAcceptException(int err)	:	SocketException(err) { }
@@ -87,7 +88,7 @@ namespace irc
 		{ return "Could not accept socket connection"; }
 	};
 
-	class	SocketReadException	:	public	SocketException
+	class	SocketReadException	:	public SocketException
 	{
 	public:
 		SocketReadException(int err)	:	SocketException(err) { }
@@ -96,31 +97,45 @@ namespace irc
 		{ return "Could not read from socket"; }
 	};
 
+	struct	SocketConnection
+	{
+		struct sockaddr_in	address;
+		SocketConnection(struct sockaddr_in const& address)
+			:	address(address)
+		{ }
+	};
+
 	class	SocketServer
 	{
 	protected:
-		typedef	::std::map<int, struct sockaddr_in>		connectionMap;
-		typedef	::std::pair<int, struct sockaddr_in>	connectionPair;
+		typedef	SocketConnection				connection;
+		typedef	struct sockaddr_in				connectionAddress;
+		typedef	::std::pair<int, connection*>	connectionPair;
+		typedef	::std::map<int, connection*>	connectionMap;
+		typedef	::std::queue<int>				connectionQueue;
 
 		unsigned			portNumber;
 		unsigned			maxClients;
 		fd_set				connections;
 		connectionMap		connectionFds;
+		connectionQueue		disconnectedFds;
 
-		struct sockaddr_in	serverAddr;
+		connectionAddress	serverAddr;
 		int					listenFd;
 		int					highestFd;
 		char				buffer[SOCKET_BUFFER_SIZE + 1];
 
-		void	addConnection(int connectionFd, struct sockaddr_in const& address);
+		void	addConnection(int connectionFd, connection* connection);
 		void	removeConnection(int connectionFd);
 		void	clearConnections();
 
-		virtual void	onConnection(int connectionFd,
-			struct sockaddr_in const& address);
-		virtual void	onDisconnection(int connectionFd);
-		virtual void	onMessage(int connectionFd, std::string const& message);
-		void			checkActivity(connectionPair const& connection);
+		void	checkActivity(int connectionFd);
+
+		virtual SocketConnection	*onConnection(int connectionFd,
+			connectionAddress const& address);
+		virtual void				onDisconnection(connection* connection);
+		virtual void				onMessage(connection* connection,
+			std::string const& message);
 
 	public:
 		class	ServerException	:	public std::exception
@@ -133,7 +148,6 @@ namespace irc
 		~SocketServer();
 
 		void	start();
-
 		void	stop() throw();
 	};
 }

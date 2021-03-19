@@ -1,4 +1,4 @@
-#include <SocketServer.hpp>
+#include <IRCServer.hpp>
 #include <csignal>
 
 static void	doNothing(int)
@@ -6,7 +6,7 @@ static void	doNothing(int)
 
 int			main(void)
 {
-	irc::SocketServer	server;
+	irc::IRCServer		server;
 	int					err = 0;
 
 	signal(SIGINT, doNothing);

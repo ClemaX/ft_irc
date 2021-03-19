@@ -55,18 +55,20 @@ namespace irc
 		return (connection);
 	}
 
-	void	SocketServer::onDisconnection(int connectionFd)
+	void	SocketServer::onDisconnection(connection* connection)
 	{
 		std::cout << "Socket disconnected: "
-			<< "fd: " << connectionFd
-			<< ", ip: " << connectionFds[connectionFd]->address.sin_addr.s_addr
-			<< ", port: " << connectionFds[connectionFd]->address.sin_port
+			<< ", ip: " << connection->address.sin_addr.s_addr
+			<< ", port: " << connection->address.sin_port
 			<< std::endl;
 	}
 
-	void	SocketServer::onMessage(int connectionFd, std::string const& message)
+	void	SocketServer::onMessage(connection* connection,
+		std::string const& message)
 	{
-		std::cout << "Received message on fd " << connectionFd << ": "
+		std::cout << "Received message: "
+			<< ", ip: " << connection->address.sin_addr.s_addr
+			<< ", port: " << connection->address.sin_port
 			<< '\'' << message << '\'' << std::endl;
 	}
 
@@ -78,7 +80,7 @@ namespace irc
 
 			if (ret == 0)
 			{
-				onDisconnection(connectionFd);
+				onDisconnection(connectionFds[connectionFd]);
 				disconnectedFds.push(connectionFd);
 			}
 			else if (ret < 0)
@@ -90,7 +92,7 @@ namespace irc
 			else
 			{
 				buffer[ret] = '\0';
-				onMessage(connectionFd, buffer);
+				onMessage(connectionFds[connectionFd], buffer);
 			}
 		}
 	}

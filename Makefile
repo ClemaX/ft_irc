@@ -25,7 +25,13 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	main.cpp\
 	atoi.cpp\
 	bzero.cpp\
+	parseField.cpp\
 	SocketServer.cpp\
+	IRCChannel.cpp\
+	IRCClient.cpp\
+	IRCCommand.cpp\
+	IRCMessage.cpp\
+	IRCServer.cpp\
 )
 
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
