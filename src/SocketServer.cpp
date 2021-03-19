@@ -3,22 +3,21 @@
 
 namespace irc
 {
-	void	SocketServer::addConnection(int connectionFd, struct sockaddr_in const& address)
+	void	SocketServer::addConnection(int connectionFd,
+		SocketConnection* connection)
 	{
-		if (connectionFd > 0)
-		{
-			if (connectionFd != listenFd)
-				connectionFds[connectionFd] = address;
+		if (connectionFd != listenFd)
+			connectionFds[connectionFd] = connection;
 
-			if (connectionFd > highestFd)
-				highestFd = connectionFd;
-		}
+		if (connectionFd > highestFd)
+			highestFd = connectionFd;
 	}
 
 	void	SocketServer::removeConnection(int connectionFd)
 	{
 		if (connectionFd > 0)
 		{
+			delete connectionFds[connectionFd];
 			connectionFds.erase(connectionFd);
 			if (connectionFd == highestFd)
 			{
@@ -35,25 +34,33 @@ namespace irc
 	{
 		for (connectionMap::const_iterator it = connectionFds.begin();
 			it != connectionFds.end(); ++it)
-			close(it->first);
+			{
+				close(it->first);
+				delete(it->second);
+			}
 		connectionFds.clear();
 	}
 
-	void	SocketServer::onConnection(int connectionFd, struct sockaddr_in const& address)
+	SocketConnection*	SocketServer::onConnection(int connectionFd,
+		struct sockaddr_in const& address)
 	{
+		SocketConnection*	connection = new SocketConnection(address);
+
 		std::cout << "New connection: "
 			<< "fd: " << connectionFd
 			<< ", ip: " << address.sin_addr.s_addr
 			<< ", port: " << address.sin_port
 			<< std::endl;
+
+		return (connection);
 	}
 
 	void	SocketServer::onDisconnection(int connectionFd)
 	{
 		std::cout << "Socket disconnected: "
 			<< "fd: " << connectionFd
-			<< ", ip: " << connectionFds[connectionFd].sin_addr.s_addr
-			<< ", port: " << connectionFds[connectionFd].sin_port
+			<< ", ip: " << connectionFds[connectionFd]->address.sin_addr.s_addr
+			<< ", port: " << connectionFds[connectionFd]->address.sin_port
 			<< std::endl;
 	}
 
@@ -63,11 +70,8 @@ namespace irc
 			<< '\'' << message << '\'' << std::endl;
 	}
 
-	void	SocketServer::checkActivity(
-		std::pair<int, struct sockaddr_in> const& connection)
+	void	SocketServer::checkActivity(int connectionFd)
 	{
-		const int	connectionFd = connection.first;
-
 		if (FD_ISSET(connectionFd, &connections))
 		{
 			int	ret = recv(connectionFd, buffer, sizeof(buffer) - 1, 0);
@@ -205,14 +209,14 @@ namespace irc
 						throw SocketAcceptException(err);
 					}
 				}
-				addConnection(incomingFd, clientAddr);
-				onConnection(incomingFd, clientAddr);
+
+				addConnection(incomingFd, onConnection(incomingFd, clientAddr));
 			}
 
 			// Read messages
 			for (connectionMap::iterator it = connectionFds.begin();
 				it != connectionFds.end(); ++it)
-				checkActivity(*it);
+				checkActivity(it->first);
 
 			// Remove disconnected sockets
 			for (size_t i = 0; i < disconnectedFds.size(); ++i)
