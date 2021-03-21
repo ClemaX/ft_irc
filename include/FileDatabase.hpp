@@ -88,15 +88,27 @@ public:
 
 	FileDatabase(std::string const& filepath, unsigned keyLength,
 		unsigned valueLength)
-		:	file(filepath.c_str()),
+		:	file(filepath.c_str(), std::fstream::in | std::fstream::out
+				| std::fstream::binary),
 			keyLength(keyLength),
 			valueLength(valueLength)
 	{
+		std::streampos	readPos = 0;
+
+		// Create file if it does not exist
+		if (file.fail())
+		{
+			std::cout << "Creating database at '" << filepath << '\''
+				<< std::endl;
+			file.open(filepath.c_str(), std::fstream::in | std::fstream::out
+				| std::fstream::binary | std::fstream::trunc);
+		}
+
+		// Allocate read buffers
 		keyBuffer = new char [keyLength];
 		valueBuffer = new char [valueLength];
 
-		std::streampos	readPos = 0;
-
+		// Load existing data
 		while (file.peek() != std::string::traits_type::eof())
 		{
 			file.get(keyBuffer, keyLength + 1, DB_PADDING);
@@ -109,12 +121,16 @@ public:
 
 			data[keyBuffer] = valueBuffer;
 		}
+
+		// Reset file
 		file.seekg(0);
 		file.clear();
 	}
 
 	~FileDatabase()
 	{
+		file.close();
+
 		delete[] keyBuffer;
 		delete[] valueBuffer;
 	}
