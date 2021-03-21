@@ -14,24 +14,44 @@
 class FileDatabase	:	public IDatabase<std::string>
 {
 private:
-	class	Exception			:	public std::exception { };
-
-	class	OverflowException	:	public Exception
-	{
-	public:
-		char const*	what() const throw() { return "Data overflows line size"; }
-	};
+	std::fstream	file;
 
 	unsigned		keyLength;
 	unsigned		valueLength;
 
-	std::fstream	file;
 	std::map<std::string, std::string>	data;
 
 	char*	keyBuffer;
 	char*	valueBuffer;
 
-	bool	seekTo(std::string const& key)
+	bool	seekToKey(std::string const& key)
+	{
+		std::streampos	readPos = 0;
+
+		while (file.peek() != std::string::traits_type::eof())
+		{
+			file.get(keyBuffer, keyLength + 1, DB_PADDING);
+
+			if (keyBuffer == key)
+			{
+				file.seekg(0);
+				file.seekp(readPos);
+				return true;
+			}
+
+			readPos += keyLength;
+			file.seekg(readPos);
+			file.get(valueBuffer, valueLength + 1, DB_PADDING);
+			readPos += valueLength + sizeof(DB_ENDL);
+			file.seekg(readPos);
+		}
+		file.seekg(0);
+		file.seekp(readPos);
+		return false;
+	}
+
+	// TODO: Use seekToKey
+	bool	seekToValue(std::string const& key)
 	{
 		std::streampos	readPos = 0;
 
@@ -58,10 +78,17 @@ private:
 	}
 
 public:
+	class	Exception			:	public std::exception { };
+
+	class	OverflowException	:	public Exception
+	{
+	public:
+		char const*	what() const throw() { return "Data overflows line size"; }
+	};
+
 	FileDatabase(std::string const& filepath, unsigned keyLength,
 		unsigned valueLength)
-		:
-			file(filepath.c_str()),
+		:	file(filepath.c_str()),
 			keyLength(keyLength),
 			valueLength(valueLength)
 	{
@@ -101,7 +128,7 @@ public:
 
 		const unsigned	keyPadding = keyLength - key.length();
 		const unsigned	valuePadding = valueLength - value.length();
-		const bool		newline = !seekTo(key);
+		const bool		newline = !seekToValue(key);
 
 		if (newline)
 		{
