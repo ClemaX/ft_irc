@@ -28,7 +28,7 @@ namespace irc
 
 	IRCMessage::IRCMessage(std::string const& message)
 	{
-		if (message.length() > 512)
+		if (message.length() > IRC_MESSAGE_MAXLEN)
 			throw InvalidMessageException();
 
 		std::string::const_iterator			it = message.begin();

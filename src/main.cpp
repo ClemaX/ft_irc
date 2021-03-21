@@ -1,7 +1,7 @@
 #include <IRCServer.hpp>
 #include <csignal>
 
-static void	doNothing(int)
+static inline void	doNothing(int)
 { }
 
 int			main(void)
