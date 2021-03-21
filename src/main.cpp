@@ -2,14 +2,16 @@
 #include <csignal>
 
 static void	doNothing(int)
-{ }
+{
+	std::cout << std::endl;
+}
 
 int			main(void)
 {
 	irc::IRCServer		server;
 	int					err = 0;
 
-	signal(SIGINT, doNothing);
+	signal(SIGINT, &doNothing);
 
 	try { server.start(); }
 	catch (irc::SocketException const& e)
