@@ -2,8 +2,12 @@
 
 namespace irc
 {
-	IRCChannelClient::IRCChannelClient(struct sockaddr_in const& address)
-		:	IRCClient(address), isChannelOperator(false)
+	IRCChannelClient::IRCChannelClient(IRCClient* client, bool isOp)
+		:	client(client), isChannelOperator(isOp)
+	{ }
+
+	IRCChannelClient::IRCChannelClient(IRCClient* client)
+		:	client(client), isChannelOperator(false)
 	{ }
 
 	IRCChannel::IRCChannel(std::string const& name)

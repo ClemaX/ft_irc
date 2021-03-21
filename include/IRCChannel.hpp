@@ -8,11 +8,13 @@
 namespace irc
 {
 	// TODO: Reference to connection and add IRCChannelClient on JOIN command
-	struct	IRCChannelClient	:	IRCClient
+	struct	IRCChannelClient
 	{
-		bool	isChannelOperator;
+		IRCClient*	client;
+		bool		isChannelOperator;
 
-		IRCChannelClient(struct sockaddr_in const& address);
+		IRCChannelClient(IRCClient* client);
+		IRCChannelClient(IRCClient* client, bool isOp);
 	};
 
 	class	IRCChannel
