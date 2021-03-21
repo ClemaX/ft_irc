@@ -24,7 +24,7 @@ INCS = $(LIBINCS) $(INCDIR)
 SRCS = $(addprefix $(SRCDIR)/,\
 	main.cpp\
 	atoi.cpp\
-	bzero.cpp\
+	crypto.cpp\
 	parseField.cpp\
 	SocketServer.cpp\
 	IRCChannel.cpp\
@@ -41,7 +41,7 @@ DEPS = $(OBJS:.o=.d)
 CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 $(INCS:%=-I%) -g3
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
 LDFLAGS = $(LIBDIRS:%=-L%)
-LDLIBS = $(LIBARS:lib%.a=-l%)
+LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
 # Compiling commands
 COMPILE.cpp = $(CXX) $(DFLAGS) $(CXXFLAGS) -c
