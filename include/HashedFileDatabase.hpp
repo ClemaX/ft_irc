@@ -15,5 +15,6 @@ public:
 	{ }
 
 	virtual void	set(std::string const& key, std::string const& value)
+		throw(OverflowException)
 	{ FileDatabase::set(key, hasher.get_hashed_sha256(value)); }
 };
