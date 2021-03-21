@@ -63,7 +63,7 @@ crypto::operator=(const crypto& other)
 	if (this != &other)
 	{
 		sha256_context = other.sha256_context;
-		ft_uchar_cpy(hashed_sha256, other.hashed_sha256, SHA256_DIGEST_LENGTH);	
+		ft_uchar_cpy(hashed_sha256, other.hashed_sha256, SHA256_DIGEST_LENGTH);
 		hexa_hash_sha256 = other.hexa_hash_sha256;
 	}
 	return (*this);
@@ -74,7 +74,7 @@ crypto::get_hashed_sha256() const
 throw()
 { return (hexa_hash_sha256); }
 
-inline const std::string&
+const std::string&
 crypto::get_hashed_sha256(const std::string& msg)
 throw(crypto_exeption)
 {
