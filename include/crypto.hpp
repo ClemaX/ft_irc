@@ -27,7 +27,7 @@ class crypto
 	~crypto();
 
 	crypto& operator=(const crypto& other);
-	
+
 	const std::string&	get_hashed_sha256() const throw();
 	const std::string&	get_hashed_sha256(const std::string& msg) throw(crypto_exeption);
 };
