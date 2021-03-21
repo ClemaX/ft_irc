@@ -26,26 +26,43 @@ namespace irc
 		}
 	}
 
-	IRCMessage::IRCMessage(std::string const& message)
+	IRCMessage::IRCMessage(std::string message)
 	{
-		if (message.length() > 512)
+		// Check message size
+		static const unsigned		suffixLength = sizeof(IRC_MESSAGE_SUFFIX) - 1;
+		unsigned					newLength;
+		std::string::const_iterator	it;
+		std::string::const_iterator	end;
+		std::string					argument;
+
+		if (message.length() < suffixLength || message.length() > IRC_MESSAGE_MAXLEN)
 			throw InvalidMessageException();
 
-		std::string::const_iterator			it = message.begin();
-		std::string::const_iterator	const	end = message.end();
+		newLength = message.length() - suffixLength;
+		// Check and strip message suffix
+		if (message.compare(newLength, suffixLength, IRC_MESSAGE_SUFFIX))
+			throw InvalidMessageException();
+		message.erase(newLength, suffixLength);
 
+		// Initialize iterators
+		it = message.begin();
+		end = message.end();
+
+		// Parse prefix
 		if (*it == IRC_MESSAGE_PREFIX_PREFIX)
 			prefix = Prefix(++it, end);
 		if (it == end)
-			throw;
+			throw InvalidMessageException();
 
+		// Parse command
 		command = parseCommand(it, end);
 
+		// Parse arguments
 		while (it != end)
 		{
-			std::string	argument;
 			it = parseField(argument, it, end);
-			arguments.push_back(argument);
+			if (argument.length())
+				arguments.push_back(argument);
 		}
 	}
 }

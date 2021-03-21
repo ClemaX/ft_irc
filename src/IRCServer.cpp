@@ -2,16 +2,46 @@
 
 namespace irc
 {
-	IRCServer::IRCServer()	:	SocketServer()
+	IRCServer::IRCServer()
+		:	SocketServer(),
+			passwords("passwords.db",
+				IRC_NICKNAME_MAXLEN, SHA256_DIGEST_LENGTH * 2)
 	{ }
 
 	IRCServer::~IRCServer()
 	{ }
 
+	IRCCommand const*	parseCommand(
+		std::string::const_iterator& it, std::string::const_iterator last)
+	{
+		std::string	name;
+		unsigned	i = 0;
+
+		it = parseField(name, it, last);
+
+		std::cout << "Command candidate " << name << std::endl;
+		if (name.length() == 0)
+			return NULL;
+
+		while (i < commandCount && name != commands[i]->name)
+			i++;
+		if (i == commandCount)
+			return NULL;
+
+		return commands[i];
+	}
+
 	IRCServer::connection*	IRCServer::onConnection(int connectionFd,
 		connectionAddress const& address)
 	{
-		IRCChannelClient*	newClient = new IRCChannelClient(address);
+		IRCClient*	newClient;
+
+		try { newClient = new IRCClient(address); }
+		catch (std::exception const&)
+		{
+			stop();
+			throw;
+		}
 
 		newClient->username = "test";
 
@@ -27,17 +57,27 @@ namespace irc
 	void	IRCServer::onMessage(connection* connection,
 		std::string const& message)
 	{
-		IRCChannel	dummyChannel = IRCChannel("dummy");
-		IRCChannelClient* client
-			= static_cast<IRCChannelClient*>(connection);
+		IRCClient*	client
+			= static_cast<IRCClient*>(connection);
+/*
+		IRCChannel			dummyChannel = IRCChannel("dummy");
+		IRCChannelClient	dummyChannelClient(client); */
 
 		std::cout << client->username << ": " << message;
 
-		IRCMessage const*	ircMessage = new IRCMessage(message);
+		IRCMessage const*	ircMessage = NULL;
+		try
+		{ ircMessage = new IRCMessage(message); }
+		catch(IRCMessage::IRCMessageException const& e)
+		{ std::cerr << e.what() << ": " << message << std::endl; }
 
+		if (ircMessage && ircMessage->command)
+			ircMessage->command->execute(*this, client, ircMessage->arguments);
+
+/*
 		if (ircMessage->command)
-			ircMessage->command->execute(*client, dummyChannel,
-				ircMessage->arguments);
+			ircMessage->command->execute(dummyChannelClient, dummyChannel,
+				ircMessage->arguments); */
 	}
 }
 

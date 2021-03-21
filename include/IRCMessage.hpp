@@ -3,6 +3,7 @@
 #include <parseField.hpp>
 
 #include <IRCCommand.hpp>
+#include <IRCServer.hpp>
 
 namespace irc
 {
@@ -33,6 +34,6 @@ namespace irc
 		std::vector<std::string>	arguments;
 
 		/// CR-LF should be stripped of message string!
-		IRCMessage(std::string const& message);
+		IRCMessage(std::string message);
 	};
 }
