@@ -4,7 +4,7 @@
 #include <exception> // using std::exception
 #include <cstring> // using strerror
 #include <cerrno> // using errno
-#include <map> // using std::map
+#include <map> // using std::map, std::pair
 #include <queue> // using std::queue
 //#include <algorithm>
 
@@ -145,7 +145,7 @@ namespace irc
 
 		SocketServer();
 
-		~SocketServer();
+		virtual ~SocketServer();
 
 		void	start();
 		void	stop() throw();
