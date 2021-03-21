@@ -36,7 +36,7 @@ namespace irc
 	{
 		IRCClient*	newClient;
 
-		try { newClient = new IRCClient(address); }
+		try { newClient = new IRCClient(connectionFd, address); }
 		catch (std::exception const&)
 		{
 			stop();
@@ -59,9 +59,6 @@ namespace irc
 	{
 		IRCClient*	client
 			= static_cast<IRCClient*>(connection);
-/*
-		IRCChannel			dummyChannel = IRCChannel("dummy");
-		IRCChannelClient	dummyChannelClient(client); */
 
 		std::cout << client->username << ": " << message;
 
@@ -73,11 +70,6 @@ namespace irc
 
 		if (ircMessage && ircMessage->command)
 			ircMessage->command->execute(*this, client, ircMessage->arguments);
-
-/*
-		if (ircMessage->command)
-			ircMessage->command->execute(dummyChannelClient, dummyChannel,
-				ircMessage->arguments); */
 	}
 }
 

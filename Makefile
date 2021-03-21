@@ -26,6 +26,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	atoi.cpp\
 	crypto.cpp\
 	parseField.cpp\
+	SocketConnection.cpp\
 	SocketServer.cpp\
 	IRCChannel.cpp\
 	IRCClient.cpp\

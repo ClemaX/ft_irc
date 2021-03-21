@@ -1,153 +1,100 @@
 #pragma once
 
 #include <iostream> // using std::cout, std::cerr, std::endl
-#include <exception> // using std::exception
-#include <cstring> // using strerror
 #include <cerrno> // using errno
 #include <map> // using std::map, std::pair
 #include <queue> // using std::queue
-//#include <algorithm>
 
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
+#include <SocketExceptions.hpp>
+
 #ifndef SOCKET_BUFFER_SIZE
 # define SOCKET_BUFFER_SIZE	512U
 #endif
 
-namespace irc
+typedef	sockaddr_in	socketAddress;
+typedef	in_addr_t	internetAddress;
+typedef	in_port_t	internetPort;
+
+class	SocketConnection
 {
-	class	SocketException	:	public ::std::exception
-	{
-	protected:
-		const int	err;
-		char const*	errMeaning;
+private:
+	int				fd;
+	socketAddress	socketAddress;
 
-	public:
-		SocketException(int err)
-			:	err(err), errMeaning(strerror(err))
-		{ }
+public:
 
-		char const*	why() const throw()
-		{ return  errMeaning; }
-	};
+	SocketConnection() throw();
 
-	class	SocketOpenException	:	public SocketException
-	{
-	public:
-		SocketOpenException(int err)	:	SocketException(err) { }
+	SocketConnection(int fd, struct sockaddr_in const& socketAddress);
 
-		virtual char const*	what() const throw()
-		{ return "Could not open socket"; };
-	};
+	virtual	~SocketConnection() throw();
 
-	class	SocketOptionException	:	public SocketException
-	{
-	public:
-		SocketOptionException(int err)	:	SocketException(err) { }
+	bool	isOpen() const throw()
+	{ return fd > 0; }
 
-		virtual char const*	what() const throw()
-		{ return "Could not set socket option"; }
-	};
+	void	close() throw(SocketCloseException);
 
-	class	SocketBindException	:	public SocketException
-	{
-	public:
-		SocketBindException(int err)	:	SocketException(err) { }
+	bool	read(char *buffer, size_t n) throw(SocketReadException);
 
-		virtual char const*	what() const throw()
-		{ return "Could not bind socket"; }
-	};
+	virtual void	operator<<(std::string const& str) const
+		throw(SocketWriteException);
 
-	class	SocketListenException	:	public SocketException
-	{
-	public:
-		SocketListenException(int err)	:	SocketException(err) { }
+	inline internetAddress	getAddr() const throw()
+	{ return socketAddress.sin_addr.s_addr; }
 
-		virtual char const*	what() const throw()
-		{ return "Could not listen on socket"; }
-	};
+	inline internetPort		getPort() const throw()
+	{ return socketAddress.sin_port; }
+};
 
-	class	SocketSelectException	:	public SocketException
-	{
-	public:
-		SocketSelectException(int err)	:	SocketException(err) { }
+class	SocketServer
+{
+protected:
+	typedef	SocketConnection				connection;
+	typedef	struct sockaddr_in				connectionAddress;
+	typedef	::std::pair<int, connection*>	connectionPair;
+	typedef	::std::map<int, connection*>	connectionMap;
+	typedef	::std::queue<int>				connectionQueue;
 
-		virtual char const*	what() const throw()
-		{ return "Could not select socket connections"; }
-	};
+	unsigned			portNumber;
+	unsigned			maxClients;
+	fd_set				connections;
+	connectionMap		connectionFds;
+	connectionQueue		disconnectedFds;
 
-	class	SocketAcceptException	:	public SocketException
-	{
-	public:
-		SocketAcceptException(int err)	:	SocketException(err) { }
+	connectionAddress	serverAddr;
+	int					listenFd;
+	int					highestFd;
+	char				buffer[SOCKET_BUFFER_SIZE + 1];
 
-		virtual char const*	what() const throw()
-		{ return "Could not accept socket connection"; }
-	};
+	void	addConnection(int connectionFd, connection* connection);
+	void	removeConnection(int connectionFd);
+	void	clearConnections();
 
-	class	SocketReadException	:	public SocketException
-	{
-	public:
-		SocketReadException(int err)	:	SocketException(err) { }
+	void	checkActivity(int connectionFd);
 
-		virtual char const*	what() const throw()
-		{ return "Could not read from socket"; }
-	};
+	void	sendMessage(connection* connection, std::string const& message);
 
-	struct	SocketConnection
-	{
-		struct sockaddr_in	address;
-		SocketConnection(struct sockaddr_in const& address)
-			:	address(address)
-		{ }
-	};
+	virtual SocketConnection	*onConnection(int connectionFd,
+		connectionAddress const& address);
+	virtual void				onDisconnection(connection* connection);
+	virtual void				onMessage(connection* connection,
+		std::string const& message);
 
-	class	SocketServer
-	{
-	protected:
-		typedef	SocketConnection				connection;
-		typedef	struct sockaddr_in				connectionAddress;
-		typedef	::std::pair<int, connection*>	connectionPair;
-		typedef	::std::map<int, connection*>	connectionMap;
-		typedef	::std::queue<int>				connectionQueue;
+public:
+	class	ServerException	:	public std::exception
+	{ };
 
-		unsigned			portNumber;
-		unsigned			maxClients;
-		fd_set				connections;
-		connectionMap		connectionFds;
-		connectionQueue		disconnectedFds;
+	SocketServer(unsigned portNumber, unsigned maxClients);
 
-		connectionAddress	serverAddr;
-		int					listenFd;
-		int					highestFd;
-		char				buffer[SOCKET_BUFFER_SIZE + 1];
+	SocketServer();
 
-		void	addConnection(int connectionFd, connection* connection);
-		void	removeConnection(int connectionFd);
-		void	clearConnections();
+	virtual ~SocketServer();
 
-		void	checkActivity(int connectionFd);
-
-		virtual SocketConnection	*onConnection(int connectionFd,
-			connectionAddress const& address);
-		virtual void				onDisconnection(connection* connection);
-		virtual void				onMessage(connection* connection,
-			std::string const& message);
-
-	public:
-		class	ServerException	:	public std::exception
-		{ };
-
-		SocketServer(unsigned portNumber, unsigned maxClients);
-
-		SocketServer();
-
-		virtual ~SocketServer();
-
-		void	start();
-		void	stop() throw();
-	};
-}
+	void	start();
+	void	stop() throw();
+};
