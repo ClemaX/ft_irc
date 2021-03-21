@@ -31,6 +31,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	IRCChannel.cpp\
 	IRCClient.cpp\
 	IRCCommand.cpp\
+	IRCCommands.cpp\
 	IRCMessage.cpp\
 	IRCServer.cpp\
 )

@@ -29,90 +29,60 @@ namespace irc
 
 		channelMap	channels;
 
-		virtual connection* onConnection(int connectionFd,
+		virtual connection*	onConnection(int connectionFd,
 			connectionAddress const& address);
 
-		virtual void	onMessage(connection* connection,
+		virtual void		onMessage(connection* connection,
 			std::string const& message);
 
 	public:
 
 		struct	IRCKickCommand		:	public IRCChannelCommand
 		{
-			IRCKickCommand()	:	IRCChannelCommand("KICK", true)
-			{ }
+			IRCKickCommand();
+
 			virtual bool	execute(IRCServer& server, IRCClient const* user,
-				argumentList const& arguments) const
-			{
-				(void)server;
-				(void)arguments;
-				std::cout << user->username << " executes " << name << std::endl;
-				return false;
-			}
+				argumentList const& arguments) const;
 		};
 
 		struct	IRCModeCommand		:	public IRCChannelCommand
 		{
-			IRCModeCommand()	:	IRCChannelCommand("MODE", true)
-			{ }
+			IRCModeCommand();
+
 			virtual bool	execute(IRCServer& server, IRCClient const* user,
-				argumentList const& arguments) const
-			{
-				(void)server;
-				(void)arguments;
-				std::cout << user->username << " executes " << name << std::endl;
-				return false;
-			}
+				argumentList const& arguments) const;
 		};
 
 		struct	IRCInviteCommand	:	public IRCChannelCommand
 		{
-			IRCInviteCommand()	:	IRCChannelCommand("INVITE", true)
-			{ }
+			IRCInviteCommand();
+
 			virtual bool	execute(IRCServer& server, IRCClient const* user,
-				argumentList const& arguments) const
-			{
-				(void)server;
-				(void)arguments;
-				std::cout << user->username << " executes " << name << std::endl;
-				return false;
-			}
+				argumentList const& arguments) const;
 		};
 
 		struct	IRCTopicCommand		:	public IRCChannelCommand
 		{
-			IRCTopicCommand()	:	IRCChannelCommand("TOPIC", true)
-			{ }
+			IRCTopicCommand();
+
 			virtual bool	execute(IRCServer& server, IRCClient const* user,
-				argumentList const& arguments) const
-			{
-				(void)server;
-				(void)arguments;
-				std::cout << user->username << " executes " << name << std::endl;
-				return false;
-			}
+				argumentList const& arguments) const;
+		};
+
+		struct	IRCPassCommand		:	public IRCCommand
+		{
+			IRCPassCommand();
+
+			virtual bool	execute(IRCServer& server, IRCClient const* user,
+				argumentList const& arguments) const;
 		};
 
 		struct	IRCJoinCommand		:	public IRCCommand
 		{
-			IRCJoinCommand()	:	IRCCommand("JOIN")
-			{ }
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
-				argumentList const& arguments) const
-			{
-				(void)server;
-				std::cout << user->username << " executes " << name << std::endl;
+			IRCJoinCommand();
 
-				if (arguments.size())
-				{
-					std::cout << "Arguments: ";
-					for (argumentList::const_iterator it = arguments.begin();
-						it != arguments.end(); it++)
-						std::cout << *it << ", ";
-					std::cout << std::endl;
-				}
-				return false;
-			}
+			virtual bool	execute(IRCServer& server, IRCClient const* user,
+				argumentList const& arguments) const;
 		};
 
 		IRCServer();
