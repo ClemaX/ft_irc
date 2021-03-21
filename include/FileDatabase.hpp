@@ -14,6 +14,14 @@
 class FileDatabase	:	public IDatabase<std::string>
 {
 private:
+	class	Exception			:	public std::exception { };
+
+	class	OverflowException	:	public Exception
+	{
+	public:
+		char const*	what() const throw() { return "Data overflows line size"; }
+	};
+
 	unsigned		keyLength;
 	unsigned		valueLength;
 
@@ -85,9 +93,11 @@ public:
 	}
 
 	virtual void	set(std::string const& key, std::string const& value)
+		throw (OverflowException)
 	{
+		std::cout << "valueLength: " << value.length() << std::endl;
 		if (key.length() > keyLength || value.length() > valueLength)
-			throw;
+			throw OverflowException();
 
 		const unsigned	keyPadding = keyLength - key.length();
 		const unsigned	valuePadding = valueLength - value.length();
