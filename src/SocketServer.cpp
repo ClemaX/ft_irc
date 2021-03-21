@@ -108,7 +108,10 @@ namespace irc
 	}
 
 	SocketServer::SocketServer()
-		:	portNumber(1337), maxClients(10), listenFd(0), highestFd(0)
+		:	portNumber(1337),
+			maxClients(10),
+			listenFd(0),
+			highestFd(0)
 	{
 		FD_ZERO(&connections);
 		serverAddr.sin_family = AF_INET;
