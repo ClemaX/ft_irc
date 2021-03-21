@@ -16,31 +16,26 @@ throw()
 // Private members //
 /////////////////////
 
-/**
- * 	@brief Gen a new sha256 hash into @c hashed_ash256 address.
-*/
 inline bool
-crypto::gen_hash_sha226(const std::string& msg)
+crypto::gen_hash_sha226(const std::string& msg, unsigned char* res_hash,
+const std::string& __salt)
 throw()
 {
+	SHA256_CTX	sha256_context;
 	return (SHA256_Init(&sha256_context)
-	&& SHA256_Update(&sha256_context, msg.c_str(), msg.length())
-	&& SHA256_Final(hashed_sha256, &sha256_context));
+	&& SHA256_Update(&sha256_context, (__salt + msg).c_str(), msg.length())
+	&& SHA256_Final(res_hash, &sha256_context));
 }
 
-/**
- * 	@brief Fill @c hexa_hash_sha256 using the data holded by
- * 	@c hashed_sha256 and converting it into hexadecimal format.
-*/
-void
-crypto::convert_to_hex()
+inline const std::string
+crypto::convert_to_hex(const unsigned char*const hash, size_t lenght)
 throw()
 {
 	std::stringstream ss;
 
-	for (size_t i = 0 ; i < SHA256_DIGEST_LENGTH ; i++)
-		ss << std::hex << static_cast<int>(hashed_sha256[i]);
-	hexa_hash_sha256 = ss.str();
+	for (size_t i = 0 ; i < lenght ; i++)
+		ss << std::hex << static_cast<int>(hash[i]);
+	return (std::string(ss.str()));
 }
 
 ////////////////////
@@ -48,7 +43,11 @@ throw()
 ////////////////////
 
 crypto::crypto()
-: sha256_context(), hashed_sha256(), hexa_hash_sha256()
+: hashed_sha256(), hexa_hash_sha256(), salt()
+{ }
+
+crypto::crypto(const std::string& __salt)
+: hashed_sha256(), hexa_hash_sha256(), salt(__salt)
 { }
 
 crypto::crypto(const crypto& other)
@@ -62,9 +61,9 @@ crypto::operator=(const crypto& other)
 {
 	if (this != &other)
 	{
-		sha256_context = other.sha256_context;
 		ft_uchar_cpy(hashed_sha256, other.hashed_sha256, SHA256_DIGEST_LENGTH);
 		hexa_hash_sha256 = other.hexa_hash_sha256;
+		salt = other.salt;
 	}
 	return (*this);
 }
@@ -78,8 +77,15 @@ const std::string&
 crypto::get_hashed_sha256(const std::string& msg)
 throw(crypto_exeption)
 {
-	if (!gen_hash_sha226(msg))
+	if (!gen_hash_sha226(msg, hashed_sha256, salt))
 		throw crypto_exeption();
-	convert_to_hex();
+	hexa_hash_sha256 = convert_to_hex(hashed_sha256, SHA256_DIGEST_LENGTH);
 	return (get_hashed_sha256());
+}
+
+int main()
+{
+	crypto c;
+
+	std::cout << c.get_hashed_sha256("FT IRC") << std::endl;
 }

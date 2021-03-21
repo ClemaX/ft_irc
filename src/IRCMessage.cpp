@@ -28,13 +28,13 @@ namespace irc
 
 	IRCMessage::IRCMessage(std::string message)
 	{
-		// Check message size
 		static const unsigned		suffixLength = sizeof(IRC_MESSAGE_SUFFIX) - 1;
 		unsigned					newLength;
 		std::string::const_iterator	it;
 		std::string::const_iterator	end;
 		std::string					argument;
 
+		// Check message size
 		if (message.length() < suffixLength || message.length() > IRC_MESSAGE_MAXLEN)
 			throw InvalidMessageException();
 

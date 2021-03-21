@@ -139,7 +139,7 @@ namespace irc
 		}
 
 		// Allow multiple concurrent connections
-		if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )
+		if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&opt), sizeof(opt)) < 0 )
 		{
 			int err = errno;
 			std::cerr << "setsockopt: " << strerror(err) << std::endl;
@@ -148,7 +148,7 @@ namespace irc
 		}
 
 		// Bind the socket to the server address
-		if (bind(listenFd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+		if (bind(listenFd, reinterpret_cast<struct sockaddr*>(&serverAddr), sizeof(serverAddr)) < 0)
 		{
 			int err = errno;
 			std::cerr << "binding: " << strerror(err) << std::endl;

@@ -2,9 +2,7 @@
 #include <csignal>
 
 static void	doNothing(int)
-{
-	std::cout << std::endl;
-}
+{ std::cout << std::endl; }
 
 int			main(void)
 {
