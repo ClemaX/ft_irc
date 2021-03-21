@@ -4,6 +4,9 @@ obj/
 *.out
 *.o
 
+# Runtime data
+*.db
+
 # macOS
 .DS_Store
 
