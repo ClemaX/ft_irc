@@ -7,13 +7,18 @@ namespace irc
 	{
 		while (*first == IRC_MESSAGE_DELIM)
 			first++;
+
 		if (first == last)
+		{
+			str.clear();
 			return first;
+		}
+
 		std::string::const_iterator	fieldLast =
 			std::find(first, last, IRC_MESSAGE_DELIM);
-		if (fieldLast == first)
-			fieldLast = last;
+
 		str.assign(first, fieldLast);
+
 		return fieldLast;
 	}
 }
