@@ -82,10 +82,3 @@ throw(crypto_exeption)
 	hexa_hash_sha256 = convert_to_hex(hashed_sha256, SHA256_DIGEST_LENGTH);
 	return (get_hashed_sha256());
 }
-
-int main()
-{
-	crypto c;
-
-	std::cout << c.get_hashed_sha256("FT IRC") << std::endl;
-}
