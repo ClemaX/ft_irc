@@ -24,7 +24,7 @@ crypto::gen_hash_sha226(const std::string& msg)
 throw()
 {
 	return (SHA256_Init(&sha256_context)
-	&& SHA256_Update(&sha256_context, msg.c_str(), msg.length())
+	&& SHA256_Update(&sha256_context, (salt + msg).c_str(), msg.length())
 	&& SHA256_Final(hashed_sha256, &sha256_context));
 }
 
@@ -48,7 +48,11 @@ throw()
 ////////////////////
 
 crypto::crypto()
-: sha256_context(), hashed_sha256(), hexa_hash_sha256()
+: sha256_context(), hashed_sha256(), hexa_hash_sha256(), salt()
+{ }
+
+crypto::crypto(const std::string& __salt)
+: sha256_context(), hashed_sha256(), hexa_hash_sha256(), salt(__salt)
 { }
 
 crypto::crypto(const crypto& other)
@@ -65,6 +69,7 @@ crypto::operator=(const crypto& other)
 		sha256_context = other.sha256_context;
 		ft_uchar_cpy(hashed_sha256, other.hashed_sha256, SHA256_DIGEST_LENGTH);	
 		hexa_hash_sha256 = other.hexa_hash_sha256;
+		salt = other.salt;
 	}
 	return (*this);
 }
@@ -82,4 +87,11 @@ throw(crypto_exeption)
 		throw crypto_exeption();
 	convert_to_hex();
 	return (get_hashed_sha256());
+}
+
+int main()
+{
+	crypto c;
+
+	std::cout << c.get_hashed_sha256("FT IRC") << std::endl;
 }

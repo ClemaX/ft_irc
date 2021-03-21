@@ -16,6 +16,7 @@ class crypto
     SHA256_CTX			sha256_context;
     unsigned char		hashed_sha256[SHA256_DIGEST_LENGTH];
 	std::string			hexa_hash_sha256;
+	std::string			salt;
 
 	bool				gen_hash_sha226(const std::string& msg) throw();
 	void				convert_to_hex() throw();
@@ -23,6 +24,7 @@ class crypto
 	public:
 
 	crypto();
+	crypto(const std::string& salt);
 	crypto(const crypto& other);
 	~crypto();
 
