@@ -55,3 +55,70 @@ This file contains the RFC documentation sumary.
 	- TOPIC: Change the chanel topic (requires +t mode).
 - Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.
 
+2.2 Chars
+- Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).
+- Some bytes values are however used as messages delimitors:
+	- '{', '}', '|' are lowercases.
+	- '[', ']', '\' are uppercases.
+
+2.3) Messages
+- Servers and clients send to each other messages and those messages can generate or not an answer.
+- If a user cast a valid command, the server behaviour should be as specified in the documentation.
+- The comunication between client & server is essentally asyncronous.
+- Each IRC message can consist on (are separeted with at least 1 espace):
+	- <optional> prefix:
+		- start ':' (0x3b) and be followed by the prefix (no espaces between).
+		- is used by severs to indicate the origin of the msg
+			(no prefix == msg comes from same connection as the msg receptor).
+		- Client should't use prefixes for sending msgs, if they do the only valid prefix
+			is the nickname associated with the client.
+		- If the prefix isn't in the database or the prefix or the sender does not match with
+			the msg prefix the server must ignore the msg (in a silent way).
+	- command: must be a IRC valid command or 3 digits representing ASCII text.
+	- parameters: max == 15.
+- Each message is finished by CR (0x0d) - LF (0x0a).
+- A message max lenght is 512 - CR-LF = 510.
+- More details in seccion 7.
+
+2.3.1) Messages format in pseudocode
+<message>		-> [':' <prefix> <espace> ] <command> <parram> <CR-LF>
+<prefix>		-> <server name> | <nick> ['!' <user> ] ['@' <host> ]
+<command>		-> <char> { <char> } | <digit> <digit> <digit>
+<espace>		-> ' ' { ' ' } (0x20)
+<param>			-> <espace> [':' <final param> | <middle param> <final param> ]
+<final param>	-> any kind of bytes sequence (empty too) exept <CR-LF> or 0x0
+<middle param>	-> any kind of bytes seqence (not empty) exept <CR-LF> or 0x0
+<CR-LF>			-> 0x0d - 0x0a
+
+Notes:
+1) <espace> is only 0x20 not whitespaces.
+2) <final param> and <middle param> are only used for accept espaces in a param
+	(just a syntactical trick).
+3) CR and LF can't be part of the msg (logical).
+4) 0x0 can't be used inside a msg for C/C++ reasons.
+5) The last <param> must be a empty string.
+6) The use of the prefix "['!' <user> ] ['@' <host> ]" must not be used in
+	server - server comunication, its only server - client oriented.
+
+<target>		-> <a> <"," <target>
+<a>				-> <chanel> | <user> '@' <server name> | <nick> | <mask>
+<chanel>		-> ('#' | '&') <string>
+<server name>	-> <host>
+<host>			-> see RFC 952 [DNS:4]
+<mask>			-> ('#' |'&') <string>
+<string>		-> any 1bytes value exept: espace, bell, cr, lf, coma.
+
+<user> 			-> <string with coma> { <string with coma> }
+<leter>			-> 'a' ... 'z' | 'A' ... 'Z'
+<digit>			-> '0' ... '9'
+<especial>		-> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'
+
+2.4) Numeric aswers
+- The most common answer (for error and not error).
+- Composed by:
+	- 1) The sender prefix.
+	- 2) 3 digit integer.
+	- 3) The receiver.
+- A client can't raise a numeric answer (is silent ignored).
+- Section 6 contains the numeric answers codes list.
+
