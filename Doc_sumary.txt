@@ -1,0 +1,56 @@
+
+This file contains the RFC documentation sumarry.
+
+1) RFC 1459:
+
+1.1 Servers
+- User can connect to a server.
+- Servers can conect to other servers.
+- Servers structure is a extended binary tree ( https://www.geeksforgeeks.org/extended-binary-tree/ ).
+	- Where each server is the central node (for the chunk of the network that each server can "see").
+
+1.2 Clients
+- A client is anything that is connected to a server (exept a server).
+- Each client is distinguished to other clients using an unique nickname (9 bytes max lenght).
+- Also the all the servers need the have the following information about all the clients:
+	- the real name of the host that the client is connected.
+	- the username of the client of that host.
+	- the server that the client is connected.
+
+1.2.1 Operators
+- Operators are admins.
+- SQUIT (4.1.7).
+- CONNECT (4.3.5).
+- KILL (4.6.1).
+
+1.3 Chanels
+- A chanel is a named group containing > 1 clients which recives the chanel msgs.
+- The chanel is implicitly created when the first client joins it.
+- The chanel is implicitly destroyed when the last client lefts it.
+- Until the chanel exists any client can refer to this chanel using it name.
+- Chanels names :
+	- Are strings.
+	- Begin with '&' or '#'.
+	- 200 bytes max sized.
+	- Can't contain whitespaces.
+	- Can't contain ctrl^G (ASCII 7).
+	- Can't contain a ','.
+- 2 kinds of chanels can exist:
+	- Chanels distributed over the network (all the servers) -> '#'.
+	- Local server chanel -> '&'.
+- MODE (4.2.3).
+- For create a new chanel or join an existing one an user must use "JOIN" command.
+- The first client to create a chanel becomes the operator of the chanel.
+- Else if the chanel already exist: check 8.13.
+- If the connection between 2 servers break up, for a chanel which clients are in
+	both servers, when the connection is restored both will servers anounce to each other
+	all the JOINs and MODEs of the chanel.
+
+1.3.1 Chanel operator
+- The chanel operator owns the chanel.
+- It can cast some commands:
+	- KICK: kick out of the chanel a user.
+	- MODE: change chanel modes.
+	- INVITE: invite an user to the chanel.
+	- TOPIC: Change the chanel topic (requires +t mode).
+- Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.
