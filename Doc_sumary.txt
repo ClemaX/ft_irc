@@ -1,11 +1,11 @@
 
-This file contains the RFC documentation sumarry.
+This file contains the RFC documentation sumary.
 
 1) RFC 1459:
 
 1.1 Servers
 - User can connect to a server.
-- Servers can conect to other servers.
+- Servers can connect to other servers.
 - Servers structure is a extended binary tree ( https://www.geeksforgeeks.org/extended-binary-tree/ ).
 	- Where each server is the central node (for the chunk of the network that each server can "see").
 
@@ -36,13 +36,13 @@ This file contains the RFC documentation sumarry.
 	- Can't contain ctrl^G (ASCII 7).
 	- Can't contain a ','.
 - 2 kinds of chanels can exist:
-	- Chanels distributed over the network (all the servers) -> '#'.
+	- Chanels distributed all over the network (all the servers) -> '#'.
 	- Local server chanel -> '&'.
 - MODE (4.2.3).
 - For create a new chanel or join an existing one an user must use "JOIN" command.
-- The first client to create a chanel becomes the operator of the chanel.
+- The first client to join a chanel becomes the operator of the chanel.
 - Else if the chanel already exist: check 8.13.
-- If the connection between 2 servers break up, for a chanel which clients are in
+- If the connection between 2 servers breaks up, for a chanel which clients are in
 	both servers, when the connection is restored both will servers anounce to each other
 	all the JOINs and MODEs of the chanel.
 
@@ -54,3 +54,4 @@ This file contains the RFC documentation sumarry.
 	- INVITE: invite an user to the chanel.
 	- TOPIC: Change the chanel topic (requires +t mode).
 - Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.
+
