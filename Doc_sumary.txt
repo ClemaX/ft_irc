@@ -119,6 +119,38 @@ Notes:
 	- 1) The sender prefix.
 	- 2) 3 digit integer.
 	- 3) The receiver.
-- A client can't raise a numeric answer (is silent ignored).
+- A client can't raise a numeric answer (is silently ignored).
 - Section 6 contains the numeric answers codes list.
+
+3.1) One to one comunication
+- Ussualy one to one comunication is only done by clients.
+- To ensure a secure way of comunication between clients is necesary that
+	all the servers are able to send a msg in a precice dirrection (to any client).
+- The shortest path wins.
+
+3.2.1) One to list comunication
+- Worts groupal method (send message N times for N members in the list).
+
+3.2.2) One to a group (chanel) comunication
+- The conversation is only sent to servers used by the users of the chanel.
+- If there are more than 1 user in the same server and in the same chanel, the
+	message is sent once to the server.
+
+3.2.3) One to host/server mask comunication
+- Same as previous.
+
+3.3.1) Client to client comunication
+- There's any kind of unique message that can be sent to all the clients.
+
+3.3.2) Client to server comunication
+- Commands change the state of a chanel, a user ...
+- Must be sent to all the servers all over the network.
+
+3.3.3) Server to server comunication
+- Almost every msg sent server to server is distributed all over the network
+	to all servers.
+
+
+
+
 
