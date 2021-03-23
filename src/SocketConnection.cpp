@@ -51,9 +51,10 @@ bool	SocketConnection::read(char *buffer, size_t n) throw(SocketReadException)
 	return success;
 }
 
-void	SocketConnection::operator<<(std::string const& str) const
+SocketConnection const&	SocketConnection::operator<<(std::string const& str) const
 	throw(SocketWriteException)
 {
 	if (isOpen() && send(fd, str.c_str(), str.length(), 0) == -1)
 		throw SocketWriteException(errno);
+	return *this;
 }
