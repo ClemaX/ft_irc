@@ -23,7 +23,7 @@ namespace irc
 
 	struct	NumericReply	:	IReply
 	{
-		typedef	std::vector<IRCClient const*> clientList;
+		typedef	std::vector<Client const*> clientList;
 		Message::Prefix		prefix;
 		int					code;
 		std::string			message;

@@ -2,16 +2,16 @@
 
 namespace irc
 {
-	IRCServer::IRCServer()
+	Server::Server()
 		:	SocketServer(),
 			passwords("passwords.db",
 				IRC_NICKNAME_MAXLEN, SHA256_DIGEST_LENGTH * 2)
 	{ }
 
-	IRCServer::~IRCServer()
+	Server::~Server()
 	{ }
 
-	IRCCommand const*	parseCommand(
+	Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
 	{
 		std::string	name;
@@ -30,12 +30,12 @@ namespace irc
 		return commands[i];
 	}
 
-	IRCServer::connection*	IRCServer::onConnection(int connectionFd,
+	Server::connection*	Server::onConnection(int connectionFd,
 		connectionAddress const& address)
 	{
-		IRCClient*	newClient;
+		Client*	newClient;
 
-		try { newClient = new IRCClient(connectionFd, address); }
+		try { newClient = new Client(connectionFd, address); }
 		catch (std::exception const&)
 		{
 			stop();
@@ -53,10 +53,10 @@ namespace irc
 		return newClient;
 	}
 
-	void	IRCServer::onMessage(connection* connection, std::string const& message)
+	void	Server::onMessage(connection* connection, std::string const& message)
 	{
-		IRCClient*	client
-			= static_cast<IRCClient*>(connection);
+		Client*	client
+			= static_cast<Client*>(connection);
 
 		//std::cout << client->username << ": " << connection->buffer;
 

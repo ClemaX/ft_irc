@@ -2,15 +2,15 @@
 
 namespace irc
 {
-	IRCChannelClient::IRCChannelClient(IRCClient* client, bool isOp)
+	ChannelClient::ChannelClient(Client* client, bool isOp)
 		:	client(client), isChannelOperator(isOp)
 	{ }
 
-	IRCChannelClient::IRCChannelClient(IRCClient* client)
+	ChannelClient::ChannelClient(Client* client)
 		:	client(client), isChannelOperator(false)
 	{ }
 
-	IRCChannel::IRCChannel(std::string const& name)
+	Channel::Channel(std::string const& name)
 		:	name(name)
 	{ }
 }

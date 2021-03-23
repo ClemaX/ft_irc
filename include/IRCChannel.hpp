@@ -7,24 +7,24 @@
 
 namespace irc
 {
-	// TODO: Reference to connection and add IRCChannelClient on JOIN command
-	struct	IRCChannelClient
+	// TODO: Reference to connection and add ChannelClient on JOIN command
+	struct	ChannelClient
 	{
-		IRCClient*	client;
+		Client*	client;
 		bool		isChannelOperator;
 
-		IRCChannelClient(IRCClient* client);
-		IRCChannelClient(IRCClient* client, bool isOp);
+		ChannelClient(Client* client);
+		ChannelClient(Client* client, bool isOp);
 	};
 
-	class	IRCChannel
+	class	Channel
 	{
 	protected:
-		std::list<IRCChannelClient>	clients;
+		std::list<ChannelClient>	clients;
 
 	public:
 		std::string const			name;
 
-		IRCChannel(std::string const& name);
+		Channel(std::string const& name);
 	};
 }

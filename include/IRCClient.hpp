@@ -15,7 +15,7 @@ namespace irc
 	* that the client is running on, the username of the client on that
 	* host, and the server to which the client is connected.
 	*/
-	class	IRCClient	:	public SocketConnection
+	class	Client	:	public SocketConnection
 	{
 	private:
 	public:
@@ -26,7 +26,7 @@ namespace irc
 		std::string	username;
 		std::string	server;
 
-		IRCClient(int fd, struct sockaddr_in const& address);
-		virtual ~IRCClient() throw();
+		Client(int fd, struct sockaddr_in const& address);
+		virtual ~Client() throw();
 	};
 }

@@ -6,8 +6,8 @@ static void	doNothing(int)
 
 int			main(void)
 {
-	irc::IRCServer	server;
-	int				err = 0;
+	irc::Server	server;
+	int			err = 0;
 
 	signal(SIGINT, &doNothing);
 

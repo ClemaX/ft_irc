@@ -2,12 +2,12 @@
 
 namespace irc
 {
-	IRCCommand::IRCCommand(std::string const& name)
+	Command::Command(std::string const& name)
 		:	name(name)
 	{ }
 
-	IRCChannelCommand::IRCChannelCommand(std::string const& name,
+	ChannelCommand::ChannelCommand(std::string const& name,
 		bool isOperatorCommand)
-		:	IRCCommand(name), isOperatorCommand(isOperatorCommand)
+		:	Command(name), isOperatorCommand(isOperatorCommand)
 	{ }
 }

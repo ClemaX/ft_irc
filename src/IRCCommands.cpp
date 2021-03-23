@@ -2,11 +2,11 @@
 
 namespace irc
 {
-	IRCServer::IRCKickCommand::IRCKickCommand()
-		:	IRCChannelCommand("KICK", true)
+	Server::KickCommand::KickCommand()
+		:	ChannelCommand("KICK", true)
 	{ }
 
-	bool	IRCServer::IRCKickCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::KickCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -15,11 +15,11 @@ namespace irc
 		return false;
 	}
 
-	IRCServer::IRCModeCommand::IRCModeCommand()
-		:	IRCChannelCommand("MODE", true)
+	Server::ModeCommand::ModeCommand()
+		:	ChannelCommand("MODE", true)
 	{ }
 
-	bool	IRCServer::IRCModeCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::ModeCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -28,11 +28,11 @@ namespace irc
 		return false;
 	}
 
-	IRCServer::IRCInviteCommand::IRCInviteCommand()
-		:	IRCChannelCommand("INVITE", true)
+	Server::InviteCommand::InviteCommand()
+		:	ChannelCommand("INVITE", true)
 	{ }
 
-	bool	IRCServer::IRCInviteCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::InviteCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -41,11 +41,11 @@ namespace irc
 		return false;
 	}
 
-	IRCServer::IRCTopicCommand::IRCTopicCommand()
-		:	IRCChannelCommand("TOPIC", true)
+	Server::TopicCommand::TopicCommand()
+		:	ChannelCommand("TOPIC", true)
 	{ }
 
-	bool	IRCServer::IRCTopicCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::TopicCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -54,19 +54,19 @@ namespace irc
 		return false;
 	}
 
-	IRCServer::IRCPassCommand::IRCPassCommand()
-		:	IRCCommand("PASS")
+	Server::PassCommand::PassCommand()
+		:	Command("PASS")
 	{ }
 
-	// TODO: IRCClient << Message
+	// TODO: Client << Message
 
-	IRCClient const&	operator<<(IRCClient const& client, IReply const& message)
+	Client const&	operator<<(Client const& client, IReply const& message)
 	{
 		client << message.serialize();
 		return client;
 	}
 
-	bool	IRCServer::IRCPassCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::PassCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -74,18 +74,18 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(IRC_ERR_NEEDMOREPARAMS);
+			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
 		return true;
 	}
 
-	IRCServer::IRCJoinCommand::IRCJoinCommand()
-		:	IRCCommand("JOIN")
+	Server::JoinCommand::JoinCommand()
+		:	Command("JOIN")
 	{ }
 
-	bool	IRCServer::IRCJoinCommand::execute(IRCServer& server, IRCClient* user,
+	bool	Server::JoinCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;

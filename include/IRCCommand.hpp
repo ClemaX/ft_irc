@@ -8,26 +8,26 @@
 
 namespace irc
 {
-	class	IRCServer;
+	class	Server;
 
-	struct	IRCCommand
+	struct	Command
 	{
 		typedef std::vector<std::string>	argumentList;
 		std::string const	name;
 
-		IRCCommand(std::string const& name);
+		Command(std::string const& name);
 
-		virtual bool	execute(IRCServer& server, IRCClient* user,
+		virtual bool	execute(Server& server, Client* user,
 			argumentList const& arguments) const = 0;
 	};
 
-	struct	IRCChannelCommand	:	public IRCCommand
+	struct	ChannelCommand	:	public Command
 	{
 		bool const	isOperatorCommand;
 
-		IRCChannelCommand(std::string const& name, bool isOperatorCommand);
+		ChannelCommand(std::string const& name, bool isOperatorCommand);
 	};
 
-	IRCCommand const*	parseCommand(std::string::const_iterator& it,
+	Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);
 }

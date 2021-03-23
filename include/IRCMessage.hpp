@@ -71,10 +71,9 @@ namespace irc
 		};
 
 		Prefix						prefix;
-		IRCCommand const*			command;
+		Command const*			command;
 		std::vector<std::string>	arguments;
 
-		/// CR-LF should be stripped of message string!
 		Message(std::string& buffer) throw(MessageException);
 	};
 }

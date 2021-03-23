@@ -21,13 +21,13 @@
 
 namespace irc
 {
-	class	IRCServer	:	public SocketServer
+	class	Server	:	public SocketServer
 	{
 	private:
 		HashedFileDatabase	passwords;
 
 	protected:
-		typedef ::std::map<std::string, IRCChannel>	channelMap;
+		typedef ::std::map<std::string, Channel>	channelMap;
 
 		channelMap	channels;
 
@@ -38,74 +38,73 @@ namespace irc
 			std::string const& message);
 
 	public:
-
-		struct	IRCKickCommand		:	public IRCChannelCommand
+		struct	PassCommand		:	public Command
 		{
-			IRCKickCommand();
+			PassCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		struct	IRCModeCommand		:	public IRCChannelCommand
+		struct	KickCommand		:	public ChannelCommand
 		{
-			IRCModeCommand();
+			KickCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		struct	IRCInviteCommand	:	public IRCChannelCommand
+		struct	ModeCommand		:	public ChannelCommand
 		{
-			IRCInviteCommand();
+			ModeCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		struct	IRCTopicCommand		:	public IRCChannelCommand
+		struct	InviteCommand	:	public ChannelCommand
 		{
-			IRCTopicCommand();
+			InviteCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		struct	IRCPassCommand		:	public IRCCommand
+		struct	TopicCommand		:	public ChannelCommand
 		{
-			IRCPassCommand();
+			TopicCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		struct	IRCJoinCommand		:	public IRCCommand
+		struct	JoinCommand		:	public Command
 		{
-			IRCJoinCommand();
+			JoinCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient* user,
+			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
-		IRCServer();
-		~IRCServer();
+		Server();
+		~Server();
 	};
 
-	static const IRCServer::IRCJoinCommand	joinCommand;
-	static const IRCServer::IRCKickCommand	kickCommand;
-	static const IRCServer::IRCModeCommand	modeCommand;
-	static const IRCServer::IRCModeCommand	inviteCommand;
-	static const IRCServer::IRCTopicCommand	topicCommand;
-	static const IRCServer::IRCPassCommand	passCommand;
+	static const Server::JoinCommand	joinCommand;
+	static const Server::KickCommand	kickCommand;
+	static const Server::ModeCommand	modeCommand;
+	static const Server::ModeCommand	inviteCommand;
+	static const Server::TopicCommand	topicCommand;
+	static const Server::PassCommand	passCommand;
 
-	static IRCCommand const*const	commands[] =
+	static Command const*const	commands[] =
 	{
+		&passCommand,
 	  	&joinCommand,
 		&kickCommand,
 		&modeCommand,
 		&inviteCommand,
-		&topicCommand,
-		&passCommand
+		&topicCommand
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
