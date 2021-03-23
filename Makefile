@@ -23,6 +23,7 @@ LIBARS = $(notdir $(LIBS))
 INCS = $(LIBINCS) $(INCDIR)
 SRCS = $(addprefix $(SRCDIR)/,\
 	main.cpp\
+	itoa.cpp\
 	atoi.cpp\
 	crypto.cpp\
 	parseField.cpp\
@@ -73,7 +74,7 @@ include $(wildcard $(DEPS))
 # Binaries
 $(BINDIR)/$(NAME): $(OBJS) $(LIBS) | $(BINDIR)
 	@echo "LD $@ $(LIBARS:lib%.a=-l%)"
-	$(COMPILE.o) $^ -o $@ $(LDLIBS)
+	$(COMPILE.o) $(OBJS) -o $@ $(LDLIBS)
 
 # Remove temporary objects
 clean:
