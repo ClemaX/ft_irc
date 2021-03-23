@@ -71,7 +71,7 @@ namespace irc
 		};
 
 		Prefix						prefix;
-		Command const*			command;
+		Command const*				command;
 		std::vector<std::string>	arguments;
 
 		Message(std::string& buffer) throw(MessageException);
