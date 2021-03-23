@@ -98,7 +98,7 @@ SocketServer::SocketServer(unsigned portNumber, unsigned maxClients)
 }
 
 SocketServer::SocketServer()
-	:	portNumber(1337),
+	:	portNumber(2525),
 		maxClients(10),
 		listenFd(0),
 		highestFd(0)
@@ -112,6 +112,10 @@ SocketServer::SocketServer()
 SocketServer::~SocketServer()
 { stop(); }
 
+#ifndef SOCK_NONBLOCK
+# define SOCK_NONBLOCK 0
+#endif
+
 void	SocketServer::start()
 {
 	int	opt = 1;
@@ -121,6 +125,10 @@ void	SocketServer::start()
 
 	// Open a new socket
 	listenFd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+
+	#if SOCK_NONBLOCK == 0
+		fcntl(listenFd, F_SETFL, O_NONBLOCK);
+	#endif
 
 	if (listenFd < 0)
 	{

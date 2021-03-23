@@ -14,13 +14,14 @@ BINDIR = .
 
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
+LIBCRYPTO = $(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/
 
 LIBDIRS = $(dir $(LIBS))
 LIBINCS = $(addsuffix $(INCDIR), $(LIBDIRS))
 LIBARS = $(notdir $(LIBS))
 
 # Sources
-INCS = $(LIBINCS) $(INCDIR)
+INCS = $(LIBINCS) $(INCDIR) $(LIBCRYPTO)/include
 SRCS = $(addprefix $(SRCDIR)/,\
 	main.cpp\
 	itoa.cpp\
@@ -41,9 +42,9 @@ OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
 # Flags
-CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 $(INCS:%=-I%) -g3
+CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
-LDFLAGS = $(LIBDIRS:%=-L%)
+LDFLAGS = $(LIBDIRS:%=-L%) -L$(LIBCRYPTO)/lib/
 LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
 # Compiling commands
