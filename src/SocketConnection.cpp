@@ -21,8 +21,11 @@ SocketConnection::~SocketConnection() throw()
 
 void	SocketConnection::close() throw(SocketCloseException)
 {
-	if (!isOpen() && ::close(fd) == -1)
+	if (isOpen() && ::close(fd) == -1)
+	{
+		fd = 0;
 		throw SocketCloseException(errno);
+	}
 	fd = 0;
 }
 
