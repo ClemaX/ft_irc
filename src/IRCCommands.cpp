@@ -6,7 +6,7 @@ namespace irc
 		:	IRCChannelCommand("KICK", true)
 	{ }
 
-	bool	IRCServer::IRCKickCommand::execute(IRCServer& server, IRCClient const* user,
+	bool	IRCServer::IRCKickCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -19,7 +19,7 @@ namespace irc
 		:	IRCChannelCommand("MODE", true)
 	{ }
 
-	bool	IRCServer::IRCModeCommand::execute(IRCServer& server, IRCClient const* user,
+	bool	IRCServer::IRCModeCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -32,7 +32,7 @@ namespace irc
 		:	IRCChannelCommand("INVITE", true)
 	{ }
 
-	bool	IRCServer::IRCInviteCommand::execute(IRCServer& server, IRCClient const* user,
+	bool	IRCServer::IRCInviteCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -45,7 +45,7 @@ namespace irc
 		:	IRCChannelCommand("TOPIC", true)
 	{ }
 
-	bool	IRCServer::IRCTopicCommand::execute(IRCServer& server, IRCClient const* user,
+	bool	IRCServer::IRCTopicCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -58,7 +58,15 @@ namespace irc
 		:	IRCCommand("PASS")
 	{ }
 
-	bool	IRCServer::IRCPassCommand::execute(IRCServer& server, IRCClient const* user,
+	// TODO: IRCClient << Message
+
+	IRCClient const&	operator<<(IRCClient const& client, IReply const& message)
+	{
+		client << message.serialize();
+		return client;
+	}
+
+	bool	IRCServer::IRCPassCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;
@@ -66,7 +74,7 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << "NOTENOUGHARGS";
+			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(IRC_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
@@ -77,7 +85,7 @@ namespace irc
 		:	IRCCommand("JOIN")
 	{ }
 
-	bool	IRCServer::IRCJoinCommand::execute(IRCServer& server, IRCClient const* user,
+	bool	IRCServer::IRCJoinCommand::execute(IRCServer& server, IRCClient* user,
 		argumentList const& arguments) const
 	{
 		(void)server;

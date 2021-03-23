@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+
+#include <ircdef.hpp>
+
 #include <SocketServer.hpp>
 
 
@@ -14,7 +17,10 @@ namespace irc
 	*/
 	class	IRCClient	:	public SocketConnection
 	{
+	private:
 	public:
+		std::string	buffer;
+
 		std::string	nickname;
 		std::string	hostname;
 		std::string	username;

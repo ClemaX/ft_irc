@@ -13,7 +13,7 @@
 #include <SocketExceptions.hpp>
 
 #ifndef SOCKET_BUFFER_SIZE
-# define SOCKET_BUFFER_SIZE	512U
+# define SOCKET_BUFFER_SIZE	513U
 #endif
 
 typedef	sockaddr_in	socketAddress;
@@ -27,7 +27,6 @@ private:
 	socketAddress	socketAddress;
 
 public:
-
 	SocketConnection() throw();
 
 	SocketConnection(int fd, struct sockaddr_in const& socketAddress);
@@ -41,7 +40,7 @@ public:
 
 	bool	read(char *buffer, size_t n) throw(SocketReadException);
 
-	virtual void	operator<<(std::string const& str) const
+	virtual SocketConnection const&	operator<<(std::string const& str) const
 		throw(SocketWriteException);
 
 	inline internetAddress	getAddr() const throw()

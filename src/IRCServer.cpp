@@ -19,7 +19,6 @@ namespace irc
 
 		it = parseField(name, it, last);
 
-		std::cout << "Command candidate " << name << std::endl;
 		if (name.length() == 0)
 			return NULL;
 
@@ -54,19 +53,22 @@ namespace irc
 		return newClient;
 	}
 
-	void	IRCServer::onMessage(connection* connection,
-		std::string const& message)
+	void	IRCServer::onMessage(connection* connection, std::string const& message)
 	{
 		IRCClient*	client
 			= static_cast<IRCClient*>(connection);
 
-		std::cout << client->username << ": " << message;
+		//std::cout << client->username << ": " << connection->buffer;
 
-		IRCMessage const*	ircMessage = NULL;
-		try
-		{ ircMessage = new IRCMessage(message); }
-		catch(IRCMessage::IRCMessageException const& e)
-		{ std::cerr << e.what() << ": " << message << std::endl; }
+		Message const*	ircMessage = NULL;
+
+		client->buffer.append(message);
+
+		try { ircMessage = new Message(client->buffer); }
+		catch(Message::IncompleteMessageException const& e)
+		{ std::cerr << "Waiting for more input..." << std::endl; }
+		catch(Message::MessageException const& e)
+		{ std::cerr << e.what() << std::endl; } // TODO: Check if we need to delete ircMessage on catch
 
 		if (ircMessage && ircMessage->command)
 			ircMessage->command->execute(*this, client, ircMessage->arguments);

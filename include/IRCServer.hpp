@@ -3,12 +3,14 @@
 #include <string> // using std::string
 #include <list> // using std::list
 
+#include <itoa.hpp>
 #include <parseField.hpp>
 #include <HashedFileDatabase.hpp>
 
 #include <SocketServer.hpp>
 #include <IRCChannel.hpp>
 #include <IRCMessage.hpp>
+#include <IRCReplies.hpp>
 
 // TODO: Grammar rules
 // TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)
@@ -41,7 +43,7 @@ namespace irc
 		{
 			IRCKickCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -49,7 +51,7 @@ namespace irc
 		{
 			IRCModeCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -57,7 +59,7 @@ namespace irc
 		{
 			IRCInviteCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -65,7 +67,7 @@ namespace irc
 		{
 			IRCTopicCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -73,7 +75,7 @@ namespace irc
 		{
 			IRCPassCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -81,7 +83,7 @@ namespace irc
 		{
 			IRCJoinCommand();
 
-			virtual bool	execute(IRCServer& server, IRCClient const* user,
+			virtual bool	execute(IRCServer& server, IRCClient* user,
 				argumentList const& arguments) const;
 		};
 
@@ -94,7 +96,7 @@ namespace irc
 	static const IRCServer::IRCModeCommand	modeCommand;
 	static const IRCServer::IRCModeCommand	inviteCommand;
 	static const IRCServer::IRCTopicCommand	topicCommand;
-
+	static const IRCServer::IRCPassCommand	passCommand;
 
 	static IRCCommand const*const	commands[] =
 	{
@@ -102,12 +104,10 @@ namespace irc
 		&kickCommand,
 		&modeCommand,
 		&inviteCommand,
-		&topicCommand
+		&topicCommand,
+		&passCommand
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
-
-	IRCCommand const*	parseCommand(std::string::const_iterator& it,
-		std::string::const_iterator last);
 }
 

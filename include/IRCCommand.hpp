@@ -1,5 +1,6 @@
 #pragma once
 
+#include <itoa.hpp>
 #include <parseField.hpp>
 
 #include <IRCChannel.hpp>
@@ -16,7 +17,7 @@ namespace irc
 
 		IRCCommand(std::string const& name);
 
-		virtual bool	execute(IRCServer& server, IRCClient const* user,
+		virtual bool	execute(IRCServer& server, IRCClient* user,
 			argumentList const& arguments) const = 0;
 	};
 
@@ -27,4 +28,6 @@ namespace irc
 		IRCChannelCommand(std::string const& name, bool isOperatorCommand);
 	};
 
+	IRCCommand const*	parseCommand(std::string::const_iterator& it,
+		std::string::const_iterator last);
 }
