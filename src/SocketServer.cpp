@@ -141,7 +141,7 @@ void	SocketServer::start()
 	if (bind(listenFd, reinterpret_cast<struct sockaddr*>(&serverAddr), sizeof(serverAddr)) < 0)
 	{
 		int err = errno;
-		std::cerr << "binding: " << strerror(err) << std::endl;
+		std::cerr << "bind: " << strerror(err) << std::endl;
 		stop();
 		throw SocketBindException(err);
 	}
