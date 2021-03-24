@@ -4,6 +4,11 @@ This file contains the RFC documentation summary.
 # **RFC 1459:**
 ======
 
+# SUMMARY
+
+["1.  Introduction"](# 1.  INTRODUCTION)
+[2. The IRC Specification](# 2. The IRC Specification)
+
 # 1.  INTRODUCTION
 
 ## 1.1 Servers
