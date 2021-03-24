@@ -28,6 +28,7 @@ A channel is a named group containing > 1 clients which recives the channel msgs
 The channel is implicitly created when the first client joins it.  
 The channel is implicitly destroyed when the last client lefts it.  
 Until the channel exists any client can refer to this channel using its name.  
+
 Chanels names :  
 * Are strings.  
 * Begin with '&' or '#'.  
@@ -38,6 +39,7 @@ Chanels names :
 2 kinds of channels can exist:  
 * Chanels distributed all over the network (all the servers) -> '#'.  
 * Local server channel -> '&'.  
+
 MODE (4.2.3).  
 To create a new channel or join an existing one, a user must use "JOIN" command.  
 The first client to join a channel becomes the operator of the channel.  
