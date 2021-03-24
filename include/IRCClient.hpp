@@ -4,8 +4,9 @@
 
 #include <ircdef.hpp>
 
-#include <SocketServer.hpp>
+#include <SocketConnection.hpp>
 
+#include <IRCIReply.hpp>
 
 namespace irc
 {
@@ -18,15 +19,20 @@ namespace irc
 	class	Client	:	public SocketConnection
 	{
 	private:
+
 	public:
-		std::string	buffer;
+		std::string	readBuffer;
+//		std::string	writeBuffer; // TODO: Should we use a Message container instead?
 
 		std::string	nickname;
 		std::string	hostname;
 		std::string	username;
 		std::string	server;
 
-		Client(int fd, struct sockaddr_in const& address);
+		Client(int fd, address const& address);
+
+		Client const&	operator<<(IReply const* reply) const;
+
 		virtual ~Client() throw();
 	};
 }

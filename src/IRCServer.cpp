@@ -1,4 +1,5 @@
 #include <IRCServer.hpp>
+#include <IRCMessage.hpp>
 
 namespace irc
 {
@@ -11,7 +12,7 @@ namespace irc
 	Server::~Server()
 	{ }
 
-	Command const*	parseCommand(
+	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
 	{
 		std::string	name;
@@ -31,7 +32,7 @@ namespace irc
 	}
 
 	Server::connection*	Server::onConnection(int connectionFd,
-		connectionAddress const& address)
+		connection::address const& address)
 	{
 		Client*	newClient;
 
@@ -62,16 +63,18 @@ namespace irc
 
 		Message const*	ircMessage = NULL;
 
-		client->buffer.append(message);
+		client->readBuffer.append(message);
 
-		try { ircMessage = new Message(client->buffer); }
+		try { ircMessage = new Message(client->readBuffer); }
 		catch(Message::IncompleteMessageException const& e)
 		{ std::cerr << "Waiting for more input..." << std::endl; }
 		catch(Message::MessageException const& e)
-		{ std::cerr << e.what() << std::endl; } // TODO: Check if we need to delete ircMessage on catch
+		{
+			std::cerr << e.what() << std::endl;
+			client->readBuffer.clear();
+		} // TODO: Check if we need to delete ircMessage on catch
 
 		if (ircMessage && ircMessage->command)
 			ircMessage->command->execute(*this, client, ircMessage->arguments);
 	}
 }
-

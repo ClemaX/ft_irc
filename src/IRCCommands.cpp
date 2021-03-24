@@ -60,9 +60,10 @@ namespace irc
 
 	// TODO: Client << Message
 
-	Client const&	operator<<(Client const& client, IReply const& message)
+	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
 	{
 		client << message.serialize();
+
 		return client;
 	}
 
