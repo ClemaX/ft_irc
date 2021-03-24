@@ -165,6 +165,8 @@ Almost every msg sent server to server is distributed all over the network to al
 
 # 4. Message details
 
+## 4.1 Connection Registration
+
 The recommended order for a client to register is as follows:
 * 1\. Pass message
 * 2\. Nick message
@@ -219,6 +221,119 @@ Command: **SQUIT**
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; the server link tolson.oulu.fi has been terminated because of "Bad Link".  
 &nbsp; &nbsp; \- *:Trillian SQUIT cm22.eng.umd.edu :Server out of control*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Trillian to disconnect "cm22.eng.umd.edu" from the net because "Server out of control".  
+
+
+## 4.2 Channel operations
+
+Command: **JOIN**
+   Parameters: \<channel\>{,\<channel\>} [\<key\>{,\<key\>}]
+   Examples:
+ &nbsp; &nbsp; \- *JOIN #foobar
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foobar.
+ &nbsp; &nbsp; \- *JOIN &foo fubar
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel &foo using key "fubar".
+ &nbsp; &nbsp; \- *JOIN #foo,&bar fubar
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar" and &bar using no key.
+&nbsp; &nbsp; \- *JOIN #foo,#bar fubar,foobar
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar". and channel #bar using key "foobar".
+&nbsp; &nbsp; \- *JOIN #foo,#bar
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channels #foo and #bar.
+&nbsp; &nbsp; \- *:WiZ JOIN #Twilight_zone
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; JOIN message from WiZ
+
+Command: **PART**
+   Parameters: \<channel\>{,\<channel\>}
+   Examples:
+&nbsp; &nbsp; \- *PART #twilight_zone
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave channel "#twilight_zone"
+&nbsp; &nbsp; \- *PART #oz-ops,&group5
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave both channels "&group5" and "#oz-ops".
+
+   Channel mode Parameters: \<channel\> {[+|-]|o|p|s|i|t|n|b|v} [\<limit\>] [\<user\>] [\<ban mask\>]
+
+   User mode Parameters: \<nickname\> {[+|-]|i|w|s|o}
+
+   Examples - Use of Channel Modes:
+&nbsp; &nbsp; \- *MODE #Finnish +im
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Makes #Finnish channel moderated and 'invite-only'.
+&nbsp; &nbsp; \- *MODE #Finnish +o Kilroy
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Gives 'chanop' privileges to Kilroy on channel #Finnish.
+&nbsp; &nbsp; \- *MODE #Finnish +v Wiz
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Allow WiZ to speak on #Finnish.
+&nbsp; &nbsp; \- *MODE #Fins -s
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Removes 'secret' flag from channel
+                                #Fins.
+&nbsp; &nbsp; \- *MODE #42 +k oulu
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the channel key to "oulu".
+&nbsp; &nbsp; \- *MODE #eu-opers +l 10
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the limit for the number of users
+                                on channel to 10.
+&nbsp; &nbsp; \- *MODE &oulu +b
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list ban masks set for channel.
+&nbsp; &nbsp; \- *MODE &oulu +b *!*@*
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent all users from joining.
+&nbsp; &nbsp; \- *MODE &oulu +b *!*@*.edu
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent any user from a hostname
+                                matching *.edu from joining.
+
+    Examples - Use of user Modes:
+&nbsp; &nbsp; \- *:MODE WiZ -w
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; turns reception of WALLOPS messages off for WiZ.
+&nbsp; &nbsp; \- *:Angel MODE Angel +i
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to make themselves invisible.
+&nbsp; &nbsp; \- *MODE WiZ -o
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; WiZ 'deopping' (removing operator status). The plain reverse of this command ("MODE WiZ +o") must not be allowed from users since would bypass the OPER command.
+
+Command: **TOPIC**
+   Parameters: \<channel\> [\<topic\>]
+   Examples:
+&nbsp; &nbsp; \- *:Wiz TOPIC #test :New topic
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;User Wiz setting the topic.
+&nbsp; &nbsp; \- *TOPIC #test :another topic
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;set the topic on #test to "another topic".
+&nbsp; &nbsp; \- *TOPIC #test
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the topic for #test.
+
+Command: **NAMES**
+   Parameters: [\<channel\>{,\<channel\>}]
+   Examples:
+&nbsp; &nbsp; \- *NAMES #twilight_zone,#42
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list visible users on #twilight_zone and #42 if the channels are visible to you.
+&nbsp; &nbsp; \- *NAMES
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all visible channels and users
+
+
+Command: **LIST**
+   Parameters: [\<channel\>{,\<channel\>} [\<server\>]]
+   Examples:
+&nbsp; &nbsp; \- *LIST
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all channels.
+&nbsp; &nbsp; \- *LIST #twilight_zone,#42
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List channels #twilight_zone and #42
+
+
+Command: **INVITE**
+   Parameters: \<nickname\> \<channel\>
+   Examples:
+&nbsp; &nbsp; \- *:Angel INVITE Wiz #Dust
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; User Angel inviting WiZ to channel #Dust
+&nbsp; &nbsp; \- *INVITE Wiz #Twilight_Zone
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Command to invite WiZ to #Twilight_zone
+
+Command: **KICK**
+   Parameters: \<channel\> \<user\> [\<comment\>]
+   Examples:
+&nbsp; &nbsp; \- *KICK &Melbourne Matthew
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick Matthew from &Melbourne
+&nbsp; &nbsp; \- *KICK #Finnish John :Speaking English
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick John from #Finnish using "Speaking English" as the reason (comment).
+&nbsp; &nbsp; \- *:WiZ KICK #Finnish John
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; KICK message from WiZ to remove John from channel #Finnish
+
+*NOTE:*
+     It is possible to extend the KICK command parameters to the following:
+ &nbsp; &nbsp; &nbsp; &nbsp; \<channel\>{,\<channel\>} \<user\>{,\<user\>} [\<comment\>]
+
 
 ======
 
