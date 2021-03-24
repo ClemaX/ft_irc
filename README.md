@@ -71,6 +71,7 @@ Each IRC message can consist on (separeted with at least 1 space):
 	* If the prefix isn't in the database or the prefix or the sender does not match with the msg prefix the server must ignore the msg in a silent way).  
 * command: must be an IRC valid command or 3 digits representing ASCII text.  
 * parameters: max == 15.  
+
 Each message is finished by CR (0x0d) - LF (0x0a).  
 A message max lenght is 512 - CR-LF = 510.  
 More details in section 7.  
@@ -104,7 +105,7 @@ More details in section 7.
 \<string\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
 
 \<user\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<string with coma\> { \<string with coma\> }  
-\<leter\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> 'a' ... 'z' | 'A' ... 'Z'  
+\<letter\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> 'a' ... 'z' | 'A' ... 'Z'  
 \<digit\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> '0' ... '9'  
 \<especial\>   &nbsp; &nbsp; &nbsp; &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
 
@@ -113,7 +114,8 @@ The most common answer (for error and not error).
 Composed by:  
 * 1\) The sender prefix.  
 * 2\) 3 digit integer.  
-* 3\) The receiver.
+* 3\) The receiver.  
+
 A client can't raise a numeric answer (it's silently ignored).  
 Section 6 contains the numeric answers codes list.  
 
