@@ -10,8 +10,8 @@ This file contains the RFC documentation summary.
 [2. The IRC Specification](#2theircspecification)  
 [2. The IRC Specification](#-2-the-irc-specification)  
 [2. The IRC Specification](#2-the-irc-specification)  
-[2. The IRC Specification](#2.TheIRCSpecification)  
-[2. The IRC Specification](#-2.-The-IRC-Specification)  
+[2. The IRC Specification](#2TheIRCSpecification)  
+[2. The IRC Specification](#-2-The-IRC-Specification)  
 
 # 1.  INTRODUCTION
 
@@ -69,7 +69,7 @@ Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'
 
 ======
 
-# 2. The IRC Specification
+# 2 The IRC Specification
 
 ## 2.2 Chars
 Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).  
