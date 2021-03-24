@@ -64,7 +64,7 @@ Servers and clients send to each other messages and those messages can generate 
 If a user cast a valid command, the server behaviour should be as specified in the documentation.  
 The comunication between client & server is essentally asyncronous.  
 Each IRC message can consist on (separeted with at least 1 space):  
-* <optional> prefix:  
+* \<optional\> prefix:  
 	* start ':' (0x3b) and be followed by the prefix (no spaces between).  
 	* is used by severs to indicate the origin of the msg (no prefix == msg comes from same connection as the msg receptor).  
 	* Client shouldn't use prefixes for sending msgs, if they do the only valid prefix is the nickname associated with the client.  
@@ -87,13 +87,13 @@ More details in section 7.
 \<CR-LF\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> 0x0d - 0x0a  
 
 #### Notes:
-1) <space> is only 0x20 not whitespaces.
-2) <final param> and <middle param> are only used to accept spaces in a param
+1) \<space\> is only 0x20 not whitespaces.
+2) \<final param\> and \<middle param\> are only used to accept spaces in a param
 	(just a syntactical trick).
 3) CR and LF can't be part of the msg (logical).
 4) 0x0 can't be used inside a msg for C/C++ reasons.
-5) The last <param> must be an empty string.
-6) The prefix "['!' <user> ] ['@' <host> ]" must not be used in
+5) The last \<param\> must be an empty string.
+6) The prefix "['!' \<user\> ] ['@' \<host\> ]" must not be used in
 	server - server comunication, its only server - client oriented.
 
 \<target\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<a\> \<"," \<target\>  
