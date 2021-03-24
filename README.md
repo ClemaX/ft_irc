@@ -148,5 +148,6 @@ Almost every msg sent server to server is distributed all over the network to al
 
 
 
-
+# Sources:
+* [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
 
