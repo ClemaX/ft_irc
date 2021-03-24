@@ -268,9 +268,9 @@ Command: **PART**
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the limit for the number of users on channel to 10.  
 &nbsp; &nbsp; \- *MODE &oulu +b*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list ban masks set for channel.  
-&nbsp; &nbsp; \- *MODE &oulu +b *!*@**  
+&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@**  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent all users from joining.  
-&nbsp; &nbsp; \- *MODE &oulu +b *!*@*.edu*  
+&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@\*.edu*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent any user from a hostname matching *.edu from joining.  
 
     Examples - Use of User Modes:  
@@ -337,7 +337,7 @@ Command: **KICK**
 Command: **VERSION**  
    Parameters: [\<server\>]  
    Examples:  
-&nbsp; &nbsp; \- *:Wiz VERSION *.se*  
+&nbsp; &nbsp; \- *:Wiz VERSION \*.se*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Wiz to check the version of a server matching "*.se"  
 &nbsp; &nbsp; \- *VERSION tolsun.oulu.fi*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the version of server "tolsun.oulu.fi".  
@@ -355,7 +355,7 @@ Command: **LINKS**
    Examples:  
 &nbsp; &nbsp; \- *LINKS *.au*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all servers which have a name that matches *.au;  
-&nbsp; &nbsp; \- *:WiZ LINKS *.bu.edu *.edu*  
+&nbsp; &nbsp; \- *:WiZ LINKS \*.bu.edu \*.edu*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; LINKS message from WiZ to the first server matching *.edu for a list of servers matching *.bu.edu.  
 
 Command: **TIME**  
@@ -363,7 +363,7 @@ Command: **TIME**
    Examples:  
    &nbsp; &nbsp; \- *TIME tolsun.oulu.fi*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the time on the server "tolson.oulu.fi"  
-   &nbsp; &nbsp; \- *Angel TIME *.au*  
+   &nbsp; &nbsp; \- *Angel TIME \*.au*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; user angel checking the time on a  
  
 Command: **CONNECT**  
@@ -377,7 +377,7 @@ Command: **CONNECT**
 Command: **TRACE**  
    Parameters: [\<server\>]  
    Examples:  
-&nbsp; &nbsp; \- *TRACE *.oulu.fi*  
+&nbsp; &nbsp; \- *TRACE \*.oulu.fi*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE to a server matching *.oulu.fi  
 &nbsp; &nbsp; \- *:WiZ TRACE AngelDust*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE issued by WiZ to nick AngelDust  
@@ -388,7 +388,7 @@ Command: **ADMIN**
    Examples:  
 &nbsp; &nbsp; \- *ADMIN tolsun.oulu.fi*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an ADMIN reply from tolsun.oulu.fi  
-&nbsp; &nbsp; \- *:WiZ ADMIN *.edu*  
+&nbsp; &nbsp; \- *:WiZ ADMIN \*.edu*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ADMIN request from WiZ for first server found to match *.edu.  
 
 Command: **INFO**  
@@ -396,7 +396,7 @@ Command: **INFO**
    Examples:  
 &nbsp; &nbsp; \- *INFO csd.bu.edu*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an INFO reply from csd.bu.edu  
-&nbsp; &nbsp; \- *:Avalon INFO *.fi*  
+&nbsp; &nbsp; \- *:Avalon INFO \*.fi*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; INFO request from Avalon for first server found to match *.fi.  
 &nbsp; &nbsp; \- *INFO Angel*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request info from the server that Angel is connected to.  
