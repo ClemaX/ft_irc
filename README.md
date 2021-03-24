@@ -7,8 +7,8 @@ This file contains the RFC documentation summary.
 # SUMMARY
 
 [1. Introduction](#-1-introduction)  
-* [1.1 Servers](#-1.1-servers)  
-* [1.2 Clients](#-1.2-clients)  
+* [1.1 Servers](#-1\.1-servers)  
+* [1.2 Clients](#-1-2-clients)  
 * [1.3 Channels](#-1.3-channels)  
 
 [2. The IRC Specification](#2-the-irc-specification)  
