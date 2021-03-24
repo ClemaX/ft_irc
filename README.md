@@ -453,10 +453,10 @@ Command: **NOTICE**
    Parameters: \<nickname\> \<text\>  
 
 
-# 4.5 User based queries
+## 4.5 User based queries
 
 Command: **WHO**   
-   Parameters: [<name> [<o>]]  
+   Parameters: [\<name\> [\<o\>]]  
    Examples:  
 &nbsp; &nbsp; \- *WHO *.fi*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users who match against "*.fi".  
@@ -464,7 +464,7 @@ Command: **WHO**
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users with a match against "jto*" if they are an operator.  
 
 Command: **WHOIS**   
-   Parameters: [<server>] <nickmask>[,<nickmask>[,...]]  
+   Parameters: [\<server\>] \<nickmask\>[,\<nickmask\>[,...]]  
    Examples:  
 &nbsp; &nbsp; \- *WHOIS wiz*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return available user information about nick WiZ*  
@@ -472,7 +472,7 @@ Command: **WHOIS**
 
 
 Command: **WHOWAS**   
-   Parameters: <nickname> [<count> [<server>]]  
+   Parameters: \<nickname\> [\<count\> [\<server\>]]  
    Examples:  
 &nbsp; &nbsp; \- *WHOWAS Wiz*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return all information in the nick history about nick "WiZ";  
