@@ -23,13 +23,13 @@ SQUIT (4.1.7).
 CONNECT (4.3.5).  
 KILL (4.6.1).  
 
-## 1.3 Chanels
+## 1.3 Channels
 A channel is a named group containing > 1 clients which recives the channel msgs.  
 The channel is implicitly created when the first client joins it.  
 The channel is implicitly destroyed when the last client lefts it.  
 Until the channel exists any client can refer to this channel using its name.  
 
-Chanels names :  
+Channels names :  
 * Are strings.  
 * Begin with '&' or '#'.  
 * 200 bytes max sized.  
@@ -37,7 +37,7 @@ Chanels names :
 * Can't contain ctrl^G (ASCII 7).  
 * Can't contain a ','.  
 2 kinds of channels can exist:  
-* Chanels distributed all over the network (all the servers) -> '#'.  
+* Channels distributed all over the network (all the servers) -> '#'.  
 * Local server channel -> '&'.  
 
 MODE (4.2.3).  
@@ -46,7 +46,7 @@ The first client to join a channel becomes the operator of the channel.
 Else if the channel already exist: check 8.13.  
 If the connection between 2 servers breaks up, for a channel which clients are in both servers, when the connection is restored both servers will anounce to each other all the JOINs and MODEs of the channel.  
 
-### 1.3.1 Chanel operator
+### 1.3.1 Channel operator
 The channel operator owns the channel.  
 It can cast some commands:  
 * KICK: kick out of the channel a user.  
