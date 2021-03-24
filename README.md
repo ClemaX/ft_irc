@@ -1,7 +1,10 @@
 
 This file contains the RFC documentation summary.  
 
-# 1. RFC 1459:
+# **RFC 1459:**
+=====
+
+# 1.  INTRODUCTION
 
 ## 1.1 Servers
 User can connect to a server.  
@@ -55,6 +58,10 @@ It can cast some commands:
 * TOPIC: Change the channel topic (requires +t mode).  
 Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.  
 
+=====
+
+# 2. The IRC Specification
+
 ## 2.2 Chars
 Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).  
 Some bytes values are however used as messages delimitors:  
@@ -89,7 +96,7 @@ More details in section 7.
 \<middle param\>  &nbsp; -> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0  
 \<CR-LF\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> 0x0d - 0x0a  
 
-#### Notes:
+#### *Notes:*
 1) \<space\> is only 0x20 not whitespaces.  
 2) \<final param\> and \<middle param\> are only used to accept spaces in a param  
 	(just a syntactical trick).  
@@ -121,10 +128,16 @@ Composed by:
 A client can't raise a numeric answer (it's silently ignored).  
 Section 6 contains the numeric answers codes list.  
 
+=====
+
+# 3. IRC Concepts.
+
 ## 3.1 One to one comunication
 Usualy one to one comunication is only done by clients.  
 To ensure a secure way of comunication between clients it's necessary that all the servers are able to send a msg in a precise direction (to any client).  
 The shortest path wins.  
+
+## 3.2 One-to-many
 
 ### 3.2.1 One to list comunication
 Worts groupal method (send message N times for N members in the list).  
@@ -136,6 +149,8 @@ If there are more than 1 user in the same server and in the same channel, the	me
 ### 3.2.3 One to host/server mask comunication
 Same as previous.  
 
+## 3.3 One-to-all
+
 ### 3.3.1 Client to client comunication
 There's any kind of unique message that can be sent to all the clients.  
 
@@ -146,7 +161,76 @@ Must be sent to all the servers all over the network.
 ### 3.3.3 Server to server comunication
 Almost every msg sent server to server is distributed all over the network to all servers.  
 
+=====
 
+# 4. Message details
+
+The recommended order for a client to register is as follows:
+* 1. Pass message
+* 2. Nick message
+* 3. User message
+
+Command: PASS
+   Parameters: \<password\>
+   Example:
+			PASS secretpasswordhere
+
+Command: NICK
+   Parameters: \<nickname\> [ \<hopcount\> ]
+   Example:
+			NICK Wiz                        ; Introducing new nick "Wiz".
+			:WiZ NICK Kilroy                ; WiZ changed his nickname to Kilroy.
+
+Command: USER
+   Parameters: \<username\> \<hostname\> \<servername\> \<realname\>
+   Examples:
+			USER guest tolmoon tolsun :Ronnie Reagan
+                                   ; User registering themselves with a
+                                   username of "guest" and real name
+                                   "Ronnie Reagan".
+			:testnick USER guest tolmoon tolsun :Ronnie Reagan
+                                   ; message between servers with the
+                                   nickname for which the USER command
+                                   belongs to
+
+
+Command: SERVER
+   Parameters: \<servername\> \<hopcount\> \<info\>
+   Example:
+			SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server
+                                ; New server test.oulu.fi introducing
+                                itself and attempting to register.  The
+                                name in []'s is the hostname for the
+                                host running test.oulu.fi.
+			:tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server
+                                ; Server tolsun.oulu.fi is our uplink
+                                for csd.bu.edu which is 5 hops away.
+
+Command: OPER
+   Parameters: \<user\> \<password\>
+   Example:
+			OPER foo bar
+								; Attempt to register as an operator
+                                using a username of "foo" and "bar" as
+                                the password.
+
+Command: QUIT
+   Parameters: [\<Quit message\>]
+   Examples:
+			QUIT :Gone to have lunch        ; Preferred message format.
+
+Command: SQUIT
+   Parameters: \<server\> \<comment\>
+   Example:
+			SQUIT tolsun.oulu.fi :Bad Link ?
+									; the server link tolson.oulu.fi has
+                                	been terminated because of "Bad Link".
+			:Trillian SQUIT cm22.eng.umd.edu :Server out of control
+                                    ; message from Trillian to disconnect
+                                	"cm22.eng.umd.edu" from the net
+                                    because "Server out of control".
+
+=====
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
