@@ -7,7 +7,11 @@ This file contains the RFC documentation summary.
 # SUMMARY
 
 [1.  Introduction](#-1.--introduction)  
+[2. The IRC Specification](#2theircspecification)  
+[2. The IRC Specification](#-2-the-irc-specification)  
 [2. The IRC Specification](#2-the-irc-specification)  
+[2. The IRC Specification](#2.TheIRCSpecification)  
+[2. The IRC Specification](#-2.-The-IRC-Specification)  
 
 # 1.  INTRODUCTION
 
