@@ -29,15 +29,15 @@ The channel is implicitly created when the first client joins it.
 The channel is implicitly destroyed when the last client lefts it.  
 Until the channel exists any client can refer to this channel using its name.  
 Chanels names :  
-	* Are strings.  
-	* Begin with '&' or '#'.  
-	* 200 bytes max sized.  
-	* Can't contain whitespaces.  
-	* Can't contain ctrl^G (ASCII 7).  
-	* Can't contain a ','.  
+* Are strings.  
+* Begin with '&' or '#'.  
+* 200 bytes max sized.  
+* Can't contain whitespaces.  
+* Can't contain ctrl^G (ASCII 7).  
+* Can't contain a ','.  
 2 kinds of channels can exist:  
-	* Chanels distributed all over the network (all the servers) -> '#'.  
-	* Local server channel -> '&'.  
+* Chanels distributed all over the network (all the servers) -> '#'.  
+* Local server channel -> '&'.  
 MODE (4.2.3).  
 To create a new channel or join an existing one, a user must use "JOIN" command.  
 The first client to join a channel becomes the operator of the channel.  
@@ -47,30 +47,30 @@ If the connection between 2 servers breaks up, for a channel which clients are i
 ### 1.3.1 Chanel operator
 The channel operator owns the channel.  
 It can cast some commands:  
-	* KICK: kick out of the channel a user.  
-	* MODE: change channel modes.  
-	* INVITE: invite a user to the channel.  
-	* TOPIC: Change the channel topic (requires +t mode).  
+* KICK: kick out of the channel a user.  
+* MODE: change channel modes.  
+* INVITE: invite a user to the channel.  
+* TOPIC: Change the channel topic (requires +t mode).  
 Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.  
 
 ## 2.2 Chars
 Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).
 Some bytes values are however used as messages delimitors:
-	* '{', '}', '|' are lowercases.
-	* '[', ']', '\' are uppercases.
+* '{', '}', '|' are lowercases.
+* '[', ']', '\' are uppercases.
 
 ## 2.3 Messages
 Servers and clients send to each other messages and those messages can generate or not an answer.  
 If a user cast a valid command, the server behaviour should be as specified in the documentation.  
 The comunication between client & server is essentally asyncronous.  
 Each IRC message can consist on (separeted with at least 1 space):  
-	* <optional> prefix:  
-		* start ':' (0x3b) and be followed by the prefix (no spaces between).  
-		* is used by severs to indicate the origin of the msg (no prefix == msg comes from same connection as the msg receptor).  
-		* Client shouldn't use prefixes for sending msgs, if they do the only valid prefix is the nickname associated with the client.  
-		* If the prefix isn't in the database or the prefix or the sender does not match with the msg prefix the server must ignore the msg in a silent way).  
-	* command: must be an IRC valid command or 3 digits representing ASCII text.  
-	* parameters: max == 15.  
+* <optional> prefix:  
+	* start ':' (0x3b) and be followed by the prefix (no spaces between).  
+	* is used by severs to indicate the origin of the msg (no prefix == msg comes from same connection as the msg receptor).  
+	* Client shouldn't use prefixes for sending msgs, if they do the only valid prefix is the nickname associated with the client.  
+	* If the prefix isn't in the database or the prefix or the sender does not match with the msg prefix the server must ignore the msg in a silent way).  
+* command: must be an IRC valid command or 3 digits representing ASCII text.  
+* parameters: max == 15.  
 Each message is finished by CR (0x0d) - LF (0x0a).  
 A message max lenght is 512 - CR-LF = 510.  
 More details in section 7.  
