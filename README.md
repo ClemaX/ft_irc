@@ -383,7 +383,7 @@ Command: **TRACE**
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE issued by WiZ to nick AngelDust  
 
 
-Command: **ADMIN**
+Command: **ADMIN**  
    Parameters: [\<server\>]  
    Examples:  
 &nbsp; &nbsp; \- *ADMIN tolsun.oulu.fi*  
