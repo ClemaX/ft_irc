@@ -88,14 +88,14 @@ More details in section 7.
 <middle param>	-> any kind of bytes seqence (not empty) exept <CR-LF> or 0x0
 <CR-LF>			-> 0x0d - 0x0a
 
-\<message\>		-\> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\> \n
-\<prefix\>		-\> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ] \n
-\<command\>		-\> \<char\> { \<char\> } | \<digit\> \<digit\> \<digit\> \n
-\<space\>		-\> ' ' { ' ' } (0x20) \n
-\<param\>			-\> \<space\> [':' \<final param\> | \<middle param\> \<final param\> ] \n
-\<final param\>	-\> any kind of bytes sequence (empty too) exept \<CR-LF\> or 0x0 \n
-\<middle param\>	-\> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0 
-\<CR-LF\>			-> 0x0d - 0x0a	\n
+\<message\>			-> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\>  
+\<prefix\>			-> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ]  
+\<command\>			-> \<char\> { \<char\> } | \<digit\> \<digit\> \<digit\>  
+\<space\>			-> ' ' { ' ' } (0x20)  
+\<param\>			-> \<space\> [':' \<final param\> | \<middle param\> \<final param\> ]  
+\<final param\>		-> any kind of bytes sequence (empty too) exept \<CR-LF\> or 0x0  
+\<middle param\>	-> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0  
+\<CR-LF\>			-> 0x0d - 0x0a  
 
 #### Notes:
 1) <space> is only 0x20 not whitespaces.
