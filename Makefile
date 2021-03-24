@@ -14,7 +14,12 @@ BINDIR = .
 
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
-LIBCRYPTO = $(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/
+
+ifneq ($(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/,)
+	LIBCRYPTO = $(HOME)/.brew/Cellar/openssl@1.1/1.1.1j
+else
+	LIBCRYPTO = $(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/
+endif
 
 LIBDIRS = $(dir $(LIBS))
 LIBINCS = $(addsuffix $(INCDIR), $(LIBDIRS))
