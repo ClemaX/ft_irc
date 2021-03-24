@@ -6,8 +6,10 @@ This file contains the RFC documentation summary.
 
 # SUMMARY
 
-[1.  Introduction](#-1.--introduction)  
+[1. Introduction](#-1-introduction)  
 [2. The IRC Specification](#2-the-irc-specification)  
+[3. IRC Concepts](#3-the-irc-concepts)  
+[4. Message details](#4-message-details)  
 
 # 1. INTRODUCTION
 
@@ -135,7 +137,7 @@ Section 6 contains the numeric answers codes list.
 
 ======
 
-# 3. IRC Concepts.
+# 3. IRC Concepts
 
 ## 3.1 One to one comunication
 Usualy one to one comunication is only done by clients.  
