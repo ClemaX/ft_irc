@@ -12,6 +12,10 @@ This file contains the RFC documentation summary.
 * [1.3 Channels](#-1.3-channels)  
 
 [2. The IRC Specification](#2-the-irc-specification)  
+* [2.2 Chars](#-22-chars)  
+* [2.3 Messages](#-23-messages)  
+* [2.4 Numeric answers](#-24-numeric-answers)  
+
 [3. IRC Concepts](#3-irc-concepts)  
 [4. Message details](#4-message-details)  
 
