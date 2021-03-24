@@ -503,8 +503,7 @@ Command: **KILL**
 	For users it is left up to them to provide an adequate reason to satisfy others who see it.  
 	To prevent/discourage fake KILLs from being generated to hide the identify of the KILLer, the comment also shows a 'kill-path' which is updated by each server it passes through, each prepending its name to the path.  
   
-  
-	Examples:  
+Examples:  
 &nbsp; &nbsp; \- *KILL David (csd.bu.edu \<- tolsun.oulu.fi)*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Nickname collision between csd.bu.edu and tolson.oulu.fi  
 
