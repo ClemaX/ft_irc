@@ -458,9 +458,9 @@ Command: **NOTICE**
 Command: **WHO**   
    Parameters: [\<name\> [\<o\>]]  
    Examples:  
-&nbsp; &nbsp; \- *WHO *.fi*  
+&nbsp; &nbsp; \- *WHO \*.fi*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users who match against "*.fi".  
-&nbsp; &nbsp; \- *WHO jto* o*  
+&nbsp; &nbsp; \- *WHO jto\* o*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users with a match against "jto*" if they are an operator.  
 
 Command: **WHOIS**   
@@ -478,7 +478,7 @@ Command: **WHOWAS**
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return all information in the nick history about nick "WiZ";  
 &nbsp; &nbsp; \- *WHOWAS Mermaid 9*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return at most, the 9 most recent entries in the nick history for "Mermaid";    
-&nbsp; &nbsp; \- *WHOWAS Trillian 1 *.edu*  
+&nbsp; &nbsp; \- *WHOWAS Trillian 1 \*.edu*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return the most recent history for "Trillian" from the first server found to match "*.edu".  
 
 ======
