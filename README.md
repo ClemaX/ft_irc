@@ -8,7 +8,7 @@ This file contains the RFC documentation summary.
 
 [1. Introduction](#-1-introduction)  
 [2. The IRC Specification](#2-the-irc-specification)  
-[3. IRC Concepts](#3-the-irc-concepts)  
+[3. IRC Concepts](#3-irc-concepts)  
 [4. Message details](#4-message-details)  
 
 # 1. INTRODUCTION
