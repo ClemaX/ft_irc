@@ -171,9 +171,9 @@ The recommended order for a client to register is as follows:
 * 3\. User message
 
 Command: **PASS**  
-   Parameters: \<password\>  
-   Example:  
-			- PASS secretpasswordhere  
+	Parameters: \<password\>  
+	Example:  
+   - PASS secretpasswordhere  
 
 Command: **NICK**  
    Parameters: \<nickname\> [ \<hopcount\> ]  
