@@ -6,7 +6,7 @@ This file contains the RFC documentation summary.
 
 # SUMMARY
 
-[1. Introduction](#-1-introduction)  
+[1. Introduction](#1-introduction)  
 * [1.1 Servers](#11-servers)  
 * [1.2 Clients](#12-clients)  
 * [1.3 Channels](#13-channels)  
@@ -17,7 +17,15 @@ This file contains the RFC documentation summary.
 * [2.4 Numeric answers](#24-numeric-answers)  
 
 [3. IRC Concepts](#3-irc-concepts)  
+* [3.1 One to one comunication](#31-one-to-one-comunication)  
+* [3.2 One-to-many](#32-one-to-many)  
+* [3.3 One-to-all](#33-one-to-all)  
+
 [4. Message details](#4-message-details)  
+* [4.1 Connection Registration](#41-connection-registration)  
+* [4.2 Channel operations](#42-channel-operations)  
+* [4.3 Server queries and commands](#43-server-queries-and-commands)  
+* [4.4 Sending messages](#44-sending-messages)  
 
 # 1. INTRODUCTION
 
