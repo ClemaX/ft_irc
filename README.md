@@ -1,7 +1,7 @@
 
 This file contains the RFC documentation summary.
 
-# 1) RFC 1459:
+# 1. RFC 1459:
 
 ## 1.1 Servers
 User can connect to a server.
@@ -59,7 +59,7 @@ Some bytes values are however used as messages delimitors:
 	- '{', '}', '|' are lowercases.
 	- '[', ']', '\' are uppercases.
 
-## 2.3) Messages
+## 2.3 Messages
 Servers and clients send to each other messages and those messages can generate or not an answer.
 If a user cast a valid command, the server behaviour should be as specified in the documentation.
 The comunication between client & server is essentally asyncronous.
@@ -78,7 +78,7 @@ Each message is finished by CR (0x0d) - LF (0x0a).
 A message max lenght is 512 - CR-LF = 510.
 More details in section 7.
 
-### 2.3.1) Messages format in pseudocode
+### 2.3.1 Messages format in pseudocode
 <message>		-> [':' <prefix> <space> ] <command> <parram> <CR-LF>
 <prefix>		-> <server name> | <nick> ['!' <user> ] ['@' <host> ]
 <command>		-> <char> { <char> } | <digit> <digit> <digit>
@@ -87,6 +87,15 @@ More details in section 7.
 <final param>	-> any kind of bytes sequence (empty too) exept <CR-LF> or 0x0
 <middle param>	-> any kind of bytes seqence (not empty) exept <CR-LF> or 0x0
 <CR-LF>			-> 0x0d - 0x0a
+
+\<message\>		-\> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\>
+\<prefix\>		-\> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ]
+\<command\>		-\> \<char\> { \<char\> } | \<digit\> \<digit\> \<digit\>
+\<space\>		-\> ' ' { ' ' } (0x20)
+\<param\>			-\> \<space\> [':' \<final param\> | \<middle param\> \<final param\> ]
+\<final param\>	-\> any kind of bytes sequence (empty too) exept \<CR-LF\> or 0x0
+\<middle param\>	-\> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0
+\<CR-LF\>	
 
 #### Notes:
 1) <space> is only 0x20 not whitespaces.
@@ -111,7 +120,7 @@ More details in section 7.
 <digit>			-> '0' ... '9'
 <especial>		-> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'
 
-## 2.4) Numeric answers
+## 2.4 Numeric answers
 The most common answer (for error and not error).
 Composed by:
 	- 1) The sender prefix.
@@ -120,29 +129,29 @@ Composed by:
 A client can't raise a numeric answer (it's silently ignored).
 Section 6 contains the numeric answers codes list.
 
-## 3.1) One to one comunication
+## 3.1 One to one comunication
 Usualy one to one comunication is only done by clients.
 To ensure a secure way of comunication between clients it's necessary that all the servers are able to send a msg in a precise direction (to any client).
 The shortest path wins.
 
-### 3.2.1) One to list comunication
+### 3.2.1 One to list comunication
 Worts groupal method (send message N times for N members in the list).
 
-### 3.2.2) One to a group (channel) comunication
+### 3.2.2 One to a group (channel) comunication
 The conversation is only sent to servers used by the users of the channel.
 If there are more than 1 user in the same server and in the same channel, the	message is sent once to the server.
 
-### 3.2.3) One to host/server mask comunication
+### 3.2.3 One to host/server mask comunication
 Same as previous.
 
-### 3.3.1) Client to client comunication
+### 3.3.1 Client to client comunication
 There's any kind of unique message that can be sent to all the clients.
 
-### 3.3.2) Client to server comunication
+### 3.3.2 Client to server comunication
 Commands change the state of a channel, a user ...
 Must be sent to all the servers all over the network.
 
-### 3.3.3) Server to server comunication
+### 3.3.3 Server to server comunication
 Almost every msg sent server to server is distributed all over the network to all servers.
 
 
