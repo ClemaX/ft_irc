@@ -254,7 +254,6 @@ Command: **PART**
    User mode Parameters: \<nickname\> {[+|-]|i|w|s|o}  
 
    Examples - Use of Channel Modes:  
-
 &nbsp; &nbsp; \- *MODE #Finnish +im*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Makes #Finnish channel moderated and 'invite-only'.  
 &nbsp; &nbsp; \- *MODE #Finnish +o Kilroy*  
@@ -275,7 +274,6 @@ Command: **PART**
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent any user from a hostname matching *.edu from joining.  
 
     Examples - Use of User Modes:  
-
 &nbsp; &nbsp; \- *:MODE WiZ -w*  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; turns reception of WALLOPS messages off for WiZ.  
 &nbsp; &nbsp; \- *:Angel MODE Angel +i*  
