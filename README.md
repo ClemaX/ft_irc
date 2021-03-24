@@ -13,9 +13,9 @@ Servers structure is an extended binary tree ( https://www.geeksforgeeks.org/ext
 A client is anything that is connected to a server (exept a server).  
 Each client is distinguished to other clients using an unique nickname (9 bytes max lenght).  
 Also all the servers need to have the following information about all the clients:  
-	- the real name of the host that the client is connected.  
-	- the username of the client of that host.  
-	- the server that the client is connected.  
+    - the real name of the host that the client is connected.  
+    - the username of the client of that host.  
+    - the server that the client is connected.  
 
 ### 1.2.1 Operators
 Operators are admins.
