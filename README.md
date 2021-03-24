@@ -2,7 +2,7 @@
 This file contains the RFC documentation summary.  
 
 # **RFC 1459:**
-=====
+======
 
 # 1.  INTRODUCTION
 
@@ -58,7 +58,7 @@ It can cast some commands:
 * TOPIC: Change the channel topic (requires +t mode).  
 Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.  
 
-=====
+======
 
 # 2. The IRC Specification
 
@@ -128,7 +128,7 @@ Composed by:
 A client can't raise a numeric answer (it's silently ignored).  
 Section 6 contains the numeric answers codes list.  
 
-=====
+======
 
 # 3. IRC Concepts.
 
@@ -161,76 +161,76 @@ Must be sent to all the servers all over the network.
 ### 3.3.3 Server to server comunication
 Almost every msg sent server to server is distributed all over the network to all servers.  
 
-=====
+======
 
 # 4. Message details
 
 The recommended order for a client to register is as follows:
-* 1. Pass message
-* 2. Nick message
-* 3. User message
+* 1\. Pass message
+* 2\. Nick message
+* 3\. User message
 
-Command: PASS
-   Parameters: \<password\>
-   Example:
-			PASS secretpasswordhere
+Command: PASS  
+   Parameters: \<password\>  
+   Example:  
+			PASS secretpasswordhere  
 
-Command: NICK
-   Parameters: \<nickname\> [ \<hopcount\> ]
-   Example:
-			NICK Wiz                        ; Introducing new nick "Wiz".
-			:WiZ NICK Kilroy                ; WiZ changed his nickname to Kilroy.
+Command: NICK  
+   Parameters: \<nickname\> [ \<hopcount\> ]  
+   Example:  
+			NICK Wiz                        ; Introducing new nick "Wiz".  
+			:WiZ NICK Kilroy                ; WiZ changed his nickname to Kilroy.  
 
-Command: USER
-   Parameters: \<username\> \<hostname\> \<servername\> \<realname\>
-   Examples:
-			USER guest tolmoon tolsun :Ronnie Reagan
+Command: USER  
+   Parameters: \<username\> \<hostname\> \<servername\> \<realname\>  
+   Examples:  
+			USER guest tolmoon tolsun :Ronnie Reagan  
                                    ; User registering themselves with a
                                    username of "guest" and real name
-                                   "Ronnie Reagan".
-			:testnick USER guest tolmoon tolsun :Ronnie Reagan
+                                   "Ronnie Reagan".  
+			:testnick USER guest tolmoon tolsun :Ronnie Reagan  
                                    ; message between servers with the
                                    nickname for which the USER command
-                                   belongs to
+                                   belongs to  
 
 
-Command: SERVER
-   Parameters: \<servername\> \<hopcount\> \<info\>
-   Example:
-			SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server
+Command: SERVER  
+   Parameters: \<servername\> \<hopcount\> \<info\>  
+   Example:  
+			SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server  
                                 ; New server test.oulu.fi introducing
                                 itself and attempting to register.  The
                                 name in []'s is the hostname for the
-                                host running test.oulu.fi.
-			:tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server
+                                host running test.oulu.fi.  
+			:tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server  
                                 ; Server tolsun.oulu.fi is our uplink
-                                for csd.bu.edu which is 5 hops away.
+                                for csd.bu.edu which is 5 hops away.  
 
-Command: OPER
-   Parameters: \<user\> \<password\>
-   Example:
-			OPER foo bar
+Command: OPER  
+   Parameters: \<user\> \<password\>  
+   Example:  
+			OPER foo bar  
 								; Attempt to register as an operator
                                 using a username of "foo" and "bar" as
-                                the password.
+                                the password.  
 
-Command: QUIT
-   Parameters: [\<Quit message\>]
-   Examples:
-			QUIT :Gone to have lunch        ; Preferred message format.
+Command: QUIT  
+   Parameters: [\<Quit message\>]  
+   Examples:  
+			QUIT :Gone to have lunch        ; Preferred message format.  
 
-Command: SQUIT
-   Parameters: \<server\> \<comment\>
-   Example:
-			SQUIT tolsun.oulu.fi :Bad Link ?
+Command: SQUIT  
+   Parameters: \<server\> \<comment\>  
+   Example:  
+			SQUIT tolsun.oulu.fi :Bad Link ?  
 									; the server link tolson.oulu.fi has
-                                	been terminated because of "Bad Link".
-			:Trillian SQUIT cm22.eng.umd.edu :Server out of control
+                                	been terminated because of "Bad Link".  
+			:Trillian SQUIT cm22.eng.umd.edu :Server out of control  
                                     ; message from Trillian to disconnect
                                 	"cm22.eng.umd.edu" from the net
-                                    because "Server out of control".
+                                    because "Server out of control".  
 
-=====
+======
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
