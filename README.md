@@ -79,14 +79,6 @@ A message max lenght is 512 - CR-LF = 510.
 More details in section 7.
 
 ### 2.3.1 Messages format in pseudocode
-<message>		-> [':' <prefix> <space> ] <command> <parram> <CR-LF>
-<prefix>		-> <server name> | <nick> ['!' <user> ] ['@' <host> ]
-<command>		-> <char> { <char> } | <digit> <digit> <digit>
-<space>		-> ' ' { ' ' } (0x20)
-<param>			-> <space> [':' <final param> | <middle param> <final param> ]
-<final param>	-> any kind of bytes sequence (empty too) exept <CR-LF> or 0x0
-<middle param>	-> any kind of bytes seqence (not empty) exept <CR-LF> or 0x0
-<CR-LF>			-> 0x0d - 0x0a
 
 \<message\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\>  
 \<prefix\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ]  
@@ -107,18 +99,18 @@ More details in section 7.
 6) The prefix "['!' <user> ] ['@' <host> ]" must not be used in
 	server - server comunication, its only server - client oriented.
 
-<target>		-> <a> <"," <target>
-<a>				-> <channel> | <user> '@' <server name> | <nick> | <mask>
-<channel>		-> ('#' | '&') <string>
-<server name>	-> <host>
-<host>			-> see RFC 952 [DNS:4]
-<mask>			-> ('#' |'&') <string>
-<string>		-> any 1bytes value exept: space, bell, cr, lf, coma.
+/<target/>		-> /<a/> /<"," /<target/>  
+/<a/>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> /<channel/> | /<user/> '@' /<server name/> | /<nick/> | /<mask/>  
+/<channel/>   &nbsp; &nbsp;  -> ('#' | '&') /<string/>  
+/<server name/>  -> /<host/>  
+/<host/>   &nbsp; &nbsp; &nbsp;-> see RFC 952 [DNS:4]  
+/<mask/>   &nbsp; &nbsp; &nbsp;-> ('#' |'&') /<string/>  
+/<string/>   &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
 
-<user> 			-> <string with coma> { <string with coma> }
-<leter>			-> 'a' ... 'z' | 'A' ... 'Z'
-<digit>			-> '0' ... '9'
-<especial>		-> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'
+/<user/>   &nbsp; &nbsp; &nbsp;  -> /<string with coma/> { /<string with coma/> }  
+/<leter/>   &nbsp; &nbsp; &nbsp;-> 'a' ... 'z' | 'A' ... 'Z'  
+/<digit/>   &nbsp; &nbsp; &nbsp;-> '0' ... '9'  
+/<especial/>   &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
 
 ## 2.4 Numeric answers
 The most common answer (for error and not error).
