@@ -173,7 +173,7 @@ The recommended order for a client to register is as follows:
 Command: **PASS**  
 	Parameters: \<password\>  
 	Example:  
-   - PASS secretpasswordhere  
+&nbsp; &nbsp; \- PASS secretpasswordhere  
 
 Command: **NICK**  
    Parameters: \<nickname\> [ \<hopcount\> ]  
