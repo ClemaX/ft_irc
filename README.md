@@ -402,7 +402,34 @@ Command: **INFO**
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request info from the server that Angel is connected to.  
 
 
+## 4.4 Sending messages
 
+   The main purpose of the IRC protocol is to provide a base for clients
+   to communicate with each other.  PRIVMSG and NOTICE are the only
+   messages available which actually perform delivery of a text message
+   from one client to another - the rest just make it possible and try
+   to ensure it happens in a reliable and structured manner.
+
+### 4.4.1 Private messages
+
+Command: **PRIVMSG**  
+   Parameters: \<receiver\>{,\<receiver\>} \<text to be sent\>  
+   Examples:  
+&nbsp; &nbsp; \- *:Angel PRIVMSG Wiz :Hello are you receiving this message ?*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to Wiz.  
+&nbsp; &nbsp; \- *PRIVMSG Angel :yes I'm receiving it !receiving it !'u\>(768u+1n) .br*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;Message to Angel.  
+&nbsp; &nbsp; \- *PRIVMSG jto@tolsun.oulu.fi :Hello !*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to a client on server tolsun.oulu.fi with username of "jto".  
+&nbsp; &nbsp; \- *PRIVMSG $*.fi :Server tolsun.oulu.fi rebooting.*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to everyone on a server which has a name matching *.fi.  
+&nbsp; &nbsp; \- *PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to all users who come from a host which has a name matching *.edu.  
+
+### 4.4.2 Notice
+
+Command: **NOTICE**  
+   Parameters: \<nickname\> \<text\>  
 
 
 ======
