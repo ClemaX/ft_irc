@@ -99,18 +99,18 @@ More details in section 7.
 6) The prefix "['!' <user> ] ['@' <host> ]" must not be used in
 	server - server comunication, its only server - client oriented.
 
-/<target/>		-> /<a/> /<"," /<target/>  
-/<a/>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> /<channel/> | /<user/> '@' /<server name/> | /<nick/> | /<mask/>  
-/<channel/>   &nbsp; &nbsp;  -> ('#' | '&') /<string/>  
-/<server name/>  -> /<host/>  
-/<host/>   &nbsp; &nbsp; &nbsp;-> see RFC 952 [DNS:4]  
-/<mask/>   &nbsp; &nbsp; &nbsp;-> ('#' |'&') /<string/>  
-/<string/>   &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
+\<target\>		-> \<a\> \<"," \<target\>  
+\<a\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<channel\> | \<user\> '@' \<server name\> | \<nick\> | \<mask\>  
+\<channel\>   &nbsp; &nbsp;  -> ('#' | '&') \<string\>  
+\<server name\>  -> \<host\>  
+\<host\>   &nbsp; &nbsp; &nbsp;-> see RFC 952 [DNS:4]  
+\<mask\>   &nbsp; &nbsp; &nbsp;-> ('#' |'&') \<string\>  
+\<string\>   &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
 
-/<user/>   &nbsp; &nbsp; &nbsp;  -> /<string with coma/> { /<string with coma/> }  
-/<leter/>   &nbsp; &nbsp; &nbsp;-> 'a' ... 'z' | 'A' ... 'Z'  
-/<digit/>   &nbsp; &nbsp; &nbsp;-> '0' ... '9'  
-/<especial/>   &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
+\<user\>   &nbsp; &nbsp; &nbsp;  -> \<string with coma\> { \<string with coma\> }  
+\<leter\>   &nbsp; &nbsp; &nbsp;-> 'a' ... 'z' | 'A' ... 'Z'  
+\<digit\>   &nbsp; &nbsp; &nbsp;-> '0' ... '9'  
+\<especial\>   &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
 
 ## 2.4 Numeric answers
 The most common answer (for error and not error).
