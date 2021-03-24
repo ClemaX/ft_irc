@@ -26,6 +26,8 @@ This file contains the RFC documentation summary.
 * [4.2 Channel operations](#42-channel-operations)  
 * [4.3 Server queries and commands](#43-server-queries-and-commands)  
 * [4.4 Sending messages](#44-sending-messages)  
+* [4.5 User based queries](#45-user-based-queries)  
+* [4.6 Miscellaneous messages](#46-miscellaneous-messages)  
 
 # 1. INTRODUCTION
 
