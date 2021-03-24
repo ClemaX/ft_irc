@@ -453,7 +453,38 @@ Command: **NOTICE**
    Parameters: \<nickname\> \<text\>  
 
 
+# 4.5 User based queries
+
+Command: **WHO**   
+   Parameters: [<name> [<o>]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHO *.fi*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users who match against "*.fi".  
+&nbsp; &nbsp; \- *WHO jto* o*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users with a match against "jto*" if they are an operator.  
+
+Command: **WHOIS**   
+   Parameters: [<server>] <nickmask>[,<nickmask>[,...]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHOIS wiz*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return available user information about nick WiZ*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ask server eff.org for user information about trillian  
+
+
+Command: **WHOWAS**   
+   Parameters: <nickname> [<count> [<server>]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHOWAS Wiz*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return all information in the nick history about nick "WiZ";  
+&nbsp; &nbsp; \- *WHOWAS Mermaid 9*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return at most, the 9 most recent entries in the nick history for "Mermaid";    
+&nbsp; &nbsp; \- *WHOWAS Trillian 1 *.edu*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return the most recent history for "Trillian" from the first server found to match "*.edu".  
+
 ======
+
+
+
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
