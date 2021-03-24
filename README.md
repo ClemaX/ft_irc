@@ -111,9 +111,9 @@ More details in section 7.
 ## 2.4 Numeric answers
 The most common answer (for error and not error).  
 Composed by:  
-* 1) The sender prefix.  
-* 2) 3 digit integer.  
-* 3) The receiver.  
+* 1\) The sender prefix.  
+* 2\) 3 digit integer.  
+* 3\) The receiver.  
 A client can't raise a numeric answer (it's silently ignored).  
 Section 6 contains the numeric answers codes list.  
 
