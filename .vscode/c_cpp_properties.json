@@ -3,7 +3,8 @@
         {
             "name": "42",
             "includePath": [
-                "${workspaceRoot}/include"
+                "${workspaceRoot}/include",
+                "~/brew/brew/Cellar/openssl@1.1/1.1.1d/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

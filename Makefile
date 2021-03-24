@@ -28,19 +28,21 @@ LIBARS = $(notdir $(LIBS))
 # Sources
 INCS = $(LIBINCS) $(INCDIR) $(LIBCRYPTO)/include
 SRCS = $(addprefix $(SRCDIR)/,\
-	main.cpp\
-	itoa.cpp\
 	atoi.cpp\
 	crypto.cpp\
-	parseField.cpp\
-	SocketConnection.cpp\
-	SocketServer.cpp\
+	IRCAMessage.cpp\
 	IRCChannel.cpp\
 	IRCClient.cpp\
 	IRCCommand.cpp\
 	IRCCommands.cpp\
 	IRCMessage.cpp\
+	IRCReplies.cpp\
 	IRCServer.cpp\
+	itoa.cpp\
+	main.cpp\
+	parseField.cpp\
+	SocketConnection.cpp\
+	SocketServer.cpp\
 )
 
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)

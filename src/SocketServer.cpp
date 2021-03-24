@@ -24,7 +24,6 @@ void	SocketServer::removeConnection(int connectionFd)
 			else
 				highestFd = connectionFds.rbegin()->first;
 		}
-		close(connectionFd);
 	}
 }
 
@@ -32,10 +31,7 @@ void	SocketServer::clearConnections()
 {
 	for (connectionMap::const_iterator it = connectionFds.begin();
 		it != connectionFds.end(); ++it)
-		{
-			close(it->first);
 			delete(it->second);
-		}
 	connectionFds.clear();
 }
 
@@ -206,7 +202,7 @@ void	SocketServer::start()
 			if (incomingFd < 0)
 			{
 				int	err = errno;
-				if (err != EWOULDBLOCK)
+				if (err != EWOULDBLOCK) // TODO: Maybe check EAGAIN (man errno)
 				{
 					stop();
 					throw SocketAcceptException(err);

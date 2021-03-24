@@ -4,14 +4,13 @@
 
 #include <IRCClient.hpp>
 
-
 namespace irc
 {
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 	struct	ChannelClient
 	{
 		Client*	client;
-		bool		isChannelOperator;
+		bool	isChannelOperator;
 
 		ChannelClient(Client* client);
 		ChannelClient(Client* client, bool isOp);

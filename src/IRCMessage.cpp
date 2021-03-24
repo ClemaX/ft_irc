@@ -2,30 +2,6 @@
 
 namespace irc
 {
-	Message::Prefix::Prefix()
-	{ }
-
-	Message::Prefix::Prefix(std::string::const_iterator& it,
-		std::string::const_iterator last) throw(InvalidMessageException)
-	{
-		std::string::const_iterator	needle;
-
-		needle = std::find(it, last, IRC_MESSAGE_PREFIX_USER_PREFIX);
-		if (needle != it)
-		{
-			it = parseField(user, ++needle, last);
-			if (user.length() == 0)
-				throw InvalidMessageException();
-		}
-		needle = std::find(it, last, IRC_MESSAGE_PREFIX_HOST_PREFIX);
-		if (needle != it)
-		{
-			it = parseField(host, ++needle, last);
-			if (host.length() == 0)
-				throw InvalidMessageException();
-		}
-	}
-
 	Message::Message(std::string& buffer) throw(MessageException)
 	{
 		static const unsigned		suffixLength = sizeof(IRC_MESSAGE_SUFFIX) - 1;

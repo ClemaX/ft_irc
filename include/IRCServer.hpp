@@ -9,8 +9,8 @@
 
 #include <SocketServer.hpp>
 #include <IRCChannel.hpp>
-#include <IRCMessage.hpp>
 #include <IRCReplies.hpp>
+#include <IRCClient.hpp>
 
 // TODO: Grammar rules
 // TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)
@@ -32,12 +32,31 @@ namespace irc
 		channelMap	channels;
 
 		virtual connection*	onConnection(int connectionFd,
-			connectionAddress const& address);
+			connection::address const& address);
 
 		virtual void		onMessage(connection* connection,
 			std::string const& message);
 
 	public:
+
+		struct	Command
+		{
+			typedef std::vector<std::string>	argumentList;
+			std::string const	name;
+
+			Command(std::string const& name);
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const = 0;
+		};
+
+		struct	ChannelCommand	:	public Command
+		{
+			bool const	isOperatorCommand;
+
+			ChannelCommand(std::string const& name, bool isOperatorCommand);
+		};
+
 		struct	PassCommand		:	public Command
 		{
 			PassCommand();
@@ -90,6 +109,9 @@ namespace irc
 		~Server();
 	};
 
+	Server::Command const*	parseCommand(std::string::const_iterator& it,
+		std::string::const_iterator last);
+
 	static const Server::JoinCommand	joinCommand;
 	static const Server::KickCommand	kickCommand;
 	static const Server::ModeCommand	modeCommand;
@@ -97,7 +119,7 @@ namespace irc
 	static const Server::TopicCommand	topicCommand;
 	static const Server::PassCommand	passCommand;
 
-	static Command const*const	commands[] =
+	static Server::Command const*const	commands[] =
 	{
 		&passCommand,
 	  	&joinCommand,
@@ -109,4 +131,3 @@ namespace irc
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
 }
-
