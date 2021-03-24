@@ -332,6 +332,79 @@ Command: **KICK**
  &nbsp; &nbsp; &nbsp; &nbsp; \<channel\>{,\<channel\>} \<user\>{,\<user\>} [\<comment\>]  
 
 
+## 4.3 Server queries and commands
+
+Command: **VERSION**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *:Wiz VERSION *.se*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Wiz to check the version of a server matching "*.se"  
+&nbsp; &nbsp; \- *VERSION tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the version of server "tolsun.oulu.fi".  
+
+Command: **STATS**  
+   Parameters: [\<query\> [\<server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *STATS m*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the command usage for the server you are connected to  
+&nbsp; &nbsp; \- *:Wiz STATS c eff.org*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request by WiZ for C/N line information from server eff.org  
+
+Command: **LINKS**  
+   Parameters: [[\<remote server\>] \<server mask\>]  
+   Examples:  
+&nbsp; &nbsp; \- *LINKS *.au*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all servers which have a name that matches *.au;  
+&nbsp; &nbsp; \- *:WiZ LINKS *.bu.edu *.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; LINKS message from WiZ to the first server matching *.edu for a list of servers matching *.bu.edu.  
+
+Command: **TIME**  
+   Parameters: [\<server\>]  
+   Examples:  
+   &nbsp; &nbsp; \- *TIME tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the time on the server "tolson.oulu.fi"  
+   &nbsp; &nbsp; \- *Angel TIME *.au*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; user angel checking the time on a  
+ 
+Command: **CONNECT**  
+   Parameters: \<target server\> [\<port\> [\<remote server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *CONNECT tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Attempt to connect a server to tolsun.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ CONNECT eff.org 6667 csd.bu.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; CONNECT attempt by WiZ to get servers eff.org and csd.bu.edu connected on port 6667.  
+
+Command: **TRACE**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *TRACE *.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE to a server matching *.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ TRACE AngelDust*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE issued by WiZ to nick AngelDust  
+
+
+Command: **ADMIN**
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *ADMIN tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an ADMIN reply from tolsun.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ ADMIN *.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ADMIN request from WiZ for first server found to match *.edu.  
+
+Command: **INFO**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *INFO csd.bu.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an INFO reply from csd.bu.edu  
+&nbsp; &nbsp; \- *:Avalon INFO *.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; INFO request from Avalon for first server found to match *.fi.  
+&nbsp; &nbsp; \- *INFO Angel*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request info from the server that Angel is connected to.  
+
+
+
+
+
 ======
 
 # Sources:
