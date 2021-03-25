@@ -54,9 +54,9 @@ This file contains the RFC documentation summary.
 * [8.13 Channel membership](#813-channel-membership)  
 
 [9. Current problems](#9-current-problems)  
-* [9.1 Scalability](#91scalability)  
-* [9.2 Labels](#92labels)  
-* [9.3 Algorithms](#93algorithms)  
+* [9.1 Scalability](#91-scalability)  
+* [9.2 Labels](#92-labels)  
+* [9.3 Algorithms](#93-algorithms)  
 
 [Sources](#Sources)  
 
