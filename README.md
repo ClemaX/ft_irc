@@ -102,7 +102,7 @@ Details:
 [2. Channel Characteristics](#2-channel-characteristics)  
 * [2.1 Namespace](#21-namespace)  
 * [2.2 Channel Scope](#22-channel-scope)  
-* [2.3 Channel Properties](#22-channel-properties)  
+* [2.3 Channel Properties](#23-channel-properties)  
 * [2.4 Privileged Channel Members](#24-privileged-channel-members)  
 
 
