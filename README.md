@@ -92,7 +92,18 @@ Details:
 * [6.2 Reliability](#62-reliability)  
 * [6.3 Network Congestion](#63-network-congestion)  
 * [6.4 Privacy](#64-privacy)  
+  
+  
+  
+**RFC 2811 (April 2000)**
 
+[1. Introduction](#1-rfc-2811---introduction)  
+
+[2. Channel Characteristics](#2-channel-characteristics)  
+* [2.1 Namespace](#21-namespace)  
+* [2.2 Channel Scope](#22-channel-scope)  
+* [2.3 Channel Properties](#22-channel-properties)  
+* [2.4 Privileged Channel Members](#24-privileged-channel-members)  
 
 
 
@@ -125,36 +136,8 @@ CONNECT (4.3.5).
 KILL (4.6.1).  
 
 ## 1.3 Channels
-A channel is a named group containing > 1 clients which recives the channel msgs.  
-The channel is implicitly created when the first client joins it.  
-The channel is implicitly destroyed when the last client lefts it.  
-Until the channel exists any client can refer to this channel using its name.  
 
-Channels names :  
-* Are strings.  
-* Begin with '&' or '#'.  
-* 200 bytes max sized.  
-* Can't contain whitespaces.  
-* Can't contain ctrl^G (ASCII 7).  
-* Can't contain a ','.  
-2 kinds of channels can exist:  
-* Channels distributed all over the network (all the servers) -> '#'.  
-* Local server channel -> '&'.  
-
-MODE (4.2.3).  
-To create a new channel or join an existing one, a user must use "JOIN" command.  
-The first client to join a channel becomes the operator of the channel.  
-Else if the channel already exist: check 8.13.  
-If the connection between 2 servers breaks up, for a channel which clients are in both servers, when the connection is restored both servers will anounce to each other all the JOINs and MODEs of the channel.  
-
-### 1.3.1 Channel operator
-The channel operator owns the channel.  
-It can cast some commands:  
-* KICK: kick out of the channel a user.  
-* MODE: change channel modes.  
-* INVITE: invite a user to the channel.  
-* TOPIC: Change the channel topic (requires +t mode).  
-Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.  
+See section ["2. Channel Characteristics"](#2-channel-characteristics) of the RFC 2811.
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
@@ -1190,13 +1173,13 @@ Even by changing to unique labels, there are problems with channel-related comma
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
   
   
-  
+------------------------------------------------------------
   
 # **RFC 2810**
 
 First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
 
-The RFC 2810 specifically describes the Architecture of the IRC protocol.
+The RFC 2810 specifically describes the **Architecture** of the IRC protocol.
 
 # 1. RFC 2810 - Introduction
 
@@ -1284,6 +1267,100 @@ In an attempt to minimize the impact of these problems, it is strongly RECOMMEND
 
 Besides not scaling well, the fact that servers need to know all information about other entities, the issue of privacy is also a concern.  
 This is in particular true for channels, as the related information is quite a lot more revealing than whether a user is online or not.  
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+  
+  
+  
+------------------------------------------------------------
+
+# **RFC 2811**
+
+First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
+
+The RFC 2811 specifically describes the **Channel Management** of the IRC protocol.
+
+# 1. RFC 2811 - Introduction
+
+One of the most notable characteristics of the IRC (Internet Relay Chat) protocol is to allow for users to be grouped in forums, called channels, providing a mean for multiple users to communicate together.  
+
+There was originally a unique type of channels, but with the years, new types appeared either as a response to a need, or for experimental purposes.  
+
+This document specifies how channels, their characteristics and properties are managed by IRC servers.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 2. Channel Characteristics
+
+   A channel is a named group of one or more users which will all receive messages addressed to that channel.  
+   A channel is characterized by its name, properties and current members.  
+
+## 2.1. Namespace
+
+Channels names :  
+* Are strings.  
+* Begin with '&' or '#', '+' or '!'.  
+* Max length of 50 characters.
+* Channel names are case insensitive  
+* Can't contain spaces.  
+* Can't contain ctrl^G (ASCII 7).  
+* Can't contain a ','.
+* A colon (':') is used as a delimiter for the channel mask.
+
+The use of different prefixes effectively creates four (4) distinct namespaces for channel names  
+
+## 2.2 Channel Scope
+
+A channel entity is known by one or more servers on the IRC network.  
+A user can only become member of a channel known by the server to which the user is directly connected.  
+The list of servers which know of the existence of a particular channel MUST be a contiguous part of the IRC network, in order for the messages addressed to the channel to be sent to all the channel members.  
+
+Channels with '**&**' as prefix are local to the server where they are created.  
+
+Other channels are known to one or more servers that are connected to the network, depending on the channel mask:  
+* If there is no channel mask, then the channel is known to all the servers.
+* If there is a channel mask, then the channel MUST only be known to servers which has a local user on the channel, and to its neighbours if the mask matches both the local and neighbouring server names.  
+Since other servers have absolutely no knowledge of the existence of such a channel, the area formed by the servers having a name matching the mask has to be contiguous for the channel to be known by all these servers.  
+Channel masks are best used in conjunction with server hostmasking [IRC-SERVER].
+
+## 2.3. Channel Properties
+
+Each channel has its own properties, which are defined by channel modes.  
+Channel modes can be manipulated by the channel members.  
+The modes affect the way servers manage the channels.  
+
+Channels with '+' as prefix do not support channel modes.  
+This means that all the modes are unset, with the exception of the 't' channel flag which is set.  
+
+## 2.4. Privileged Channel Members
+
+In order for the channel members to keep some control over a channel, and some kind of sanity, some channel members are privileged.  
+Only these members are allowed to perform the following actions on the channel:
+* INVITE  - Invite a client to an invite-only channel (mode +i)
+* KICK    - Eject a client from the channel
+* MODE    - Change the channel's mode, as well as members' privileges
+* PRIVMSG - Sending messages to the channel (mode +n, +m, +v)
+* TOPIC   - Change the channel topic in a mode +t channel
+
+### 2.4.1. Channel Operators
+
+The channel operators (also referred to as a "chop" or "chanop") on a given channel are considered to 'own' that channel.  
+Ownership of a channel is shared among channel operators.  
+
+Channel operators are identified by the '@' symbol next to their nickname whenever it is associated with a channel (i.e., replies to the NAMES, WHO and WHOIS commands).  
+
+Since channels starting with the character '+' as prefix do not support channel modes, no member can therefore have the status of channel operator.  
+
+### 2.4.2. Channel Creator
+
+A user who creates a channel with the character '!' as prefix is identified as the "channel creator".  
+Upon creation of the channel, this user is also given channel operator status.  
+
+In recognition of this status, the channel creators are endowed with the ability to toggle certain modes of the channel which channel operators may not manipulate.  
+
+A "channel creator" can be distinguished from a channel operator by issuing the proper MODE command.  
 
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
