@@ -105,6 +105,15 @@ Details:
 * [2.3 Channel Properties](#23-channel-properties)  
 * [2.4 Privileged Channel Members](#24-privileged-channel-members)  
 
+[3. Channel lifetime](#2-channel-lifetime)  
+* [3.1 Standard channels](#31-standard-channels)  
+* [3.2 Safe channels](#32-safe-channels)  
+
+[4. Channel Modes](#4-channel-modes)  
+* [4.1 Member Status](#41-member-status)  
+* [4.2 Channel Flags](#42-channel-flags)  
+* [4.3 Channel Access Control](#43-channel-access-control)  
+
 
 
 [Sources](#Sources)  
@@ -1362,8 +1371,203 @@ In recognition of this status, the channel creators are endowed with the ability
 
 A "channel creator" can be distinguished from a channel operator by issuing the proper MODE command.  
 
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 3. Channel lifetime
+
+In regard to the lifetime of a channel, there are typically two groups of channels:  
+* standard channels which prefix is either '&', '#' or '+'
+* "safe channels" which prefix is '!'
+
+## 3.1. Standard channels
+
+These channels are created implicitly when the first user joins it, and cease to exist when the last user leaves it.  
+While the channel exists, any client can reference the channel using the name of the channel.  
+
+The user creating a channel automatically becomes channel operator with the notable exception of channels which name is prefixed by the character '+'.  
+
+In order to avoid the creation of duplicate channels (typically when the IRC network becomes disjoint because of a split between two servers), channel names SHOULD NOT be allowed to be reused by a user if a [channel operator](#241-channel-operators) has recently left the channel because of a network split.  
+If this happens, the channel name is temporarily unavailable.  
+The duration while a channel remains unavailable should be tuned on a per IRC network basis.  
+It is important to note that this prevents local users from creating a channel using the same name, but does not prevent the channel to be recreated by a remote user. The latter typically happens when the IRC network rejoins.  
+Obviously, this mechanism only makes sense for channels which name begins with the character '#', but MAY be used for channels which name begins with the character '+'.  
+This mechanism is commonly known as "Channel Delay".  
+
+## 3.2 Safe Channels
+Unlike other channels, "safe channels" are not implicitly created.  
+A user wishing to create such a channel MUST request the creation by sending a special JOIN command to the server in which the channel identifier (then unknown) is replaced by the character '!'.  
+The creation process for this type of channel is strictly controlled.  
+The user only chooses part of the channel name (known as the channel "short name"), the server automatically prepends the user provided name with a channel identifier consisting of five (5) characters.  
+The channel name resulting from the combination of these two elements is unique, making the channel safe from abuses based on network splits.  
+
+The user who creates such a channel automatically becomes "[channel creator](#241-channel-creators)".   
+
+A server MUST NOT allow the creation of a new channel if another channel with the same short name exists; or if another channel with the same short name existed recently AND any of its member(s) left because of a network split.  
+Such channel ceases to exist after last user leaves AND no other member recently left the channel because of a network split.  
+
+Unlike the mechanism described in section 5.2.2 (Channel Delay), in this case, channel names do not become unavailable: these channels may continue to exist after the last user left.  
+Only the user creating the channel becomes "channel creator", users joining an existing empty channel do not automatically become "channel creator" nor "channel operator".  
+
+To ensure the uniqueness of the channel names, the channel identifier created by the server MUST follow specific rules.  For more details on this, see section 5.2.1 (Channel Identifier).  
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 4. Channel Modes
+
+The various modes available for channels are as follows:  
+* O - give "channel creator" status;
+* o - give/take channel operator privilege;
+* v - give/take the voice privilege;
+
+* a - toggle the anonymous channel flag;
+* i - toggle the invite-only channel flag;
+* m - toggle the moderated channel;
+* n - toggle the no messages to channel from clients on the outside;
+* q - toggle the quiet channel flag;
+* p - toggle the private channel flag;
+* s - toggle the secret channel flag;
+* r - toggle the server reop channel flag;
+* t - toggle the topic settable by channel operator only flag;
+
+* k - set/remove the channel key (password);
+* l - set/remove the user limit to channel;
+
+* b - set/remove ban mask to keep users out;
+* e - set/remove an exception mask to override a ban mask;
+* I - set/remove an invitation mask to automatically override the invite-only flag;
+
+Unless mentioned otherwise below, all these modes can be manipulated by "channel operators" by using the MODE command defined in "IRC Client Protocol" [IRC-CLIENT].  
+
+## 4.1 Member Status
+
+The modes in this category take a channel member nickname as argument and affect the privileges given to this user.
+
+### 4.1.1 "Channel Creator" Status
+
+The mode 'O' is only used in conjunction with "safe channels" and SHALL NOT be manipulated by users.  
+Servers use it to give the user creating the channel the status of "channel creator".  
+
+### 4.1.2 Channel Operator Status
+
+The mode 'o' is used to toggle the operator status of a channel member.  
+
+### 4.1.3 Voice Privilege
+
+The mode 'v' is used to give and take voice privilege to/from a channel member.  
+Users with this privilege can talk on moderated channels.  
+
+## 4.2 Channel Flags
+
+The modes in this category are used to define properties which affects how channels operate.  
+
+### 4.2.1 Anonymous Flag
+
+The channel flag 'a' defines an anonymous channel.  
+This means that when a message sent to the channel is sent by the server to users, and the origin is a user, then it MUST be masked.  
+To mask the message, the origin is changed to "anonymous!anonymous@anonymous." (e.g., a user with the nickname "anonymous", the username "anonymous" and from a host called "anonymous.").  
+Because of this, servers MUST forbid users from using the nickname "anonymous".  
+Servers MUST also NOT send QUIT messages for users leaving such channels to the other channel members but generate a PART message instead.  
+
+On channels with the character '&' as prefix, this flag MAY be toggled by channel operators, but on channels with the character '!' as prefix, this flag can be set (but SHALL NOT be unset) by the "channel creator" only.  
+This flag MUST NOT be made available on other types of channels.  
+
+Replies to the WHOIS, WHO and NAMES commands MUST NOT reveal the presence of other users on channels for which the anonymous flag is set.  
+
+### 4.2.2 Invite Only Flag
+
+When the channel flag 'i' is set, new members are only accepted if their mask matches Invite-list (See section 4.3.2) or they have been invited by a channel operator.  
+This flag also restricts the usage of the INVITE command to channel operators.  
+
+
+### 4.2.3 Moderated Channel Flag
+
+The channel flag 'm' is used to control who may speak on a channel.  
+When it is set, only channel operators, and members who have been given the voice privilege may send messages to the channel.
+
+This flag only affects users.  
+
+### 4.2.4 No Messages To Channel From Clients On The Outside
+
+When the channel flag 'n' is set, only channel members MAY send messages to the channel.  
+
+This flag only affects users.  
+
+### 4.2.5 Quiet Channel
+
+The channel flag 'q' is for use by servers only.  
+When set, it restricts the type of data sent to users about the channel operations: other user joins, parts and nick changes are not sent.  
+From a user's point of view, the channel contains only one user.  
+
+This is typically used to create special local channels on which the server sends notices related to its operations.  
+This was used as a more efficient and flexible way to replace the user mode 's' defined in RFC 1459.  
+
+### 4.2.6 Private and Secret Channels
+
+The channel flag 'p' is used to mark a channel "private" and the channel flag 's' to mark a channel "secret".  
+Both properties are similar and conceal the existence of the channel from other users.  
+
+This means that there is no way of getting this channel's name from the server without being a member.  
+In other words, these channels MUST be omitted from replies to queries like the WHOIS command.  
+
+When a channel is "secret", in addition to the restriction above, the server will act as if the channel does not exist for queries like the TOPIC, LIST, NAMES commands.  
+Note that there is one exception to this rule: servers will correctly reply to the MODE command.  
+Finally, secret channels are not accounted for in the reply to the LUSERS command when the \<mask\> parameter is specified.  
+
+The channel flags 'p' and 's' MUST NOT both be set at the same time.  
+If a MODE message originating from a server sets the flag 'p' and the flag 's' is already set for the channel, the change is silently ignored.  
+This should only happen during a split healing phase.  
+
+### 4.2.7 Server Reop Flag
+
+The channel flag 'r' is only available on channels which name begins with the character '!' and MAY only be toggled by the "channel creator".  
+
+This flag is used to prevent a channel from having no channel operator for an extended period of time.  
+When this flag is set, any channel that has lost all its channel operators for longer than the "reop delay" period triggers a mechanism in servers to reop some or all of the channel inhabitants.  
+This mechanism is described more in detail in section 5.2.4 (Channel Reop Mechanism).  
+
+### 4.2.8 Topic
+
+The channel flag 't' is used to restrict the usage of the TOPIC command to channel operators.  
+
+### 4.2.9 User Limit
+
+A user limit may be set on channels by using the channel flag 'l'.
+When the limit is reached, servers MUST forbid their local users to join the channel.  
+
+The value of the limit MUST only be made available to the channel members in the reply sent by the server to a MODE query.  
+
+### 4.2.10 Channel Key
+
+When a channel key is set (by using the mode 'k'), servers MUST reject their local users request to join the channel unless this key is given.  
+
+The channel key MUST only be made visible to the channel members in the reply sent by the server to a MODE query.  
+
+## 4.3 Channel Access Control
+
+The last category of modes is used to control access to the channel, they take a mask as argument.  
+
+In order to reduce the size of the global database for control access modes set for channels, servers MAY put a maximum limit on the number of such modes set for a particular channel.  
+If such restriction is imposed, it MUST only affect user requests.  
+The limit SHOULD be homogeneous on a per IRC network basis.  
+
+### 4.3.1 Channel Ban and Exception
+
+When a user requests to join a channel, his local server checks if the user's address matches any of the ban masks set for the channel.  
+If a match is found, the user request is denied unless the address also matches an exception mask set for the channel.  
+
+Servers MUST NOT allow a channel member who is banned from the channel to speak on the channel, unless this member is a channel operator or has voice privilege.  
+
+A user who is banned from a channel and who carries an invitation sent by a channel operator is allowed to join the channel.  
+
+### 4.3.2 Channel Invitation
+
+For channels which have the invite-only flag set, users whose address matches an invitation mask set for the channel are allowed to join the channel without any invitation.  
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
 
 
 # Sources:
