@@ -1,7 +1,19 @@
 
-This file contains the RFC documentation summary.  
+This file contains the following RFC documentation summary:  
+* **RFC 1459 (May 1993)**
+* **RFC 2810 - 2811 - 2812 - 2813 (April 2000)**
+* **RFC 7194 (August 2014)**
 
-# **RFC 1459:**
+RFC 1459: Basic Internet Relay Chat Protocol
+
+RFC 2810 to 2813: Update of RFC 1459 describing the architecture of the IRC protocol and the role of its different components.  
+Details:  
+* RFC 2810: Architecture
+* RFC 2811: Channel Management
+* RFC 2812: Client Protocol
+* RFC 2813: Server Protocol
+
+RFC 7194: Default Port for Internet Relay Chat (IRC) via TLS/SSL
 
 
 # SUMMARY
@@ -196,7 +208,7 @@ The shortest path wins.
 ## 3.2 One-to-many
 
 ### 3.2.1 One to list comunication
-Worts groupal method (send message N times for N members in the list).  
+Worst groupal method (send message N times for N members in the list).  
 
 ### 3.2.2 One to a group (channel) comunication
 The conversation is only sent to servers used by the users of the channel.  
