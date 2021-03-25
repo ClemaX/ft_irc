@@ -4,19 +4,21 @@ This file contains the following RFC documentation summary:
 * **RFC 2810 - 2811 - 2812 - 2813 (April 2000)**
 * **RFC 7194 (August 2014)**
 
-RFC 1459: Basic Internet Relay Chat Protocol
+**RFC 1459**: Basic Internet Relay Chat Protocol
 
-RFC 2810 to 2813: Update of RFC 1459 describing the architecture of the IRC protocol and the role of its different components.  
+**RFC 2810 to 2813**: Update of RFC 1459 describing the architecture of the IRC protocol and the role of its different components.  
 Details:  
 * RFC 2810: Architecture
 * RFC 2811: Channel Management
 * RFC 2812: Client Protocol
 * RFC 2813: Server Protocol
 
-RFC 7194: Default Port for Internet Relay Chat (IRC) via TLS/SSL
+**RFC 7194**: Default Port for Internet Relay Chat (IRC) via TLS/SSL
 
 
-# SUMMARY
+# Summary
+
+**RFC 1459 (May 1993)**
 
 [1. Introduction](#1-introduction)  
 * [1.1 Servers](#11-servers)  
@@ -71,6 +73,8 @@ RFC 7194: Default Port for Internet Relay Chat (IRC) via TLS/SSL
 * [9.3 Algorithms](#93-algorithms)  
 
 [Sources](#Sources)  
+
+# **RFC 1459 (May 1993)**
 
 # 1. INTRODUCTION
 
