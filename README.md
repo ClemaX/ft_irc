@@ -20,7 +20,7 @@ Details:
 
 **RFC 1459 (May 1993)**
 
-[1. RFC 1459 - Introduction](#1-rfc-1459-introduction)  
+[1. RFC 1459 - Introduction](#1-rfc-1459---introduction)  
 * [1.1 Servers](#11-servers)  
 * [1.2 Clients](#12-clients)  
 * [1.3 Channels](#13-channels)  
@@ -75,7 +75,7 @@ Details:
 
 **RFC 2810 (April 2000)**
 
-[1. Introduction](#1-rfc-2810-introduction)  
+[1. Introduction](#1-rfc-2810---introduction)  
 
 [2. Components](#2-components)  
 * [2.2 Clients](#22-clients)  
@@ -1184,9 +1184,10 @@ These race conditions generally arise from the problem of it taking time for mes
 Even by changing to unique labels, there are problems with channel-related commands being disrupted.  
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
-
-
-
+  
+  
+  
+  
 # **RFC 2810**
 
 First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
