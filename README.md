@@ -15,6 +15,7 @@ Details:
 
 **RFC 7194**: Default Port for Internet Relay Chat (IRC) via TLS/SSL
 
+------------------------------------------------------------
 
 # Summary
 
@@ -71,8 +72,9 @@ Details:
 * [9.1 Scalability](#91-scalability)  
 * [9.2 Labels](#92-labels)  
 * [9.3 Algorithms](#93-algorithms)  
-
-
+  
+  
+  
 **RFC 2810 (April 2000)**
 
 [1. Introduction](#1-rfc-2810---introduction)  
@@ -95,6 +97,8 @@ Details:
 
 
 [Sources](#Sources)  
+
+------------------------------------------------------------
 
 # **RFC 1459 (May 1993)**
 
