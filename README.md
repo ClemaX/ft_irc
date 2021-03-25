@@ -39,6 +39,19 @@ This file contains the RFC documentation summary.
 [7. Client and server authentication](#7-client-and-server-authentication)  
 
 [8. Current implementations](#8-current-implementations)  
+* [8.1 Network protocol: TCP - why it is best used here](#81-network-protocol-tcp---why-it-is-best-used-here)  
+* [8.2 Command Parsing](#82-command-parsing)  
+* [8.3 Message delivery](#83-message-delivery)  
+* [8.4 Connection 'Liveness'](#84-connection-liveness)  
+* [8.5 Establishing a server to client connection](#85-establishing-a-server-to-client-connection)  
+* [8.6 Establishing a server-server connection](#86-establishing-a-server-server-connection)  
+* [8.7 Terminating server-client connections](#87-terminating-server-client-connections)  
+* [8.8 Terminating server-server connections](#88-terminating-server-server-connections)  
+* [8.9 Tracking nickname changes](#89-tracking-nickname-changes)  
+* [8.10 Flood control of clients](#810-flood-control-of-clients)  
+* [8.11 Non-blocking lookups](#811-non-blocking-lookups)  
+* [8.12 Configuration File](#812-configuration-file)  
+* [8.13 Channel membership](#813-channel-membership)  
 
 [Sources](#Sources)  
 
@@ -890,16 +903,16 @@ These numerics are not described above since they fall into one of the following
 
 # 7. Client and server authentication
 
-   Clients and servers are both subject to the same level of authentication.  
+Clients and servers are both subject to the same level of authentication.  
 
-   For both, an IP number to hostname lookup (and reverse check on this) is performed for all connections made to the server.  
-   Both connections are then subject to a password check (if there is a password set for that connection).  
-   These checks are possible on all connections although the password check is only commonly used with servers.  
+For both, an IP number to hostname lookup (and reverse check on this) is performed for all connections made to the server.  
+Both connections are then subject to a password check (if there is a password set for that connection).  
+These checks are possible on all connections although the password check is only commonly used with servers.  
 
-  An additional check that is becoming of more and more common is that of the username responsible for making the connection.  
-  Finding the username of the other end of the connection typically involves connecting to an authentication server such as IDENT as described in RFC 1413.  
+An additional check that is becoming of more and more common is that of the username responsible for making the connection.  
+Finding the username of the other end of the connection typically involves connecting to an authentication server such as IDENT as described in RFC 1413.  
 
-  Given that without passwords it is not easy to reliably determine who is on the other end of a network connection, use of passwords is strongly recommended on inter-server connections in addition to any other measures such as using an ident server.  
+Given that without passwords it is not easy to reliably determine who is on the other end of a network connection, use of passwords is strongly recommended on inter-server connections in addition to any other measures such as using an ident server.  
 
 # 8. Current implementations
 
@@ -952,7 +965,7 @@ The server is also required to give an unambiguous message to the client which s
 After dealing with this, the server must then send out the new user's nickname and other information as supplied by itself (USER command) and as the server could discover (from DNS/authentication servers).  
 The server must send this information out with NICK first followed by USER.  
 
-## 8.6 Establishing a server-server connection.  
+## 8.6 Establishing a server-server connection  
 
 The process of establishing of a server-to-server connection is fraught with danger since there are many possible areas where problems can occur - the least of which are race conditions.  
 
@@ -1013,10 +1026,10 @@ which in essence means that the client may send 1 message every 2 seconds withou
 
 ## 8.11 Non-blocking lookups  
 
-   In a real-time environment, it is essential that a server process do as little waiting as possible so that all the clients are serviced fairly.  
-   Obviously this requires non-blocking IO on all network read/write operations.  
-   For normal server connections, this was not difficult, but there are other support operations that may cause the server to block (such as disk reads).  
-   Where possible, such activity should be performed with a short timeout.  
+In a real-time environment, it is essential that a server process do as little waiting as possible so that all the clients are serviced fairly.  
+Obviously this requires non-blocking IO on all network read/write operations.  
+For normal server connections, this was not difficult, but there are other support operations that may cause the server to block (such as disk reads).  
+Where possible, such activity should be performed with a short timeout.  
 
 ### 8.11.1 Hostname (DNS) lookups  
 
