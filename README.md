@@ -2,7 +2,7 @@
 This file contains the RFC documentation summary.  
 
 # **RFC 1459:**
-======
+
 
 # SUMMARY
 
@@ -28,6 +28,13 @@ This file contains the RFC documentation summary.
 * [4.4 Sending messages](#44-sending-messages)  
 * [4.5 User based queries](#45-user-based-queries)  
 * [4.6 Miscellaneous messages](#46-miscellaneous-messages)  
+
+[5. OPTIONALS](#5-optionals)  
+
+[6. REPLIES](#6-replies)  
+* [6.1 Error Replies](#61-error-replies)  
+* [6.2 Command responses](#62-command-responses)  
+* [6.3 Reserved numerics](#63-reserved-numerics)  
 
 [Sources](#Sources)  
 
@@ -85,7 +92,7 @@ It can cast some commands:
 * TOPIC: Change the channel topic (requires +t mode).  
 Using commands "NAMES", "WHO" or "WHOIS" the operator nickname starts with a '@'.  
 
-======
+
 
 # 2. The IRC Specification
 
@@ -155,7 +162,7 @@ Composed by:
 A client can't raise a numeric answer (it's silently ignored).  
 Section 6 contains the numeric answers codes list.  
 
-======
+
 
 # 3. IRC Concepts
 
@@ -188,7 +195,7 @@ Must be sent to all the servers all over the network.
 ### 3.3.3 Server to server comunication
 Almost every msg sent server to server is distributed all over the network to all servers.  
 
-======
+
 
 # 4. Message details
 
@@ -538,9 +545,18 @@ Command: **ERROR**
 &nbsp; &nbsp; \- *NOTICE WiZ :ERROR from csd.bu.edu -- Server \*.fi already exists*  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Same ERROR message as above but sent to user WiZ on the other server.  
 
-======
 
+# 5. OPTIONALS
 
+This section describes OPTIONAL messages. They are not required in a working server implementation of the protocol described herein.  
+
+# 6. REPLIES
+
+## 6.1 Error Replies
+
+## 6.2 Command responses
+
+## 6.3 Reserved numerics
 
 
 # Sources:
@@ -551,3 +567,4 @@ Command: **ERROR**
 * [RFC 2813 documentation](https://tools.ietf.org/html/rfc2813)
 * [RFC 7194 documentation](https://tools.ietf.org/html/rfc7194)
 
+[Go back to summary](#summary)  
