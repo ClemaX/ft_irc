@@ -690,6 +690,187 @@ This section describes OPTIONAL messages. They are not required in a working ser
 
 ## 6.2 Command responses
 
+300 &nbsp; &nbsp; RPL_NONE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Dummy reply number. Not used.  
+
+302 &nbsp; &nbsp; RPL_USERHOST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<reply\>{\<space\>\<reply\>}]"  
+
+303 &nbsp; &nbsp; RPL_ISON  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<nick\> {\<space\>\<nick\>}]"  
+
+301 &nbsp; &nbsp; RPL_AWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :\<away message\>"  
+
+305 &nbsp; &nbsp; RPL_UNAWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are no longer marked as being away"  
+306 &nbsp; &nbsp; RPL_NOWAWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You have been marked as being away"  
+
+311 &nbsp; &nbsp; RPL_WHOISUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
+312 &nbsp; &nbsp; RPL_WHOISSERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<server\> :\<server info\>"  
+313 &nbsp; &nbsp; RPL_WHOISOPERATOR  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :is an IRC operator"  
+317 &nbsp; &nbsp; RPL_WHOISIDLE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<integer\> :seconds idle"  
+318 &nbsp; &nbsp; RPL_ENDOFWHOIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of /WHOIS list"  
+319 &nbsp; &nbsp; RPL_WHOISCHANNELS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :{[@|+]\<channel\>\<space\>}"  
+
+314 &nbsp; &nbsp; RPL_WHOWASUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
+369 &nbsp; &nbsp; RPL_ENDOFWHOWAS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of WHOWAS"  
+
+321 &nbsp; &nbsp; RPL_LISTSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Channel :Users  Name"  
+322 &nbsp; &nbsp; RPL_LIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<# visible\> :\<topic\>"  
+323 &nbsp; &nbsp; RPL_LISTEND  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /LIST"  
+
+324 &nbsp; &nbsp; RPL_CHANNELMODEIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<mode\> \<mode params\>"  
+
+331 &nbsp; &nbsp; RPL_NOTOPIC  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :No topic is set"  
+332 &nbsp; &nbsp; RPL_TOPIC  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :\<topic\>"  
+
+341 &nbsp; &nbsp; RPL_INVITING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<nick\>"  
+
+342 &nbsp; &nbsp; RPL_SUMMONING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> :Summoning user to IRC"  
+
+351 &nbsp; &nbsp; RPL_VERSION  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<version\>.\<debuglevel\> \<server\> :\<comments\>"  
+
+352 &nbsp; &nbsp; RPL_WHOREPLY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<user\> \<host\> \<server\> \<nick\> \  
+ \<H|G\>[*][@|+] :\<hopcount\> \<real name\>"  
+315 &nbsp; &nbsp; RPL_ENDOFWHO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<name\> :End of /WHO list"  
+
+353 &nbsp; &nbsp; RPL_NAMREPLY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :[[@|+]\<nick\> [[@|+]\<nick\> [...]]]"  
+366 &nbsp; &nbsp; RPL_ENDOFNAMES  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of /NAMES list"  
+
+364 &nbsp; &nbsp; RPL_LINKS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> \<server\> :\<hopcount\> \<server info\>"  
+365 &nbsp; &nbsp; RPL_ENDOFLINKS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :End of /LINKS list"  
+
+367 &nbsp; &nbsp; RPL_BANLIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<banid\>"  
+368 &nbsp; &nbsp; RPL_ENDOFBANLIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of channel ban list"  
+
+371 &nbsp; &nbsp; RPL_INFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<string\>"  
+374 &nbsp; &nbsp; RPL_ENDOFINFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /INFO list"  
+
+375 &nbsp; &nbsp; RPL_MOTDSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<server\> Message of the day - "  
+372 &nbsp; &nbsp; RPL_MOTD  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<text\>"  
+376 &nbsp; &nbsp; RPL_ENDOFMOTD  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /MOTD command"  
+
+381 &nbsp; &nbsp; RPL_YOUREOPER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are now an IRC operator"  
+
+382 &nbsp; &nbsp; RPL_REHASHING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<config file\> :Rehashing"  
+
+391 &nbsp; &nbsp; RPL_TIME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :\<string showing server's local time\>"  
+
+392 &nbsp; &nbsp; RPL_USERSSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":UserID   Terminal  Host"  
+393 &nbsp; &nbsp; RPL_USERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":%-8s %-9s %-8s"  
+394 &nbsp; &nbsp; RPL_ENDOFUSERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of users"  
+395 &nbsp; &nbsp; RPL_NOUSERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Nobody logged in"  
+
+200 &nbsp; &nbsp; RPL_TRACELINK  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Link \<version & debug level\> \<destination\> \  
+ \<next server\>"  
+201 &nbsp; &nbsp; RPL_TRACECONNECTING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Try. \<class\> \<server\>"  
+202 &nbsp; &nbsp; RPL_TRACEHANDSHAKE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H.S. \<class\> \<server\>"  
+203 &nbsp; &nbsp; RPL_TRACEUNKNOWN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "???? \<class\> [\<client IP address in dot form\>]"  
+204 &nbsp; &nbsp; RPL_TRACEOPERATOR  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Oper \<class\> \<nick\>"  
+205 &nbsp; &nbsp; RPL_TRACEUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "User \<class\> \<nick\>"  
+206 &nbsp; &nbsp; RPL_TRACESERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Serv \<class\> \<int\>S \<int\>C \<server\> \  
+ \<nick!user|*!*\>@\<host|server\>"  
+208 &nbsp; &nbsp; RPL_TRACENEWTYPE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<newtype\> 0 \<client name\>"  
+261 &nbsp; &nbsp; RPL_TRACELOG  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "File \<logfile\> \<debug level\>"  
+
+211 &nbsp; &nbsp; RPL_STATSLINKINFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<linkname\> \<sendq\> \<sent messages\> \  
+ \<sent bytes\> \<received messages\> \  
+ \<received bytes\> \<time open\>"  
+212 &nbsp; &nbsp; RPL_STATSCOMMANDS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> \<count\>"  
+213 &nbsp; &nbsp; RPL_STATSCLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "C \<host\> * \<name\> \<port\> \<class\>"  
+214 &nbsp; &nbsp; RPL_STATSNLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "N \<host\> * \<name\> \<port\> \<class\>"  
+215 &nbsp; &nbsp; RPL_STATSILINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "I \<host\> * \<host\> \<port\> \<class\>"  
+216 &nbsp; &nbsp; RPL_STATSKLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "K \<host\> * \<username\> \<port\> \<class\>"  
+218 &nbsp; &nbsp; RPL_STATSYLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Y \<class\> \<ping frequency\> \<connect frequency\> \<max sendq\>"  
+219 &nbsp; &nbsp; RPL_ENDOFSTATS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<stats letter\> :End of /STATS report"  
+241 &nbsp; &nbsp; RPL_STATSLLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "L \<hostmask\> * \<servername\> \<maxdepth\>"  
+242 &nbsp; &nbsp; RPL_STATSUPTIME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Server Up %d days %d:%02d:%02d"  
+243 &nbsp; &nbsp; RPL_STATSOLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "O \<hostmask\> * \<name\>"  
+244 &nbsp; &nbsp; RPL_STATSHLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H \<hostmask\> * \<servername\>"  
+
+221 &nbsp; &nbsp; RPL_UMODEIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user mode string\>"  
+
+251 &nbsp; &nbsp; RPL_LUSERCLIENT  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":There are \<integer\> users and \<integer\> invisible on \<integer\> servers"  
+252 &nbsp; &nbsp; RPL_LUSEROP  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :operator(s) online"  
+253 &nbsp; &nbsp; RPL_LUSERUNKNOWN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :unknown connection(s)"  
+254 &nbsp; &nbsp; RPL_LUSERCHANNELS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :channels formed"  
+255 &nbsp; &nbsp; RPL_LUSERME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":I have \<integer\> clients and \<integer\> servers"  
+
+256 &nbsp; &nbsp; RPL_ADMINME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :Administrative info"  
+257 &nbsp; &nbsp; RPL_ADMINLOC1  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
+258 &nbsp; &nbsp; RPL_ADMINLOC2  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
+259 &nbsp; &nbsp; RPL_ADMINEMAIL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"
+
 ## 6.3 Reserved numerics
 
 
