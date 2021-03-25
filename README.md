@@ -750,8 +750,7 @@ This section describes OPTIONAL messages. They are not required in a working ser
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<version\>.\<debuglevel\> \<server\> :\<comments\>"  
 
 352 &nbsp; &nbsp; RPL_WHOREPLY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<user\> \<host\> \<server\> \<nick\> \  
- \<H|G\>[*][@|+] :\<hopcount\> \<real name\>"  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<user\> \<host\> \<server\> \<nick\> \<H|G\>[*][@|+] :\<hopcount\> \<real name\>"  
 315 &nbsp; &nbsp; RPL_ENDOFWHO  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<name\> :End of /WHO list"  
 
@@ -801,8 +800,7 @@ This section describes OPTIONAL messages. They are not required in a working ser
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Nobody logged in"  
 
 200 &nbsp; &nbsp; RPL_TRACELINK  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Link \<version & debug level\> \<destination\> \  
- \<next server\>"  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Link \<version & debug level\> \<destination\> \<next server\>"  
 201 &nbsp; &nbsp; RPL_TRACECONNECTING  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Try. \<class\> \<server\>"  
 202 &nbsp; &nbsp; RPL_TRACEHANDSHAKE  
@@ -814,17 +812,14 @@ This section describes OPTIONAL messages. They are not required in a working ser
 205 &nbsp; &nbsp; RPL_TRACEUSER  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "User \<class\> \<nick\>"  
 206 &nbsp; &nbsp; RPL_TRACESERVER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Serv \<class\> \<int\>S \<int\>C \<server\> \  
- \<nick!user|*!*\>@\<host|server\>"  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Serv \<class\> \<int\>S \<int\>C \<server\> \<nick!user|*!*\>@\<host|server\>"  
 208 &nbsp; &nbsp; RPL_TRACENEWTYPE  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<newtype\> 0 \<client name\>"  
 261 &nbsp; &nbsp; RPL_TRACELOG  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "File \<logfile\> \<debug level\>"  
 
 211 &nbsp; &nbsp; RPL_STATSLINKINFO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<linkname\> \<sendq\> \<sent messages\> \  
- \<sent bytes\> \<received messages\> \  
- \<received bytes\> \<time open\>"  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<linkname\> \<sendq\> \<sent messages\> \<sent bytes\> \<received messages\> \<received bytes\> \<time open\>"  
 212 &nbsp; &nbsp; RPL_STATSCOMMANDS  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> \<count\>"  
 213 &nbsp; &nbsp; RPL_STATSCLINE  
