@@ -105,7 +105,7 @@ Details:
 * [2.3 Channel Properties](#23-channel-properties)  
 * [2.4 Privileged Channel Members](#24-privileged-channel-members)  
 
-[3. Channel lifetime](#2-channel-lifetime)  
+[3. Channel lifetime](#3-channel-lifetime)  
 * [3.1 Standard channels](#31-standard-channels)  
 * [3.2 Safe channels](#32-safe-channels)  
 
