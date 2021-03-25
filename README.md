@@ -1400,7 +1400,7 @@ The creation process for this type of channel is strictly controlled.
 The user only chooses part of the channel name (known as the channel "short name"), the server automatically prepends the user provided name with a channel identifier consisting of five (5) characters.  
 The channel name resulting from the combination of these two elements is unique, making the channel safe from abuses based on network splits.  
 
-The user who creates such a channel automatically becomes "[channel creator](#241-channel-creators)".   
+The user who creates such a channel automatically becomes "[channel creator](#242-channel-creator)".   
 
 A server MUST NOT allow the creation of a new channel if another channel with the same short name exists; or if another channel with the same short name existed recently AND any of its member(s) left because of a network split.  
 Such channel ceases to exist after last user leaves AND no other member recently left the channel because of a network split.  
