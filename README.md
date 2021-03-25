@@ -554,137 +554,137 @@ This section describes OPTIONAL messages. They are not required in a working ser
 
 ## 6.1 Error Replies
 
-401     ERR_NOSUCHNICK  
+401 &nbsp; &nbsp; ERR_NOSUCHNICK  
 &nbsp; &nbsp; "\<nickname\> :No such nick/channel"  
 
-402     ERR_NOSUCHSERVER  
+402 &nbsp; &nbsp; ERR_NOSUCHSERVER  
 &nbsp; &nbsp; "\<server name\> :No such server"  
 
-403     ERR_NOSUCHCHANNEL  
+403 &nbsp; &nbsp; ERR_NOSUCHCHANNEL  
 &nbsp; &nbsp; "\<channel name\> :No such channel"  
 
-404     ERR_CANNOTSENDTOCHAN  
+404 &nbsp; &nbsp; ERR_CANNOTSENDTOCHAN  
 &nbsp; &nbsp; "\<channel name\> :Cannot send to channel"  
 
-405     ERR_TOOMANYCHANNELS  
+405 &nbsp; &nbsp; ERR_TOOMANYCHANNELS  
 &nbsp; &nbsp; "\<channel name\> :You have joined too many channels"  
 
-406     ERR_WASNOSUCHNICK  
+406 &nbsp; &nbsp; ERR_WASNOSUCHNICK  
 &nbsp; &nbsp; "\<nickname\> :There was no such nickname"  
 
-407     ERR_TOOMANYTARGETS  
+407 &nbsp; &nbsp; ERR_TOOMANYTARGETS  
 &nbsp; &nbsp; "\<target\> :Duplicate recipients. No message    
 
-409     ERR_NOORIGIN  
+409 &nbsp; &nbsp; ERR_NOORIGIN  
 &nbsp; &nbsp; ":No origin specified"  
 
-411     ERR_NORECIPIENT  
+411 &nbsp; &nbsp; ERR_NORECIPIENT  
 &nbsp; &nbsp; ":No recipient given (\<command\>)"  
 
-412     ERR_NOTEXTTOSEND  
+412 &nbsp; &nbsp; ERR_NOTEXTTOSEND  
 &nbsp; &nbsp; ":No text to send"  
 
-413     ERR_NOTOPLEVEL  
+413 &nbsp; &nbsp; ERR_NOTOPLEVEL  
 &nbsp; &nbsp; "\<mask\> :No toplevel domain specified"  
 
-414     ERR_WILDTOPLEVEL  
+414 &nbsp; &nbsp; ERR_WILDTOPLEVEL  
 &nbsp; &nbsp; "\<mask\> :Wildcard in toplevel domain"  
 
-421     ERR_UNKNOWNCOMMAND  
+421 &nbsp; &nbsp; ERR_UNKNOWNCOMMAND  
 &nbsp; &nbsp; "\<command\> :Unknown command"  
 
-422     ERR_NOMOTD  
+422 &nbsp; &nbsp; ERR_NOMOTD  
 &nbsp; &nbsp; ":MOTD File is missing"  
 
-423     ERR_NOADMININFO  
+423 &nbsp; &nbsp; ERR_NOADMININFO  
 &nbsp; &nbsp; "\<server\> :No administrative info available"  
 
-424     ERR_FILEERROR  
+424 &nbsp; &nbsp; ERR_FILEERROR  
 &nbsp; &nbsp; ":File error doing \<file op\> on \<file\>"  
 
-431     ERR_NONICKNAMEGIVEN  
+431 &nbsp; &nbsp; ERR_NONICKNAMEGIVEN  
 &nbsp; &nbsp; ":No nickname given"  
 
-432     ERR_ERRONEUSNICKNAME  
+432 &nbsp; &nbsp; ERR_ERRONEUSNICKNAME  
 &nbsp; &nbsp; "\<nick\> :Erroneus nickname"  
 
-433     ERR_NICKNAMEINUSE  
+433 &nbsp; &nbsp; ERR_NICKNAMEINUSE  
 &nbsp; &nbsp; "\<nick\> :Nickname is already in use"  
 
-436     ERR_NICKCOLLISION  
+436 &nbsp; &nbsp; ERR_NICKCOLLISION  
 &nbsp; &nbsp; "\<nick\> :Nickname collision KILL"  
 
-441     ERR_USERNOTINCHANNEL  
+441 &nbsp; &nbsp; ERR_USERNOTINCHANNEL  
 &nbsp; &nbsp; "\<nick\> \<channel\> :They aren't on that channel"  
 
-442     ERR_NOTONCHANNEL  
+442 &nbsp; &nbsp; ERR_NOTONCHANNEL  
 &nbsp; &nbsp; "\<channel\> :You're not on that channel"  
 
-443     ERR_USERONCHANNEL  
+443 &nbsp; &nbsp; ERR_USERONCHANNEL  
 &nbsp; &nbsp; "\<user\> \<channel\> :is already on channel"  
 
-444     ERR_NOLOGIN  
+444 &nbsp; &nbsp; ERR_NOLOGIN  
 &nbsp; &nbsp; "\<user\> :User not logged in"  
 
-445     ERR_SUMMONDISABLED  
+445 &nbsp; &nbsp; ERR_SUMMONDISABLED  
 &nbsp; &nbsp; ":SUMMON has been disabled"  
 
-446     ERR_USERSDISABLED  
+446 &nbsp; &nbsp; ERR_USERSDISABLED  
 &nbsp; &nbsp; ":USERS has been disabled"  
 
-451     ERR_NOTREGISTERED  
+451 &nbsp; &nbsp; ERR_NOTREGISTERED  
 &nbsp; &nbsp; ":You have not registered"  
 
-461     ERR_NEEDMOREPARAMS  
+461 &nbsp; &nbsp; ERR_NEEDMOREPARAMS  
 &nbsp; &nbsp; "\<command\> :Not enough parameters"  
 
-462     ERR_ALREADYREGISTRED  
+462 &nbsp; &nbsp; ERR_ALREADYREGISTRED  
 &nbsp; &nbsp; ":You may not reregister"  
 
 
-463     ERR_NOPERMFORHOST  
+463 &nbsp; &nbsp; ERR_NOPERMFORHOST  
 &nbsp; &nbsp; ":Your host isn't among the privileged"  
 
-464     ERR_PASSWDMISMATCH  
+464 &nbsp; &nbsp; ERR_PASSWDMISMATCH  
 &nbsp; &nbsp; ":Password incorrect"  
 
-465     ERR_YOUREBANNEDCREEP  
+465 &nbsp; &nbsp; ERR_YOUREBANNEDCREEP  
 &nbsp; &nbsp; ":You are banned from this server"  
 
-467     ERR_KEYSET  
+467 &nbsp; &nbsp; ERR_KEYSET  
 &nbsp; &nbsp; "\<channel\> :Channel key already set"  
 
-471     ERR_CHANNELISFULL  
+471 &nbsp; &nbsp; ERR_CHANNELISFULL  
 &nbsp; &nbsp; "\<channel\> :Cannot join channel (+l)"  
 
-472     ERR_UNKNOWNMODE  
+472 &nbsp; &nbsp; ERR_UNKNOWNMODE  
 &nbsp; &nbsp; "\<char\> :is unknown mode char to me"  
 
-473     ERR_INVITEONLYCHAN  
+473 &nbsp; &nbsp; ERR_INVITEONLYCHAN  
 &nbsp; &nbsp; "\<channel\> :Cannot join channel (+i)"  
 
-474     ERR_BANNEDFROMCHAN  
+474 &nbsp; &nbsp; ERR_BANNEDFROMCHAN  
 &nbsp; &nbsp; "\<channel\> :Cannot join channel (+b)"  
 
-475     ERR_BADCHANNELKEY  
+475 &nbsp; &nbsp; ERR_BADCHANNELKEY  
 &nbsp; &nbsp; "\<channel\> :Cannot join channel (+k)"  
 
-481     ERR_NOPRIVILEGES  
+481 &nbsp; &nbsp; ERR_NOPRIVILEGES  
 &nbsp; &nbsp; ":Permission Denied- You're not an IRC operator"  
 
-482     ERR_CHANOPRIVSNEEDED  
+482 &nbsp; &nbsp; ERR_CHANOPRIVSNEEDED  
 &nbsp; &nbsp; "\<channel\> :You're not channel operator"  
 
-483     ERR_CANTKILLSERVER  
+483 &nbsp; &nbsp; ERR_CANTKILLSERVER  
 &nbsp; &nbsp; ":You cant kill a server!"  
 
-491     ERR_NOOPERHOST  
+491 &nbsp; &nbsp; ERR_NOOPERHOST  
 &nbsp; &nbsp; ":No O-lines for your host"  
 
-501     ERR_UMODEUNKNOWNFLAG  
+501 &nbsp; &nbsp; ERR_UMODEUNKNOWNFLAG  
 &nbsp; &nbsp; ":Unknown MODE flag"  
 
-502     ERR_USERSDONTMATCH  
+502 &nbsp; &nbsp; ERR_USERSDONTMATCH  
 &nbsp; &nbsp; ":Cant change mode for other users"
 
 
