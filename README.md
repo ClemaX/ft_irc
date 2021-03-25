@@ -20,7 +20,7 @@ Details:
 
 **RFC 1459 (May 1993)**
 
-[1. Introduction](#1-introduction)  
+[1. RFC 1459 - Introduction](#1-rfc-1459-introduction)  
 * [1.1 Servers](#11-servers)  
 * [1.2 Clients](#12-clients)  
 * [1.3 Channels](#13-channels)  
@@ -72,11 +72,33 @@ Details:
 * [9.2 Labels](#92-labels)  
 * [9.3 Algorithms](#93-algorithms)  
 
+
+**RFC 2810 (April 2000)**
+
+[1. Introduction](#1-rfc-2810-introduction)  
+
+[2. Components](#2-components)  
+* [2.2 Clients](#22-clients)  
+
+[4. IRC Protocol Services](#4-irc-protocol-services)  
+* [4.1 Client Locator](#4-client-locator)  
+* [4.2 Message Relaying](#4-message-relaying)  
+* [4.3 Channel Hosting And Management](#4-channel-hosting-and-management)  
+
+[6. Current Problems](#6-current-problems)  
+* [6.1 Scalability](#61-scalability)  
+* [6.2 Reliability](#62-reliability)  
+* [6.3 Network Congestion](#63-network-congestion)  
+* [6.4 Privacy](#64-privacy)  
+
+
+
+
 [Sources](#Sources)  
 
 # **RFC 1459 (May 1993)**
 
-# 1. INTRODUCTION
+# 1. RFC 1459 - Introduction
 
 ## 1.1 Servers
 User can connect to a server.  
@@ -1162,6 +1184,102 @@ These race conditions generally arise from the problem of it taking time for mes
 Even by changing to unique labels, there are problems with channel-related commands being disrupted.  
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+
+# **RFC 2810**
+
+First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
+
+The RFC 2810 specifically describes the Architecture of the IRC protocol.
+
+# 1. RFC 2810 - Introduction
+
+The IRC Protocol is based on the client-server model, and is well suited to running on many machines in a distributed fashion.  
+A typical setup involves a single process (the server) forming a central point for clients (or other servers) to connect to, performing the required message deliver multiplexing and other functions.  
+
+This distributed model, which requires each server to have a copy of the global state information, is still the most flagrant problem of the protocol as it is a serious handicap, which limits the maximum size a network can reach.  
+If the existing networks have been able to keep growing at an incredible pace, we must thank hardware manufacturers for giving us ever more powerful systems.  
+
+
+# 2. Components
+
+## 2.2. Clients
+
+A client is anything connecting to a server that is not another server.  
+There are two types of clients which both serve a different purpose.  
+
+### 2.2.1. User Clients
+
+User clients are generally programs providing a text based interface that is used to communicate interactively via IRC.  
+This particular type of clients is often referred as "users".  
+
+### 2.2.2. Service Clients
+
+Unlike users, service clients are not intended to be used manually nor for talking.  
+They have a more limited access to the chat functions of the protocol, while optionally having access to more private data from the servers.  
+
+Services are typically automatons used to provide some kind of service (not necessarily related to IRC itself) to users.  
+An example is a service collecting statistics about the origin of users connected on the IRC network.  
+
+
+# 4. IRC Protocol Services
+
+This section describes the services offered by the IRC protocol.  
+The combination of these services allow real-time conferencing.  
+
+## 4.1. Client Locator
+
+To be able to exchange messages, two clients must be able to locate each other.  
+
+Upon connecting to a server, a client registers using a label which is then used by other servers and clients to know where the client is located.  
+Servers are responsible for keeping track of all the labels being used.  
+
+## 4.2. Message Relaying
+
+The IRC protocol provides no mean for two clients to directly communicate.  
+All communication between clients is relayed by the server(s).  
+
+## 4.3. Channel Hosting And Management
+
+A channel is a named group of one or more users which will all receive messages addressed to that channel.  
+A channel is characterized by its name and current members, it also has a set of properties which can be manipulated by (some of) its members.  
+
+Channels provide a mean for a message to be sent to several clients.  
+Servers host channels, providing the necessary message multiplexing.  
+Servers are also responsible for managing channels by keeping track of the channel members.  
+The exact role of servers is defined in "Internet Relay Chat: Channel Management" [IRC-CHAN].  
+
+
+# 6. Current Problems
+
+There are a number of recognized problems with this protocol, this section only addresses the problems related to the architecture of the protocol.  
+
+## 6.1. Scalability
+
+It is widely recognized that this protocol does not scale sufficiently well when used in a large arena.  
+The main problem comes from the requirement that all servers know about all other servers, clients and channels and that information regarding them be updated as soon as it changes.  
+
+## 6.2. Reliability
+
+As the only network configuration allowed for IRC servers is that of a spanning tree, each link between two servers is an obvious and quite serious point of failure.  
+This particular issue is addressed more in detail in "Internet Relay Chat: Server Protocol" [IRC-SERVER].  
+
+## 6.3. Network Congestion
+
+Another problem related to the scalability and reliability issues, as well as the spanning tree architecture, is that the protocol and architecture for IRC are extremely vulnerable to network congestions.  
+This problem is endemic, and should be solved for the next generation: if congestion and high traffic volume cause a link between two servers to fail, not only this failure generates more network traffic, but the reconnection (eventually elsewhere) of two servers also generates more traffic.  
+
+In an attempt to minimize the impact of these problems, it is strongly RECOMMENDED that servers do not automatically try to reconnect too fast, in order to avoid aggravating the situation.  
+
+## 6.4. Privacy
+
+Besides not scaling well, the fact that servers need to know all information about other entities, the issue of privacy is also a concern.  
+This is in particular true for channels, as the related information is quite a lot more revealing than whether a user is online or not.  
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
