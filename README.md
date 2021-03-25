@@ -868,11 +868,10 @@ This section describes OPTIONAL messages. They are not required in a working ser
 
 ## 6.3 Reserved numerics
 
-These numerics are not described above since they fall into one of the following categories:
-        1\. no longer in use;
-        2\. reserved for future planned use;
-        3\. in current use but are part of a non-generic 'feature' of
-           the current IRC server.
+These numerics are not described above since they fall into one of the following categories:  
+        1\. no longer in use;  
+        2\. reserved for future planned use;  
+        3\. in current use but are part of a non-generic 'feature' of the current IRC server.  
 
         209     RPL_TRACECLASS          217     RPL_STATSQLINE
         231     RPL_SERVICEINFO         232     RPL_ENDOFSERVICES
