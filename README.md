@@ -145,7 +145,7 @@ Details:
 
 [7. RFC 2812 - Current problems](#7-rfc-2812---current-problems)
 * [7.1 Nicknames](#71-nicknames)
-* [7.2 Limitation of wildcards](#72-limitation0of-wildcards)
+* [7.2 Limitation of wildcards](#72-limitation-of-wildcards)
 * [7.3 Security considerations](#73-security-considerations)
 
 
