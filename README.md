@@ -114,6 +114,20 @@ Details:
 * [4.2 Channel Flags](#42-channel-flags)  
 * [4.3 Channel Access Control](#43-channel-access-control)  
 
+[5. Current Implementations](#5-current-implementations)
+* [5.1 Tracking Recently Used Channels](#51-tracking-recently-used-channels)
+* [5.2 Safe Channels](#52-safe-channels)
+
+[6. Current problems](#6-Current problems)
+* [6.1 Labels](#61-labels)
+* [6.2 Mode Propagation Delays](#62-mode-propagation-delays)
+* [6.3 Collisions And Channel Modes](#63-collisions-and-channel-modes)
+* [6.4 Resource Exhaustion](#64-resource-exhaustion)
+
+[7. Security Considerations](#7-security-considerations)
+* [7.1 Access Control](#71-access-control)
+* [7.2 Channel Privacy](#72-channel-privacy)
+* [7.3 Anonymity](#73-anonymity)
 
 
 [Sources](#Sources)  
@@ -1567,8 +1581,81 @@ For channels which have the invite-only flag set, users whose address matches an
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
+# 5. Current Implementations
 
+The only current implementation of these rules as part of the IRC protocol is the IRC server, version 2.10.  
 
+## 5.1 Tracking Recently Used Channels
+
+This mechanism is commonly known as "Channel Delay" and generally only applies to channels which names is prefixed with the character '#'.  
+
+When a network split occurs, servers SHOULD keep track of which channels lost a "channel operator" as the result of the break.  
+These channels are then in a special state which lasts for a certain period of time.  
+In this particular state, the channels cannot cease to exist.  
+If all the channel members leave the channel, the channel becomes unavailable: the server local clients cannot join the channel as long as it is empty.  
+
+Once a channel is unavailable, it will become available again either because a remote user has joined the channel (most likely because the network is healing), or because the delay period has expired (in which case the channel ceases to exist and may be re-created).  
+
+The duration for which a channel death is delayed SHOULD be set considering many factors among which are the size (user wise) of the IRC network, and the usual duration of network splits.  
+It SHOULD be uniform on all servers for a given IRC network.  
+
+## 5.2 Safe Channels
+
+This document introduces the notion of "safe channels".  
+These channels have a name prefixed with the character '!' and great effort is made to avoid collisions in this name space.  
+Collisions are not impossible, however they are very unlikely.
+
+For more information about the different cases and solution concerning this section, have a look at the [RFC 2811 documentation](https://tools.ietf.org/html/rfc2811), section 5.2.
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 6. Current problems
+
+There are a number of recognized problems with the way IRC channels are managed.  
+Some of these can be directly attributed to the rules defined in this document, while others are the result of the underlying "IRC Server Protocol" [IRC-SERVER].  
+Although derived from RFC 1459, this document introduces several novelties in an attempt to solve some of the known problems.  
+
+You will find below the summary of the current problem concerning channels.
+For more information about this problems, have a look at the [RFC 2811 documentation](https://tools.ietf.org/html/rfc2811), section 6.
+
+## 6.1 Labels
+
+### 6.1.1 Channel Delay
+
+### 6.1.2 Safe Channels
+
+## 6.2 Mode Propagation Delays
+
+## 6.3 Collisions And Channel Modes
+
+## 6.4 Resource Exhaustion
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 7. Security Considerations
+
+## 7.1 Access Control
+
+One of the main ways to control access to a channel is to use masks which are based on the username and hostname of the user connections.  
+This mechanism can only be efficient and safe if the IRC servers have an accurate way of authenticating user connections, and if users cannot easily get around it.  
+While it is in theory possible to implement such a strict authentication mechanism, most IRC networks (especially public networks) do not have anything like this in place and provide little guaranty about the accuracy of the username and hostname for a particular client connection.  
+
+Another way to control access is to use a channel key, but since this key is sent in plaintext, it is vulnerable to traditional man in the middle attacks.  
+
+## 7.2 Channel Privacy
+
+Because channel collisions are treated as inclusive events (See Section 6.3), it is possible for users to join a channel overriding its access control settings.  
+This method has long been used by individuals to "take over" channels by "illegitimately" gaining channel operator status on the channel.  
+The same method can be used to find out the exact list of members of a channel, as well as to eventually receive some of the messages sent to the channel.  
+
+## 7.3 Anonymity
+
+The anonymous channel flag (See Section 4.2.1) can be used to render all users on such channel "anonymous" by presenting all messages to the channel as originating from a pseudo user which nickname is "anonymous".  
+This is done at the client-server level, and no anonymity is provided at the server-server level.  
+
+It should be obvious to readers, that the level of anonymity offered is quite poor and insecure, and that clients SHOULD display strong warnings for users joining such channels.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
