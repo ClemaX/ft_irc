@@ -149,6 +149,11 @@ Details:
 * [7.3 Security considerations](#73-security-considerations)
 
 
+
+**RFC 2813 (April 2000)**
+
+[1. Introduction](#1-rfc-2813---introduction)
+
 [Sources](#Sources)  
 
 ------------------------------------------------------------
@@ -1806,6 +1811,26 @@ For more information about this problems, have a look at the [RFC 2812 documenta
 ## 7.2 Limitation of wildcards
 
 ## 7.3 Security considerations
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# **RFC 2813**
+
+First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
+
+The RFC 2813 specifically describes the **Server Protocol** of the IRC protocol.
+
+# 1. RFC 2813 - Introduction
+
+While based on the client-server model, the IRC (Internet Relay Chat) protocol allows servers to connect to each other effectively forming a network.  
+
+This document defines the protocol used by servers to talk to each other.  
+It was originally a superset of the client protocol but has evolved differently.  
+
+First formally documented in May 1993 as part of RFC 1459, most of the changes brought since then can be found in this document as development was focused on making the protocol scale better.  
+Better scalability has allowed existing world-wide networks to keep growing and reach sizes which defy the old specification.  
 
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
