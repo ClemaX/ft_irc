@@ -26,10 +26,7 @@ Details:
 * [1.2 Clients](#12-clients)  
 * [1.3 Channels](#13-channels)  
 
-[2. The IRC Specification](#2-the-irc-specification)  
-* [2.2 Chars](#22-chars)  
-* [2.3 Messages](#23-messages)  
-* [2.4 Numeric answers](#24-numeric-answers)  
+[2. The IRC Specification - RFC 1459](#2-the-irc-specification---rfc-1459)  
 
 [3. IRC Concepts](#3-irc-concepts)  
 * [3.1 One to one comunication](#31-one-to-one-comunication)  
@@ -47,9 +44,6 @@ Details:
 [5. OPTIONALS](#5-optionals)  
 
 [6. REPLIES](#6-replies)  
-* [6.1 Error Replies](#61-error-replies)  
-* [6.2 Command responses](#62-command-responses)  
-* [6.3 Reserved numerics](#63-reserved-numerics)  
 
 [7. Client and server authentication](#7-client-and-server-authentication)  
 
@@ -130,6 +124,37 @@ Details:
 * [7.3 Anonymity](#73-anonymity)
 
 
+
+**RFC 2812 (April 2000)**
+
+[1. Introduction](#1-rfc-2812---introduction)
+
+[2. The IRC Specification - RFC 2812](#2-the-irc-specification---rfc-2812)  
+* [2.2 Character codes](#22-charachter-codes)  
+* [2.3 Messages](#23-messages)  
+* [2.4 Numeric answers](#24-numeric-answers)  
+* [2.5 Wildcards expressions](#25-wildcards-expressions)  
+
+[3. Message details](#3-message-details)  
+* [3.1 Connection Registration](#31-connection-registration)  
+* [3.2 Channel operations](#32-channel-operations)  
+* [3.3 Sending messages](#33-sending-messages)  
+* [3.4 Server queries and commands](#34-server-queries-and-commands)  
+* [3.5 Service Query and Commands](#35-service-queries-and-commands)  
+* [3.6 User based queries](#35-user-based-queries)  
+* [3.7 Miscellaneous messages](#36-miscellaneous-messages)  
+
+[5. Replies](#5-replies)  
+* [5.1 Command responses](#51-command-responses)  
+* [5.2 Error Replies](#52-error-replies)  
+* [5.3 Reserved numerics](#53-reserved-numerics)  
+
+[7. RFC 2812 - Current problems](#7-rfc-2812---current-problems)
+* [7.1 Nicknames](#71-nicknames)
+* [7.2 Limitation of wildcards](#72-limitation0of-wildcards)
+* [7.3 Security considerations](#73-security-considerations)
+
+
 [Sources](#Sources)  
 
 ------------------------------------------------------------
@@ -164,73 +189,9 @@ See section ["2. Channel Characteristics"](#2-channel-characteristics) of the RF
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
-# 2. The IRC Specification
+# 2. The IRC Specification - RFC 1459
 
-## 2.2 Chars
-Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).  
-Some bytes values are however used as messages delimitors:  
-* '{', '}', '|' are lowercases.  
-* '[', ']', '\' are uppercases.  
-
-## 2.3 Messages
-Servers and clients send to each other messages and those messages can generate or not an answer.  
-If a user cast a valid command, the server behaviour should be as specified in the documentation.  
-The comunication between client & server is essentally asyncronous.  
-Each IRC message can consist on (separeted with at least 1 space):  
-* \<optional\> prefix:  
-	* start ':' (0x3b) and be followed by the prefix (no spaces between).  
-	* is used by severs to indicate the origin of the msg (no prefix == msg comes from same connection as the msg receptor).  
-	* Client shouldn't use prefixes for sending msgs, if they do the only valid prefix is the nickname associated with the client.  
-	* If the prefix isn't in the database or the prefix or the sender does not match with the msg prefix the server must ignore the msg in a silent way).  
-* command: must be an IRC valid command or 3 digits representing ASCII text.  
-* parameters: max == 15.  
-
-Each message is finished by CR (0x0d) - LF (0x0a).  
-A message max lenght is 512 - CR-LF = 510.  
-More details in section 7.  
-
-### 2.3.1 Messages format in pseudocode
-
-\<message\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\>  
-\<prefix\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ]  
-\<command\>  &nbsp; &nbsp; &nbsp; &nbsp;  -> \<char\> { \<char\> } | \<digit\> \<digit\> \<digit\>  
-\<space\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> ' ' { ' ' } (0x20)  
-\<param\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<space\> [':' \<final param\> | \<middle param\> \<final param\> ]  
-\<final param\>  &nbsp; &nbsp; &nbsp;  -> any kind of bytes sequence (empty too) exept \<CR-LF\> or 0x0  
-\<middle param\>  &nbsp; -> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0  
-\<CR-LF\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> 0x0d - 0x0a  
-
-#### *Notes:*
-1) \<space\> is only 0x20 not whitespaces.  
-2) \<final param\> and \<middle param\> are only used to accept spaces in a param  
-	(just a syntactical trick).  
-3) CR and LF can't be part of the msg (logical).  
-4) 0x0 can't be used inside a msg for C/C++ reasons.  
-5) The last \<param\> must be an empty string.  
-6) The prefix "['!' \<user\> ] ['@' \<host\> ]" must not be used in	server - server comunication, its only server - client oriented.  
-
-\<target\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<a\> \<"," \<target\>  
-\<a\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<channel\> | \<user\> '@' \<server name\> | \<nick\> | \<mask\>  
-\<channel\>   &nbsp; &nbsp; &nbsp; &nbsp;  -> ('#' | '&') \<string\>  
-\<server name\> &nbsp; -> \<host\>  
-\<host\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> see RFC 952 [DNS:4]  
-\<mask\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> ('#' |'&') \<string\>  
-\<string\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
-
-\<user\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<string with coma\> { \<string with coma\> }  
-\<letter\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> 'a' ... 'z' | 'A' ... 'Z'  
-\<digit\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> '0' ... '9'  
-\<especial\>   &nbsp; &nbsp; &nbsp; &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
-
-## 2.4 Numeric answers
-The most common answer (for error and not error).  
-Composed by:  
-* 1\) The sender prefix.  
-* 2\) 3 digit integer.  
-* 3\) The receiver.  
-
-A client can't raise a numeric answer (it's silently ignored).  
-Section 6 contains the numeric answers codes list.  
+See section ["2. The IRC Specification - RFC 2812"](#2-the-irc-specification---rfc-2812) of the RFC 2812.
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
@@ -253,7 +214,7 @@ If there are more than 1 user in the same server and in the same channel, the	me
 ### 3.2.3 One to host/server mask comunication
 Same as previous.  
 
-## 3.3 One-to-all
+## 3.34One-to-all
 
 ### 3.3.1 Client to client comunication
 There's any kind of unique message that can be sent to all the clients.  
@@ -269,351 +230,7 @@ Almost every msg sent server to server is distributed all over the network to al
 
 # 4. Message details
 
-## 4.1 Connection Registration
-
-The recommended order for a client to register is as follows:
-* 1\. Pass message
-* 2\. Nick message
-* 3\. User message
-
-Command: **PASS**  
-	Parameters: \<password\>  
-	Example:  
-&nbsp; &nbsp; \- PASS secretpasswordhere  
-
-Command: **NICK**  
-Parameters: \<nickname\> [ \<hopcount\> ]  
-   Example:  
-&nbsp; &nbsp; \- *NICK Wiz*
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Introducing new nick "Wiz".  
-&nbsp; &nbsp; \- *:WiZ NICK Kilroy*
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; WiZ changed his nickname to Kilroy.  
-
-Command: **USER**  
-   Parameters: \<username\> \<hostname\> \<servername\> \<realname\>  
-   Examples:  
-&nbsp; &nbsp; \- *USER guest tolmoon tolsun :Ronnie Reagan*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  User registering themselves with a username of "guest" and real name "Ronnie Reagan".  
-&nbsp; &nbsp; \- *:testnick USER guest tolmoon tolsun :Ronnie Reagan*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  message between servers with the nickname for which the USER command belongs to  
-
-
-Command: **SERVER**  
-   Parameters: \<servername\> \<hopcount\> \<info\>  
-   Example:  
-&nbsp; &nbsp; \- *SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; New server test.oulu.fi introducing itself and attempting to register. The name in []'s is the hostname for the host running test.oulu.fi.  
-&nbsp; &nbsp; \- *:tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Server tolsun.oulu.fi is our uplink for csd.bu.edu which is 5 hops away.  
-
-Command: **OPER**  
-   Parameters: \<user\> \<password\>  
-   Example:  
-&nbsp; &nbsp; \- *OPER foo bar*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Attempt to register as an operator using a username of "foo" and "bar" as the password.  
-
-Command: **QUIT**  
-   Parameters: [\<Quit message\>]  
-   Examples:  
-&nbsp; &nbsp; \- *QUIT :Gone to have lunch*
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Preferred message format.  
-
-Command: **SQUIT**  
-   Parameters: \<server\> \<comment\>  
-   Example:  
-&nbsp; &nbsp; \- *SQUIT tolsun.oulu.fi :Bad Link ?*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; the server link tolson.oulu.fi has been terminated because of "Bad Link".  
-&nbsp; &nbsp; \- *:Trillian SQUIT cm22.eng.umd.edu :Server out of control*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Trillian to disconnect "cm22.eng.umd.edu" from the net because "Server out of control".  
-
-
-## 4.2 Channel operations
-
-Command: **JOIN**  
-   Parameters: \<channel\>{,\<channel\>} [\<key\>{,\<key\>}]  
-   Examples:  
- &nbsp; &nbsp; \- *JOIN #foobar*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foobar.  
- &nbsp; &nbsp; \- *JOIN &foo fubar*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel &foo using key "fubar".  
- &nbsp; &nbsp; \- *JOIN #foo,&bar fubar*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar" and &bar using no key.  
-&nbsp; &nbsp; \- *JOIN #foo,#bar fubar,foobar*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar". and channel #bar using key "foobar".  
-&nbsp; &nbsp; \- *JOIN #foo,#bar*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channels #foo and #bar.  
-&nbsp; &nbsp; \- *:WiZ JOIN #Twilight_zone*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; JOIN message from WiZ  
-
-Command: **PART**  
-   Parameters: \<channel\>{,\<channel\>}  
-   Examples:  
-&nbsp; &nbsp; \- *PART #twilight_zone*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave channel "#twilight_zone"  
-&nbsp; &nbsp; \- *PART #oz-ops,&group5*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave both channels "&group5" and "#oz-ops".  
-
-   Channel mode Parameters: \<channel\> {[+|-]|o|p|s|i|t|n|b|v} [\<limit\>] [\<user\>] [\<ban mask\>]  
-
-   User mode Parameters: \<nickname\> {[+|-]|i|w|s|o}  
-
-   Examples - Use of Channel Modes:  
-&nbsp; &nbsp; \- *MODE #Finnish +im*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Makes #Finnish channel moderated and 'invite-only'.  
-&nbsp; &nbsp; \- *MODE #Finnish +o Kilroy*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Gives 'chanop' privileges to Kilroy on channel #Finnish.  
-&nbsp; &nbsp; \- *MODE #Finnish +v Wiz*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Allow WiZ to speak on #Finnish.  
-&nbsp; &nbsp; \- *MODE #Fins -s*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Removes 'secret' flag from channel #Fins.  
-&nbsp; &nbsp; \- *MODE #42 +k oulu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the channel key to "oulu".  
-&nbsp; &nbsp; \- *MODE #eu-opers +l 10*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the limit for the number of users on channel to 10.  
-&nbsp; &nbsp; \- *MODE &oulu +b*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list ban masks set for channel.  
-&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@**  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent all users from joining.  
-&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@\*.edu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent any user from a hostname matching *.edu from joining.  
-
-    Examples - Use of User Modes:  
-&nbsp; &nbsp; \- *:MODE WiZ -w*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; turns reception of WALLOPS messages off for WiZ.  
-&nbsp; &nbsp; \- *:Angel MODE Angel +i*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to make themselves invisible.  
-&nbsp; &nbsp; \- *MODE WiZ -o*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; WiZ 'deopping' (removing operator status). The plain reverse of this command ("MODE WiZ +o") must not be allowed from users since would bypass the OPER command.  
-
-Command: **TOPIC**  
-   Parameters: \<channel\> [\<topic\>]  
-   Examples:  
-&nbsp; &nbsp; \- *:Wiz TOPIC #test :New topic*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;User Wiz setting the topic.  
-&nbsp; &nbsp; \- *TOPIC #test :another topic*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;set the topic on #test to "another topic".  
-&nbsp; &nbsp; \- *TOPIC #test*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the topic for #test.  
-
-Command: **NAMES**  
-   Parameters: [\<channel\>{,\<channel\>}]  
-   Examples:  
-&nbsp; &nbsp; \- *NAMES #twilight_zone,#42*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list visible users on #twilight_zone and #42 if the channels are visible to you.  
-&nbsp; &nbsp; \- *NAMES*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all visible channels and users  
-
-
-Command: **LIST**  
-   Parameters: [\<channel\>{,\<channel\>} [\<server\>]]  
-   Examples:  
-&nbsp; &nbsp; \- *LIST*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all channels.  
-&nbsp; &nbsp; \- *LIST #twilight_zone,#42*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List channels #twilight_zone and #42  
-
-
-Command: **INVITE**  
-   Parameters: \<nickname\> \<channel\>  
-   Examples:  
-&nbsp; &nbsp; \- *:Angel INVITE Wiz #Dust*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; User Angel inviting WiZ to channel #Dust  
-&nbsp; &nbsp; \- *INVITE Wiz #Twilight_Zone*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Command to invite WiZ to #Twilight_zone  
-
-Command: **KICK**  
-   Parameters: \<channel\> \<user\> [\<comment\>]  
-   Examples:  
-&nbsp; &nbsp; \- *KICK &Melbourne Matthew*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick Matthew from &Melbourne  
-&nbsp; &nbsp; \- *KICK #Finnish John :Speaking English*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick John from #Finnish using "Speaking English" as the reason (comment).  
-&nbsp; &nbsp; \- *:WiZ KICK #Finnish John*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; KICK message from WiZ to remove John from channel #Finnish  
-
-*NOTE:*
-     It is possible to extend the KICK command parameters to the following:  
- &nbsp; &nbsp; &nbsp; &nbsp; \<channel\>{,\<channel\>} \<user\>{,\<user\>} [\<comment\>]  
-
-
-## 4.3 Server queries and commands
-
-Command: **VERSION**  
-   Parameters: [\<server\>]  
-   Examples:  
-&nbsp; &nbsp; \- *:Wiz VERSION \*.se*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Wiz to check the version of a server matching "*.se"  
-&nbsp; &nbsp; \- *VERSION tolsun.oulu.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the version of server "tolsun.oulu.fi".  
-
-Command: **STATS**  
-   Parameters: [\<query\> [\<server\>]]  
-   Examples:  
-&nbsp; &nbsp; \- *STATS m*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the command usage for the server you are connected to  
-&nbsp; &nbsp; \- *:Wiz STATS c eff.org*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request by WiZ for C/N line information from server eff.org  
-
-Command: **LINKS**  
-   Parameters: [[\<remote server\>] \<server mask\>]  
-   Examples:  
-&nbsp; &nbsp; \- *LINKS *.au*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all servers which have a name that matches *.au;  
-&nbsp; &nbsp; \- *:WiZ LINKS \*.bu.edu \*.edu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; LINKS message from WiZ to the first server matching *.edu for a list of servers matching *.bu.edu.  
-
-Command: **TIME**  
-   Parameters: [\<server\>]  
-   Examples:  
-   &nbsp; &nbsp; \- *TIME tolsun.oulu.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the time on the server "tolson.oulu.fi"  
-   &nbsp; &nbsp; \- *Angel TIME \*.au*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; user angel checking the time on a  
- 
-Command: **CONNECT**  
-   Parameters: \<target server\> [\<port\> [\<remote server\>]]  
-   Examples:  
-&nbsp; &nbsp; \- *CONNECT tolsun.oulu.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Attempt to connect a server to tolsun.oulu.fi  
-&nbsp; &nbsp; \- *:WiZ CONNECT eff.org 6667 csd.bu.edu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; CONNECT attempt by WiZ to get servers eff.org and csd.bu.edu connected on port 6667.  
-
-Command: **TRACE**  
-   Parameters: [\<server\>]  
-   Examples:  
-&nbsp; &nbsp; \- *TRACE \*.oulu.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE to a server matching *.oulu.fi  
-&nbsp; &nbsp; \- *:WiZ TRACE AngelDust*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE issued by WiZ to nick AngelDust  
-
-
-Command: **ADMIN**  
-   Parameters: [\<server\>]  
-   Examples:  
-&nbsp; &nbsp; \- *ADMIN tolsun.oulu.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an ADMIN reply from tolsun.oulu.fi  
-&nbsp; &nbsp; \- *:WiZ ADMIN \*.edu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ADMIN request from WiZ for first server found to match *.edu.  
-
-Command: **INFO**  
-   Parameters: [\<server\>]  
-   Examples:  
-&nbsp; &nbsp; \- *INFO csd.bu.edu*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an INFO reply from csd.bu.edu  
-&nbsp; &nbsp; \- *:Avalon INFO \*.fi*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; INFO request from Avalon for first server found to match *.fi.  
-&nbsp; &nbsp; \- *INFO Angel*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request info from the server that Angel is connected to.  
-
-
-## 4.4 Sending messages
-
-The main purpose of the IRC protocol is to provide a base for clients to communicate with each other.  
-
-PRIVMSG and NOTICE are the only messages available which actually perform delivery of a text message from one client to another - the rest just make it possible and try to ensure it happens in a reliable and structured manner.  
-
-### 4.4.1 Private messages
-
-Command: **PRIVMSG**  
-   Parameters: \<receiver\>{,\<receiver\>} \<text to be sent\>  
-   Examples:  
-&nbsp; &nbsp; \- *:Angel PRIVMSG Wiz :Hello are you receiving this message ?*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to Wiz.  
-&nbsp; &nbsp; \- *PRIVMSG Angel :yes I'm receiving it !receiving it !'u\>(768u+1n) .br*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;Message to Angel.  
-&nbsp; &nbsp; \- *PRIVMSG jto@tolsun.oulu.fi :Hello !*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to a client on server tolsun.oulu.fi with username of "jto".  
-&nbsp; &nbsp; \- *PRIVMSG $*.fi :Server tolsun.oulu.fi rebooting.*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to everyone on a server which has a name matching *.fi.  
-&nbsp; &nbsp; \- *PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions*  
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to all users who come from a host which has a name matching *.edu.  
-
-### 4.4.2 Notice
-
-Command: **NOTICE**  
-   Parameters: \<nickname\> \<text\>  
-
-
-## 4.5 User based queries
-
-Command: **WHO**   
-   Parameters: [\<name\> [\<o\>]]  
-   Examples:  
-&nbsp; &nbsp; \- *WHO \*.fi*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users who match against "*.fi".  
-&nbsp; &nbsp; \- *WHO jto\* o*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users with a match against "jto*" if they are an operator.  
-
-Command: **WHOIS**   
-   Parameters: [\<server\>] \<nickmask\>[,\<nickmask\>[,...]]  
-   Examples:  
-&nbsp; &nbsp; \- *WHOIS wiz*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return available user information about nick WiZ*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ask server eff.org for user information about trillian  
-
-
-Command: **WHOWAS**   
-   Parameters: \<nickname\> [\<count\> [\<server\>]]  
-   Examples:  
-&nbsp; &nbsp; \- *WHOWAS Wiz*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return all information in the nick history about nick "WiZ";  
-&nbsp; &nbsp; \- *WHOWAS Mermaid 9*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return at most, the 9 most recent entries in the nick history for "Mermaid";    
-&nbsp; &nbsp; \- *WHOWAS Trillian 1 \*.edu*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return the most recent history for "Trillian" from the first server found to match "*.edu".  
-
-
-## 4.6 Miscellaneous messages
-
-   Messages in this category do not fit into any of the above categories but are nonetheless still a part of and required by the protocol.  
-
-Command: **KILL**  
-   Parameters: \<nickname\> \<comment\>  
-
-	The KILL message is used to cause a client-server connection to be closed by the server which has the actual connection.  
-	KILL is used by servers when they encounter a duplicate entry in the list of valid nicknames and is used to remove both entries.  
-	It is also available to operators.  
-
-	Clients which have automatic reconnect algorithms effectively make this command useless since the disconnection is only brief.  
-	It does however break the flow of data and can be used to stop large amounts of being abused, any user may elect to receive KILL messages generated for others to keep an 'eye' on would be trouble spots.  
-
-	In an arena where nicknames are required to be globally unique at all times, KILL messages are sent whenever 'duplicates' are detected (that is an attempt to register two users with the same nickname) in the hope that both of them will disappear and only 1 reappear.  
-
-	The comment given must reflect the actual reason for the KILL.  
-	For server-generated KILLs it usually is made up of details concerning the origins of the two conflicting nicknames.  
-	For users it is left up to them to provide an adequate reason to satisfy others who see it.  
-	To prevent/discourage fake KILLs from being generated to hide the identify of the KILLer, the comment also shows a 'kill-path' which is updated by each server it passes through, each prepending its name to the path.  
-  
-Examples:  
-&nbsp; &nbsp; \- *KILL David (csd.bu.edu \<- tolsun.oulu.fi)*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Nickname collision between csd.bu.edu and tolson.oulu.fi  
-
-
-   *NOTE:*
-   It is recommended that only Operators be allowed to kill other users with KILL message. In an ideal world not even operators would need to do this and it would be left to servers to deal with.  
-
-
-Command: **PING**  
-   Parameters: \<server1\> [\<server2\>]  
-   Examples:  
-&nbsp; &nbsp; \- *PING tolsun.oulu.fi*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; server sending a PING message to another server to indicate it is still alive.  
-&nbsp; &nbsp; \- *PING WiZ*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; PING message being sent to nick WiZ  
-
-Command: **PONG**  
-   Parameters: \<daemon\> [\<daemon2\>]  
-   Examples:  
-&nbsp; &nbsp; \- *PONG csd.bu.edu tolsun.oulu.fi*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; PONG message from csd.bu.edu to  
-
-Command: **ERROR**  
-   Parameters: \<error message\>  
-   Examples:  
-&nbsp; &nbsp; \- *ERROR :Server \*.fi already exists*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ERROR message to the other server which caused this error.  
-&nbsp; &nbsp; \- *NOTICE WiZ :ERROR from csd.bu.edu -- Server \*.fi already exists*  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Same ERROR message as above but sent to user WiZ on the other server.  
+See section ["3. Message Details"](#3-message-details) of the RFC 2812.
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
@@ -625,336 +242,7 @@ This section describes OPTIONAL messages. They are not required in a working ser
 
 # 6. REPLIES
 
-## 6.1 Error Replies
-
-401 &nbsp; &nbsp; ERR_NOSUCHNICK  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nickname\> :No such nick/channel"  
-
-402 &nbsp; &nbsp; ERR_NOSUCHSERVER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server name\> :No such server"  
-
-403 &nbsp; &nbsp; ERR_NOSUCHCHANNEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :No such channel"  
-
-404 &nbsp; &nbsp; ERR_CANNOTSENDTOCHAN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :Cannot send to channel"  
-
-405 &nbsp; &nbsp; ERR_TOOMANYCHANNELS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :You have joined too many channels"  
-
-406 &nbsp; &nbsp; ERR_WASNOSUCHNICK  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nickname\> :There was no such nickname"  
-
-407 &nbsp; &nbsp; ERR_TOOMANYTARGETS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<target\> :Duplicate recipients. No message    
-
-409 &nbsp; &nbsp; ERR_NOORIGIN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No origin specified"  
-
-411 &nbsp; &nbsp; ERR_NORECIPIENT  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No recipient given (\<command\>)"  
-
-412 &nbsp; &nbsp; ERR_NOTEXTTOSEND  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No text to send"  
-
-413 &nbsp; &nbsp; ERR_NOTOPLEVEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :No toplevel domain specified"  
-
-414 &nbsp; &nbsp; ERR_WILDTOPLEVEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :Wildcard in toplevel domain"  
-
-421 &nbsp; &nbsp; ERR_UNKNOWNCOMMAND  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> :Unknown command"  
-
-422 &nbsp; &nbsp; ERR_NOMOTD  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":MOTD File is missing"  
-
-423 &nbsp; &nbsp; ERR_NOADMININFO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :No administrative info available"  
-
-424 &nbsp; &nbsp; ERR_FILEERROR  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":File error doing \<file op\> on \<file\>"  
-
-431 &nbsp; &nbsp; ERR_NONICKNAMEGIVEN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No nickname given"  
-
-432 &nbsp; &nbsp; ERR_ERRONEUSNICKNAME  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Erroneus nickname"  
-
-433 &nbsp; &nbsp; ERR_NICKNAMEINUSE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Nickname is already in use"  
-
-436 &nbsp; &nbsp; ERR_NICKCOLLISION  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Nickname collision KILL"  
-
-441 &nbsp; &nbsp; ERR_USERNOTINCHANNEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<channel\> :They aren't on that channel"  
-
-442 &nbsp; &nbsp; ERR_NOTONCHANNEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :You're not on that channel"  
-
-443 &nbsp; &nbsp; ERR_USERONCHANNEL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> \<channel\> :is already on channel"  
-
-444 &nbsp; &nbsp; ERR_NOLOGIN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> :User not logged in"  
-
-445 &nbsp; &nbsp; ERR_SUMMONDISABLED  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":SUMMON has been disabled"  
-
-446 &nbsp; &nbsp; ERR_USERSDISABLED  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":USERS has been disabled"  
-
-451 &nbsp; &nbsp; ERR_NOTREGISTERED  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You have not registered"  
-
-461 &nbsp; &nbsp; ERR_NEEDMOREPARAMS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> :Not enough parameters"  
-
-462 &nbsp; &nbsp; ERR_ALREADYREGISTRED  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You may not reregister"  
-
-
-463 &nbsp; &nbsp; ERR_NOPERMFORHOST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Your host isn't among the privileged"  
-
-464 &nbsp; &nbsp; ERR_PASSWDMISMATCH  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Password incorrect"  
-
-465 &nbsp; &nbsp; ERR_YOUREBANNEDCREEP  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are banned from this server"  
-
-467 &nbsp; &nbsp; ERR_KEYSET  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Channel key already set"  
-
-471 &nbsp; &nbsp; ERR_CHANNELISFULL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+l)"  
-
-472 &nbsp; &nbsp; ERR_UNKNOWNMODE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<char\> :is unknown mode char to me"  
-
-473 &nbsp; &nbsp; ERR_INVITEONLYCHAN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+i)"  
-
-474 &nbsp; &nbsp; ERR_BANNEDFROMCHAN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+b)"  
-
-475 &nbsp; &nbsp; ERR_BADCHANNELKEY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+k)"  
-
-481 &nbsp; &nbsp; ERR_NOPRIVILEGES  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Permission Denied- You're not an IRC operator"  
-
-482 &nbsp; &nbsp; ERR_CHANOPRIVSNEEDED  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :You're not channel operator"  
-
-483 &nbsp; &nbsp; ERR_CANTKILLSERVER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You cant kill a server!"  
-
-491 &nbsp; &nbsp; ERR_NOOPERHOST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No O-lines for your host"  
-
-501 &nbsp; &nbsp; ERR_UMODEUNKNOWNFLAG  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Unknown MODE flag"  
-
-502 &nbsp; &nbsp; ERR_USERSDONTMATCH  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Cant change mode for other users"
-
-
-## 6.2 Command responses
-
-300 &nbsp; &nbsp; RPL_NONE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Dummy reply number. Not used.  
-
-302 &nbsp; &nbsp; RPL_USERHOST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<reply\>{\<space\>\<reply\>}]"  
-
-303 &nbsp; &nbsp; RPL_ISON  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<nick\> {\<space\>\<nick\>}]"  
-
-301 &nbsp; &nbsp; RPL_AWAY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :\<away message\>"  
-
-305 &nbsp; &nbsp; RPL_UNAWAY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are no longer marked as being away"  
-306 &nbsp; &nbsp; RPL_NOWAWAY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You have been marked as being away"  
-
-311 &nbsp; &nbsp; RPL_WHOISUSER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
-312 &nbsp; &nbsp; RPL_WHOISSERVER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<server\> :\<server info\>"  
-313 &nbsp; &nbsp; RPL_WHOISOPERATOR  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :is an IRC operator"  
-317 &nbsp; &nbsp; RPL_WHOISIDLE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<integer\> :seconds idle"  
-318 &nbsp; &nbsp; RPL_ENDOFWHOIS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of /WHOIS list"  
-319 &nbsp; &nbsp; RPL_WHOISCHANNELS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :{[@|+]\<channel\>\<space\>}"  
-
-314 &nbsp; &nbsp; RPL_WHOWASUSER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
-369 &nbsp; &nbsp; RPL_ENDOFWHOWAS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of WHOWAS"  
-
-321 &nbsp; &nbsp; RPL_LISTSTART  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Channel :Users  Name"  
-322 &nbsp; &nbsp; RPL_LIST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<# visible\> :\<topic\>"  
-323 &nbsp; &nbsp; RPL_LISTEND  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /LIST"  
-
-324 &nbsp; &nbsp; RPL_CHANNELMODEIS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<mode\> \<mode params\>"  
-
-331 &nbsp; &nbsp; RPL_NOTOPIC  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :No topic is set"  
-332 &nbsp; &nbsp; RPL_TOPIC  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :\<topic\>"  
-
-341 &nbsp; &nbsp; RPL_INVITING  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<nick\>"  
-
-342 &nbsp; &nbsp; RPL_SUMMONING  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> :Summoning user to IRC"  
-
-351 &nbsp; &nbsp; RPL_VERSION  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<version\>.\<debuglevel\> \<server\> :\<comments\>"  
-
-352 &nbsp; &nbsp; RPL_WHOREPLY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<user\> \<host\> \<server\> \<nick\> \<H|G\>[*][@|+] :\<hopcount\> \<real name\>"  
-315 &nbsp; &nbsp; RPL_ENDOFWHO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<name\> :End of /WHO list"  
-
-353 &nbsp; &nbsp; RPL_NAMREPLY  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :[[@|+]\<nick\> [[@|+]\<nick\> [...]]]"  
-366 &nbsp; &nbsp; RPL_ENDOFNAMES  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of /NAMES list"  
-
-364 &nbsp; &nbsp; RPL_LINKS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> \<server\> :\<hopcount\> \<server info\>"  
-365 &nbsp; &nbsp; RPL_ENDOFLINKS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :End of /LINKS list"  
-
-367 &nbsp; &nbsp; RPL_BANLIST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<banid\>"  
-368 &nbsp; &nbsp; RPL_ENDOFBANLIST  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of channel ban list"  
-
-371 &nbsp; &nbsp; RPL_INFO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<string\>"  
-374 &nbsp; &nbsp; RPL_ENDOFINFO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /INFO list"  
-
-375 &nbsp; &nbsp; RPL_MOTDSTART  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<server\> Message of the day - "  
-372 &nbsp; &nbsp; RPL_MOTD  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<text\>"  
-376 &nbsp; &nbsp; RPL_ENDOFMOTD  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /MOTD command"  
-
-381 &nbsp; &nbsp; RPL_YOUREOPER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are now an IRC operator"  
-
-382 &nbsp; &nbsp; RPL_REHASHING  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<config file\> :Rehashing"  
-
-391 &nbsp; &nbsp; RPL_TIME  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :\<string showing server's local time\>"  
-
-392 &nbsp; &nbsp; RPL_USERSSTART  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":UserID   Terminal  Host"  
-393 &nbsp; &nbsp; RPL_USERS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":%-8s %-9s %-8s"  
-394 &nbsp; &nbsp; RPL_ENDOFUSERS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of users"  
-395 &nbsp; &nbsp; RPL_NOUSERS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Nobody logged in"  
-
-200 &nbsp; &nbsp; RPL_TRACELINK  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Link \<version & debug level\> \<destination\> \<next server\>"  
-201 &nbsp; &nbsp; RPL_TRACECONNECTING  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Try. \<class\> \<server\>"  
-202 &nbsp; &nbsp; RPL_TRACEHANDSHAKE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H.S. \<class\> \<server\>"  
-203 &nbsp; &nbsp; RPL_TRACEUNKNOWN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "???? \<class\> [\<client IP address in dot form\>]"  
-204 &nbsp; &nbsp; RPL_TRACEOPERATOR  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Oper \<class\> \<nick\>"  
-205 &nbsp; &nbsp; RPL_TRACEUSER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "User \<class\> \<nick\>"  
-206 &nbsp; &nbsp; RPL_TRACESERVER  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Serv \<class\> \<int\>S \<int\>C \<server\> \<nick!user|*!*\>@\<host|server\>"  
-208 &nbsp; &nbsp; RPL_TRACENEWTYPE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<newtype\> 0 \<client name\>"  
-261 &nbsp; &nbsp; RPL_TRACELOG  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "File \<logfile\> \<debug level\>"  
-
-211 &nbsp; &nbsp; RPL_STATSLINKINFO  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<linkname\> \<sendq\> \<sent messages\> \<sent bytes\> \<received messages\> \<received bytes\> \<time open\>"  
-212 &nbsp; &nbsp; RPL_STATSCOMMANDS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> \<count\>"  
-213 &nbsp; &nbsp; RPL_STATSCLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "C \<host\> * \<name\> \<port\> \<class\>"  
-214 &nbsp; &nbsp; RPL_STATSNLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "N \<host\> * \<name\> \<port\> \<class\>"  
-215 &nbsp; &nbsp; RPL_STATSILINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "I \<host\> * \<host\> \<port\> \<class\>"  
-216 &nbsp; &nbsp; RPL_STATSKLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "K \<host\> * \<username\> \<port\> \<class\>"  
-218 &nbsp; &nbsp; RPL_STATSYLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Y \<class\> \<ping frequency\> \<connect frequency\> \<max sendq\>"  
-219 &nbsp; &nbsp; RPL_ENDOFSTATS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<stats letter\> :End of /STATS report"  
-241 &nbsp; &nbsp; RPL_STATSLLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "L \<hostmask\> * \<servername\> \<maxdepth\>"  
-242 &nbsp; &nbsp; RPL_STATSUPTIME  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Server Up %d days %d:%02d:%02d"  
-243 &nbsp; &nbsp; RPL_STATSOLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "O \<hostmask\> * \<name\>"  
-244 &nbsp; &nbsp; RPL_STATSHLINE  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H \<hostmask\> * \<servername\>"  
-
-221 &nbsp; &nbsp; RPL_UMODEIS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user mode string\>"  
-
-251 &nbsp; &nbsp; RPL_LUSERCLIENT  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":There are \<integer\> users and \<integer\> invisible on \<integer\> servers"  
-252 &nbsp; &nbsp; RPL_LUSEROP  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :operator(s) online"  
-253 &nbsp; &nbsp; RPL_LUSERUNKNOWN  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :unknown connection(s)"  
-254 &nbsp; &nbsp; RPL_LUSERCHANNELS  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :channels formed"  
-255 &nbsp; &nbsp; RPL_LUSERME  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":I have \<integer\> clients and \<integer\> servers"  
-
-256 &nbsp; &nbsp; RPL_ADMINME  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :Administrative info"  
-257 &nbsp; &nbsp; RPL_ADMINLOC1  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
-258 &nbsp; &nbsp; RPL_ADMINLOC2  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
-259 &nbsp; &nbsp; RPL_ADMINEMAIL  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"
-
-## 6.3 Reserved numerics
-
-These numerics are not described above since they fall into one of the following categories:  
-&nbsp; &nbsp; &nbsp; &nbsp; 1\. no longer in use;  
-&nbsp; &nbsp; &nbsp; &nbsp; 2\. reserved for future planned use;  
-&nbsp; &nbsp; &nbsp; &nbsp; 3\. in current use but are part of a non-generic 'feature' of the current IRC server.  
-
-        209     RPL_TRACECLASS          217     RPL_STATSQLINE
-        231     RPL_SERVICEINFO         232     RPL_ENDOFSERVICES
-        233     RPL_SERVICE             234     RPL_SERVLIST
-        235     RPL_SERVLISTEND
-        316     RPL_WHOISCHANOP         361     RPL_KILLDONE
-        362     RPL_CLOSING             363     RPL_CLOSEEND
-        373     RPL_INFOSTART           384     RPL_MYPORTIS
-        466     ERR_YOUWILLBEBANNED     476     ERR_BADCHANMASK
-        492     ERR_NOSERVICEHOST
+See section ["5. Replies"](#5-replies) of the RFC 2812.  
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
@@ -1656,6 +944,874 @@ This is done at the client-server level, and no anonymity is provided at the ser
 It should be obvious to readers, that the level of anonymity offered is quite poor and insecure, and that clients SHOULD display strong warnings for users joining such channels.  
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+
+# **RFC 2812**
+
+First formally documented in May 1993 by RFC 1459 [IRC], the protocol has kept evolving. This documents are updates describing the current IRC protocol and the role of its different components.
+
+The RFC 2812 specifically describes the **Client Protocol** of the IRC protocol.
+
+# 1. RFC 2812 - Introduction
+
+The IRC (Internet Relay Chat) protocol is for use with text based conferencing; the simplest client being any socket program capable of connecting to the server.  
+
+This document defines the Client Protocol, and assumes that the reader is familiar with the IRC Architecture.  
+
+# 2. The IRC Specification - RFC 2812
+
+See section ["2. The IRC Specification - RFC 2812"](#2-the-irc-specification---rfc-2812) of the RFC 2812.
+
+## 2.2 Character codes
+Unique bytes are used to send mgs (char, uchar, int8_t, uint8_t, ...).  
+Some bytes values are however used as messages delimitors:  
+* '{', '}', '|' are lowercases.  
+* '[', ']', '\' are uppercases.  
+
+## 2.3 Messages
+Servers and clients send to each other messages and those messages can generate or not an answer.  
+If a user cast a valid command, the server behaviour should be as specified in the documentation.  
+The comunication between client & server is essentally asyncronous.  
+Each IRC message can consist on (separeted with at least 1 space):  
+* \<optional\> prefix:  
+	* start ':' (0x3b) and be followed by the prefix (no spaces between).  
+	* is used by severs to indicate the origin of the msg (no prefix == msg comes from same connection as the msg receptor).  
+	* Client shouldn't use prefixes for sending msgs, if they do the only valid prefix is the nickname associated with the client.  
+	* If the prefix isn't in the database or the prefix or the sender does not match with the msg prefix the server must ignore the msg in a silent way).  
+* command: must be an IRC valid command or 3 digits representing ASCII text.  
+* parameters: max == 15.  
+
+Each message is finished by CR (0x0d) - LF (0x0a).  
+A message max lenght is 512 - CR-LF = 510.  
+More details in section 7.  
+
+### 2.3.1 Messages format in pseudocode
+
+\<message\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> [':' \<prefix\> \<space\> ] \<command\> \<parram\> \<CR-LF\>  
+\<prefix\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<server name\> | \<nick\> ['!' \<user\> ] ['@' \<host\> ]  
+\<command\>  &nbsp; &nbsp; &nbsp; &nbsp;  -> \<char\> { \<char\> } | \<digit\> \<digit\> \<digit\>  
+\<space\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> ' ' { ' ' } (0x20)  
+\<param\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<space\> [':' \<final param\> | \<middle param\> \<final param\> ]  
+\<final param\>  &nbsp; &nbsp; &nbsp;  -> any kind of bytes sequence (empty too) exept \<CR-LF\> or 0x0  
+\<middle param\>  &nbsp; -> any kind of bytes seqence (not empty) exept \<CR-LF\> or 0x0  
+\<CR-LF\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> 0x0d - 0x0a  
+
+#### *Notes:*
+1) \<space\> is only 0x20 not whitespaces.  
+2) \<final param\> and \<middle param\> are only used to accept spaces in a param  
+	(just a syntactical trick).  
+3) CR and LF can't be part of the msg (logical).  
+4) 0x0 can't be used inside a msg for C/C++ reasons.  
+5) The last \<param\> must be an empty string.  
+6) The prefix "['!' \<user\> ] ['@' \<host\> ]" must not be used in	server - server comunication, its only server - client oriented.  
+
+\<target\>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<a\> \<"," \<target\>  
+\<a\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<channel\> | \<user\> '@' \<server name\> | \<nick\> | \<mask\>  
+\<channel\>   &nbsp; &nbsp; &nbsp; &nbsp;  -> ('#' | '&') \<string\>  
+\<server name\> &nbsp; -> \<host\>  
+\<host\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> see RFC 952 [DNS:4]  
+\<mask\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> ('#' |'&') \<string\>  
+\<string\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> any 1bytes value exept: space, bell, cr, lf, coma.  
+
+\<user\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  -> \<string with coma\> { \<string with coma\> }  
+\<letter\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> 'a' ... 'z' | 'A' ... 'Z'  
+\<digit\>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> '0' ... '9'  
+\<especial\>   &nbsp; &nbsp; &nbsp; &nbsp; -> '-' | '[' | ']' | '\' \ '`' | '^' | '{' '}'  
+
+## 2.4 Numeric answers
+The most common answer (for error and not error).  
+Composed by:  
+* 1\) The sender prefix.  
+* 2\) 3 digit integer.  
+* 3\) The receiver.  
+
+A client can't raise a numeric answer (it's silently ignored).  
+Section 5 contains the numeric answers codes list.  
+
+## 2.5 Wildcards expressions
+
+When wildcards are allowed in a string, it is referred as a "mask".  
+
+For string matching purposes, the protocol allows the use of two special characters:
+* '?' (%x3F) to match one and only one character
+* '\*' (%x2A) to match any number of any characters
+
+These two characters can be escaped using the character '\' (%x5C).  
+
+The Augmented BNF syntax for this is:  
+mask       =  *( nowild / noesc wildone / noesc wildmany )  
+wildone    =  %x3F  
+wildmany   =  %x2A  
+nowild     =  %x01-29 / %x2B-3E / %x40-FF  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; any octet except NUL, "*", "?"  
+noesc      =  %x01-5B / %x5D-FF  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; any octet except NUL and "\"  
+matchone   =  %x01-FF  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; matches wildone  
+matchmany  =  *matchone  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; matches wildmany  
+
+Examples:
+&nbsp; &nbsp; \- *a?c*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Matches any string of 3 characters in length starting with "a" and ending with "c"  
+&nbsp; &nbsp; \- *a\*c*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Matches any string of at least 2 characters in length starting with "a" and ending with "c"  
+
+
+# 3. Connection Registration
+
+## 3.1 Connection Registration
+
+The recommended order for a client to register is as follows:
+* 1\. Pass message
+* 2\. Nick message
+* 3\. User message
+
+Command: **PASS**  
+	Parameters: \<password\>  
+	Example:  
+&nbsp; &nbsp; \- PASS secretpasswordhere  
+
+Command: **NICK**  
+Parameters: \<nickname\> [ \<hopcount\> ]  
+   Example:  
+&nbsp; &nbsp; \- *NICK Wiz*
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Introducing new nick "Wiz".  
+&nbsp; &nbsp; \- *:WiZ NICK Kilroy*
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; WiZ changed his nickname to Kilroy.  
+
+Command: **USER**  
+   Parameters: \<username\> \<hostname\> \<servername\> \<realname\>  
+   Examples:  
+&nbsp; &nbsp; \- *USER guest tolmoon tolsun :Ronnie Reagan*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  User registering themselves with a username of "guest" and real name "Ronnie Reagan".  
+&nbsp; &nbsp; \- *:testnick USER guest tolmoon tolsun :Ronnie Reagan*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  message between servers with the nickname for which the USER command belongs to  
+
+
+Command: **SERVER**  
+   Parameters: \<servername\> \<hopcount\> \<info\>  
+   Example:  
+&nbsp; &nbsp; \- *SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; New server test.oulu.fi introducing itself and attempting to register. The name in []'s is the hostname for the host running test.oulu.fi.  
+&nbsp; &nbsp; \- *:tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Server tolsun.oulu.fi is our uplink for csd.bu.edu which is 5 hops away.  
+
+Command: **OPER**  
+   Parameters: \<user\> \<password\>  
+   Example:  
+&nbsp; &nbsp; \- *OPER foo bar*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Attempt to register as an operator using a username of "foo" and "bar" as the password.  
+
+Command: **QUIT**  
+   Parameters: [\<Quit message\>]  
+   Examples:  
+&nbsp; &nbsp; \- *QUIT :Gone to have lunch*
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Preferred message format.  
+
+Command: **SQUIT**  
+   Parameters: \<server\> \<comment\>  
+   Example:  
+&nbsp; &nbsp; \- *SQUIT tolsun.oulu.fi :Bad Link ?*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; the server link tolson.oulu.fi has been terminated because of "Bad Link".  
+&nbsp; &nbsp; \- *:Trillian SQUIT cm22.eng.umd.edu :Server out of control*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Trillian to disconnect "cm22.eng.umd.edu" from the net because "Server out of control".  
+
+
+## 3.2 Channel operations
+
+Command: **JOIN**  
+   Parameters: \<channel\>{,\<channel\>} [\<key\>{,\<key\>}]  
+   Examples:  
+ &nbsp; &nbsp; \- *JOIN #foobar*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foobar.  
+ &nbsp; &nbsp; \- *JOIN &foo fubar*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel &foo using key "fubar".  
+ &nbsp; &nbsp; \- *JOIN #foo,&bar fubar*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar" and &bar using no key.  
+&nbsp; &nbsp; \- *JOIN #foo,#bar fubar,foobar*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channel #foo using key "fubar". and channel #bar using key "foobar".  
+&nbsp; &nbsp; \- *JOIN #foo,#bar*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; join channels #foo and #bar.  
+&nbsp; &nbsp; \- *:WiZ JOIN #Twilight_zone*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; JOIN message from WiZ  
+
+Command: **PART**  
+   Parameters: \<channel\>{,\<channel\>}  
+   Examples:  
+&nbsp; &nbsp; \- *PART #twilight_zone*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave channel "#twilight_zone"  
+&nbsp; &nbsp; \- *PART #oz-ops,&group5*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; leave both channels "&group5" and "#oz-ops".  
+
+   Channel mode Parameters: \<channel\> {[+|-]|o|p|s|i|t|n|b|v} [\<limit\>] [\<user\>] [\<ban mask\>]  
+
+   User mode Parameters: \<nickname\> {[+|-]|i|w|s|o}  
+
+   Examples - Use of Channel Modes:  
+&nbsp; &nbsp; \- *MODE #Finnish +im*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Makes #Finnish channel moderated and 'invite-only'.  
+&nbsp; &nbsp; \- *MODE #Finnish +o Kilroy*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Gives 'chanop' privileges to Kilroy on channel #Finnish.  
+&nbsp; &nbsp; \- *MODE #Finnish +v Wiz*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Allow WiZ to speak on #Finnish.  
+&nbsp; &nbsp; \- *MODE #Fins -s*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Removes 'secret' flag from channel #Fins.  
+&nbsp; &nbsp; \- *MODE #42 +k oulu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the channel key to "oulu".  
+&nbsp; &nbsp; \- *MODE #eu-opers +l 10*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Set the limit for the number of users on channel to 10.  
+&nbsp; &nbsp; \- *MODE &oulu +b*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list ban masks set for channel.  
+&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@**  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent all users from joining.  
+&nbsp; &nbsp; \- *MODE &oulu +b \*!\*@\*.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; prevent any user from a hostname matching *.edu from joining.  
+
+    Examples - Use of User Modes:  
+&nbsp; &nbsp; \- *:MODE WiZ -w*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; turns reception of WALLOPS messages off for WiZ.  
+&nbsp; &nbsp; \- *:Angel MODE Angel +i*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to make themselves invisible.  
+&nbsp; &nbsp; \- *MODE WiZ -o*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; WiZ 'deopping' (removing operator status). The plain reverse of this command ("MODE WiZ +o") must not be allowed from users since would bypass the OPER command.  
+
+Command: **TOPIC**  
+   Parameters: \<channel\> [\<topic\>]  
+   Examples:  
+&nbsp; &nbsp; \- *:Wiz TOPIC #test :New topic*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;User Wiz setting the topic.  
+&nbsp; &nbsp; \- *TOPIC #test :another topic*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;set the topic on #test to "another topic".  
+&nbsp; &nbsp; \- *TOPIC #test*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the topic for #test.  
+
+Command: **NAMES**  
+   Parameters: [\<channel\>{,\<channel\>}]  
+   Examples:  
+&nbsp; &nbsp; \- *NAMES #twilight_zone,#42*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list visible users on #twilight_zone and #42 if the channels are visible to you.  
+&nbsp; &nbsp; \- *NAMES*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all visible channels and users  
+
+
+Command: **LIST**  
+   Parameters: [\<channel\>{,\<channel\>} [\<server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *LIST*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all channels.  
+&nbsp; &nbsp; \- *LIST #twilight_zone,#42*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List channels #twilight_zone and #42  
+
+
+Command: **INVITE**  
+   Parameters: \<nickname\> \<channel\>  
+   Examples:  
+&nbsp; &nbsp; \- *:Angel INVITE Wiz #Dust*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; User Angel inviting WiZ to channel #Dust  
+&nbsp; &nbsp; \- *INVITE Wiz #Twilight_Zone*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Command to invite WiZ to #Twilight_zone  
+
+Command: **KICK**  
+   Parameters: \<channel\> \<user\> [\<comment\>]  
+   Examples:  
+&nbsp; &nbsp; \- *KICK &Melbourne Matthew*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick Matthew from &Melbourne  
+&nbsp; &nbsp; \- *KICK #Finnish John :Speaking English*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Kick John from #Finnish using "Speaking English" as the reason (comment).  
+&nbsp; &nbsp; \- *:WiZ KICK #Finnish John*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; KICK message from WiZ to remove John from channel #Finnish  
+
+*NOTE:*
+     It is possible to extend the KICK command parameters to the following:  
+ &nbsp; &nbsp; &nbsp; &nbsp; \<channel\>{,\<channel\>} \<user\>{,\<user\>} [\<comment\>]  
+
+
+
+## 3.3 Sending messages
+
+The main purpose of the IRC protocol is to provide a base for clients to communicate with each other.  
+
+PRIVMSG and NOTICE are the only messages available which actually perform delivery of a text message from one client to another - the rest just make it possible and try to ensure it happens in a reliable and structured manner.  
+
+### 3.3.1 Private messages
+
+Command: **PRIVMSG**  
+   Parameters: \<receiver\>{,\<receiver\>} \<text to be sent\>  
+   Examples:  
+&nbsp; &nbsp; \- *:Angel PRIVMSG Wiz :Hello are you receiving this message ?*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message from Angel to Wiz.  
+&nbsp; &nbsp; \- *PRIVMSG Angel :yes I'm receiving it !receiving it !'u\>(768u+1n) .br*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;Message to Angel.  
+&nbsp; &nbsp; \- *PRIVMSG jto@tolsun.oulu.fi :Hello !*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to a client on server tolsun.oulu.fi with username of "jto".  
+&nbsp; &nbsp; \- *PRIVMSG $*.fi :Server tolsun.oulu.fi rebooting.*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to everyone on a server which has a name matching *.fi.  
+&nbsp; &nbsp; \- *PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to all users who come from a host which has a name matching *.edu.  
+
+### 3.3.2 Notice
+
+Command: **NOTICE**  
+   Parameters: \<nickname\> \<text\>  
+
+
+## 3.4 Server queries and commands
+
+Command: **VERSION**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *:Wiz VERSION \*.se*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Wiz to check the version of a server matching "*.se"  
+&nbsp; &nbsp; \- *VERSION tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the version of server "tolsun.oulu.fi".  
+
+Command: **STATS**  
+   Parameters: [\<query\> [\<server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *STATS m*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the command usage for the server you are connected to  
+&nbsp; &nbsp; \- *:Wiz STATS c eff.org*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request by WiZ for C/N line information from server eff.org  
+
+Command: **LINKS**  
+   Parameters: [[\<remote server\>] \<server mask\>]  
+   Examples:  
+&nbsp; &nbsp; \- *LINKS *.au*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; list all servers which have a name that matches *.au;  
+&nbsp; &nbsp; \- *:WiZ LINKS \*.bu.edu \*.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; LINKS message from WiZ to the first server matching *.edu for a list of servers matching *.bu.edu.  
+
+Command: **TIME**  
+   Parameters: [\<server\>]  
+   Examples:  
+   &nbsp; &nbsp; \- *TIME tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; check the time on the server "tolson.oulu.fi"  
+   &nbsp; &nbsp; \- *Angel TIME \*.au*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; user angel checking the time on a  
+ 
+Command: **CONNECT**  
+   Parameters: \<target server\> [\<port\> [\<remote server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *CONNECT tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Attempt to connect a server to tolsun.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ CONNECT eff.org 6667 csd.bu.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; CONNECT attempt by WiZ to get servers eff.org and csd.bu.edu connected on port 6667.  
+
+Command: **TRACE**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *TRACE \*.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE to a server matching *.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ TRACE AngelDust*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; TRACE issued by WiZ to nick AngelDust  
+
+
+Command: **ADMIN**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *ADMIN tolsun.oulu.fi*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an ADMIN reply from tolsun.oulu.fi  
+&nbsp; &nbsp; \- *:WiZ ADMIN \*.edu*  
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ADMIN request from WiZ for first server found to match *.edu.  
+
+Command: **INFO**  
+   Parameters: [\<server\>]  
+   Examples:  
+&nbsp; &nbsp; \- *INFO csd.bu.edu*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request an INFO reply from csd.bu.edu  
+&nbsp; &nbsp; \- *:Avalon INFO \*.fi*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; INFO request from Avalon for first server found to match *.fi.  
+&nbsp; &nbsp; \- *INFO Angel*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; request info from the server that Angel is connected to.  
+
+
+## 3.5 Service Query and Commands
+
+The service query group of commands has been designed to return information about any service which is connected to the network.  
+
+Command: **SERVLIST**  
+   Parameters: [ \<mask\> [ \<type\> ] ]  
+
+The SERVLIST command is used to list services currently connected to the network and visible to the user issuing the command.  
+The optional parameters may be used to restrict the result of the query (to matching services names, and services type).  
+ 
+Numeric Replies:  
+&nbsp; &nbsp; RPL_SERVLIST &nbsp; &nbsp; &nbsp; &nbsp;  RPL_SERVLISTEND  
+
+
+Command: **SQUERY**
+   Parameters: \<servicename\> \<text\>
+   Examples:  
+&nbsp; &nbsp; \- *SQUERY irchelp :HELP privmsg*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to the service with nickname irchelp.  
+&nbsp; &nbsp; \- *SQUERY dict@irc.fr :fr2en blaireau*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Message to the service with name dict@irc.fr.  
+
+
+## 3.6 User based queries
+
+Command: **WHO**   
+   Parameters: [\<name\> [\<o\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHO \*.fi*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users who match against "*.fi".  
+&nbsp; &nbsp; \- *WHO jto\* o*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; List all users with a match against "jto*" if they are an operator.  
+
+Command: **WHOIS**   
+   Parameters: [\<server\>] \<nickmask\>[,\<nickmask\>[,...]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHOIS wiz*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return available user information about nick WiZ*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ask server eff.org for user information about trillian  
+
+
+Command: **WHOWAS**   
+   Parameters: \<nickname\> [\<count\> [\<server\>]]  
+   Examples:  
+&nbsp; &nbsp; \- *WHOWAS Wiz*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return all information in the nick history about nick "WiZ";  
+&nbsp; &nbsp; \- *WHOWAS Mermaid 9*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return at most, the 9 most recent entries in the nick history for "Mermaid";    
+&nbsp; &nbsp; \- *WHOWAS Trillian 1 \*.edu*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; return the most recent history for "Trillian" from the first server found to match "*.edu".  
+
+
+## 3.7 Miscellaneous messages
+
+   Messages in this category do not fit into any of the above categories but are nonetheless still a part of and required by the protocol.  
+
+Command: **KILL**  
+   Parameters: \<nickname\> \<comment\>  
+
+	The KILL message is used to cause a client-server connection to be closed by the server which has the actual connection.  
+	KILL is used by servers when they encounter a duplicate entry in the list of valid nicknames and is used to remove both entries.  
+	It is also available to operators.  
+
+	Clients which have automatic reconnect algorithms effectively make this command useless since the disconnection is only brief.  
+	It does however break the flow of data and can be used to stop large amounts of being abused, any user may elect to receive KILL messages generated for others to keep an 'eye' on would be trouble spots.  
+
+	In an arena where nicknames are required to be globally unique at all times, KILL messages are sent whenever 'duplicates' are detected (that is an attempt to register two users with the same nickname) in the hope that both of them will disappear and only 1 reappear.  
+
+	The comment given must reflect the actual reason for the KILL.  
+	For server-generated KILLs it usually is made up of details concerning the origins of the two conflicting nicknames.  
+	For users it is left up to them to provide an adequate reason to satisfy others who see it.  
+	To prevent/discourage fake KILLs from being generated to hide the identify of the KILLer, the comment also shows a 'kill-path' which is updated by each server it passes through, each prepending its name to the path.  
+  
+Examples:  
+&nbsp; &nbsp; \- *KILL David (csd.bu.edu \<- tolsun.oulu.fi)*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Nickname collision between csd.bu.edu and tolson.oulu.fi  
+
+
+   *NOTE:*
+   It is recommended that only Operators be allowed to kill other users with KILL message. In an ideal world not even operators would need to do this and it would be left to servers to deal with.  
+
+
+Command: **PING**  
+   Parameters: \<server1\> [\<server2\>]  
+   Examples:  
+&nbsp; &nbsp; \- *PING tolsun.oulu.fi*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; server sending a PING message to another server to indicate it is still alive.  
+&nbsp; &nbsp; \- *PING WiZ*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; PING message being sent to nick WiZ  
+
+Command: **PONG**  
+   Parameters: \<daemon\> [\<daemon2\>]  
+   Examples:  
+&nbsp; &nbsp; \- *PONG csd.bu.edu tolsun.oulu.fi*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; PONG message from csd.bu.edu to  
+
+Command: **ERROR**  
+   Parameters: \<error message\>  
+   Examples:  
+&nbsp; &nbsp; \- *ERROR :Server \*.fi already exists*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; ERROR message to the other server which caused this error.  
+&nbsp; &nbsp; \- *NOTICE WiZ :ERROR from csd.bu.edu -- Server \*.fi already exists*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Same ERROR message as above but sent to user WiZ on the other server.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 5. Replies
+
+## 5.1 Command responses
+
+Numerics in the range from 001 to 099 are used for client-server connections only and should never travel between servers.  
+Replies generated in the response to commands are found in the range from 200 to 399.
+
+001 &nbsp; &nbsp; RPL_WELCOME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Welcome to the Internet Relay Network \<nick\>!\<user\>@\<host\>"  
+002 &nbsp; &nbsp; RPL_YOURHOST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Your host is \<servername\>, running version \<ver\>"  
+003 &nbsp; &nbsp; RPL_CREATED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "This server was created \<date\>"  
+004 &nbsp; &nbsp; RPL_MYINFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<servername\> \<version\> \<available user modes\> \<available channel modes\>"  
+005 &nbsp; &nbsp; RPL_BOUNCE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Try server \<server name\>, port \<port number\>"  
+
+302 &nbsp; &nbsp; RPL_USERHOST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<reply\>{\<space\>\<reply\>}]"  
+
+303 &nbsp; &nbsp; RPL_ISON  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":[\<nick\> {\<space\>\<nick\>}]"  
+
+301 &nbsp; &nbsp; RPL_AWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :\<away message\>"  
+
+305 &nbsp; &nbsp; RPL_UNAWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are no longer marked as being away"  
+306 &nbsp; &nbsp; RPL_NOWAWAY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You have been marked as being away"  
+
+311 &nbsp; &nbsp; RPL_WHOISUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
+312 &nbsp; &nbsp; RPL_WHOISSERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<server\> :\<server info\>"  
+313 &nbsp; &nbsp; RPL_WHOISOPERATOR  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :is an IRC operator"  
+317 &nbsp; &nbsp; RPL_WHOISIDLE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<integer\> :seconds idle"  
+318 &nbsp; &nbsp; RPL_ENDOFWHOIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of /WHOIS list"  
+319 &nbsp; &nbsp; RPL_WHOISCHANNELS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :{[@|+]\<channel\>\<space\>}"  
+
+314 &nbsp; &nbsp; RPL_WHOWASUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<user\> \<host\> * :\<real name\>"  
+369 &nbsp; &nbsp; RPL_ENDOFWHOWAS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :End of WHOWAS"  
+
+321 &nbsp; &nbsp; RPL_LISTSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Channel :Users  Name"  
+322 &nbsp; &nbsp; RPL_LIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<# visible\> :\<topic\>"  
+323 &nbsp; &nbsp; RPL_LISTEND  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /LIST"  
+
+324 &nbsp; &nbsp; RPL_CHANNELMODEIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<mode\> \<mode params\>"  
+
+331 &nbsp; &nbsp; RPL_NOTOPIC  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :No topic is set"  
+332 &nbsp; &nbsp; RPL_TOPIC  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :\<topic\>"  
+
+341 &nbsp; &nbsp; RPL_INVITING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<nick\>"  
+
+342 &nbsp; &nbsp; RPL_SUMMONING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> :Summoning user to IRC"  
+
+351 &nbsp; &nbsp; RPL_VERSION  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<version\>.\<debuglevel\> \<server\> :\<comments\>"  
+
+352 &nbsp; &nbsp; RPL_WHOREPLY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<user\> \<host\> \<server\> \<nick\> \<H|G\>[*][@|+] :\<hopcount\> \<real name\>"  
+315 &nbsp; &nbsp; RPL_ENDOFWHO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<name\> :End of /WHO list"  
+
+353 &nbsp; &nbsp; RPL_NAMREPLY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :[[@|+]\<nick\> [[@|+]\<nick\> [...]]]"  
+366 &nbsp; &nbsp; RPL_ENDOFNAMES  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of /NAMES list"  
+
+364 &nbsp; &nbsp; RPL_LINKS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> \<server\> :\<hopcount\> \<server info\>"  
+365 &nbsp; &nbsp; RPL_ENDOFLINKS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :End of /LINKS list"  
+
+367 &nbsp; &nbsp; RPL_BANLIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> \<banid\>"  
+368 &nbsp; &nbsp; RPL_ENDOFBANLIST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :End of channel ban list"  
+
+371 &nbsp; &nbsp; RPL_INFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<string\>"  
+374 &nbsp; &nbsp; RPL_ENDOFINFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /INFO list"  
+
+375 &nbsp; &nbsp; RPL_MOTDSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<server\> Message of the day - "  
+372 &nbsp; &nbsp; RPL_MOTD  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":- \<text\>"  
+376 &nbsp; &nbsp; RPL_ENDOFMOTD  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of /MOTD command"  
+
+381 &nbsp; &nbsp; RPL_YOUREOPER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are now an IRC operator"  
+
+382 &nbsp; &nbsp; RPL_REHASHING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<config file\> :Rehashing"  
+
+391 &nbsp; &nbsp; RPL_TIME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :\<string showing server's local time\>"  
+
+392 &nbsp; &nbsp; RPL_USERSSTART  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":UserID   Terminal  Host"  
+393 &nbsp; &nbsp; RPL_USERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":%-8s %-9s %-8s"  
+394 &nbsp; &nbsp; RPL_ENDOFUSERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":End of users"  
+395 &nbsp; &nbsp; RPL_NOUSERS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Nobody logged in"  
+
+200 &nbsp; &nbsp; RPL_TRACELINK  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Link \<version & debug level\> \<destination\> \<next server\>"  
+201 &nbsp; &nbsp; RPL_TRACECONNECTING  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Try. \<class\> \<server\>"  
+202 &nbsp; &nbsp; RPL_TRACEHANDSHAKE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H.S. \<class\> \<server\>"  
+203 &nbsp; &nbsp; RPL_TRACEUNKNOWN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "???? \<class\> [\<client IP address in dot form\>]"  
+204 &nbsp; &nbsp; RPL_TRACEOPERATOR  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Oper \<class\> \<nick\>"  
+205 &nbsp; &nbsp; RPL_TRACEUSER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "User \<class\> \<nick\>"  
+206 &nbsp; &nbsp; RPL_TRACESERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Serv \<class\> \<int\>S \<int\>C \<server\> \<nick!user|*!*\>@\<host|server\>"  
+208 &nbsp; &nbsp; RPL_TRACENEWTYPE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<newtype\> 0 \<client name\>"  
+261 &nbsp; &nbsp; RPL_TRACELOG  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "File \<logfile\> \<debug level\>"  
+
+211 &nbsp; &nbsp; RPL_STATSLINKINFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<linkname\> \<sendq\> \<sent messages\> \<sent bytes\> \<received messages\> \<received bytes\> \<time open\>"  
+212 &nbsp; &nbsp; RPL_STATSCOMMANDS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> \<count\>"  
+213 &nbsp; &nbsp; RPL_STATSCLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "C \<host\> * \<name\> \<port\> \<class\>"  
+214 &nbsp; &nbsp; RPL_STATSNLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "N \<host\> * \<name\> \<port\> \<class\>"  
+215 &nbsp; &nbsp; RPL_STATSILINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "I \<host\> * \<host\> \<port\> \<class\>"  
+216 &nbsp; &nbsp; RPL_STATSKLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "K \<host\> * \<username\> \<port\> \<class\>"  
+218 &nbsp; &nbsp; RPL_STATSYLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Y \<class\> \<ping frequency\> \<connect frequency\> \<max sendq\>"  
+219 &nbsp; &nbsp; RPL_ENDOFSTATS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<stats letter\> :End of /STATS report"  
+241 &nbsp; &nbsp; RPL_STATSLLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "L \<hostmask\> * \<servername\> \<maxdepth\>"  
+242 &nbsp; &nbsp; RPL_STATSUPTIME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Server Up %d days %d:%02d:%02d"  
+243 &nbsp; &nbsp; RPL_STATSOLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "O \<hostmask\> * \<name\>"  
+244 &nbsp; &nbsp; RPL_STATSHLINE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "H \<hostmask\> * \<servername\>"  
+
+221 &nbsp; &nbsp; RPL_UMODEIS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user mode string\>"  
+
+251 &nbsp; &nbsp; RPL_LUSERCLIENT  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":There are \<integer\> users and \<integer\> invisible on \<integer\> servers"  
+252 &nbsp; &nbsp; RPL_LUSEROP  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :operator(s) online"  
+253 &nbsp; &nbsp; RPL_LUSERUNKNOWN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :unknown connection(s)"  
+254 &nbsp; &nbsp; RPL_LUSERCHANNELS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<integer\> :channels formed"  
+255 &nbsp; &nbsp; RPL_LUSERME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":I have \<integer\> clients and \<integer\> servers"  
+
+256 &nbsp; &nbsp; RPL_ADMINME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :Administrative info"  
+257 &nbsp; &nbsp; RPL_ADMINLOC1  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
+258 &nbsp; &nbsp; RPL_ADMINLOC2  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"  
+259 &nbsp; &nbsp; RPL_ADMINEMAIL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":\<admin info\>"
+
+
+## 5.2 Error Replies
+
+401 &nbsp; &nbsp; ERR_NOSUCHNICK  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nickname\> :No such nick/channel"  
+
+402 &nbsp; &nbsp; ERR_NOSUCHSERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server name\> :No such server"  
+
+403 &nbsp; &nbsp; ERR_NOSUCHCHANNEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :No such channel"  
+
+404 &nbsp; &nbsp; ERR_CANNOTSENDTOCHAN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :Cannot send to channel"  
+
+405 &nbsp; &nbsp; ERR_TOOMANYCHANNELS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel name\> :You have joined too many channels"  
+
+406 &nbsp; &nbsp; ERR_WASNOSUCHNICK  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nickname\> :There was no such nickname"  
+
+407 &nbsp; &nbsp; ERR_TOOMANYTARGETS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<target\> :Duplicate recipients. No message    
+
+409 &nbsp; &nbsp; ERR_NOORIGIN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No origin specified"  
+
+411 &nbsp; &nbsp; ERR_NORECIPIENT  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No recipient given (\<command\>)"  
+
+412 &nbsp; &nbsp; ERR_NOTEXTTOSEND  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No text to send"  
+
+413 &nbsp; &nbsp; ERR_NOTOPLEVEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :No toplevel domain specified"  
+
+414 &nbsp; &nbsp; ERR_WILDTOPLEVEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<mask\> :Wildcard in toplevel domain"  
+
+421 &nbsp; &nbsp; ERR_UNKNOWNCOMMAND  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> :Unknown command"  
+
+422 &nbsp; &nbsp; ERR_NOMOTD  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":MOTD File is missing"  
+
+423 &nbsp; &nbsp; ERR_NOADMININFO  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<server\> :No administrative info available"  
+
+424 &nbsp; &nbsp; ERR_FILEERROR  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":File error doing \<file op\> on \<file\>"  
+
+431 &nbsp; &nbsp; ERR_NONICKNAMEGIVEN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No nickname given"  
+
+432 &nbsp; &nbsp; ERR_ERRONEUSNICKNAME  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Erroneus nickname"  
+
+433 &nbsp; &nbsp; ERR_NICKNAMEINUSE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Nickname is already in use"  
+
+436 &nbsp; &nbsp; ERR_NICKCOLLISION  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> :Nickname collision KILL"  
+
+441 &nbsp; &nbsp; ERR_USERNOTINCHANNEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<nick\> \<channel\> :They aren't on that channel"  
+
+442 &nbsp; &nbsp; ERR_NOTONCHANNEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :You're not on that channel"  
+
+443 &nbsp; &nbsp; ERR_USERONCHANNEL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> \<channel\> :is already on channel"  
+
+444 &nbsp; &nbsp; ERR_NOLOGIN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<user\> :User not logged in"  
+
+445 &nbsp; &nbsp; ERR_SUMMONDISABLED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":SUMMON has been disabled"  
+
+446 &nbsp; &nbsp; ERR_USERSDISABLED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":USERS has been disabled"  
+
+451 &nbsp; &nbsp; ERR_NOTREGISTERED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You have not registered"  
+
+461 &nbsp; &nbsp; ERR_NEEDMOREPARAMS  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<command\> :Not enough parameters"  
+
+462 &nbsp; &nbsp; ERR_ALREADYREGISTRED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You may not reregister"  
+
+
+463 &nbsp; &nbsp; ERR_NOPERMFORHOST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Your host isn't among the privileged"  
+
+464 &nbsp; &nbsp; ERR_PASSWDMISMATCH  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Password incorrect"  
+
+465 &nbsp; &nbsp; ERR_YOUREBANNEDCREEP  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You are banned from this server"  
+
+467 &nbsp; &nbsp; ERR_KEYSET  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Channel key already set"  
+
+471 &nbsp; &nbsp; ERR_CHANNELISFULL  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+l)"  
+
+472 &nbsp; &nbsp; ERR_UNKNOWNMODE  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<char\> :is unknown mode char to me"  
+
+473 &nbsp; &nbsp; ERR_INVITEONLYCHAN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+i)"  
+
+474 &nbsp; &nbsp; ERR_BANNEDFROMCHAN  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+b)"  
+
+475 &nbsp; &nbsp; ERR_BADCHANNELKEY  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :Cannot join channel (+k)"  
+
+481 &nbsp; &nbsp; ERR_NOPRIVILEGES  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Permission Denied- You're not an IRC operator"  
+
+482 &nbsp; &nbsp; ERR_CHANOPRIVSNEEDED  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "\<channel\> :You're not channel operator"  
+
+483 &nbsp; &nbsp; ERR_CANTKILLSERVER  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":You cant kill a server!"  
+
+491 &nbsp; &nbsp; ERR_NOOPERHOST  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":No O-lines for your host"  
+
+501 &nbsp; &nbsp; ERR_UMODEUNKNOWNFLAG  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Unknown MODE flag"  
+
+502 &nbsp; &nbsp; ERR_USERSDONTMATCH  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ":Cant change mode for other users"
+
+
+## 5.3 Reserved numerics
+
+These numerics are not described above since they fall into one of the following categories:  
+&nbsp; &nbsp; &nbsp; &nbsp; 1\. no longer in use;  
+&nbsp; &nbsp; &nbsp; &nbsp; 2\. reserved for future planned use;  
+&nbsp; &nbsp; &nbsp; &nbsp; 3\. in current use but are part of a non-generic 'feature' of the current IRC server.  
+
+        209     RPL_TRACECLASS
+        234     RPL_SERVLIST
+        235     RPL_SERVLISTEND
+        361     RPL_KILLDONE
+        
+        466     ERR_YOUWILLBEBANNED     476     ERR_BADCHANMASK
+
+        231    RPL_SERVICEINFO     232  RPL_ENDOFSERVICES
+        233    RPL_SERVICE
+        300    RPL_NONE            316  RPL_WHOISCHANOP
+        361    RPL_KILLDONE        362  RPL_CLOSING
+        363    RPL_CLOSEEND        373  RPL_INFOSTART
+        384    RPL_MYPORTIS
+
+        213    RPL_STATSCLINE      214  RPL_STATSNLINE
+        215    RPL_STATSILINE      216  RPL_STATSKLINE
+        217    RPL_STATSQLINE      218  RPL_STATSYLINE
+        240    RPL_STATSVLINE      241  RPL_STATSLLINE
+        244    RPL_STATSHLINE      244  RPL_STATSSLINE
+        246    RPL_STATSPING       247  RPL_STATSBLINE
+        250    RPL_STATSDLINE
+        492    ERR_NOSERVICEHOST
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 7. RFC 2812 - Current problems
+
+The IRC software, version 2.10 is the only complete implementation of the IRC protocol (client and server).  
+Because of the small amount of changes in the client protocol since the publication of RFC 1459, implementations that follow it are likely to be compliant with this protocol or to require a small amount of changes to reach compliance.  
+
+You will find below the summary of the current problem concerning clients protocol.  
+For more information about this problems, have a look at the [RFC 2812 documentation](https://tools.ietf.org/html/rfc2812), section 7.  
+
+## 7.1 Nicknames
+
+## 7.2 Limitation of wildcards
+
+## 7.3 Security considerations
+
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
 
 # Sources:
 * [RFC 1459 documentation](https://tools.ietf.org/html/rfc1459)
