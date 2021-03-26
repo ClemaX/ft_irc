@@ -159,13 +159,13 @@ Details:
 * [2.2 Clients](#22-clients)
 * [2.3 Channels](#23-channels)
 
-[3. The IRC Server Specification](#3.-the-ric-server-specification)
+[3. The IRC Server Specification](#3.-the-irc-server-specification)
 * [3.1 Overview](#31-overview)
 * [3.2 Character codes](#32-character-codes)
 * [3.3 Messages](#33-messages)
 * [3.4 Numeric replies](#34-numeric-replies)
 
-[4. Message Details](#4.-message-details)
+[4. Message Details](#4-message-details)
 * [4.1 Connection Registration](#41-connection-registration)
 * [4.2 Channel operations](#42-channel-operations)
 
@@ -176,7 +176,7 @@ Details:
 * [6.2 Labels](#62-labels)
 * [6.3 Algorithms](#63-algorithms)
 
-[7. Security Considerations](#7-security-considerations)
+[7. Security Consideration](#7-security-consideration)
 * [7.1 Authentication](#71-authentication)
 * [7.2 Integrity](#72-integrity)
 
@@ -2129,7 +2129,7 @@ For more information about this problems, have a look at the [RFC 2813 documenta
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
 
-# 7. Security Considerations
+# 7. Security Consideration
 
 ## 7.1 Authentication
 
