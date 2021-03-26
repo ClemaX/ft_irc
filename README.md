@@ -159,7 +159,7 @@ Details:
 * [2.2 Clients](#22-clients)
 * [2.3 Channels](#23-channels)
 
-[3. The IRC Server Specification](#3.-the-irc-server-specification)
+[3. The IRC Server Specification](#3-the-irc-server-specification)
 * [3.1 Overview](#31-overview)
 * [3.2 Character codes](#32-character-codes)
 * [3.3 Messages](#33-messages)
