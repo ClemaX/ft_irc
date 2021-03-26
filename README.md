@@ -87,7 +87,7 @@ Details:
 * [4.2 Message Relaying](#42-message-relaying)  
 * [4.3 Channel Hosting And Management](#43-channel-hosting-and-management)  
 
-[6. Current Problems](#6-current-problems)  
+[6. RFC 2810 - Current problems](#6-rfc-2810---current-problems)
 * [6.1 Scalability](#61-scalability)  
 * [6.2 Reliability](#62-reliability)  
 * [6.3 Network Congestion](#63-network-congestion)  
@@ -118,7 +118,7 @@ Details:
 * [5.1 Tracking Recently Used Channels](#51-tracking-recently-used-channels)
 * [5.2 Safe Channels](#52-safe-channels)
 
-[6. Current problems](#6-current-problems)
+[6. RFC 2811 - Current problems](#6-rfc-2811---current-problems)
 * [6.1 Labels](#61-labels)
 * [6.2 Mode Propagation Delays](#62-mode-propagation-delays)
 * [6.3 Collisions And Channel Modes](#63-collisions-and-channel-modes)
@@ -1265,7 +1265,7 @@ The exact role of servers is defined in "Internet Relay Chat: Channel Management
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
-# 6. Current Problems
+# 6. RFC 2810 - Current Problems
 
 There are a number of recognized problems with this protocol, this section only addresses the problems related to the architecture of the protocol.  
 
@@ -1609,7 +1609,7 @@ For more information about the different cases and solution concerning this sect
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
 
-# 6. Current problems
+# 6. RFC 2811 - Current problems
 
 There are a number of recognized problems with the way IRC channels are managed.  
 Some of these can be directly attributed to the rules defined in this document, while others are the result of the underlying "IRC Server Protocol" [IRC-SERVER].  
