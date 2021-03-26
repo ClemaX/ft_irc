@@ -130,7 +130,7 @@ Details:
 [1. Introduction](#1-rfc-2812---introduction)
 
 [2. The IRC Specification - RFC 2812](#2-the-irc-specification---rfc-2812)  
-* [2.2 Character codes](#22-charachter-codes)  
+* [2.2 Character codes](#22-character-codes)  
 * [2.3 Messages](#23-messages)  
 * [2.4 Numeric answers](#24-numeric-answers)  
 * [2.5 Wildcards expressions](#25-wildcards-expressions)  
