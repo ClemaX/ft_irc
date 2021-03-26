@@ -154,6 +154,36 @@ Details:
 
 [1. Introduction](#1-rfc-2813---introduction)
 
+[2. Global database](#2-global-database)
+* [2.1 Servers](#21-servers)
+* [2.2 Clients](#22-clients)
+* [2.3 Channels](#23-channels)
+
+[3. The IRC Server Specification](#3.-the-ric-server-specification)
+* [3.1 Overview](#31-overview)
+* [3.2 Character codes](#32-character-codes)
+* [3.3 Messages](#33-messages)
+* [3.4 Numeric replies](#34-numeric-replies)
+
+[4. Message Details](#4.-message-details)
+* [4.1 Connection Registration](#41-connection-registration)
+* [4.2 Channel operations](#42-channel-operations)
+
+[5. Implementation details](#5-implementation-details)
+
+[6. Current problems](#6-current-problems)
+* [6.1 Scalability](#61-scalability)
+* [6.2 Labels](#62-labels)
+* [6.3 Algorithms](#63-algorithms)
+
+[7. Security Considerations](#7-security-considerations)
+* [7.1 Authentication](#71-authentication)
+* [7.2 Integrity](#72-integrity)
+
+
+**RFC 1794 (August 2014)**
+
+
 [Sources](#Sources)  
 
 ------------------------------------------------------------
@@ -1824,16 +1854,309 @@ The RFC 2813 specifically describes the **Server Protocol** of the IRC protocol.
 
 # 1. RFC 2813 - Introduction
 
-While based on the client-server model, the IRC (Internet Relay Chat) protocol allows servers to connect to each other effectively forming a network.  
+This document is intended for people working on implementing an IRC server but will also be useful to anyone implementing an IRC service.  
 
-This document defines the protocol used by servers to talk to each other.  
-It was originally a superset of the client protocol but has evolved differently.  
-
-First formally documented in May 1993 as part of RFC 1459, most of the changes brought since then can be found in this document as development was focused on making the protocol scale better.  
-Better scalability has allowed existing world-wide networks to keep growing and reach sizes which defy the old specification.  
+Servers provide the three basic services required for realtime conferencing defined by the "Internet Relay Chat: Architecture" : client locator (via the client protocol ), message relaying (via the server protocol defined in this document) and channel hosting and management (following specific rules [IRC- CHAN]).  
 
 
 ###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 2. Global database
+
+Although the IRC Protocol defines a fairly distributed model, each server maintains a "global state database" about the whole IRC network.  
+This database is, in theory, identical on all servers.
+
+## 2.1 Servers
+
+Servers are uniquely identified by their name which has a maximum length of sixty three (63) characters.  
+See the protocol grammar rules (section 3.3.1) for what may and may not be used in a server name.  
+
+Each server is typically known by all other servers, however it is possible to define a "hostmask" to group servers together according to their name.  
+Inside the hostmasked area, all the servers have a name which matches the hostmask, and any other server with a name matching the hostmask SHALL NOT be connected to the IRC network outside the hostmasked area.  
+Servers which are outside the area have no knowledge of the individual servers present inside the area, instead they are presented with a virtual server which has the hostmask for name.  
+
+
+## 2.2 Clients
+
+For each client, all servers MUST have the following information:  
+* a netwide unique identifier (whose format depends on the type of client)
+* the server to which the client is connected.  
+
+### 2.2.1 Users
+
+Each user is distinguished from other users by a unique nickname having a maximum length of nine (9) characters.  
+In addition to the nickname, all servers MUST have the following information about all users:  
+* the name of the host that the user is running on
+* the username of the user on that host
+* the server to which the client is connected.  
+
+### 2.2.2 Services
+
+Each service is distinguished from other services by a service name composed of a nickname and a server name.  
+The nickname has a maximum length of nine (9) characters.  
+The server name used to compose the service name is the name of the server to which the service is connected.  
+In addition to this service name all servers MUST know the service type.  
+
+Services differ from users by the format of their identifier, but more importantly services and users don't have the same type of access to the server: services can request part or all of the global state information that a server maintains, but have a more restricted set of commands available to them and are not allowed to join channels.  
+Finally services are not usually subject to the "Flood control" mechanism described in section 5.8.
+
+## 2.3 Channels
+ 
+Alike services, channels have a scope and are not necessarily known to all servers.  When a channel existence is known to a server, the server MUST keep track of the channel members, as well as the channel modes.
+
+# 3. The IRC Server Specification
+
+## 3.1 Overview
+
+The protocol as described herein is for use with server to server connections.  
+For client to server connections, see the IRC Client Protocol specification IN [RFC 2812 documentation](https://tools.ietf.org/html/rfc2812).  
+
+There are, however, more restrictions on client connections (which are considered to be untrustworthy) than on server connections.   
+
+## 3.2 Character codes
+
+See section [2.2 Character codes](#22-character-codes) in RFC 2812.
+
+## 3.3 Messages
+
+Servers and clients send each other messages which may or may not generate a reply.  
+Most communication between servers do not generate any reply, as servers mostly perform routing tasks for the clients.  
+ 
+Each IRC message may consist of up to three main parts: the prefix (OPTIONAL), the command, and the command parameters (maximum of fifteen (15)).  
+The prefix, command, and all parameters are separated by one ASCII space character (0x20) each.   
+
+The presence of a prefix is indicated with a single leading ASCII colon character (':', 0x3b), which MUST be the first character of the message itself.  There MUST be NO gap (whitespace) between the colon and the prefix.  
+The prefix is used by servers to indicate the true origin of the message.  
+If the prefix is missing from the message, it is assumed to have originated from the connection from which it was received.  
+Clients SHOULD not use a prefix when sending a message from themselves; if they use one, the only valid prefix is the registered nickname associated with the client.   
+
+When a server receives a message, it MUST identify its source using the (eventually assumed) prefix.  
+If the prefix cannot be found in the server's internal database, it MUST be discarded, and if the prefix indicates the message comes from an (unknown) server, the link from which the message was received MUST be dropped.  
+Dropping a link in such circumstances is a little excessive but necessary to maintain the integrity of the network and to prevent future problems.  
+Another common error condition is that the prefix found in the server's internal database identifies a different source (typically a source registered from a different link than from which the message arrived).  
+If the message was received from a server link and the prefix identifies a client, a KILL message MUST be issued for the client and sent to all servers.  
+In other cases, the link from which the message arrived SHOULD be dropped for clients, and MUST be dropped for servers.  
+In all cases, the message MUST be discarded.  
+
+The command MUST either be a valid IRC command or a three (3) digit number represented in ASCII text.  
+
+IRC messages are always lines of characters terminated with a CR-LF (Carriage Return - Line Feed) pair, and these messages SHALL NOT exceed 512 characters in length, counting all characters including the trailing CR-LF.  
+Thus, there are 510 characters maximum allowed for the command and its parameters.  There is no provision for continuation message lines.  
+
+### 3.3.1 Message format in Augmented BNF
+
+The protocol messages must be extracted from the contiguous stream of octets.  
+The current solution is to designate two characters, CR and LF, as message separators.  
+Empty messages are silently ignored, which permits use of the sequence CR-LF between messages without extra problems.  
+
+The extracted message is parsed into the components \<prefix\>, \<command\> and list of parameters (\<params\>).  
+
+The Augmented BNF representation for this is found in "IRC Client Protocol".  
+
+The extended prefix (["!" user "@" host ]) MUST NOT be used in server to server communications and is only intended for server to client messages in order to provide clients with more useful information about who a message is from without the need for additional queries.  
+
+## 3.4 Numeric replies
+
+See section [2.4 Numeric replies](#24-numeric-replies) in RFC 2812.
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 4. Message Details
+
+All the messages recognized by the IRC server and client are described in the IRC Client Protocol specification.  
+Where the reply ERR_NOSUCHSERVER is returned, it means that the target of the message could not be found.  
+The server MUST NOT send any other replies after this error for that command.  
+The server to which a client is connected is required to parse the complete message, returning any appropriate errors.  
+
+If the server encounters a fatal error while parsing a message, an error MUST be sent back to the client and the parsing terminated.  
+A fatal error may follow from incorrect command, a destination which is otherwise unknown to the server (server, client or channel names fit this category), not enough parameters or incorrect privileges.  
+
+If a full set of parameters is presented, then each MUST be checked for validity and appropriate responses sent back to the client.  
+In the case of messages which use parameter lists using the comma as an item separator, a reply MUST be sent for each item.  
+
+In the examples below, some messages appear using the full format:  
+  :Name COMMAND parameter list
+
+Such examples represent a message from "Name" in transit between servers, where it is essential to include the name of the original sender of the message so remote servers may send back a reply along the correct path.  
+
+The message details for client to server communication are described in the "IRC Client Protocol".  
+Some sections in the following pages apply to some of these messages, they are additions to the message specifications which are only relevant to server to server communication, or to the server implementation.  
+The messages which are introduced here are only used for server to server communication.  
+
+## 4.1 Connection Registration
+
+The commands described here are used to register a connection with another IRC server.  
+
+For more details about a specific commande, check the [RFC 2813 documentation](https://tools.ietf.org/html/rfc2813), section 4.  
+
+### 4.1.1 Password message
+
+Command: **PASS**  
+   Parameters: \<password\> \<version\> \<flags\> [\<options\>]  
+   Numeric Replies:  
+           ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+   Example:  
+&nbsp; &nbsp; \- *PASS moresecretpassword 0210010000 IRC|aBgH$ Z*  
+
+### 4.1.2 Server message
+
+Command: **SERVER**  
+   Parameters: \<servername\> \<hopcount\> \<token\> \<info\>  
+   Numeric Replies:  
+           ERR_ALREADYREGISTRED  
+   Example:  
+&nbsp; &nbsp; \- *SERVER test.oulu.fi 1 1 :Experimental server*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; New server test.oulu.fi introducing itself and attempting to register.  
+&nbsp; &nbsp; \- *:tolsun.oulu.fi SERVER csd.bu.edu 5 34 :BU Central Server*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Server tolsun.oulu.fi is our uplink for csd.bu.edu which is 5 hops away.  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   The token "34" will be used by tolsun.oulu.fi when introducing new users or services connected to csd.bu.edu.  
+
+### 4.1.3 Nick
+
+Command: **NICK**  
+   Parameters: \<nickname\> \<hopcount\> \<username\> \<host\> \<servertoken\> \<umode\> \<realname\>  
+   Examples:  
+&nbsp; &nbsp; \- *NICK syrk 5 kalt millennium.stealth.net 34 +i :Christophe Kalt*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; New user with nickname "syrk", username "kalt", connected from host   "millennium.stealth.net" to server "34" ("csd.bu.edu" according to the previous example).  
+&nbsp; &nbsp; \- *:krys NICK syrk*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; The other form of the NICK message, as defined in "IRC Client Protocol" and used between servers: krys changed his nickname to syrk  
+
+### 4.1.4 Service message
+
+Command: **SERVICE**  
+   Parameters: \<servicename\> \<servertoken\> \<distribution\> \<type\> \<hopcount\> \<info\>  
+   Numeric Replies:  
+           ERR_ALREADYREGISTRED            ERR_NEEDMOREPARAMS  
+           ERR_ERRONEUSNICKNAME  
+           RPL_YOURESERVICE                RPL_YOURHOST  
+           RPL_MYINFO  
+   Example:  
+&nbsp; &nbsp; \- *SERVICE dict@irc.fr 9 *.fr 0 1 :French Dictionary *  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; r" registered on server "9" is being announced to another server.  This service will only be available on servers whose name matches "*.fr".  
+
+### 4.1.5 Quit
+
+Command: **QUIT**  
+   Parameters: [\<Quit Message\>]  
+   Numeric Replies:  
+           None.  
+   Examples:  
+&nbsp; &nbsp; \- *:WiZ QUIT :Gone to have lunch*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; Preferred message format.  
+
+### 4.1.6 Server quit message
+
+Command: **SQUIT**  
+   Parameters: \<server\> \<comment\>  
+   Numeric replies:  
+           ERR_NOPRIVILEGES                ERR_NOSUCHSERVER  
+           ERR_NEEDMOREPARAMS  
+   Example:  
+&nbsp; &nbsp; \- *SQUIT tolsun.oulu.fi :Bad Link ?*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; the server link tolson.oulu.fi has been terminated because of "Bad Link".  
+&nbsp; &nbsp; \- *:Trillian SQUIT cm22.eng.umd.edu :Server out of control*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; message from Trillian to disconnect "cm22.eng.umd.edu" from the net because "Server out of control".  
+
+## 4.2 Channel operations
+
+This group of messages is concerned with manipulating channels, their properties (channel modes), and their contents (typically users).  
+In implementing these, a number of race conditions are inevitable when users at opposing ends of a network send commands which will ultimately clash.  
+It is also REQUIRED that servers keep a nickname history to ensure that wherever a \<nick\> parameter is given, the server check its history in case it has recently been changed.  
+
+### 4.2.1 Join message
+
+Command: **JOIN**  
+   Parameters: \<channel\>[ %x7 \<modes\> ] \*( "," \<channel\>[ %x7 \<modes\> ] )
+   Numeric Replies:  
+           ERR_NEEDMOREPARAMS              ERR_BANNEDFROMCHAN  
+           ERR_INVITEONLYCHAN              ERR_BADCHANNELKEY  
+           ERR_CHANNELISFULL               ERR_BADCHANMASK  
+           ERR_NOSUCHCHANNEL               ERR_TOOMANYCHANNELS  
+           ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE  
+           RPL_TOPIC
+   Examples:  
+&nbsp; &nbsp; \- *:WiZ JOIN #Twilight_zone*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ; JOIN message from WiZ  
+
+### 4.2.2 Njoin message
+
+Command: **NJOIN**  
+   Parameters: \<channel\> [ "@@" / "@" ] [ "+" ] \<nickname\> \*( "," [ "@@" / "@" ] [ "+" ] \<nickname\> )
+   Numeric Replies:  
+           ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL  
+           ERR_ALREADYREGISTRED  
+   Examples:  
+&nbsp; &nbsp; \- *:ircd.stealth.net NJOIN #Twilight_zone :@WiZ,+syrk,avalon*  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;NJOIN message from ircd.stealth.net announcing users joining the Twilight_zone channel: WiZ with channel operator status, syrk with voice privilege and avalon with no privilege.  
+
+
+### 4.2.3 Mode message
+
+The MODE message is a dual-purpose command in IRC.  
+It allows both usernames and channels to have their mode changed.  
+
+When parsing MODE messages, it is RECOMMENDED that the entire message be parsed first, and then the changes which resulted passed on.  
+
+It is REQUIRED that servers are able to change channel modes so that "channel creator" and "channel operators" may be created.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 5. Implementation details
+
+See [RFC 2813 documentation](https://tools.ietf.org/html/rfc2813), section 5.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+# 6. Current problems
+
+You will find below the summary of the current problem concerning clients protocol.  
+For more information about this problems, have a look at the [RFC 2813 documentation](https://tools.ietf.org/html/rfc2813), section 6.  
+
+## 6.1 Scalability
+
+## 6.2 Labels
+
+### 6.2.1 Nicknames
+
+### 6.2.2 Channels
+
+### 6.2.3 Servers
+
+## 6.3 Algorithms
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+# 7. Security Considerations
+
+## 7.1 Authentication
+
+Servers only have two means of authenticating incoming connections: plain text password, and DNS lookups.  
+While these methods are weak and widely recognized as unsafe, their combination has proven to be sufficient in the past:  
+ * public networks typically allow user connections with only few restrictions, without requiring accurate authentication.
+ * private networks which operate in a controlled environment often use home-grown authentication mechanisms not available on the internet: reliable ident servers, or other proprietary mechanisms.  
+
+The same comments apply to the authentication of IRC Operators.  
+
+It should also be noted that while there has been no real demand over the years for stronger authentication, and no real effort to provide better means to safely authenticate users, the current protocol offers enough to be able to easily plug-in external authentication methods based on the information that a client can submit to the server upon connection: nickname, username, password.  
+
+## 7.2 Integrity
+
+Since the PASS and OPER messages of the IRC protocol are sent in clear text, a stream layer encryption mechanism (like "The TLS Protocol") could be used to protect these transactions.  
+
+###### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *[to the top](#summary)*
+
+
+
+# **RFC 7194**
+
+This document describes the commonly accepted practice of listening on TCP port 6697 for incoming Internet Relay Chat (IRC) connections encrypted via TLS/SSL.  
+
+The RFC 2813 specifically describes the **Default Port for Internet Relay Chat (IRC) via TLS/SSL** of the IRC protocol.  
+
+See [RFC 7194 documentation](https://tools.ietf.org/html/rfc7194) for information.  
 
 
 # Sources:
