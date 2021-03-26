@@ -118,7 +118,7 @@ Details:
 * [5.1 Tracking Recently Used Channels](#51-tracking-recently-used-channels)
 * [5.2 Safe Channels](#52-safe-channels)
 
-[6. Current problems](#6-Current problems)
+[6. Current problems](#6-current-problems)
 * [6.1 Labels](#61-labels)
 * [6.2 Mode Propagation Delays](#62-mode-propagation-delays)
 * [6.3 Collisions And Channel Modes](#63-collisions-and-channel-modes)
