@@ -2,6 +2,13 @@
 
 namespace irc
 {
+	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
+	{
+		client << message.serialize();
+
+		return client;
+	}
+
 	Server::KickCommand::KickCommand()
 		:	ChannelCommand("KICK", true)
 	{ }
@@ -57,15 +64,6 @@ namespace irc
 	Server::PassCommand::PassCommand()
 		:	Command("PASS")
 	{ }
-
-	// TODO: Client << Message
-
-	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
-	{
-		client << message.serialize();
-
-		return client;
-	}
 
 	bool	Server::PassCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const

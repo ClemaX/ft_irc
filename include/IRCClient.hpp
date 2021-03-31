@@ -22,7 +22,7 @@ namespace irc
 
 	public:
 		std::string	readBuffer;
-//		std::string	writeBuffer; // TODO: Should we use a Message container instead?
+		std::string	writeBuffer; // TODO: Should we use a Message container instead?
 
 		std::string	nickname;
 		std::string	hostname;
@@ -31,7 +31,10 @@ namespace irc
 
 		Client(int fd, address const& address);
 
-		Client const&	operator<<(IReply const* reply) const;
+		Client const&	operator<<(IReply const* reply);
+		Client const&	operator<<(std::string const& str);
+
+		void	flush() throw(SocketWriteException);
 
 		virtual ~Client() throw();
 	};

@@ -37,6 +37,7 @@ namespace irc
 		virtual void		onMessage(connection* connection,
 			std::string const& message);
 
+		virtual void		onFlush() const throw(SocketWriteException);
 	public:
 
 		struct	Command
