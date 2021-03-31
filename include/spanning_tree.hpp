@@ -107,7 +107,7 @@ namespace ft
 
 		/* Init or update a path */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
-			paths.push_back(dynamic_cast<Node_Ptr>(prev += root->childs[i]->child)->value.id + std::string(":"));
+			paths.push_back(prev += dynamic_cast<Node_Ptr>(root->childs[i]->child)->value.id + std::string(":"));
 		
 		/* Iterate */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
