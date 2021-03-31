@@ -5,7 +5,7 @@ void	SocketServer::addConnection(int connectionFd,
 	SocketConnection* connection)
 {
 	if (connectionFd != listenFd)
-		connectionFds[connectionFd] = connection;
+		connectionFds[connectionFd] = connection;		// possible d'ajouter un element dans une map de cette facon ?
 
 	if (connectionFd > highestFd)
 		highestFd = connectionFd;

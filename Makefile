@@ -1,4 +1,4 @@
-NAME = ft_irc
+NAME = ircserv
 
 # Compiler and linker
 CXX = clang++

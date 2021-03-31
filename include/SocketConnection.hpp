@@ -22,7 +22,7 @@ public:
 
 	virtual	~SocketConnection() throw();
 
-	inline bool	isOpen() const throw()
+	inline bool	isOpen() const throw()									// definition autorisée dans le header ?
 	{ return fd > 0; }
 
 	void	close() throw(SocketCloseException);
