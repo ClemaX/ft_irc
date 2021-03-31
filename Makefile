@@ -15,18 +15,36 @@ BINDIR = .
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
 
-ifneq ($(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/,)
-	LIBCRYPTO = $(HOME)/.brew/Cellar/openssl@1.1/1.1.1j
-else
-	LIBCRYPTO = $(HOME)/brew/brew/Cellar/openssl@1.1/1.1.1d/
-endif
-
 LIBDIRS = $(dir $(LIBS))
 LIBINCS = $(addsuffix $(INCDIR), $(LIBDIRS))
 LIBARS = $(notdir $(LIBS))
 
+# Include directories
+SYSINCS = /usr/include /usr/local/include
+
+ifeq ($(shell find -L $(SYSINCS) -depth 1 -type d -name openssl -print -quit 2>/dev/null), )
+	BREW = $(shell dirname $(dir $(shell which brew)))
+
+	ifneq ($(BREW), )
+		USRINC = $(shell find -L $(BREW)/include -depth 1 -type d -name openssl -print -quit)
+		USRLIB = $(shell find -L $(BREW)/lib -depth 1 -type f -iname "libssl*" -print -quit)
+	endif
+
+	ifeq ($(USRINC), )
+$(error Could not find OpenSSL headers!)
+	endif
+
+	ifeq ($(USRLIB), )
+$(error Could not find OpenSSL library!)
+	endif
+
+	LIBINCS += $(dir $(USRINC))
+	LIBDIRS += $(dir $(USRLIB))
+endif
+
+INCS = $(LIBINCS) $(INCDIR)
+
 # Sources
-INCS = $(LIBINCS) $(INCDIR) $(LIBCRYPTO)/include
 SRCS = $(addprefix $(SRCDIR)/,\
 	atoi.cpp\
 	crypto.cpp\
@@ -51,7 +69,7 @@ DEPS = $(OBJS:.o=.d)
 # Flags
 CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
-LDFLAGS = $(LIBDIRS:%=-L%) -L$(LIBCRYPTO)/lib/
+LDFLAGS = $(LIBDIRS:%=-L%)
 LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
 # Compiling commands
