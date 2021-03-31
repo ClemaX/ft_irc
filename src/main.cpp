@@ -6,7 +6,7 @@ static void	doNothing(int)
 
 int			main(void)
 {
-	SocketServer	server;
+	irc::Server	server;
 	int			err = 0;
 
 	signal(SIGINT, &doNothing);

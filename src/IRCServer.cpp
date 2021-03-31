@@ -59,11 +59,12 @@ namespace irc
 		Client*	client
 			= static_cast<Client*>(connection);
 
-		//std::cout << client->username << ": " << connection->buffer;
 
 		Message const*	ircMessage = NULL;
 
 		client->readBuffer.append(message);
+
+		std::cout << client->username << ": " << static_cast<Client*>(connection)->readBuffer;
 
 		try { ircMessage = new Message(client->readBuffer); }
 		catch(Message::IncompleteMessageException const& e)
@@ -76,5 +77,13 @@ namespace irc
 
 		if (ircMessage && ircMessage->command)
 			ircMessage->command->execute(*this, client, ircMessage->arguments);
+	}
+
+	void	Server::onFlush() const throw(SocketWriteException)
+	{
+		// Flush messages
+		for (connectionMap::const_iterator it = fdConnectionMap.begin();
+			it != fdConnectionMap.end(); ++it)
+			static_cast<Client*>(it->second)->flush();
 	}
 }

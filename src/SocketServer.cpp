@@ -66,6 +66,9 @@ void	SocketServer::onMessage(connection* connection,
 		<< '\'' << message << '\'' << std::endl;
 }
 
+void	SocketServer::onFlush() const
+{ }
+
 void	SocketServer::checkActivity(int connectionFd)
 {
 	if (FD_ISSET(connectionFd, &connectionSet))
@@ -223,6 +226,8 @@ void	SocketServer::start()
 			removeConnection(disconnectedFds.front());
 			disconnectedFds.pop();
 		}
+
+		onFlush();
 	}
 	stop();
 }
@@ -232,6 +237,7 @@ void	SocketServer::stop() throw()
 	if (listenFd > 0)
 	{
 		std::cout << "Stopping server!" << std::endl;
+		onFlush();
 		clearConnections();
 		close(listenFd);
 		listenFd = 0;
