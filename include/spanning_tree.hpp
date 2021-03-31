@@ -92,7 +92,7 @@ namespace ft
 	 * 	NOTE: Never attempt to inline this function (recursive architecture).
 	*/
 	template <typename T>
-	const std::deque<std::string>&
+	static const std::deque<std::string>&
 	gen_path_list(typename Spanning_tree<T>::Base_Ptr const root,
 	typename Spanning_tree<T>::Node_Ptr const dest, std::string& prev = std::string())
 	{
@@ -148,7 +148,7 @@ namespace ft
 				(*i).erase((*i).begin() + index + dest->value.id.lenght(), (*i).end());
 
 				/* Calculate the distance and store the shortest */
-				size_t lenght = std::count((*i).begin(), (*i).end(), ":");
+				std::size_t lenght = std::count((*i).begin(), (*i).end(), ":");
 				if (lenght < max)
 				{
 					max = lenght;
