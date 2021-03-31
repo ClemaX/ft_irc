@@ -22,12 +22,12 @@ LIBARS = $(notdir $(LIBS))
 # Include directories
 SYSINCS = /usr/include /usr/local/include
 
-ifeq ($(shell find -L $(SYSINCS) -depth 1 -type d -name openssl -print -quit 2>/dev/null), )
+ifeq ($(shell find -L $(SYSINCS) -maxdepth 1 -type d -name openssl -print -quit 2>/dev/null), )
 	BREW = $(shell dirname $(dir $(shell which brew)))
 
 	ifneq ($(BREW), )
-		USRINC = $(shell find -L $(BREW)/include -depth 1 -type d -name openssl -print -quit)
-		USRLIB = $(shell find -L $(BREW)/lib -depth 1 -type f -iname "libssl*" -print -quit)
+		USRINC = $(shell find -L $(BREW)/include -maxdepth 1 -type d -name openssl -print -quit)
+		USRLIB = $(shell find -L $(BREW)/lib -maxdepth 1 -type f -iname "libssl*" -print -quit)
 	endif
 
 	ifeq ($(USRINC), )
