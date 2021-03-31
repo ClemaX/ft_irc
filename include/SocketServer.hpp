@@ -21,8 +21,8 @@ protected:
 
 	unsigned			portNumber;
 	unsigned			maxClients;
-	fd_set				connections;		// qu'est vraiment fd_set ?
-	connectionMap		connectionFds;
+	fd_set				connectionSet;
+	connectionMap		fdConnectionMap;
 	connectionQueue		disconnectedFds;
 
 	connection::address	serverAddr;

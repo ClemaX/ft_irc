@@ -5,7 +5,7 @@ void	SocketServer::addConnection(int connectionFd,
 	SocketConnection* connection)
 {
 	if (connectionFd != listenFd)
-		connectionFds[connectionFd] = connection;		// possible d'ajouter un element dans une map de cette facon ?
+		fdConnectionMap[connectionFd] = connection;		// possible d'ajouter un element dans une map de cette facon ?
 
 	if (connectionFd > highestFd)
 		highestFd = connectionFd;
@@ -15,24 +15,24 @@ void	SocketServer::removeConnection(int connectionFd)
 {
 	if (connectionFd > 0)
 	{
-		delete connectionFds[connectionFd];
-		connectionFds.erase(connectionFd);
+		delete fdConnectionMap[connectionFd];
+		fdConnectionMap.erase(connectionFd);
 		if (connectionFd == highestFd)
 		{
-			if (connectionFds.empty())
+			if (fdConnectionMap.empty())
 				highestFd = listenFd;
 			else
-				highestFd = connectionFds.rbegin()->first;
+				highestFd = fdConnectionMap.rbegin()->first;
 		}
 	}
 }
 
 void	SocketServer::clearConnections()
 {
-	for (connectionMap::const_iterator it = connectionFds.begin();
-		it != connectionFds.end(); ++it)
+	for (connectionMap::const_iterator it = fdConnectionMap.begin();
+		it != fdConnectionMap.end(); ++it)
 			delete(it->second);
-	connectionFds.clear();
+	fdConnectionMap.clear();
 }
 
 SocketConnection*	SocketServer::onConnection(int connectionFd,
@@ -68,16 +68,16 @@ void	SocketServer::onMessage(connection* connection,
 
 void	SocketServer::checkActivity(int connectionFd)
 {
-	if (FD_ISSET(connectionFd, &connections))
+	if (FD_ISSET(connectionFd, &connectionSet))
 	{
 		bool isOpen
-			= connectionFds[connectionFd]->read(buffer, sizeof(buffer) - 1);
+			= fdConnectionMap[connectionFd]->read(buffer, sizeof(buffer) - 1);
 
 		if (isOpen)
-			onMessage(connectionFds[connectionFd], buffer);
+			onMessage(fdConnectionMap[connectionFd], buffer);
 		else
 		{
-			onDisconnection(connectionFds[connectionFd]);
+			onDisconnection(fdConnectionMap[connectionFd]);
 			disconnectedFds.push(connectionFd);
 		}
 	}
@@ -87,7 +87,7 @@ SocketServer::SocketServer(unsigned portNumber, unsigned maxClients)
 	:	portNumber(portNumber), maxClients(maxClients),
 		listenFd(0), highestFd(0)
 {
-	FD_ZERO(&connections);
+	FD_ZERO(&connectionSet);
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
 	serverAddr.sin_port = htons(portNumber);
@@ -99,7 +99,7 @@ SocketServer::SocketServer()
 		listenFd(0),
 		highestFd(0)
 {
-	FD_ZERO(&connections);
+	FD_ZERO(&connectionSet);
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
 	serverAddr.sin_port = htons(portNumber);
@@ -161,7 +161,7 @@ void	SocketServer::start()
 	std::cout << "Listening on port " << portNumber << "..." << std::endl;
 
 	// Add listening socket to connections
-	FD_SET(listenFd, &connections);
+	FD_SET(listenFd, &connectionSet);
 	highestFd = listenFd;
 
 	// Check for incoming connections
@@ -171,14 +171,14 @@ void	SocketServer::start()
 
 	while (true)
 	{
-		FD_ZERO(&connections);
-		FD_SET(listenFd, &connections);
-		for (connectionMap::const_iterator it = connectionFds.begin();
-			it != connectionFds.end(); ++it)
-			FD_SET(it->first, &connections);
+		FD_ZERO(&connectionSet);
+		FD_SET(listenFd, &connectionSet);
+		for (connectionMap::const_iterator it = fdConnectionMap.begin();
+			it != fdConnectionMap.end(); ++it)
+			FD_SET(it->first, &connectionSet);
 
 		// Wait for incoming data
-		activity = select(highestFd + 1, &connections, NULL, NULL, NULL);
+		activity = select(highestFd + 1, &connectionSet, NULL, NULL, NULL);
 
 		if ((activity < 0))
 		{
@@ -191,7 +191,7 @@ void	SocketServer::start()
 		}
 
 		// Accept incoming connections
-		if (FD_ISSET(listenFd, &connections))
+		if (FD_ISSET(listenFd, &connectionSet))
 		{
 			int	incomingFd;
 
@@ -213,8 +213,8 @@ void	SocketServer::start()
 		}
 
 		// Read messages
-		for (connectionMap::iterator it = connectionFds.begin();
-			it != connectionFds.end(); ++it)
+		for (connectionMap::iterator it = fdConnectionMap.begin();
+			it != fdConnectionMap.end(); ++it)
 			checkActivity(it->first);
 
 		// Remove disconnected sockets
