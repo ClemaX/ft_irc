@@ -24,6 +24,6 @@ namespace irc
 	public:
 		std::string const			name;
 
-		Channel(std::string const& name);
+		Channel(std::string const& name);	// ajouter client ?
 	};
 }
