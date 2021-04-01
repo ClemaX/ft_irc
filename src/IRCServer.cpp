@@ -6,7 +6,8 @@ namespace irc
 	Server::Server()
 		:	SocketServer(),
 			passwords("passwords.db",
-				IRC_NICKNAME_MAXLEN, SHA256_DIGEST_LENGTH * 2)
+				IRC_NICKNAME_MAXLEN, SHA256_DIGEST_LENGTH * 2),
+			motd("Hello client!\nWelcome on ircserv!")
 	{ }
 
 	Server::~Server()
@@ -43,7 +44,8 @@ namespace irc
 			throw;
 		}
 
-		newClient->username = "test";
+		newClient->username = "testName";
+		newClient->nickname = "testNick";
 
 		std::cout << "New connection: "
 			<< "fd: " << connectionFd

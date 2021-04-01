@@ -57,4 +57,17 @@ namespace irc
 
 		return serialized;
 	}
+
+	unsigned	AMessage::Prefix::length() const throw()
+	{
+		unsigned	length = 1 + name.length();
+
+		if (user.length())
+			length += user.length() + 1;
+
+		if (host.length())
+			length += host.length() + 1;
+
+		return (length);
+	}
 }

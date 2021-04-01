@@ -25,6 +25,7 @@ namespace irc
 	{
 	private:
 		HashedFileDatabase	passwords;
+		std::string			motd;
 
 	protected:
 		typedef ::std::map<std::string, Channel>	channelMap;
@@ -90,7 +91,7 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	TopicCommand		:	public ChannelCommand
+		struct	TopicCommand	:	public ChannelCommand
 		{
 			TopicCommand();
 
@@ -101,6 +102,14 @@ namespace irc
 		struct	JoinCommand		:	public Command
 		{
 			JoinCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	MotdCommand		:	public Command
+		{
+			MotdCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -119,6 +128,7 @@ namespace irc
 	static const Server::ModeCommand	inviteCommand;
 	static const Server::TopicCommand	topicCommand;
 	static const Server::PassCommand	passCommand;
+	static const Server::MotdCommand	motdCommand;
 
 	static Server::Command const*const	commands[] =
 	{
@@ -127,7 +137,8 @@ namespace irc
 		&kickCommand,
 		&modeCommand,
 		&inviteCommand,
-		&topicCommand
+		&topicCommand,
+		&motdCommand,
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
