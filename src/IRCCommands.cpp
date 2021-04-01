@@ -60,10 +60,24 @@ namespace irc
 	bool	Server::TopicCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
-		(void)arguments;
-		std::cout << user->username << " executes " << name << std::endl;
-		return false;
+		if (!arguments.size())
+			return false; // throw exeception ?
+
+		const std::string channelName = arguments[0];
+		Channel	*channel = server.getChannel(channelName);
+
+		if (!channel)
+			; // throw exception ?
+		else if (!channel->isOperator(user))
+			; // throw exception ?
+		else if (arguments.size() == 1)
+			std::cout << channel->getTopic() << "\n";
+		else
+		{
+			const std::string newTopic = arguments[1];
+			channel->setTopic(newTopic);
+		}
+		return true;
 	}
 
 // --- command PASS ---//

@@ -19,12 +19,15 @@ namespace irc
 	ChannelClient::ChannelClient(const ChannelClient & src)
 	{*this = src;}
 
+	ChannelClient::~ChannelClient() {}
+
 	ChannelClient & ChannelClient::operator=(const ChannelClient & src)
 	{
 		client = src.client;
 		isChannelOperator = src.isChannelOperator;
 		return *this;
 	}
+
 
 
 // --- Channel ---
@@ -35,6 +38,21 @@ namespace irc
 	Channel::Channel(std::string const& name)
 		:	clientsMap(), serversMap(), topic(""), name(name)
 	{ }
+	
+	Channel::~Channel() {}
+
+	std::string	Channel::getTopic() const
+	{return topic;}
+
+	void	Channel::setTopic(const std::string & str)
+	{topic = str;}
+
+	bool	Channel::isInChannel(Client *client) const
+	{return (clientsMap.find(client) != clientsMap.end());}
+
+	bool	Channel::isOperator(Client *client) const
+	{return (isInChannel(client) && clientsMap.find(client)->second.isChannelOperator);}
+
 
 
 	bool	Channel::addClient(Client* client, bool	isChannelOperator)
@@ -66,7 +84,7 @@ std::cout << name << ": new server added - number of servers linked to channel =
 		client->clientChannels.erase(name);
 		clientsMap.erase(client);
 
-	std::cout << "client " << client->username << " has been removed from channel " << name << "\n";
+std::cout << "client " << client->username << " has been removed from channel " << name << "\n";
 		
 		if (clientsMap.empty())
 			return close();	
@@ -76,11 +94,11 @@ std::cout << name << ": new server added - number of servers linked to channel =
 
 	bool	Channel::close()
 	{
+		if (!serversMap.empty())
+			serversMap.begin()->second->database->dataChannelsMap.erase(name);
+		delete this;
 		
-
-		
-		
-	std::cout << "channel " << name << " has been closed\n";
+std::cout << "channel " << name << " has been closed\n";
 
 		return true;
 	}

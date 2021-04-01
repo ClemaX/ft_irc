@@ -14,6 +14,15 @@ namespace irc
 	Server::~Server()
 	{ }
 
+	Channel *Server::getChannel(const std::string & name) const
+	{
+		channelsMap::iterator it = database->dataChannelsMap.find(name);
+
+		if (it == database->dataChannelsMap.end())	// search channel in serverChannels map 
+			return NULL;
+		return it->second;
+	}
+
 	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
 	{

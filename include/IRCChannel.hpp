@@ -16,6 +16,7 @@ namespace irc
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 	struct	ChannelClient
 	{
+		
 		Client*	client;
 		bool	isChannelOperator;
 
@@ -23,6 +24,8 @@ namespace irc
 		ChannelClient(Client* client);
 		ChannelClient(Client* client, bool isOp);
 		ChannelClient(const ChannelClient & src);
+
+		~ChannelClient();
 
 		ChannelClient & operator=(const ChannelClient & src);
 	};
@@ -41,11 +44,19 @@ namespace irc
 
 		Channel();
 		Channel(std::string const& name);
+		~Channel();
+
+		std::string	getTopic() const;
+		void	setTopic(const std::string & str);
+
+		bool	isInChannel(Client *client) const;
+		bool	isOperator(Client *client) const;
 
 		bool	addClient(Client* client, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
 		bool	removeClient(Client* client);
+
 
 		bool	close();
 	};
