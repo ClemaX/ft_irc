@@ -52,7 +52,8 @@ namespace irc
 
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message.append(":- ").append(serverName).append(motd).append(" -");
+		message.append(":- ").append(serverName).append(" ").append(motd)
+			.append(" -");
 	}
 
 	MotdReply::MotdReply(std::string const& serverName,

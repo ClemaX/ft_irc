@@ -5,7 +5,7 @@ void	SocketServer::addConnection(int connectionFd,
 	SocketConnection* connection)
 {
 	if (connectionFd != listenFd)
-		fdConnectionMap[connectionFd] = connection;		// possible d'ajouter un element dans une map de cette facon ?
+		fdConnectionMap[connectionFd] = connection;
 
 	if (connectionFd > highestFd)
 		highestFd = connectionFd;
@@ -41,9 +41,9 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 	SocketConnection*	connection = new SocketConnection(connectionFd, address);
 
 	std::cout << "New connection: "
-		<< "fd: " << connectionFd
-		<< ", ip: " << address.sin_addr.s_addr
-		<< ", port: " << address.sin_port
+		<< "\n\tfd: " << connectionFd
+		<< "\n\tip: " << address.sin_addr.s_addr
+		<< "\n\tport: " << address.sin_port
 		<< std::endl;
 
 	return (connection);
@@ -52,18 +52,23 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 void	SocketServer::onDisconnection(connection* connection)
 {
 	std::cout << "Socket disconnected: "
-		<< ", ip: " << connection->getAddr()
-		<< ", port: " << connection->getPort()
+		<< "\n\tip: " << connection->getAddr()
+		<< "\n\tport: " << connection->getPort()
 		<< std::endl;
 }
 
 void	SocketServer::onMessage(connection* connection,
 	std::string const& message)
 {
+	// std::cout << "Received message: "
+	// 	<< "ip: " << connection->getAddr()
+	// 	<< ", port: " << connection->getPort()
+	// 	<< '\'' << message << '\'' << std::endl;
+	
 	std::cout << "Received message: "
-		<< ", ip: " << connection->getAddr()
-		<< ", port: " << connection->getPort()
-		<< '\'' << message << '\'' << std::endl;
+		<< "\n\tip: " << connection->getAddr()
+		<< "\n\tport: " << connection->getPort()
+		<< "\n\t\'" << message << "\'" << std::endl;
 }
 
 void	SocketServer::onFlush() const

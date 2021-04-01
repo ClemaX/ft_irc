@@ -1,0 +1,10 @@
+
+
+Connection client :
+	- username a demander lors de la Connection
+	- 
+
+Creation channel:
+	- relation avec un client
+
+nc irc.freenode.org 6665

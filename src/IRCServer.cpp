@@ -5,13 +5,24 @@ namespace irc
 {
 	Server::Server()
 		:	SocketServer(),
-			passwords("passwords.db",
-				IRC_NICKNAME_MAXLEN, SHA256_DIGEST_LENGTH * 2),
+			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
+				SHA256_DIGEST_LENGTH * 2),
 			motd("Hello client!\nWelcome on ircserv!")
-	{ }
+	{
+		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
+	}
 
 	Server::~Server()
 	{ }
+
+	Channel *Server::getChannel(const std::string & name) const
+	{
+		channelsMap::iterator it = database->dataChannelsMap.find(name);
+
+		if (it == database->dataChannelsMap.end())	// search channel in serverChannels map
+			return NULL;
+		return it->second;
+	}
 
 	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
@@ -48,9 +59,9 @@ namespace irc
 		newClient->nickname = "testNick";
 
 		std::cout << "New connection: "
-			<< "fd: " << connectionFd
-			<< ", ip: " << address.sin_addr.s_addr
-			<< ", port: " << address.sin_port
+			<< "\n\tfd: " << connectionFd
+			<< "\n\tip: " << address.sin_addr.s_addr
+			<< "\n\tport: " << address.sin_port
 			<< std::endl;
 
 		return newClient;

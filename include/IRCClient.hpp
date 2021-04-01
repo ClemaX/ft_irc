@@ -8,8 +8,12 @@
 
 #include <IRCIReply.hpp>
 
+#include <IRCChannel.hpp>
+
 namespace irc
 {
+
+	class	Channel;
 	/**
 	* In addition to the nickname, all servers must have the
 	* following information about all clients: the real name of the host
@@ -19,6 +23,9 @@ namespace irc
 	class	Client	:	public SocketConnection
 	{
 	private:
+		typedef ::std::map<std::string, Channel*>	clientChannelMap;
+		typedef ::std::pair<std::string, Channel*>	clientChannelPair;
+
 
 	public:
 		std::string	readBuffer;
@@ -29,6 +36,8 @@ namespace irc
 		std::string	username;
 		std::string	server;
 
+		clientChannelMap	clientChannels;
+
 		Client(int fd, address const& address);
 
 		Client const&	operator<<(std::string const& str);
@@ -36,5 +45,9 @@ namespace irc
 		void	flush() throw(SocketWriteException);
 
 		virtual ~Client() throw();
+
+		void	joinChannel(Channel * channel);
+		void	leaveChannel(Channel * channel);
+		void	leaveAllChannels();
 	};
 }

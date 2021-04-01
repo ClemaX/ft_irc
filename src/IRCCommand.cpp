@@ -10,4 +10,6 @@ namespace irc
 		bool isOperatorCommand)
 		:	Command(name), isOperatorCommand(isOperatorCommand)
 	{ }
+
+
 }

@@ -13,6 +13,7 @@ namespace irc
 
 		// Check message size
 		newLength = buffer.find(IRC_MESSAGE_SUFFIX, 0, suffixLength);
+
 		if (newLength == std::string::npos)
 		{
 			if (buffer.length() > maxLength)

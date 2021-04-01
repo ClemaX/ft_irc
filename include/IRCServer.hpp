@@ -11,6 +11,7 @@
 #include <IRCChannel.hpp>
 #include <IRCReplies.hpp>
 #include <IRCClient.hpp>
+#include <IRCDatabase.hpp>
 
 // TODO: Grammar rules
 // TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)
@@ -21,6 +22,9 @@
 
 namespace irc
 {
+	class Channel;
+	class IRCDatabase;
+
 	class	Server	:	public SocketServer
 	{
 	private:
@@ -28,9 +32,9 @@ namespace irc
 		std::string			motd;
 
 	protected:
-		typedef ::std::map<std::string, Channel>	channelMap;
-
-		channelMap	channels;
+		typedef ::std::map<Server*, Server*>	serversMap;
+		typedef ::std::map<std::string, Channel*>	channelsMap;
+		// typedef ::std::pair<std::string, Channel*>	channelPair;
 
 		virtual connection*	onConnection(int connectionFd,
 			connection::address const& address);
@@ -39,7 +43,13 @@ namespace irc
 			std::string const& message);
 
 		virtual void		onFlush() const throw(SocketWriteException);
+
 	public:
+		// channelMap	serverChannels;
+		// serversMap	neighbourServers;
+		IRCDatabase	*database;
+
+		Channel *getChannel(const std::string & name) const;
 
 		struct	Command
 		{
@@ -99,7 +109,7 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	JoinCommand		:	public Command
+		struct	JoinCommand		:	public ChannelCommand
 		{
 			JoinCommand();
 
@@ -115,6 +125,14 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
+		struct	PartCommand		:	public ChannelCommand
+		{
+			PartCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
 		Server();
 		~Server();
 	};
@@ -122,13 +140,14 @@ namespace irc
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);
 
+	static const Server::PassCommand	passCommand;
 	static const Server::JoinCommand	joinCommand;
 	static const Server::KickCommand	kickCommand;
 	static const Server::ModeCommand	modeCommand;
 	static const Server::ModeCommand	inviteCommand;
 	static const Server::TopicCommand	topicCommand;
-	static const Server::PassCommand	passCommand;
 	static const Server::MotdCommand	motdCommand;
+	static const Server::PartCommand	partCommand;
 
 	static Server::Command const*const	commands[] =
 	{
@@ -139,6 +158,7 @@ namespace irc
 		&inviteCommand,
 		&topicCommand,
 		&motdCommand,
+		&partCommand
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);

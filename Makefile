@@ -50,9 +50,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	crypto.cpp\
 	IRCAMessage.cpp\
 	IRCChannel.cpp\
-	IRCClient.cpp\
 	IRCCommand.cpp\
 	IRCCommands.cpp\
+	IRCClient.cpp\
+	IRCDatabase.cpp\
 	IRCMessage.cpp\
 	IRCReplies.cpp\
 	IRCServer.cpp\
