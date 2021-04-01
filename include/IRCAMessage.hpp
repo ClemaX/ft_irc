@@ -45,6 +45,7 @@ namespace irc
 			{ return !(name.length() || user.length() || host.length()); }
 
 			std::string	serialize() const throw();
+			unsigned	length() const throw();
 		};
 
 		Prefix	prefix;
