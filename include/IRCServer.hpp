@@ -21,6 +21,8 @@
 
 namespace irc
 {
+	class Channel;
+
 	class	Server	:	public SocketServer
 	{
 	private:
@@ -28,8 +30,9 @@ namespace irc
 
 	protected:
 		typedef ::std::map<std::string, Channel>	channelMap;
+		typedef ::std::pair<std::string, Channel>	channelPair;
 
-		channelMap	channels;
+		channelMap	serverChannels;
 
 		virtual connection*	onConnection(int connectionFd,
 			connection::address const& address);
@@ -98,7 +101,7 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	JoinCommand		:	public Command
+		struct	JoinCommand		:	public ChannelCommand
 		{
 			JoinCommand();
 
@@ -113,12 +116,12 @@ namespace irc
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);
 
+	static const Server::PassCommand	passCommand;
 	static const Server::JoinCommand	joinCommand;
 	static const Server::KickCommand	kickCommand;
 	static const Server::ModeCommand	modeCommand;
 	static const Server::ModeCommand	inviteCommand;
 	static const Server::TopicCommand	topicCommand;
-	static const Server::PassCommand	passCommand;
 
 	static Server::Command const*const	commands[] =
 	{

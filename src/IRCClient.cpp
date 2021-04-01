@@ -23,4 +23,14 @@ namespace irc
 		writeBuffer.clear();
 	}
 
+	void	Client::joinChannel(Channel & channel)
+	{
+		if (clientChannels.find(channel.name) != clientChannels.end())
+			return ;
+		clientChannels.insert(clientChannelPair(channel.name, channel));
+
+std::cout << "client " << username << " has joined channel " << channel.name << "\n";
+
+	}
+
 }

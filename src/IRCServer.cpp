@@ -46,9 +46,9 @@ namespace irc
 		newClient->username = "test";
 
 		std::cout << "New connection: "
-			<< "fd: " << connectionFd
-			<< ", ip: " << address.sin_addr.s_addr
-			<< ", port: " << address.sin_port
+			<< "\n\tfd: " << connectionFd
+			<< "\n\tip: " << address.sin_addr.s_addr
+			<< "\n\tport: " << address.sin_port
 			<< std::endl;
 
 		return newClient;

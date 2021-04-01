@@ -9,6 +9,8 @@ namespace irc
 		return client;
 	}
 
+
+// --- command KICK ---//
 	Server::KickCommand::KickCommand()
 		:	ChannelCommand("KICK", true)
 	{ }
@@ -22,6 +24,7 @@ namespace irc
 		return false;
 	}
 
+// --- command MODE ---//
 	Server::ModeCommand::ModeCommand()
 		:	ChannelCommand("MODE", true)
 	{ }
@@ -35,6 +38,7 @@ namespace irc
 		return false;
 	}
 
+// --- command INVITE ---//
 	Server::InviteCommand::InviteCommand()
 		:	ChannelCommand("INVITE", true)
 	{ }
@@ -48,6 +52,7 @@ namespace irc
 		return false;
 	}
 
+// --- command TOPIC ---//
 	Server::TopicCommand::TopicCommand()
 		:	ChannelCommand("TOPIC", true)
 	{ }
@@ -61,6 +66,7 @@ namespace irc
 		return false;
 	}
 
+// --- command PASS ---//
 	Server::PassCommand::PassCommand()
 		:	Command("PASS")
 	{ }
@@ -80,24 +86,25 @@ namespace irc
 		return true;
 	}
 
+// --- command JOIN ---//
 	Server::JoinCommand::JoinCommand()
-		:	Command("JOIN")
+		:	ChannelCommand("JOIN", false)
 	{ }
 
 	bool	Server::JoinCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
-		std::cout << user->username << " executes " << name << std::endl;
+		bool isOp = false;
+		const std::string channelName = arguments[0];
 
-		if (arguments.size())
+		if (server.serverChannels.find(arguments[0]) == server.serverChannels.end())	// search channel in serverChannels map 
 		{
-			std::cout << "Arguments: ";
-			for (argumentList::const_iterator it = arguments.begin();
-				it != arguments.end(); it++)
-				std::cout << *it << ", ";
-			std::cout << std::endl;
+			server.serverChannels.insert(channelPair(channelName, Channel(channelName)));	// Create the channel if it doesn't exist
+			isOp = true;										// will set user as operator
+			server.serverChannels[channelName].addServer(&server);		// add server to the channel servers list
 		}
-		return false;
+		user->joinChannel(server.serverChannels[channelName]);
+		return server.serverChannels[arguments[0]].addClient(user, isOp);
+
 	}
 }

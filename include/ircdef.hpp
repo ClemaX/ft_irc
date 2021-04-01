@@ -22,7 +22,7 @@
 /// IRC message-prefix host-indicator-prefix (as defined in RFC1459 2.3.1)
 #define IRC_MESSAGE_PREFIX_HOST_PREFIX '@'
 /// IRC message suffix. (as defined in RFC1459 2.3)
-#define IRC_MESSAGE_SUFFIX "\r\n"
+#define IRC_MESSAGE_SUFFIX "\r\n"				// How can we get the '\r' ?
 /// Maximal length of IRC messages (as defined in RFC1459 2.3).
 #define IRC_MESSAGE_MAXLEN 512
 
