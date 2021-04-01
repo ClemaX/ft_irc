@@ -111,7 +111,7 @@ namespace ft
 		
 		/* Iterate */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
-			find_shortest_path(root->childs[i].child, dest, prev);
+			gen_path_list(root->childs[i].child, dest, prev);
 
 		/* Return all the paths */
 		return (paths);
@@ -144,11 +144,8 @@ namespace ft
 			size_t index;
 			if ((index = (*i).find(dest->value.id)) != std::string::npos)
 			{
-				/* Strip the remaining substring */
-				(*i).erase((*i).begin() + index + dest->value.id.lenght(), (*i).end());
-
 				/* Calculate the distance and store the shortest */
-				std::size_t lenght = std::count((*i).begin(), (*i).end(), ":");
+				std::size_t lenght = std::count((*i).begin(), (*i).begin() + index + dest->value.id.lenght(), ":");
 				if (lenght < max)
 				{
 					max = lenght;
