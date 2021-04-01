@@ -31,7 +31,6 @@ namespace irc
 
 		Client(int fd, address const& address);
 
-		Client const&	operator<<(IReply const* reply);
 		Client const&	operator<<(std::string const& str);
 
 		void	flush() throw(SocketWriteException);
