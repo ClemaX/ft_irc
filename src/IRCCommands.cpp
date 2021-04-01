@@ -96,15 +96,38 @@ namespace irc
 	{
 		bool isOp = false;
 		const std::string channelName = arguments[0];
+		Channel *channel;
 
-		if (server.serverChannels.find(arguments[0]) == server.serverChannels.end())	// search channel in serverChannels map 
+		if (server.database->dataChannelsMap.find(channelName) == server.database->dataChannelsMap.end())	// search channel in serverChannels map 
 		{
-			server.serverChannels.insert(channelPair(channelName, Channel(channelName)));	// Create the channel if it doesn't exist
+			channel = new Channel(channelName);
+			server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
 			isOp = true;										// will set user as operator
-			server.serverChannels[channelName].addServer(&server);		// add server to the channel servers list
+			channel->addServer(&server);		// add server to the channel servers list
 		}
-		user->joinChannel(server.serverChannels[channelName]);
-		return server.serverChannels[arguments[0]].addClient(user, isOp);
+		else
+			channel = (server.database->dataChannelsMap.find(channelName))->second;
+		user->joinChannel(channel);
+		return channel->addClient(user, isOp);
 
 	}
+
+// --- command PART ---//
+	Server::PartCommand::PartCommand()
+		:	ChannelCommand("PART", true)
+	{ }
+
+	bool	Server::PartCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		(void)server;
+		const std::string channelName = arguments[0];
+
+		if (user->clientChannels.find(channelName) == user->clientChannels.end())
+			return false;
+		user->leaveChannel(user->clientChannels[channelName]);
+		return true;
+	}
+
+
 }

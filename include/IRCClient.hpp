@@ -23,10 +23,9 @@ namespace irc
 	class	Client	:	public SocketConnection
 	{
 	private:
-		typedef ::std::map<std::string, Channel&>	clientChannelMap;
-		typedef ::std::pair<std::string, Channel&>	clientChannelPair;
+		typedef ::std::map<std::string, Channel*>	clientChannelMap;
+		typedef ::std::pair<std::string, Channel*>	clientChannelPair;
 
-		clientChannelMap	clientChannels;
 
 	public:
 		std::string	readBuffer;
@@ -37,6 +36,8 @@ namespace irc
 		std::string	username;
 		std::string	server;
 
+		clientChannelMap	clientChannels;
+
 		Client(int fd, address const& address);
 
 		Client const&	operator<<(IReply const* reply);
@@ -46,6 +47,8 @@ namespace irc
 
 		virtual ~Client() throw();
 
-		void	joinChannel(Channel & channel);
+		void	joinChannel(Channel * channel);
+		void	leaveChannel(Channel * channel);
+		void	leaveAllChannels();
 	};
 }

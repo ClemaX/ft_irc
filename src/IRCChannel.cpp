@@ -29,11 +29,11 @@ namespace irc
 
 // --- Channel ---
 	Channel::Channel()
-		:	clientsMap(), serversMap(), name("")
+		:	clientsMap(), serversMap(), topic(""), name("")
 	{ }
 
 	Channel::Channel(std::string const& name)
-		:	clientsMap(), serversMap(), name(name)
+		:	clientsMap(), serversMap(), topic(""), name(name)
 	{ }
 
 
@@ -56,6 +56,32 @@ std::cout << name << ": new client added - number of clients in channel = " << c
 
 std::cout << name << ": new server added - number of servers linked to channel = " << serversMap.size() << "\n";
 	
+		return true;
+	}
+
+	bool	Channel::removeClient(Client* client)
+	{
+		if (clientsMap.find(client) == clientsMap.end())
+			return false;
+		client->clientChannels.erase(name);
+		clientsMap.erase(client);
+
+	std::cout << "client " << client->username << " has been removed from channel " << name << "\n";
+		
+		if (clientsMap.empty())
+			return close();	
+
+		return true;
+	}
+
+	bool	Channel::close()
+	{
+		
+
+		
+		
+	std::cout << "channel " << name << " has been closed\n";
+
 		return true;
 	}
 }

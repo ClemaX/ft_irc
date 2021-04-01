@@ -33,7 +33,8 @@ namespace irc
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
 		std::map<Client*, ChannelClient>	clientsMap;
-		std::map<Server*, Server*>	serversMap;
+		std::map<Server*, Server*>			serversMap;
+		std::string	topic;
 
 	public:
 		std::string const			name;
@@ -43,5 +44,9 @@ namespace irc
 
 		bool	addClient(Client* client, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
+
+		bool	removeClient(Client* client);
+
+		bool	close();
 	};
 }
