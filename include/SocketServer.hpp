@@ -38,11 +38,13 @@ protected:
 
 	void	sendMessage(connection* connection, std::string const& message);
 
-	virtual SocketConnection	*onConnection(int connectionFd,
+	virtual SocketConnection*	onConnection(int connectionFd,
 		connection::address const& address);
 	virtual void				onDisconnection(connection* connection);
 	virtual void				onMessage(connection* connection,
 		std::string const& message);
+
+	virtual void				onFlush() const;
 
 public:
 	class	ServerException	:	public std::exception
