@@ -111,7 +111,7 @@ namespace ft
 		
 		/* Iterate */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
-			find_shortest_path(root->childs[i].child, dest, prev);
+			gen_path_list(root->childs[i].child, dest, prev);
 
 		/* Return all the paths */
 		return (paths);
