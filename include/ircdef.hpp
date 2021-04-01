@@ -186,7 +186,7 @@
 /// MOTD command reply number used to indicate the content of the MOTD.
 #define IRC_RPL_MOTD 372
 /// MOTD command reply number used to indicate the end of the MOTD.
-#define IRC_RPL_ENDOFMOTD 375
+#define IRC_RPL_ENDOFMOTD 376
 /// OPER command reply number used to indicate success.
 #define IRC_RPL_YOUREOPER 381
 /// REHASH command reply number used to indicate success.
