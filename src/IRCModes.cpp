@@ -15,7 +15,8 @@ namespace irc
 		if (!channel)
 			return false;
 		
-		
+		// now we have to check +/-, flags and arguments
+
 		return true;
 	}
 
