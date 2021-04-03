@@ -30,6 +30,37 @@ namespace irc
 		ChannelClient & operator=(const ChannelClient & src);
 	};
 
+	struct	ChannelMode
+	{
+		bool	o;
+		bool	p;
+		bool	s;
+		bool	i;
+		bool	t;
+		bool	n;
+		bool	m;
+		bool	l;
+		bool	b;
+		bool	v;
+		bool	k;
+
+		// o - give/take channel operator privileges;
+        // p - private channel flag;
+        // s - secret channel flag;
+        // i - invite-only channel flag;
+        // t - topic settable by channel operator only flag;
+        // n - no messages to channel from clients on the outside;
+        // m - moderated channel;
+        // l - set the user limit to channel;
+        // b - set a ban mask to keep users out;
+        // v - give/take the ability to speak on a moderated channel;
+        // k - set a channel key (password).
+
+		ModeClient();
+		~ModeClient();
+
+	};
+
 	class	Channel
 	{
 	protected:
@@ -40,7 +71,8 @@ namespace irc
 
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
-		std::string	topic;
+		ChannelMode			channelMode;
+		std::string			topic;
 
 	public:
 		std::string const			name;
@@ -58,11 +90,12 @@ namespace irc
 
 		Client *getUser(std::string const & clientUsername) const;
 
+		void	displayNicknames(void) const;
+
 		bool	addClient(Client* client, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
 		bool	removeClient(Client* client);
-
 
 		bool	close();
 	};

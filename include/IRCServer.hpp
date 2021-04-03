@@ -135,6 +135,22 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
+		struct	NamesCommand		:	public ChannelCommand
+		{
+			NamesCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	ListCommand		:	public ChannelCommand
+		{
+			ListCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
 		Server();
 		~Server();
 	};
@@ -150,6 +166,8 @@ namespace irc
 	static const Server::TopicCommand	topicCommand;
 	static const Server::MotdCommand	motdCommand;
 	static const Server::PartCommand	partCommand;
+	static const Server::NamesCommand	namesCommand;
+	static const Server::ListCommand	listCommand;
 
 	static Server::Command const*const	commands[] =
 	{
@@ -160,7 +178,9 @@ namespace irc
 		&inviteCommand,
 		&topicCommand,
 		&motdCommand,
-		&partCommand
+		&partCommand,
+		&namesCommand,
+		&listCommand
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);

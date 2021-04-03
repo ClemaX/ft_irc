@@ -10,6 +10,29 @@ namespace irc
 	}
 
 
+// --- command PASS ---//
+	Server::PassCommand::PassCommand()
+		:	Command("PASS")
+	{ }
+
+	bool	Server::PassCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		(void)server;
+		std::cout << user->username << " executes " << name << std::endl;
+
+		if (!arguments.size())
+		{
+			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
+			return false;
+		}
+		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
+		return true;
+	}
+
+
+// ============   CHANNEL commands   ============ //
+
 // --- command KICK ---//
 	Server::KickCommand::KickCommand()
 		:	ChannelCommand("KICK", true)
@@ -22,14 +45,14 @@ namespace irc
 		if (arguments.size() < 2)
 			return false;
 		std::string channelName = arguments[0];
-		std::string clientUsername = arguments[1]; // do we check the username ? Username ?
+		std::string clientUsername = arguments[1]; // do we check the username ? Nickname ?
 
 		if (!user->isInChannel(channelName))
 			return false;
 		Channel *channel = user->getChannel(channelName);
 		if (!channel->isOperator(user))
 			return false;		
-		Client *victim = channel->getUser(clientUsername); // do we check the username ? Username ?
+		Client *victim = channel->getUser(clientUsername); // do we check the username ? Nickname ?
 		if (!victim)	// if victim not found in channel
 			return false;
 		
@@ -39,7 +62,7 @@ namespace irc
 		{
 			std::string comment = arguments[2];
 			comment.erase(0,1);
-std::cout << "Reason: \"" << comment << "\"\n";
+			std::cout << "Reason: \"" << comment << "\"\n";
 		}
 		return true;
 	}
@@ -100,26 +123,6 @@ std::cout << "Reason: \"" << comment << "\"\n";
 		return true;
 	}
 
-// --- command PASS ---//
-	Server::PassCommand::PassCommand()
-		:	Command("PASS")
-	{ }
-
-	bool	Server::PassCommand::execute(Server& server, Client* user,
-		argumentList const& arguments) const
-	{
-		(void)server;
-		std::cout << user->username << " executes " << name << std::endl;
-
-		if (!arguments.size())
-		{
-			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
-			return false;
-		}
-		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
-		return true;
-	}
-
 // --- command JOIN ---//
 	Server::JoinCommand::JoinCommand()
 		:	ChannelCommand("JOIN", false)
@@ -163,6 +166,48 @@ std::cout << "Reason: \"" << comment << "\"\n";
 		return true;
 	}
 
+// --- command NAMES ---//
+	Server::NamesCommand::NamesCommand()
+		:	ChannelCommand("NAMES", true)
+	{ }
+
+	bool	Server::NamesCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		(void)server;
+		if (!arguments.size())
+			return true;		// to manage by checking every channel
+
+		const std::string channelName = arguments[0];
+		Channel *channel = user->getChannel(channelName);
+
+		if (!channel)
+			return false;		// not exactly, we have to check the visibles channel
+		channel->displayNicknames();
+		return true;
+	}
+
+// --- command LIST ---//
+	Server::ListCommand::ListCommand()
+		:	ChannelCommand("LIST", true)
+	{ }
+
+	bool	Server::ListCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		(void)server;
+		const std::string channelName = arguments[0];
+
+		if (user->clientChannels.find(channelName) == user->clientChannels.end())
+			return false;
+		user->leaveChannel(channelName);
+		return true;
+	}
+
+
+// ============================================== //
+
+// --- command MOTD ---//
 	Server::MotdCommand::MotdCommand()
 		:	Command("MOTD")
 	{ }

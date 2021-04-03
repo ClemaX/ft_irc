@@ -28,15 +28,22 @@ namespace irc
 		return *this;
 	}
 
+// --- ModeClient ---
+	ModeClient::ModeClient()
+		:	o(false), p(false), s(false), i(false), t(false), n(false),
+			m(false), l(false), b(false), v(false), k(false)
+	{ }	
+
+	ModeClient::~ModeClient() {}
 
 
 // --- Channel ---
 	Channel::Channel()
-		:	clientsMap(), serversMap(), topic(""), name("")
+		:	clientsMap(), serversMap(), channelMode(), topic(""), name("")
 	{ }
 
 	Channel::Channel(std::string const& name)
-		:	clientsMap(), serversMap(), topic(""), name(name)
+		:	clientsMap(), serversMap(), channelMode(), topic(""), name(name)
 	{ }
 	
 	Channel::~Channel() {}
@@ -71,6 +78,12 @@ namespace irc
 				return it->first;
 		}
 		return NULL;
+	}
+
+	void	Channel::displayNicknames(void) const
+	{
+		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
+			std::cout << it->first->nickname << "\n";
 	}
 
 	bool	Channel::addClient(Client* client, bool	isChannelOperator)
