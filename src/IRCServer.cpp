@@ -60,7 +60,7 @@ namespace irc
 
 	/////////////////////////////////////////////	for testing
 		std::stringstream ss;  
-  		ss << newClient->username << rand();
+  		ss << newClient->username << rand() % 10;
 		newClient->username = ss.str();
 	/////////////////////////////////////////////
 
