@@ -38,9 +38,21 @@ std::cout << "client " << username << " has joined channel " << channel->name <<
 		if (clientChannels.find(channel->name) == clientChannels.end())
 			return ;
 		clientChannels.erase(channel->name);
-		channel->removeClient(this);
 std::cout << "client " << username << " has left channel " << channel->name << "\n";
+		channel->removeClient(this);
+	}
 
+	void	Client::leaveChannel(std::string const & name)
+	{
+		clientChannelMap::iterator it = clientChannels.find(name);
+		Channel *channel;
+
+		if (it == clientChannels.end())
+			return ;
+		channel = it->second;
+		clientChannels.erase(name);
+std::cout << "client " << username << " has left channel " << channel->name << "\n";
+		channel->removeClient(this);
 	}
 
 	void	Client::leaveAllChannels()
@@ -52,6 +64,19 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 			it = clientChannels.begin();
 			leaveChannel((*it).second);
 		}
+	}
+
+	bool	Client::isInChannel(Channel *channel) const
+	{return (clientChannels.find(channel->name) != clientChannels.end());}
+
+	bool	Client::isInChannel(std::string const & channelName) const
+	{return (clientChannels.find(channelName) != clientChannels.end());}
+
+	Channel	*Client::getChannel(std::string const & channelName) const
+	{
+		if (isInChannel(channelName))
+			return clientChannels.find(channelName)->second;
+		return NULL;
 	}
 
 }

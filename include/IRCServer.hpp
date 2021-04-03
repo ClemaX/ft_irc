@@ -3,6 +3,8 @@
 #include <string> // using std::string
 #include <list> // using std::list
 
+#include <sstream> // for testing
+
 #include <itoa.hpp>
 #include <parseField.hpp>
 #include <HashedFileDatabase.hpp>

@@ -33,10 +33,13 @@ namespace irc
 	class	Channel
 	{
 	protected:
+		typedef std::map<Client*, ChannelClient> channelClientMap;
+		typedef std::map<Server*, Server*> channelServerMap;
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
-		std::map<Client*, ChannelClient>	clientsMap;
-		std::map<Server*, Server*>			serversMap;
+
+		channelClientMap	clientsMap;
+		channelServerMap	serversMap;
 		std::string	topic;
 
 	public:
@@ -50,7 +53,10 @@ namespace irc
 		void	setTopic(const std::string & str);
 
 		bool	isInChannel(Client *client) const;
+		bool	isInChannel(std::string const & clientUsername) const;
 		bool	isOperator(Client *client) const;
+
+		Client *getUser(std::string const & clientUsername) const;
 
 		bool	addClient(Client* client, bool	isChannelOperator = false);
 		bool	addServer(Server* server);

@@ -48,6 +48,12 @@ namespace irc
 
 		void	joinChannel(Channel * channel);
 		void	leaveChannel(Channel * channel);
+		void	leaveChannel(std::string const & name);
 		void	leaveAllChannels();
+
+		bool	isInChannel(Channel *channel) const;
+		bool	isInChannel(std::string const & channelName) const;
+
+		Channel	*getChannel(std::string const & channelName) const;
 	};
 }

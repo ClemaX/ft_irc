@@ -19,9 +19,29 @@ namespace irc
 		argumentList const& arguments) const
 	{
 		(void)server;
-		(void)arguments;
-		std::cout << user->username << " executes " << name << std::endl;
-		return false;
+		if (arguments.size() < 2)
+			return false;
+		std::string channelName = arguments[0];
+		std::string clientUsername = arguments[1]; // do we check the username ? Username ?
+
+		if (!user->isInChannel(channelName))
+			return false;
+		Channel *channel = user->getChannel(channelName);
+		if (!channel->isOperator(user))
+			return false;		
+		Client *victim = channel->getUser(clientUsername); // do we check the username ? Username ?
+		if (!victim)	// if victim not found in channel
+			return false;
+		
+		victim->leaveChannel(channelName);
+
+		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)	// ':' to manage better (maybe in the parsing before)
+		{
+			std::string comment = arguments[2];
+			comment.erase(0,1);
+std::cout << "Reason: \"" << comment << "\"\n";
+		}
+		return true;
 	}
 
 // --- command MODE ---//
@@ -139,7 +159,7 @@ namespace irc
 
 		if (user->clientChannels.find(channelName) == user->clientChannels.end())
 			return false;
-		user->leaveChannel(user->clientChannels[channelName]);
+		user->leaveChannel(channelName);
 		return true;
 	}
 

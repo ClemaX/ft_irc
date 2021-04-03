@@ -58,6 +58,12 @@ namespace irc
 		newClient->username = "testName";
 		newClient->nickname = "testNick";
 
+	/////////////////////////////////////////////	for testing
+		std::stringstream ss;  
+  		ss << newClient->username << rand();
+		newClient->username = ss.str();
+	/////////////////////////////////////////////
+
 		std::cout << "New connection: "
 			<< "\n\tfd: " << connectionFd
 			<< "\n\tip: " << address.sin_addr.s_addr

@@ -50,10 +50,28 @@ namespace irc
 	bool	Channel::isInChannel(Client *client) const
 	{return (clientsMap.find(client) != clientsMap.end());}
 
+	bool	Channel::isInChannel(std::string const & clientUsername) const
+	{
+		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
+		{
+			if (it->first->username == clientUsername)
+				return true;
+		}
+		return false;
+	}
+
 	bool	Channel::isOperator(Client *client) const
 	{return (isInChannel(client) && clientsMap.find(client)->second.isChannelOperator);}
 
-
+	Client* Channel::getUser(std::string const & clientUsername) const
+	{
+		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
+		{
+			if (it->first->username == clientUsername)
+				return it->first;
+		}
+		return NULL;
+	}
 
 	bool	Channel::addClient(Client* client, bool	isChannelOperator)
 	{
