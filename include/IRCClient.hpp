@@ -9,10 +9,11 @@
 #include <IRCIReply.hpp>
 
 #include <IRCChannel.hpp>
+#include <IRCServer.hpp>
 
 namespace irc
 {
-
+	class	Server;
 	class	Channel;
 	/**
 	* In addition to the nickname, all servers must have the
@@ -34,7 +35,7 @@ namespace irc
 		std::string	nickname;
 		std::string	hostname;
 		std::string	username;
-		std::string	server;
+		Server	*server;
 
 		clientChannelMap	clientChannels;
 
@@ -55,5 +56,7 @@ namespace irc
 		bool	isInChannel(std::string const & channelName) const;
 
 		Channel	*getChannel(std::string const & channelName) const;
+		Channel	*getChannelGlobal(std::string const & channelName) const;
+				// getChannel() + channel in the database if it's neither private nor secret
 	};
 }

@@ -79,4 +79,20 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		return NULL;
 	}
 
+	Channel	*Client::getChannelGlobal(std::string const & channelName) const
+	{
+		Channel *channel = getChannel(channelName);
+		if (channel)
+			return channel;
+		
+		IRCDatabase::databaseChannelsMap channelMap = server->database->dataChannelsMap;
+		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(channelName);
+		if (it == channelMap.end())
+			return NULL;
+		channel = it->second;
+		if (channel->getModes().p == false && channel->getModes().s == false)
+			return channel;
+		return NULL;
+	}
+
 }

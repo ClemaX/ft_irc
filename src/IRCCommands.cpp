@@ -76,9 +76,18 @@ namespace irc
 		argumentList const& arguments) const
 	{
 		(void)server;
-		(void)arguments;
-		std::cout << user->username << " executes " << name << std::endl;
-		return false;
+		if (arguments.size() < 2)
+			return false;
+		
+		std::string channelName = arguments[0];
+		std::string flags = arguments[1];
+
+		std::string	flagArgument = "";
+		if (arguments.size() > 2)
+			flagArgument = arguments[2];
+		
+		return parseChannelMode(user, channelName, flags, flagArgument);
+
 	}
 
 // --- command INVITE ---//
@@ -179,7 +188,7 @@ namespace irc
 			return true;		// to manage by checking every channel
 
 		const std::string channelName = arguments[0];
-		Channel *channel = user->getChannel(channelName);
+		Channel *channel = user->getChannelGlobal(channelName);
 
 		if (!channel)
 			return false;		// not exactly, we have to check the visibles channel

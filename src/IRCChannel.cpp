@@ -28,25 +28,28 @@ namespace irc
 		return *this;
 	}
 
-// --- ModeClient ---
-	ModeClient::ModeClient()
-		:	o(false), p(false), s(false), i(false), t(false), n(false),
-			m(false), l(false), b(false), v(false), k(false)
+// --- ChannelModes ---
+	ChannelModes::ChannelModes()
+		:	o(), p(false), s(false), i(false), t(false), n(false),
+			m(false), l(false), b(), v(), k()
 	{ }	
 
-	ModeClient::~ModeClient() {}
+	ChannelModes::~ChannelModes() {}
 
 
 // --- Channel ---
 	Channel::Channel()
-		:	clientsMap(), serversMap(), channelMode(), topic(""), name("")
+		:	clientsMap(), serversMap(), channelModes(), topic(""), name("")
 	{ }
 
 	Channel::Channel(std::string const& name)
-		:	clientsMap(), serversMap(), channelMode(), topic(""), name(name)
+		:	clientsMap(), serversMap(), channelModes(), topic(""), name(name)
 	{ }
 	
 	Channel::~Channel() {}
+
+	ChannelModes	Channel::getModes() const
+	{return channelModes;}
 
 	std::string	Channel::getTopic() const
 	{return topic;}

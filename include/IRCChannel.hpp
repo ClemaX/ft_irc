@@ -15,8 +15,7 @@ namespace irc
 	class Client;
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 	struct	ChannelClient
-	{
-		
+	{	
 		Client*	client;
 		bool	isChannelOperator;
 
@@ -30,19 +29,25 @@ namespace irc
 		ChannelClient & operator=(const ChannelClient & src);
 	};
 
-	struct	ChannelMode
+	struct	ChannelModes
 	{
-		bool	o;
+	private:
+			typedef std::map<Client*, ChannelClient> channelClientMap;
+			typedef std::map<Server*, Server*> channelServerMap;
+			typedef std::map<std::string, std::string> channelUsernameMap;
+
+	public:
+		channelClientMap	o;
 		bool	p;
 		bool	s;
 		bool	i;
 		bool	t;
 		bool	n;
 		bool	m;
-		bool	l;
-		bool	b;
-		bool	v;
-		bool	k;
+		size_t	l;
+		channelUsernameMap	b;
+		channelUsernameMap	v;
+		std::string	k;
 
 		// o - give/take channel operator privileges;
         // p - private channel flag;
@@ -56,8 +61,8 @@ namespace irc
         // v - give/take the ability to speak on a moderated channel;
         // k - set a channel key (password).
 
-		ModeClient();
-		~ModeClient();
+		ChannelModes();
+		~ChannelModes();
 
 	};
 
@@ -66,12 +71,13 @@ namespace irc
 	protected:
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
+		typedef std::map<std::string, std::string> channelUsernameMap;
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
 
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
-		ChannelMode			channelMode;
+		ChannelModes		channelModes;
 		std::string			topic;
 
 	public:
@@ -81,7 +87,9 @@ namespace irc
 		Channel(std::string const& name);
 		~Channel();
 
+		ChannelModes	getModes() const;
 		std::string	getTopic() const;
+
 		void	setTopic(const std::string & str);
 
 		bool	isInChannel(Client *client) const;
@@ -98,5 +106,16 @@ namespace irc
 		bool	removeClient(Client* client);
 
 		bool	close();
+
+		// Modes functions	// left to code
+
+		void	addOperator(std::string userName);
+		void	removeOperator(std::string userName);
+		
+		void	addBanned(std::string userName);
+		void	removeBanned(std::string userName);
+		
+		void	addVoice(std::string userName);
+		void	removeVoice(std::string userName);
 	};
 }

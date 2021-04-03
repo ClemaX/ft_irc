@@ -55,6 +55,8 @@ namespace irc
 			throw;
 		}
 
+		newClient->server = this;
+
 		newClient->username = "testName";
 		newClient->nickname = "testNick";
 

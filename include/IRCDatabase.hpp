@@ -15,15 +15,15 @@ namespace irc
 	class	IRCDatabase
 	{
 	private:
-		typedef ::std::map<Server*, Server*>		serversMap;
-		typedef ::std::map<std::string, Channel*>	channelsMap;
-		typedef ::std::map<std::string, Client*>	clientsMap;
-
 
 	public:
-		serversMap	dataServersMap;
-		channelsMap	dataChannelsMap;
-		clientsMap	dataClientsMap;
+		typedef ::std::map<Server*, Server*>		databaseServersMap;
+		typedef ::std::map<std::string, Channel*>	databaseChannelsMap;
+		typedef ::std::map<std::string, Client*>	databaseClientsMap;
+		
+		databaseServersMap	dataServersMap;
+		databaseChannelsMap	dataChannelsMap;
+		databaseClientsMap	dataClientsMap;
 
 		IRCDatabase();
 		IRCDatabase(Server* server);
