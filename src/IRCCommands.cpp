@@ -58,7 +58,7 @@ namespace irc
 		
 		victim->leaveChannel(channelName);
 
-		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)	// ':' to manage better (maybe in the parsing before)
+		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)
 		{
 			std::string comment = arguments[2];
 			comment.erase(0,1);
@@ -66,6 +66,8 @@ namespace irc
 		}
 		return true;
 	}
+
+//////////////////////////////////////////////////////////////////////////////////
 
 // --- command MODE ---//
 	Server::ModeCommand::ModeCommand()
@@ -81,14 +83,19 @@ namespace irc
 		
 		std::string channelName = arguments[0];
 		std::string flags = arguments[1];
+		if (!flags.size())
+			return false;	// necessary ?
 
 		std::string	flagArgument = "";
 		if (arguments.size() > 2)
 			flagArgument = arguments[2];
-		
-		return parseChannelMode(user, channelName, flags, flagArgument);
+
+		return server.parseChannelMode(user, channelName, flags, flagArgument);
 
 	}
+
+//////////////////////////////////////////////////////////////////////////////////
+
 
 // --- command INVITE ---//
 	Server::InviteCommand::InviteCommand()
@@ -191,7 +198,7 @@ namespace irc
 		Channel *channel = user->getChannelGlobal(channelName);
 
 		if (!channel)
-			return false;		// not exactly, we have to check the visibles channel
+			return false;
 		channel->displayNicknames();
 		return true;
 	}

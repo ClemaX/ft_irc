@@ -39,17 +39,17 @@ namespace irc
 
 // --- Channel ---
 	Channel::Channel()
-		:	clientsMap(), serversMap(), channelModes(), topic(""), name("")
+		:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
 	{ }
 
 	Channel::Channel(std::string const& name)
-		:	clientsMap(), serversMap(), channelModes(), topic(""), name(name)
+		:	clientsMap(), serversMap(), topic(""), channelModes(), name(name)
 	{ }
 	
 	Channel::~Channel() {}
 
-	ChannelModes	Channel::getModes() const
-	{return channelModes;}
+	// ChannelModes	Channel::getModes() const
+	// {return channelModes;}
 
 	std::string	Channel::getTopic() const
 	{return topic;}

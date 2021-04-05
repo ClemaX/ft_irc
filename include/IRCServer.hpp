@@ -153,10 +153,11 @@ namespace irc
 
 		Server();
 		~Server();
+	
+		bool	parseChannelMode(Client *user, std::string const & channelName,
+			std::string & flags, std::string & flagArguments);
+	
 	};
-
-	bool	parseChannelMode(Client *user, std::string const & channelName,
-			std::string const & flags, std::string const & flagArguments);
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);

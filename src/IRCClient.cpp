@@ -90,7 +90,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		if (it == channelMap.end())
 			return NULL;
 		channel = it->second;
-		if (channel->getModes().p == false && channel->getModes().s == false)
+		if (channel->channelModes.p == false && channel->channelModes.s == false)
 			return channel;
 		return NULL;
 	}

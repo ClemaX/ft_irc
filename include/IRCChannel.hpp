@@ -77,17 +77,17 @@ namespace irc
 
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
-		ChannelModes		channelModes;
 		std::string			topic;
 
 	public:
+		ChannelModes		channelModes;
 		std::string const			name;
 
 		Channel();
 		Channel(std::string const& name);
 		~Channel();
 
-		ChannelModes	getModes() const;
+		// ChannelModes	getModes() const;
 		std::string	getTopic() const;
 
 		void	setTopic(const std::string & str);
