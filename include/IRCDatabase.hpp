@@ -46,9 +46,33 @@ namespace irc
 		signedFunctionPointerMap	getMinusMap();
 	};
 
+	bool	addChannelOperator(Client *user, Channel *channel, std::string & flagArguments);
+	bool	removeChannelOperator(Client *user, Channel *channel, std::string & flagArguments);
+
 	bool	setChannelPrivate(Client *user, Channel *channel, std::string & flagArguments);
-	bool	setChannelNonPrivate(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelPrivate(Client *user, Channel *channel, std::string & flagArguments);
 
 	bool	setChannelSecret(Client *user, Channel *channel, std::string & flagArguments);
-	bool	setChannelNonSecret(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelSecret(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	setChannelInviteOnly(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelInviteOnly(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	setChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	setChannelNoExternalMessage(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelNoExternalMessage(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	setChannelModerated(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelModerated(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	setChannelLimit(Client *user, Channel *channel, std::string & flagArguments);
+	bool	unsetChannelLimit(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	addChannelBanned(Client *user, Channel *channel, std::string & flagArguments);
+	bool	removeChannelBanned(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	addChannelVoice(Client *user, Channel *channel, std::string & flagArguments);
+	bool	removeChannelVoice(Client *user, Channel *channel, std::string & flagArguments);
 }

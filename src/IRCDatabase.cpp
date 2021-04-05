@@ -23,7 +23,7 @@ namespace irc
 	{dataChannelsMap[channel->name] = channel;}
 
 	void	IRCDatabase::addClient(Client *client)
-	{dataClientsMap[client->username] = client;}		// use of username ?
+	{dataClientsMap[client->nickname] = client;}		// use of nickname ?
 
 
 // --- Mode pointer functions --- //
@@ -37,8 +37,16 @@ namespace irc
 	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getPlusMap()
 	{
 		signedFunctionPointerMap	signedMap;
+		signedMap['o'] = &addChannelOperator;
 		signedMap['p'] = &setChannelPrivate;
 		signedMap['s'] = &setChannelSecret;
+		signedMap['i'] = &setChannelInviteOnly;
+		signedMap['t'] = &setChannelRestrictTopic;
+		signedMap['n'] = &setChannelNoExternalMessage;
+		signedMap['m'] = &setChannelModerated;
+		signedMap['l'] = &setChannelLimit;
+		signedMap['b'] = &addChannelBanned;
+		signedMap['v'] = &addChannelVoice;
 
 		return signedMap;
 	}
@@ -46,8 +54,16 @@ namespace irc
 	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusMap()
 	{
 		signedFunctionPointerMap	signedMap;
-		signedMap['p'] = &setChannelNonPrivate;
-		signedMap['s'] = &setChannelNonSecret;
+		signedMap['o'] = &removeChannelOperator;
+		signedMap['p'] = &unsetChannelPrivate;
+		signedMap['s'] = &unsetChannelSecret;
+		signedMap['i'] = &unsetChannelInviteOnly;
+		signedMap['t'] = &unsetChannelRestrictTopic;
+		signedMap['n'] = &unsetChannelNoExternalMessage;
+		signedMap['m'] = &unsetChannelModerated;
+		signedMap['l'] = &unsetChannelLimit;
+		signedMap['b'] = &removeChannelBanned;
+		signedMap['v'] = &removeChannelVoice;
 
 		return signedMap;
 	}

@@ -45,14 +45,14 @@ namespace irc
 		if (arguments.size() < 2)
 			return false;
 		std::string channelName = arguments[0];
-		std::string clientUsername = arguments[1]; // do we check the username ? Nickname ?
+		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
 
 		if (!user->isInChannel(channelName))
 			return false;
 		Channel *channel = user->getChannel(channelName);
 		if (!channel->isOperator(user))
 			return false;		
-		Client *victim = channel->getUser(clientUsername); // do we check the username ? Nickname ?
+		Client *victim = channel->getUser(clientNickname); // do we check the username ? Nickname ?
 		if (!victim)	// if victim not found in channel
 			return false;
 		

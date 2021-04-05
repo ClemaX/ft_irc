@@ -6,6 +6,7 @@
 #include <sstream> // for testing
 
 #include <itoa.hpp>
+#include <atoi.hpp>
 #include <parseField.hpp>
 #include <HashedFileDatabase.hpp>
 

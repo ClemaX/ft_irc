@@ -27,6 +27,8 @@ namespace irc
 	{
 		if (clientChannels.find(channel->name) != clientChannels.end())
 			return ;
+		if (channel->channelModes.l > 0 && channel->clientsMap.size() >= channel->channelModes.l)
+			return ;
 		clientChannels.insert(clientChannelPair(channel->name, channel));
 
 std::cout << "client " << username << " has joined channel " << channel->name << "\n";

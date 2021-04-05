@@ -17,7 +17,7 @@ namespace irc
 	struct	ChannelClient
 	{	
 		Client*	client;
-		bool	isChannelOperator;
+		// bool	isChannelOperator;	// not used, the operators are stored in the channelNicknameMap channel->channelModes.o
 
 		ChannelClient();
 		ChannelClient(Client* client);
@@ -32,12 +32,12 @@ namespace irc
 	struct	ChannelModes
 	{
 	private:
-			typedef std::map<Client*, ChannelClient> channelClientMap;
+			// typedef std::map<Client*, ChannelClient> channelClientMap;
 			typedef std::map<Server*, Server*> channelServerMap;
-			typedef std::map<std::string, std::string> channelUsernameMap;
+			typedef std::map<std::string, std::string> channelNicknameMap;
 
 	public:
-		channelClientMap	o;
+		channelNicknameMap	o;
 		bool	p;
 		bool	s;
 		bool	i;
@@ -45,8 +45,8 @@ namespace irc
 		bool	n;
 		bool	m;
 		size_t	l;
-		channelUsernameMap	b;
-		channelUsernameMap	v;
+		channelNicknameMap	b;
+		channelNicknameMap	v;
 		std::string	k;
 
 		// o - give/take channel operator privileges;
@@ -71,15 +71,16 @@ namespace irc
 	protected:
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
-		typedef std::map<std::string, std::string> channelUsernameMap;
+		typedef std::map<std::string, std::string> channelNicknameMap;
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
 
+
+	public:
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
 		std::string			topic;
-
-	public:
+		
 		ChannelModes		channelModes;
 		std::string const			name;
 
@@ -93,10 +94,11 @@ namespace irc
 		void	setTopic(const std::string & str);
 
 		bool	isInChannel(Client *client) const;
-		bool	isInChannel(std::string const & clientUsername) const;
+		bool	isInChannel(std::string const & clientNickname) const;
 		bool	isOperator(Client *client) const;
+		bool	isOperator(std::string const & clientNickname) const;
 
-		Client *getUser(std::string const & clientUsername) const;
+		Client *getUser(std::string const & clientNickname) const;
 
 		void	displayNicknames(void) const;
 
@@ -109,13 +111,13 @@ namespace irc
 
 		// Modes functions	// left to code
 
-		void	addOperator(std::string userName);
-		void	removeOperator(std::string userName);
+		bool	addOperator(std::string nickname);
+		bool	removeOperator(std::string nickname);
 		
-		void	addBanned(std::string userName);
-		void	removeBanned(std::string userName);
+		bool	addBanned(std::string nickname);
+		bool	removeBanned(std::string nickname);
 		
-		void	addVoice(std::string userName);
-		void	removeVoice(std::string userName);
+		bool	addVoice(std::string nickname);
+		bool	removeVoice(std::string nickname);
 	};
 }
