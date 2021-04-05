@@ -47,6 +47,7 @@ namespace irc
 		signedMap['l'] = &setChannelLimit;
 		signedMap['b'] = &addChannelBanned;
 		signedMap['v'] = &addChannelVoice;
+		signedMap['k'] = &addChannelKey;
 
 		return signedMap;
 	}
@@ -64,6 +65,7 @@ namespace irc
 		signedMap['l'] = &unsetChannelLimit;
 		signedMap['b'] = &removeChannelBanned;
 		signedMap['v'] = &removeChannelVoice;
+		signedMap['k'] = &removeChannelKey;
 
 		return signedMap;
 	}

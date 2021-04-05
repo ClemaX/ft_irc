@@ -75,4 +75,7 @@ namespace irc
 
 	bool	addChannelVoice(Client *user, Channel *channel, std::string & flagArguments);
 	bool	removeChannelVoice(Client *user, Channel *channel, std::string & flagArguments);
+
+	bool	addChannelKey(Client *user, Channel *channel, std::string & flagArguments);
+	bool	removeChannelKey(Client *user, Channel *channel, std::string & flagArguments);
 }

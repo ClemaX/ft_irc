@@ -184,6 +184,25 @@ std::cout << "channel " << channel->name << " limit has been set to " << channel
 		return channel->removeVoice(flagArguments);
 	}
 
+	bool	addChannelKey(Client *user, Channel *channel, std::string & flagArguments)
+	{
+		if (!channel->isOperator(user))
+			return false;
+		channel->channelModes.k = flagArguments;
+std::cout << "channel " << channel->name << " key has been set to " << flagArguments << "!\n";
+		return true;
+	}
+
+	bool	removeChannelKey(Client *user, Channel *channel, std::string & flagArguments)
+	{
+		(void)flagArguments;
+		if (!channel->isOperator(user))
+			return false;
+		channel->channelModes.k = "";
+std::cout << "channel " << channel->name << " key has been removed!\n";
+		return true;
+	}
+
 
 
 // --- command MODE ---//
