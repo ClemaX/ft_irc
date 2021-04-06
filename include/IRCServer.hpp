@@ -3,7 +3,10 @@
 #include <string> // using std::string
 #include <list> // using std::list
 
+#include <sstream> // for testing
+
 #include <itoa.hpp>
+#include <atoi.hpp>
 #include <parseField.hpp>
 #include <HashedFileDatabase.hpp>
 
@@ -138,6 +141,27 @@ namespace irc
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
+
+		struct	NamesCommand		:	public ChannelCommand
+		{
+			NamesCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	ListCommand		:	public ChannelCommand
+		{
+			ListCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		bool	parseChannelMode(Client *user, std::string const & channelName,
+			std::string & flags, std::string & flagArguments);
+		bool	parseUserMode(Client *user,	std::string & flags, std::string & flagArguments);
+
 	};
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
@@ -151,6 +175,8 @@ namespace irc
 	static const Server::TopicCommand	topicCommand;
 	static const Server::MotdCommand	motdCommand;
 	static const Server::PartCommand	partCommand;
+	static const Server::NamesCommand	namesCommand;
+	static const Server::ListCommand	listCommand;
 
 	static Server::Command const*const	commands[] =
 	{
@@ -161,7 +187,9 @@ namespace irc
 		&inviteCommand,
 		&topicCommand,
 		&motdCommand,
-		&partCommand
+		&partCommand,
+		&namesCommand,
+		&listCommand
 	};
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);

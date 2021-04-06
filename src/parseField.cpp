@@ -14,8 +14,11 @@ namespace irc
 			return first;
 		}
 
-		std::string::const_iterator	fieldLast =
-			std::find(first, last, IRC_MESSAGE_DELIM);
+		std::string::const_iterator	fieldLast;
+		if (*first == IRC_MESSAGE_PREFIX_PREFIX)
+			fieldLast = last;
+		else
+			fieldLast =	std::find(first, last, IRC_MESSAGE_DELIM);
 
 		str.assign(first, fieldLast);
 

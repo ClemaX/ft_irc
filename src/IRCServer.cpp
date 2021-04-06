@@ -65,8 +65,17 @@ namespace irc
 			throw;
 		}
 
+		newClient->server = this;
+
 		newClient->username = "testName";
 		newClient->nickname = "testNick";
+
+	/////////////////////////////////////////////	for testing
+		std::stringstream ss;  
+  		ss << rand() % 10;
+		newClient->username.append(ss.str());
+		newClient->nickname.append(ss.str());
+	/////////////////////////////////////////////
 
 		std::cout << "New connection: "
 			<< "\n\tfd: " << connectionFd
