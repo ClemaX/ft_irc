@@ -157,6 +157,7 @@ namespace irc
 	
 		bool	parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
+		bool	parseUserMode(Client *user,	std::string & flags, std::string & flagArguments);
 	
 	};
 

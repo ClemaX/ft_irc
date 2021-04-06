@@ -81,7 +81,7 @@ namespace irc
 		if (arguments.size() < 2)
 			return false;
 		
-		std::string channelName = arguments[0];
+		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
 		if (!flags.size())
 			return false;	// necessary ?
@@ -90,7 +90,9 @@ namespace irc
 		if (arguments.size() > 2)
 			flagArgument = arguments[2];
 
-		return server.parseChannelMode(user, channelName, flags, flagArgument);
+		if (!user->nickname.compare(nameArgument))
+			return server.parseUserMode(user, flags, flagArgument);
+		return server.parseChannelMode(user, nameArgument, flags, flagArgument);
 
 	}
 

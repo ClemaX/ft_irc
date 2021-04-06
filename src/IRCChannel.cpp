@@ -33,8 +33,8 @@ namespace irc
 
 // --- ChannelModes ---
 	ChannelModes::ChannelModes()
-		:	o(), p(false), s(false), i(false), t(false), n(false),
-			m(false), l(false), b(), v(), k()
+		:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
+			p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
 	{ }	
 
 	ChannelModes::~ChannelModes() {}
@@ -74,11 +74,22 @@ namespace irc
 	}
 
 	bool	Channel::isOperator(Client *client) const
-	{return (channelModes.o.find(client->nickname) != channelModes.o.end());}
+	{
+		return (channelModes.o.find(client->nickname) != channelModes.o.end() ||
+				channelModes.O.find(client->nickname) != channelModes.O.end());
+	}
 
 	bool	Channel::isOperator(std::string const & clientNickname) const
-	{return (channelModes.o.find(clientNickname) != channelModes.o.end());}
-	// is in channel necessary ?
+	{
+		return (channelModes.o.find(clientNickname) != channelModes.o.end() ||
+				channelModes.O.find(clientNickname) != channelModes.O.end());
+	}
+
+	bool	Channel::isCreator(Client *client) const
+	{return (channelModes.O.find(client->nickname) != channelModes.O.end());}
+
+	bool	Channel::isCreator(std::string const & clientNickname) const
+	{return (channelModes.O.find(clientNickname) != channelModes.O.end());}
 
 	Client* Channel::getUser(std::string const & clientNickname) const
 	{
@@ -151,7 +162,28 @@ std::cout << "channel " << name << " has been closed\n";
 
 
 
-	// Modes functions	// left to code
+	// Modes functions
+
+	bool	Channel::addCreator(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;	// is it possible to set a user not present in the channel as a Creator ?
+		if (channelModes.O.find(nickname) != channelModes.O.end())
+			return false;
+		channelModes.O[nickname] = nickname;
+std::cout << "channel " << name << " has added " << nickname << " as a new creator!\n";
+		return true;
+	}
+	bool	Channel::removeCreator(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;
+		if (channelModes.O.find(nickname) == channelModes.O.end())
+			return false;
+		channelModes.O.erase(nickname);
+std::cout << "channel " << name << " has removed " << nickname << " from the creator map!\n";
+		return true;
+	}
 
 	bool	Channel::addOperator(std::string nickname)
 	{
@@ -173,28 +205,7 @@ std::cout << "channel " << name << " has added " << nickname << " as a new opera
 std::cout << "channel " << name << " has removed " << nickname << " from the operator map!\n";
 		return true;
 	}
-	
-	bool	Channel::addBanned(std::string nickname)
-	{
-		if (!isInChannel(nickname))
-			return false;	// is it possible to ban a user not present in the channel ?
-		if (channelModes.b.find(nickname) != channelModes.b.end())
-			return false;
-		channelModes.b[nickname] = nickname;
-std::cout << "channel " << name << " has banned " << nickname << "!\n";
-		return true;
-	}
-	bool	Channel::removeBanned(std::string nickname)
-	{
-		if (!isInChannel(nickname))
-			return false;
-		if (channelModes.b.find(nickname) == channelModes.b.end())
-			return false;
-		channelModes.b.erase(nickname);
-std::cout << "channel " << name << " has removed " << nickname << " from the banned users!\n";
-		return true;
-	}
-	
+
 	bool	Channel::addVoice(std::string nickname)
 	{
 		if (!isInChannel(nickname))
@@ -215,4 +226,70 @@ std::cout << "channel " << name << " has added " << nickname << " in the voice m
 std::cout << "channel " << name << " has removed " << nickname << " from the voice map!\n";
 		return true;
 	}
+
+
+
+	bool	Channel::addBanned(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;	// is it possible to ban a user not present in the channel ?
+		if (channelModes.b.find(nickname) != channelModes.b.end())
+			return false;
+		channelModes.b[nickname] = nickname;
+std::cout << "channel " << name << " has banned " << nickname << "!\n";
+		return true;
+	}
+	bool	Channel::removeBanned(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;
+		if (channelModes.b.find(nickname) == channelModes.b.end())
+			return false;
+		channelModes.b.erase(nickname);
+std::cout << "channel " << name << " has removed " << nickname << " from the banned users!\n";
+		return true;
+	}
+
+	bool	Channel::addException(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;	// is it possible to add a user not present in the channel to the exception list ?
+		if (channelModes.e.find(nickname) != channelModes.e.end())
+			return false;
+		channelModes.e[nickname] = nickname;
+std::cout << "channel " << name << " has added " << nickname << " to the exception users!\n";
+		return true;
+	}
+	bool	Channel::removeException(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;
+		if (channelModes.e.find(nickname) == channelModes.e.end())
+			return false;
+		channelModes.e.erase(nickname);
+std::cout << "channel " << name << " has removed " << nickname << " from the exception users!\n";
+		return true;
+	}
+
+	bool	Channel::addInviteList(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;	// is it possible to add a user not present in the channel to the invite list ?
+		if (channelModes.I.find(nickname) != channelModes.I.end())
+			return false;
+		channelModes.I[nickname] = nickname;
+std::cout << "channel " << name << " has added " << nickname << " to the Invite list!\n";
+		return true;
+	}
+	bool	Channel::removeInviteList(std::string nickname)
+	{
+		if (!isInChannel(nickname))
+			return false;
+		if (channelModes.I.find(nickname) == channelModes.I.end())
+			return false;
+		channelModes.I.erase(nickname);
+std::cout << "channel " << name << " has removed " << nickname << " from the Invite list!\n";
+		return true;
+	}
+	
 }

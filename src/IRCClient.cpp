@@ -2,6 +2,16 @@
 
 namespace irc
 {
+
+// --- ClientModes ---
+	ClientModes::ClientModes()
+		:	i(false), s(false), w(false), o(false)
+	{ }	
+
+	ClientModes::~ClientModes() {}
+
+
+// --- Client ---
 	Client::Client(int fd, struct sockaddr_in const& address)
 		:	SocketConnection(fd, address)
 	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer

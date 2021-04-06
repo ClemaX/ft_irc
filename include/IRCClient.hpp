@@ -21,6 +21,27 @@ namespace irc
 	* that the client is running on, the username of the client on that
 	* host, and the server to which the client is connected.
 	*/
+
+	struct	ClientModes
+	{
+	private:
+
+	public:
+		bool	i;
+		bool	s;
+		bool	w;
+		bool	o;
+
+		// i - marks a users as invisible;
+        // s - marks a user for receipt of server notices;
+        // w - user receives wallops;
+        // o - operator flag.
+
+		ClientModes();
+		~ClientModes();
+
+	};
+
 	class	Client	:	public SocketConnection
 	{
 	private:
@@ -36,8 +57,10 @@ namespace irc
 		std::string	hostname;
 		std::string	username;
 		Server	*server;
+		ClientModes		clientModes;
 
 		clientChannelMap	clientChannels;
+
 
 		Client(int fd, address const& address);
 

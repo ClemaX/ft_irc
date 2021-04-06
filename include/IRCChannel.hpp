@@ -37,17 +37,26 @@ namespace irc
 			typedef std::map<std::string, std::string> channelNicknameMap;
 
 	public:
+		channelNicknameMap	O;
 		channelNicknameMap	o;
+		channelNicknameMap	v;
+	
+		bool	a;
+		bool	i;
+		bool	m;
+		bool	n;
+		bool	q;
 		bool	p;
 		bool	s;
-		bool	i;
+		bool	r;
 		bool	t;
-		bool	n;
-		bool	m;
+	
 		size_t	l;
-		channelNicknameMap	b;
-		channelNicknameMap	v;
 		std::string	k;
+	
+		channelNicknameMap	b;
+		channelNicknameMap	e;
+		channelNicknameMap	I;
 
 		// o - give/take channel operator privileges;
         // p - private channel flag;
@@ -60,6 +69,28 @@ namespace irc
         // b - set a ban mask to keep users out;
         // v - give/take the ability to speak on a moderated channel;
         // k - set a channel key (password).
+
+
+	// O - give "channel creator" status;
+        // o - give/take channel operator privilege;
+        // v - give/take the voice privilege;
+
+    // a - toggle the anonymous channel flag;
+        // i - toggle the invite-only channel flag;
+        // m - toggle the moderated channel;
+        // n - toggle the no messages to channel from clients on the outside;
+    // q - toggle the quiet channel flag;
+        // p - toggle the private channel flag;
+        // s - toggle the secret channel flag;
+    // r - toggle the server reop channel flag;
+        // t - toggle the topic settable by channel operator only flag;
+
+        // k - set/remove the channel key (password);
+        // l - set/remove the user limit to channel;
+
+        // b - set/remove ban mask to keep users out;
+    // e - set/remove an exception mask to override a ban mask;
+    // I - set/remove an invitation mask to automatically override the invite-only flag;
 
 		ChannelModes();
 		~ChannelModes();
@@ -95,8 +126,13 @@ namespace irc
 
 		bool	isInChannel(Client *client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
-		bool	isOperator(Client *client) const;
-		bool	isOperator(std::string const & clientNickname) const;
+
+		bool	isOperator(Client *client) const;						// also check for Creators
+		bool	isOperator(std::string const & clientNickname) const;	// also check for Creators
+
+		bool	isCreator(Client *client) const;
+		bool	isCreator(std::string const & clientNickname) const;
+
 
 		Client *getUser(std::string const & clientNickname) const;
 
@@ -109,15 +145,25 @@ namespace irc
 
 		bool	close();
 
-		// Modes functions	// left to code
+		// Modes functions
+
+		bool	addCreator(std::string nickname);
+		bool	removeCreator(std::string nickname);
 
 		bool	addOperator(std::string nickname);
 		bool	removeOperator(std::string nickname);
 		
+		bool	addVoice(std::string nickname);
+		bool	removeVoice(std::string nickname);
+
+
 		bool	addBanned(std::string nickname);
 		bool	removeBanned(std::string nickname);
 		
-		bool	addVoice(std::string nickname);
-		bool	removeVoice(std::string nickname);
+		bool	addException(std::string nickname);
+		bool	removeException(std::string nickname);
+		
+		bool	addInviteList(std::string nickname);
+		bool	removeInviteList(std::string nickname);
 	};
 }
