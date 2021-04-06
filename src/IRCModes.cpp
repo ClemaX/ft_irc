@@ -185,7 +185,7 @@ std::cout << "channel " << channel->name << " has been set non Secret!\n";
 	bool	setChannelReop(Client *user, Channel *channel, std::string & flagArguments)
 	{
 		(void)flagArguments;
-		if (!channel->isOperator(user))
+		if (!channel->isCreator(user))
 			return false;
 		channel->channelModes.r = true;
 std::cout << "channel " << channel->name << " has been set Reop!\n";
@@ -195,7 +195,7 @@ std::cout << "channel " << channel->name << " has been set Reop!\n";
 	bool	unsetChannelReop(Client *user, Channel *channel, std::string & flagArguments)
 	{
 		(void)flagArguments;
-		if (!channel->isOperator(user))
+		if (!channel->isCreator(user))
 			return false;
 		channel->channelModes.r = false;
 std::cout << "channel " << channel->name << " has been set non Reop!\n";

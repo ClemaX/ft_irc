@@ -35,14 +35,8 @@ namespace irc
 
 	void	Client::joinChannel(Channel * channel)
 	{
-		if (clientChannels.find(channel->name) != clientChannels.end())
-			return ;
-		if (channel->channelModes.l > 0 && channel->clientsMap.size() >= channel->channelModes.l)
-			return ;
 		clientChannels.insert(clientChannelPair(channel->name, channel));
-
 std::cout << "client " << username << " has joined channel " << channel->name << "\n";
-
 	}
 
 	void	Client::leaveChannel(Channel * channel)
@@ -51,7 +45,6 @@ std::cout << "client " << username << " has joined channel " << channel->name <<
 			return ;
 		clientChannels.erase(channel->name);
 std::cout << "client " << username << " has left channel " << channel->name << "\n";
-		channel->removeClient(this);
 	}
 
 	void	Client::leaveChannel(std::string const & name)

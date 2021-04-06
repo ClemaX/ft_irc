@@ -151,20 +151,19 @@ namespace irc
 	{
 		bool isOp = false;
 		const std::string channelName = arguments[0];
-		Channel *channel;
+		std::string password = "";
+		if (arguments.size() > 1)
+			password = arguments[1];
+		Channel *channel = server.getChannel(channelName);
 
-		if (server.database->dataChannelsMap.find(channelName) == server.database->dataChannelsMap.end())	// search channel in serverChannels map
+		if (!channel)	// if channel not present in serverChannels map
 		{
 			channel = new Channel(channelName);
 			server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
 			isOp = true;										// will set user as operator
 			channel->addServer(&server);		// add server to the channel servers list
 		}
-		else
-			channel = (server.database->dataChannelsMap.find(channelName))->second;
-		user->joinChannel(channel);
-		return channel->addClient(user, isOp);
-
+		return channel->addClient(user, password, isOp);
 	}
 
 // --- command PART ---//
@@ -175,13 +174,15 @@ namespace irc
 	bool	Server::PartCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
 		const std::string channelName = arguments[0];
+		Channel *channel = server.getChannel(channelName);
 
-		if (user->clientChannels.find(channelName) == user->clientChannels.end())
+		if (!channel)
 			return false;
-		user->leaveChannel(channelName);
-		return true;
+		if (!user->isInChannel(channelName))
+			return false;
+		
+		return channel->removeClient(user);
 	}
 
 // --- command NAMES ---//

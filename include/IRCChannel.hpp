@@ -138,7 +138,7 @@ namespace irc
 
 		void	displayNicknames(void) const;
 
-		bool	addClient(Client* client, bool	isChannelOperator = false);
+		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
 		bool	removeClient(Client* client);
@@ -165,5 +165,9 @@ namespace irc
 		
 		bool	addInviteList(std::string nickname);
 		bool	removeInviteList(std::string nickname);
+
+		bool	isStatusBanned(Client *user) const;
+		bool	isStatusException(Client *user) const;
+		bool	isStatusInvite(Client *user) const;
 	};
 }
