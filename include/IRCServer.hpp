@@ -12,6 +12,7 @@
 #include <IRCReplies.hpp>
 #include <IRCClient.hpp>
 #include <IRCDatabase.hpp>
+#include <IRCServerConfig.hpp>
 
 // TODO: Grammar rules
 // TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)
@@ -28,8 +29,8 @@ namespace irc
 	class	Server	:	public SocketServer
 	{
 	private:
+		const ServerConfig	config;
 		HashedFileDatabase	passwords;
-		std::string			motd;
 
 	protected:
 		typedef ::std::map<Server*, Server*>	serversMap;
@@ -45,9 +46,14 @@ namespace irc
 		virtual void		onFlush() const throw(SocketWriteException);
 
 	public:
+		IRCDatabase			*database;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
-		IRCDatabase	*database;
+
+		Server();
+		Server(ServerConfig const& config);
+
+		~Server();
 
 		Channel *getChannel(const std::string & name) const;
 
@@ -132,9 +138,6 @@ namespace irc
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
-
-		Server();
-		~Server();
 	};
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,

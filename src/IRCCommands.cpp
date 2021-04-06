@@ -152,7 +152,8 @@ namespace irc
 	{
 		std::cout << user->username << " executes " << name << std::endl;
 
-		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>("localhost", user->nickname, server.motd, '\n', 80);
+		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
+			"localhost", user->nickname, server.config["MOTD"], '\n', 80);
 
 		if (arguments.size())
 		{

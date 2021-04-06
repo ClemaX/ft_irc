@@ -64,7 +64,7 @@ void	SocketServer::onMessage(connection* connection,
 	// 	<< "ip: " << connection->getAddr()
 	// 	<< ", port: " << connection->getPort()
 	// 	<< '\'' << message << '\'' << std::endl;
-	
+
 	std::cout << "Received message: "
 		<< "\n\tip: " << connection->getAddr()
 		<< "\n\tport: " << connection->getPort()
@@ -95,10 +95,14 @@ SocketServer::SocketServer(unsigned portNumber, unsigned maxClients)
 	:	portNumber(portNumber), maxClients(maxClients),
 		listenFd(0), highestFd(0)
 {
+	if (this->portNumber == 0)
+		this->portNumber = 6666;
+	if (this->maxClients == 0)
+		this->maxClients = 10;
 	FD_ZERO(&connectionSet);
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
-	serverAddr.sin_port = htons(portNumber);
+	serverAddr.sin_port = htons(this->portNumber);
 }
 
 SocketServer::SocketServer()
