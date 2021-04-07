@@ -1,15 +1,25 @@
 #include <IRCServer.hpp>
 #include <IRCMessage.hpp>
+#include <atoi.hpp>
 
 namespace irc
 {
 	Server::Server()
 		:	SocketServer(),
+			config(),
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
-				SHA256_DIGEST_LENGTH * 2),
-			motd("Hello client!\nWelcome on ircserv!")
+				SHA256_DIGEST_LENGTH * 2)
 	{
 		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
+	}
+
+	Server::Server(ServerConfig const& config)
+		:	SocketServer(ft::atoi(config[IRC_CONF_PORT]), 10),
+			config(config),
+			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
+				SHA256_DIGEST_LENGTH * 2)
+	{
+
 	}
 
 	Server::~Server()

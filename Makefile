@@ -58,6 +58,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	IRCModes.cpp\
 	IRCReplies.cpp\
 	IRCServer.cpp\
+	IRCServerConfig.cpp\
 	itoa.cpp\
 	main.cpp\
 	parseField.cpp\
