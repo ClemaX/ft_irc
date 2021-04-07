@@ -1,4 +1,4 @@
-#include <IRCServer.hpp>
+#include <irc/Server.hpp>
 #include <csignal>
 
 static void	doNothing(int)

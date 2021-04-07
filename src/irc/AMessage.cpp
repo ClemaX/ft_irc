@@ -1,4 +1,4 @@
-#include <IRCAMessage.hpp>
+#include <irc/AMessage.hpp>
 
 namespace irc
 {

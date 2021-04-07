@@ -1,4 +1,4 @@
-#include <atoi.hpp>
+#include <utils/atoi.hpp>
 
 namespace ft
 {
@@ -22,5 +22,3 @@ namespace ft
 		return (i * factor);
 	}
 }
-
-

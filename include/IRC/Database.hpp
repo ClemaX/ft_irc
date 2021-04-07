@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include <IRCServer.hpp>
-#include <IRCClient.hpp>
-#include <IRCChannel.hpp>
+#include <irc/Server.hpp>
+#include <irc/Client.hpp>
+#include <irc/Channel.hpp>
 
 namespace irc
 {
@@ -24,7 +24,7 @@ namespace irc
 		typedef bool	(*ptr_function)(Client *user, Channel *channel, std::string & flagArguments);
 		typedef	std::map<char, ptr_function>	signedFunctionPointerMap;
 		typedef	std::map<char, signedFunctionPointerMap>	functionPointerMap;
-		
+
 		databaseServersMap	dataServersMap;
 		databaseChannelsMap	dataChannelsMap;
 		databaseClientsMap	dataClientsMap;
@@ -54,7 +54,7 @@ namespace irc
 
 // Channel modes
 	bool	addChannelCreator(Client *user, Channel *channel, std::string & flagArguments);
-	
+
 	bool	addChannelOperator(Client *user, Channel *channel, std::string & flagArguments);
 	bool	removeChannelOperator(Client *user, Channel *channel, std::string & flagArguments);
 
@@ -99,10 +99,10 @@ namespace irc
 
 	bool	addChannelBanned(Client *user, Channel *channel, std::string & flagArguments);
 	bool	removeChannelBanned(Client *user, Channel *channel, std::string & flagArguments);
-	
+
 	bool	addChannelException(Client *user, Channel *channel, std::string & flagArguments);
 	bool	removeChannelException(Client *user, Channel *channel, std::string & flagArguments);
-	
+
 	bool	addChannelInviteList(Client *user, Channel *channel, std::string & flagArguments);
 	bool	removeChannelInviteList(Client *user, Channel *channel, std::string & flagArguments);
 

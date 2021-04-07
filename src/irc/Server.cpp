@@ -1,6 +1,6 @@
-#include <IRCServer.hpp>
-#include <IRCMessage.hpp>
-#include <atoi.hpp>
+#include <irc/Server.hpp>
+#include <irc/Message.hpp>
+#include <utils/atoi.hpp>
 
 namespace irc
 {
@@ -71,7 +71,7 @@ namespace irc
 		newClient->nickname = "testNick";
 
 	/////////////////////////////////////////////	for testing
-		std::stringstream ss;  
+		std::stringstream ss;
   		ss << rand() % 10;
 		newClient->username.append(ss.str());
 		newClient->nickname.append(ss.str());

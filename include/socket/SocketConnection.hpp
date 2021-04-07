@@ -2,9 +2,9 @@
 
 #include <string> // using std::string
 
-#include <socketdef.hpp> // using socketAddress
+#include <socket/socketdef.hpp> // using socketAddress
 
-#include <SocketExceptions.hpp>
+#include <socket/SocketExceptions.hpp>
 
 class	SocketConnection
 {

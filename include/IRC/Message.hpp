@@ -3,10 +3,10 @@
 #include <string> // using std::string
 #include <vector> // using std::vector
 
-#include <parseField.hpp>
+#include <utils/parseField.hpp>
 
-#include <IRCAMessage.hpp>
-#include <IRCServer.hpp>
+#include <irc/AMessage.hpp>
+#include <irc/Server.hpp>
 
 namespace irc
 {

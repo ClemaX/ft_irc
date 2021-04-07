@@ -8,7 +8,7 @@
 #include <sys/select.h> // using select
 #include <unistd.h>
 
-#include <SocketConnection.hpp>
+#include <socket/SocketConnection.hpp>
 
 class	SocketServer
 {

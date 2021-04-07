@@ -5,17 +5,17 @@
 
 #include <sstream> // for testing
 
-#include <itoa.hpp>
-#include <atoi.hpp>
-#include <parseField.hpp>
+#include <utils/itoa.hpp>
+#include <utils/atoi.hpp>
+#include <utils/parseField.hpp>
 #include <HashedFileDatabase.hpp>
 
-#include <SocketServer.hpp>
-#include <IRCChannel.hpp>
-#include <IRCReplies.hpp>
-#include <IRCClient.hpp>
-#include <IRCDatabase.hpp>
-#include <IRCServerConfig.hpp>
+#include <socket/SocketServer.hpp>
+#include <irc/Channel.hpp>
+#include <irc/Replies.hpp>
+#include <irc/Client.hpp>
+#include <irc/Database.hpp>
+#include <irc/ServerConfig.hpp>
 
 // TODO: Grammar rules
 // TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)

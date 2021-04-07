@@ -1,4 +1,4 @@
-#include <SocketServer.hpp>
+#include <socket/SocketServer.hpp>
 
 SocketConnection::SocketConnection() throw()
 	:	fd(0), socketAddress()

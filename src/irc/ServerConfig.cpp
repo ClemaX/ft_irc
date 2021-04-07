@@ -1,4 +1,4 @@
-#include <IRCServerConfig.hpp>
+#include <irc/ServerConfig.hpp>
 
 namespace irc
 {

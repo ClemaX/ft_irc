@@ -1,4 +1,4 @@
-#include <IRCDatabase.hpp>
+#include <irc/Database.hpp>
 
 namespace irc
 {
@@ -66,10 +66,10 @@ namespace irc
 		signedMap['s'] = &setChannelSecret;
 		signedMap['r'] = &setChannelReop;
 		signedMap['t'] = &setChannelRestrictTopic;
-		
+
 		signedMap['l'] = &setChannelLimit;
 		signedMap['k'] = &addChannelKey;
-		
+
 		signedMap['b'] = &addChannelBanned;
 		signedMap['e'] = &addChannelException;
 		signedMap['I'] = &addChannelInviteList;
@@ -93,10 +93,10 @@ namespace irc
 		signedMap['s'] = &unsetChannelSecret;
 		signedMap['r'] = &unsetChannelReop;
 		signedMap['t'] = &unsetChannelRestrictTopic;
-		
+
 		signedMap['l'] = &unsetChannelLimit;
 		signedMap['k'] = &removeChannelKey;
-		
+
 		signedMap['b'] = &removeChannelBanned;
 		signedMap['e'] = &removeChannelException;
 		signedMap['I'] = &removeChannelInviteList;

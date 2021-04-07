@@ -1,4 +1,4 @@
-#include <IRCServer.hpp>
+#include <irc/Server.hpp>
 
 namespace irc
 {
@@ -229,7 +229,7 @@ std::cout << "channel " << channel->name << " has been set non RestrictTopic!\n"
 	{
 		if (!channel->isOperator(user))
 			return false;
-		
+
 		channel->channelModes.l = ft::atoi(flagArguments);	// error to manage if flagArgument is not valid ?
 std::cout << "channel " << channel->name << " limit has been set to " << channel->channelModes.l << "!\n";
 		return true;
@@ -319,11 +319,11 @@ std::cout << "channel " << channel->name << " key has been removed!\n";
 		char sign = flags[0];
 		if (sign != '+' && sign != '-')
 			return false;
-		
+
 		Channel *channel = user->getChannelGlobal(channelName);
 		if (!channel)
 			return false;
-		
+
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{
@@ -420,7 +420,7 @@ std::cout << "user " << user->nickname << " has been unset as an operator!\n";
 		char sign = flags[0];
 		if (sign != '+' && sign != '-')
 			return false;
-		
+
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{

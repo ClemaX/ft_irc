@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-#include <IDatabase.hpp>
+#include <irc/IDatabase.hpp>
 
 #define DB_ENDL '\n'
 #define DB_PADDING ' '
