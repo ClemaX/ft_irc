@@ -58,7 +58,7 @@ namespace irc
 
 		~Server();
 
-		Channel *getChannel(const std::string & name) const;
+		Channel *getChannel(const std::string & channelName) const;
 
 		struct	Command
 		{

@@ -59,39 +59,26 @@ namespace irc
 		channelNicknameMap	e;
 		channelNicknameMap	I;
 
-		// o - give/take channel operator privileges;
-        // p - private channel flag;
-        // s - secret channel flag;
-        // i - invite-only channel flag;
-        // t - topic settable by channel operator only flag;
-        // n - no messages to channel from clients on the outside;
-        // m - moderated channel;
-        // l - set the user limit to channel;
-        // b - set a ban mask to keep users out;
-        // v - give/take the ability to speak on a moderated channel;
-        // k - set a channel key (password).
-
-
-	// O - give "channel creator" status;
-        // o - give/take channel operator privilege;
-        // v - give/take the voice privilege;
-
-    // a - toggle the anonymous channel flag;
-        // i - toggle the invite-only channel flag;
-        // m - toggle the moderated channel;
-        // n - toggle the no messages to channel from clients on the outside;
-    // q - toggle the quiet channel flag;
-        // p - toggle the private channel flag;
-        // s - toggle the secret channel flag;
-    // r - toggle the server reop channel flag;
-        // t - toggle the topic settable by channel operator only flag;
-
-        // k - set/remove the channel key (password);
-        // l - set/remove the user limit to channel;
-
-        // b - set/remove ban mask to keep users out;
-    // e - set/remove an exception mask to override a ban mask;
-    // I - set/remove an invitation mask to automatically override the invite-only flag;
+		// O - give "channel creator" status;
+    	// o - give/take channel operator privilege;
+    	// v - give/take the voice privilege;
+	
+		// a - toggle the anonymous channel flag;
+    	// i - toggle the invite-only channel flag;
+    	// m - toggle the moderated channel;
+    	// n - toggle the no messages to channel from clients on the outside;
+  		// q - toggle the quiet channel flag;
+    	// p - toggle the private channel flag;
+    	// s - toggle the secret channel flag;
+ 		// r - toggle the server reop channel flag;
+    	// t - toggle the topic settable by channel operator only flag;
+	
+    	// k - set/remove the channel key (password);
+    	// l - set/remove the user limit to channel;
+	
+    	// b - set/remove ban mask to keep users out;
+ 		// e - set/remove an exception mask to override a ban mask;
+ 		// I - set/remove an invitation mask to automatically override the invite-only flag;
 
 		ChannelModes();
 		~ChannelModes();

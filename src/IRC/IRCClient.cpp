@@ -47,15 +47,15 @@ std::cout << "client " << username << " has joined channel " << channel->name <<
 std::cout << "client " << username << " has left channel " << channel->name << "\n";
 	}
 
-	void	Client::leaveChannel(std::string const & name)
+	void	Client::leaveChannel(std::string const & channelName)
 	{
-		clientChannelMap::iterator it = clientChannels.find(name);
+		clientChannelMap::iterator it = clientChannels.find(ft::strToLower(channelName));
 		Channel *channel;
 
 		if (it == clientChannels.end())
 			return ;
 		channel = it->second;
-		clientChannels.erase(name);
+		clientChannels.erase(ft::strToLower(channelName));
 std::cout << "client " << username << " has left channel " << channel->name << "\n";
 		channel->removeClient(this);
 	}
@@ -72,15 +72,15 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 	}
 
 	bool	Client::isInChannel(Channel *channel) const
-	{return (clientChannels.find(channel->name) != clientChannels.end());}
+	{return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end());}
 
 	bool	Client::isInChannel(std::string const & channelName) const
-	{return (clientChannels.find(channelName) != clientChannels.end());}
+	{return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end());}
 
 	Channel	*Client::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
-			return clientChannels.find(channelName)->second;
+			return clientChannels.find(ft::strToLower(channelName))->second;
 		return NULL;
 	}
 
@@ -91,7 +91,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 			return channel;
 		
 		IRCDatabase::databaseChannelsMap channelMap = server->database->dataChannelsMap;
-		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(channelName);
+		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(ft::strToLower(channelName));
 		if (it == channelMap.end())
 			return NULL;
 		channel = it->second;

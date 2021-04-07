@@ -25,9 +25,9 @@ namespace irc
 	Server::~Server()
 	{ }
 
-	Channel *Server::getChannel(const std::string & name) const
+	Channel *Server::getChannel(const std::string & channelName) const
 	{
-		channelsMap::iterator it = database->dataChannelsMap.find(name);
+		channelsMap::iterator it = database->dataChannelsMap.find(ft::strToLower(channelName));
 
 		if (it == database->dataChannelsMap.end())	// search channel in serverChannels map
 			return NULL;

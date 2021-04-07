@@ -72,7 +72,7 @@ namespace irc
 
 		void	joinChannel(Channel * channel);
 		void	leaveChannel(Channel * channel);
-		void	leaveChannel(std::string const & name);
+		void	leaveChannel(std::string const & channelName);
 		void	leaveAllChannels();
 
 		bool	isInChannel(Channel *channel) const;

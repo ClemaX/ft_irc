@@ -309,9 +309,6 @@ std::cout << "channel " << channel->name << " key has been removed!\n";
 		return channel->removeInviteList(flagArguments);
 	}
 
-/// e
-
-/// I
 
 
 

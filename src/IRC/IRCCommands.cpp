@@ -44,7 +44,7 @@ namespace irc
 		(void)server;
 		if (arguments.size() < 2)
 			return false;
-		std::string channelName = arguments[0];
+		std::string channelName = ft::strToLower(arguments[0]);
 		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
 
 		if (!user->isInChannel(channelName))
@@ -125,7 +125,7 @@ namespace irc
 		if (!arguments.size())
 			return false; // throw exeception ?
 
-		const std::string channelName = arguments[0];
+		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel	*channel = user->getChannelGlobal(channelName);
 
 		if (!channel)
@@ -153,7 +153,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 		argumentList const& arguments) const
 	{
 		bool isOp = false;
-		const std::string channelName = arguments[0];
+		const std::string channelName = ft::strToLower(arguments[0]);
 		std::string password = "";
 		if (arguments.size() > 1)
 			password = arguments[1];
@@ -177,7 +177,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 	bool	Server::PartCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		const std::string channelName = arguments[0];
+		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel *channel = server.getChannel(channelName);
 
 		if (!channel)
@@ -200,7 +200,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 		if (!arguments.size())
 			return true;		// to manage by checking every channel
 
-		const std::string channelName = arguments[0];
+		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel *channel = user->getChannelGlobal(channelName);
 
 		if (!channel)
@@ -222,7 +222,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			server.database->displayAllChannelsInfo();
 			return true;
 		}
-		const std::string channelName = arguments[0];
+		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel *channel = user->getChannelGlobal(channelName);
 		if (!channel)
 			return false;
