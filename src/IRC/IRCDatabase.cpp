@@ -18,6 +18,8 @@ namespace irc
 	IRCDatabase::~IRCDatabase() throw()
 	{ }	// erase all three maps ?
 
+// --- Add functions --- //
+
 	void	IRCDatabase::addServer(Server *server)
 	{dataServersMap[server] = server;}
 
@@ -26,6 +28,15 @@ namespace irc
 
 	void	IRCDatabase::addClient(Client *client)
 	{dataClientsMap[client->nickname] = client;}		// use of nickname ?
+
+
+// --- Display functions --- //
+
+	void	IRCDatabase::displayAllChannelsInfo(void) const
+	{
+		for (databaseChannelsMap::const_iterator it = dataChannelsMap.begin(); it != dataChannelsMap.end(); it++)
+			it->second->displayInfo();
+	}
 
 
 // --- Channel Mode pointer functions --- //

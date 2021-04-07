@@ -3,7 +3,7 @@
 namespace irc
 {
 
-// --- ChannelClient ---
+// ======== ChannelClient ========
 	ChannelClient::ChannelClient()
 		:	client(NULL)
 		// :	client(NULL), isChannelOperator(false)
@@ -31,7 +31,14 @@ namespace irc
 		return *this;
 	}
 
-// --- ChannelModes ---
+
+
+
+
+
+
+
+// ======== ChannelModes ========
 	ChannelModes::ChannelModes()
 		:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
 			p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
@@ -40,7 +47,13 @@ namespace irc
 	ChannelModes::~ChannelModes() {}
 
 
-// --- Channel ---
+
+
+
+
+
+
+// ======== Channel ========
 	Channel::Channel()
 		:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
 	{ }
@@ -51,15 +64,43 @@ namespace irc
 	
 	Channel::~Channel() {}
 
+
+
+// Get functions
+
 	// ChannelModes	Channel::getModes() const
 	// {return channelModes;}
 
 	std::string	Channel::getTopic() const
 	{return topic;}
 
+	Client* Channel::getUser(std::string const & clientNickname) const
+	{
+		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
+		{
+			if (it->first->nickname == clientNickname)
+				return it->first;
+		}
+		return NULL;
+	}
+
+
+
+
+
+
+// Set functions
 	void	Channel::setTopic(const std::string & str)
 	{topic = str;}
 
+
+
+
+
+
+
+
+// Check functions
 	bool	Channel::isInChannel(Client *client) const
 	{return (clientsMap.find(client) != clientsMap.end());}
 
@@ -91,22 +132,48 @@ namespace irc
 	bool	Channel::isCreator(std::string const & clientNickname) const
 	{return (channelModes.O.find(clientNickname) != channelModes.O.end());}
 
-	Client* Channel::getUser(std::string const & clientNickname) const
-	{
-		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
-		{
-			if (it->first->nickname == clientNickname)
-				return it->first;
-		}
-		return NULL;
-	}
 
+	bool	Channel::isStatusBanned(Client *user) const
+	{return (channelModes.b.find(user->nickname) != channelModes.b.end());}
+
+	bool	Channel::isStatusException(Client *user) const
+	{return (channelModes.e.find(user->nickname) != channelModes.e.end());}
+
+	bool	Channel::isStatusInvite(Client *user) const
+	{return (channelModes.I.find(user->nickname) != channelModes.I.end());}
+
+
+
+
+
+
+
+
+// Display functions
 	void	Channel::displayNicknames(void) const
 	{
 		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
 			std::cout << it->first->nickname << "\n";
 	}
 
+	void	Channel::displayInfo(void) const
+	{
+			std::cout << name << " ";
+			std::cout << clientsMap.size() << " ";
+			std::cout << topic << "\n";
+	}
+
+
+
+
+
+
+
+
+
+
+
+// Add/Remove functions
 	bool	Channel::addClient(Client* client, std::string & password, bool	isChannelOperator)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
@@ -170,7 +237,10 @@ std::cout << "channel " << name << " has been closed\n";
 
 
 
-	// Modes functions
+
+
+
+// Modes functions
 
 	bool	Channel::addCreator(std::string nickname)
 	{
@@ -301,13 +371,5 @@ std::cout << "channel " << name << " has removed " << nickname << " from the Inv
 	}
 
 
-	bool	Channel::isStatusBanned(Client *user) const
-	{return (channelModes.b.find(user->nickname) != channelModes.b.end());}
-
-	bool	Channel::isStatusException(Client *user) const
-	{return (channelModes.e.find(user->nickname) != channelModes.e.end());}
-
-	bool	Channel::isStatusInvite(Client *user) const
-	{return (channelModes.I.find(user->nickname) != channelModes.I.end());}
 	
 }

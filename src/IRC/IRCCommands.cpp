@@ -51,7 +51,7 @@ namespace irc
 			return false;
 		Channel *channel = user->getChannel(channelName);
 		if (!channel->isOperator(user))
-			return false;		
+			return false;	
 		Client *victim = channel->getUser(clientNickname); // do we check the username ? Nickname ?
 		if (!victim)	// if victim not found in channel
 			return false;
@@ -214,12 +214,16 @@ namespace irc
 	bool	Server::ListCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
+		if (!arguments.size())
+		{
+			server.database->displayAllChannelsInfo();
+			return true;
+		}
 		const std::string channelName = arguments[0];
-
-		if (user->clientChannels.find(channelName) == user->clientChannels.end())
+		Channel *channel = user->getChannelGlobal(channelName);
+		if (!channel)
 			return false;
-		user->leaveChannel(channelName);
+		channel->displayInfo();
 		return true;
 	}
 

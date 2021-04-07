@@ -119,11 +119,15 @@ namespace irc
 		Channel(std::string const& name);
 		~Channel();
 
+	// Get functions
 		// ChannelModes	getModes() const;
 		std::string	getTopic() const;
+		Client *getUser(std::string const & clientNickname) const;
 
+	// Set functions
 		void	setTopic(const std::string & str);
 
+	// Check functions
 		bool	isInChannel(Client *client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
 
@@ -133,11 +137,16 @@ namespace irc
 		bool	isCreator(Client *client) const;
 		bool	isCreator(std::string const & clientNickname) const;
 
+		bool	isStatusBanned(Client *user) const;
+		bool	isStatusException(Client *user) const;
+		bool	isStatusInvite(Client *user) const;
 
-		Client *getUser(std::string const & clientNickname) const;
-
+	// Display functions
 		void	displayNicknames(void) const;
+		void	displayInfo(void) const;
 
+
+	// Add/Remove functions
 		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
@@ -145,7 +154,7 @@ namespace irc
 
 		bool	close();
 
-		// Modes functions
+	// Modes functions
 
 		bool	addCreator(std::string nickname);
 		bool	removeCreator(std::string nickname);
@@ -166,8 +175,5 @@ namespace irc
 		bool	addInviteList(std::string nickname);
 		bool	removeInviteList(std::string nickname);
 
-		bool	isStatusBanned(Client *user) const;
-		bool	isStatusException(Client *user) const;
-		bool	isStatusInvite(Client *user) const;
 	};
 }

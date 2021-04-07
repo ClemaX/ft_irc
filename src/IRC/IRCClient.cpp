@@ -67,7 +67,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		while (!clientChannels.empty())
 		{
 			it = clientChannels.begin();
-			leaveChannel((*it).second);
+			(*it).second->removeClient(this);
 		}
 	}
 
