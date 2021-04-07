@@ -121,22 +121,25 @@ namespace irc
 	bool	Server::TopicCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		(void)server;
 		if (!arguments.size())
 			return false; // throw exeception ?
 
 		const std::string channelName = arguments[0];
-		Channel	*channel = server.getChannel(channelName);
+		Channel	*channel = user->getChannelGlobal(channelName);
 
 		if (!channel)
 			; // throw exception ?
-		else if (!channel->isOperator(user))
-			; // throw exception ?
 		else if (arguments.size() == 1)
 			std::cout << channel->getTopic() << "\n";
+		else if (!channel->isOperator(user))
+			; // throw exception ?
 		else
 		{
 			const std::string newTopic = arguments[1];
+			// const std::string newTopic = mergeArguments(arguments, 1);
 			channel->setTopic(newTopic);
+std::cout << "channel " << channel->name << " topic has been set to '" << newTopic << "'\n";
 		}
 		return true;
 	}
@@ -208,7 +211,7 @@ namespace irc
 
 // --- command LIST ---//
 	Server::ListCommand::ListCommand()
-		:	ChannelCommand("LIST", true)
+		:	ChannelCommand("LIST", true)	// need to check if channels are private/secret ?
 	{ }
 
 	bool	Server::ListCommand::execute(Server& server, Client* user,

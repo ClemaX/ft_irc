@@ -40,6 +40,7 @@ namespace irc
 		// Parse command
 		command = parseCommand(it, end);
 
+		// str_arguments.copy(argument);
 		// Parse arguments
 		while (it != end)
 		{
