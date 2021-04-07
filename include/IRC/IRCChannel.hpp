@@ -7,6 +7,7 @@
 
 #include <IRCClient.hpp>
 #include <IRCServer.hpp>
+#include <strings.hpp>
 
 namespace irc
 {
@@ -106,6 +107,8 @@ namespace irc
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
 
+	private:
+		Channel();
 
 	public:
 		channelClientMap	clientsMap;
@@ -115,8 +118,7 @@ namespace irc
 		ChannelModes		channelModes;
 		std::string const			name;
 
-		Channel();
-		Channel(std::string const& name);
+		Channel(std::string const& channelName);
 		~Channel();
 
 	// Get functions
@@ -128,6 +130,8 @@ namespace irc
 		void	setTopic(const std::string & str);
 
 	// Check functions
+		bool	checkChannelName(const std::string &str) const;
+
 		bool	isInChannel(Client *client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
 

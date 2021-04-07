@@ -54,13 +54,17 @@ namespace irc
 
 
 // ======== Channel ========
-	Channel::Channel()
-		:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
-	{ }
+	// Channel::Channel()
+	// 	:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
+	// { }
 
-	Channel::Channel(std::string const& name)
-		:	clientsMap(), serversMap(), topic(""), channelModes(), name(name)
-	{ }
+	Channel::Channel(std::string const& channelName)
+		:	clientsMap(), serversMap(), topic(""), channelModes(), name(ft::strToLower(channelName))
+	{
+		if (checkChannelName(name) == false)
+			std::cout << "Wrong channel name\n";
+			// return ;	// throw exception ?
+	}
 	
 	Channel::~Channel() {}
 
@@ -101,6 +105,17 @@ namespace irc
 
 
 // Check functions
+	bool	Channel::checkChannelName(const std::string &str) const	// still need to add the channel mask part (with ':')
+	{
+		if (str.length() < 2 || str.length() > 50)
+			return false;
+		if (str[0] != '&' && str[0] != '#' && str[0] != '+' && str[0] != '!')
+			return false;
+		if (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)
+			return false;
+		return true;
+	}
+
 	bool	Channel::isInChannel(Client *client) const
 	{return (clientsMap.find(client) != clientsMap.end());}
 

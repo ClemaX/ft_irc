@@ -645,7 +645,7 @@ Channels names :
 * Max length of 50 characters.
 * Channel names are case insensitive  
 * Can't contain spaces.  
-* Can't contain ctrl^G (ASCII 7).  
+* Can't contain ctrl^G (ASCII 7) (= '\'').  
 * Can't contain a ','.
 * A colon (':') is used as a delimiter for the channel mask.
 

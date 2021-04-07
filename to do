@@ -5,6 +5,6 @@ Connection client :
 	- 
 
 Creation channel:
-	- relation avec un client
+	- channel status (!, #...) ?
 
 nc irc.freenode.org 6665

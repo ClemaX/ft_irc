@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 
 namespace ft
 {
@@ -10,5 +11,14 @@ namespace ft
 
 		while (n--)
 			*temp++ = 0;
+	}
+
+	inline	std::string	strToLower(const std::string & str)
+	{
+		std::string	lowStr(str);
+		for(std::string::iterator it = lowStr.begin() ; it != lowStr.end() ; it++)
+			if (*it >= 'A' && *it <= 'Z')
+				*it = *it - 'A' + 'a';
+		return lowStr;
 	}
 }
