@@ -19,7 +19,7 @@ namespace irc
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
 				SHA256_DIGEST_LENGTH * 2)
 	{
-
+		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 
 	Server::~Server()

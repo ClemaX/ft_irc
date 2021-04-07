@@ -6,14 +6,17 @@ LD = clang++
 
 # Paths
 SRCDIR = src
-INCDIR = include
+SRC_SUBDIRS = "" IRC main socket utils
+INCDIR = include/
 LIBDIR = ..
 
-OBJDIR = obj
+OBJDIR = obj/
 BINDIR = .
 
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
+
+INCDIRS = $(addprefix $(INCDIR), $(SRC_SUBDIRS))
 
 LIBDIRS = $(dir $(LIBS))
 LIBINCS = $(addsuffix $(INCDIR), $(LIBDIRS))
@@ -42,36 +45,37 @@ $(error Could not find OpenSSL library!)
 	LIBDIRS += $(dir $(USRLIB))
 endif
 
-INCS = $(LIBINCS) $(INCDIR)
+INCS = $(LIBINCS) $(INCDIRS)
 
 # Sources
-SRCS = $(addprefix $(SRCDIR)/,\
-	atoi.cpp\
-	crypto.cpp\
-	IRCAMessage.cpp\
-	IRCChannel.cpp\
-	IRCCommand.cpp\
-	IRCCommands.cpp\
-	IRCClient.cpp\
-	IRCDatabase.cpp\
-	IRCMessage.cpp\
-	IRCModes.cpp\
-	IRCReplies.cpp\
-	IRCServer.cpp\
-	IRCServerConfig.cpp\
-	itoa.cpp\
-	main.cpp\
-	parseField.cpp\
-	SocketConnection.cpp\
-	SocketServer.cpp\
-)
+PRE_SRCS = IRC/IRCAMessage\
+	IRC/IRCChannel\
+	IRC/IRCCommand\
+	IRC/IRCCommands\
+	IRC/IRCClient\
+	IRC/IRCDatabase\
+	IRC/IRCMessage\
+	IRC/IRCModes\
+	IRC/IRCReplies\
+	IRC/IRCServer\
+	IRC/IRCServerConfig\
+	main/main\
+	socket/SocketConnection\
+	socket/SocketServer\
+	utils/atoi\
+	utils/crypto\
+	utils/itoa\
+	utils/parseField\
 
-OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+
+# OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+OBJS = $(addsuffix .o, $(addprefix $(OBJDIR), $(PRE_SRCS)))
+
 DEPS = $(OBJS:.o=.d)
 
 # Flags
 CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
-DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
+DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)$*.d
 LDFLAGS = $(LIBDIRS:%=-L%)
 LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
@@ -92,13 +96,13 @@ $(LIBS): %.a: FORCE
 	make -C $(dir $@) NAME=$(@F)
 
 # Objects
-$(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)/%.d | $(OBJDIR)
+$(OBJS): $(OBJDIR)%.o: $(SRCDIR)/%.cpp $(OBJDIR)%.d | $(OBJDIR)
 	@mkdir -p '$(@D)'
 	@echo "CXX $<"
 	$(COMPILE.cpp) $< -o $@
 
 # Dependencies
-$(DEPS): $(OBJDIR)/%.d:
+$(DEPS): $(OBJDIR)%.d:
 include $(wildcard $(DEPS))
 
 # Binaries
@@ -108,15 +112,15 @@ $(BINDIR)/$(NAME): $(OBJS) $(LIBS) | $(BINDIR)
 
 # Remove temporary objects
 clean:
-	$(foreach libdir, $(LIBDIRS),\
+	# $(foreach libdir, $(LIBDIRS),\
 		echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
 	@echo "RM $(OBJDIR)"
 	rm -rf "$(OBJDIR)"
 
 # Remove all binaries
 fclean: clean
-	$(foreach libdir, $(LIBDIRS),\
-		echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
+	# $(foreach libdir, $(LIBDIRS),\
+	# 	echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
 	@echo "RM $(BINDIR)/$(NAME)"
 	rm -f "$(BINDIR)/$(NAME)"
 	@rmdir "$(BINDIR)" 2>/dev/null && echo "RM $(BINDIR)" || :
