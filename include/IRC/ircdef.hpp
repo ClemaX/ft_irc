@@ -69,6 +69,8 @@
 /// Returned by a server to a client when it detects a nickname collision (registered of a NICK that already exists by another server).
 #define IRC_ERR_NICKCOLLISION 436
 /// Returned by the server to indicate that the target user of the command is not on the given channel.
+#define IRC_ERR_UNAVAILRESOURCE 437
+/// Returned by the server to indicate that the target user of the command is not on the given channel.
 #define IRC_ERR_NOTINCHANNEL 441
 /// Returned by the server whenever a client tries to perform a channel effecting command for which the client isn't a member.
 #define IRC_ERR_NOTONCHANNEL 442
@@ -105,6 +107,12 @@
 /// Returned after an attempt to join a channel using an invalid key.
 #define IRC_ERR_BADCHANNELKEY 475
 /// Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
+#define IRC_ERR_BADCHANMASK 476
+/// Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
+#define IRC_ERR_NOCHANMODES 477
+///
+#define IRC_ERR_BANLISTFULL 478
+///
 #define IRC_ERR_NOPRIVILEGES 481
 /// Any command requiring 'chanop' privileges (such as MODE messages) must return this error if the client making the attempt is not a chanop on the specified channel.
 #define IRC_ERR_CHANOPIVSNEEDED 482

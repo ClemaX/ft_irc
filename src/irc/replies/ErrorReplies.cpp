@@ -1,3 +1,4 @@
+#include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
 #include <irc/Client.hpp>
 
@@ -12,19 +13,34 @@ namespace irc
 
 // 403     IRC_ERR_NOSUCHCHANNEL
 //             "<channel name> :No such channel"
-
+	NoSuchChannelError::NoSuchChannelError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_NOSUCHCHANNEL)
+	{
+		message.append(channelName).append(" :No such channel");
+	}
 // 404     IRC_ERR_CANNOTSENDTOCHAN
 //             "<channel name> :Cannot send to channel"
 
 // 405     IRC_ERR_TOOMANYCHANNELS
 //             "<channel name> :You have joined too many channels"
-
+	TooManyChannelsError::TooManyChannelsError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_TOOMANYCHANNELS)
+	{
+		message.append(channelName).append(" :You have joined too many channels");
+	}
 // 406     IRC_ERR_WASNOSUCHNICK
 //             "<nickname> :There was no such nickname"
 
 // 407     IRC_ERR_TOOMANYTARGETS
 //             "<target> :Duplicate recipients. No message"
-
+	TooManyTargetError::TooManyTargetError(std::string const& serverName,
+		std::string const& TargetName)
+		:	NumericReply(serverName, IRC_ERR_TOOMANYTARGETS)
+	{
+		message.append(TargetName).append(" :Duplicate recipients. No message");
+	}
 // 409     IRC_ERR_NOORIGIN
 //             ":No origin specified"
 
@@ -64,6 +80,15 @@ namespace irc
 // 436     IRC_ERR_NICKCOLLISION
 //             "<nick> :Nickname collision KILL"
 
+// 437     IRC_ERR_UNAVAILRESOURCE
+//             "<nick/channel> :Nick/channel is temporarily unavailable"
+	UnavailableResourceError::UnavailableResourceError(std::string const& serverName,  std::string const &nickname,
+			std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_UNAVAILRESOURCE)
+	{
+		message.append(nickname).append("/").append(channelName).append(" :Nick/channel is temporarily unavailable");
+	}
+
 // 441     IRC_ERR_USERNOTINCHANNEL
 //             "<nick> <channel> :They aren't on that channel"
 
@@ -87,11 +112,11 @@ namespace irc
 
 // 461     IRC_ERR_NEEDMOREPARAMS
 //             "<command> :Not enough parameters"
-	NeedMoreParamsReply::NeedMoreParamsReply(std::string const& serverName,
+	NeedMoreParamsError::NeedMoreParamsError(std::string const& serverName,
 		std::string const& commandName)
 		:	NumericReply(serverName, IRC_ERR_NEEDMOREPARAMS)
 	{
-		message.append(commandName).append(": Not enough parameters");
+		message.append(commandName).append(" :Not enough parameters");
 	}
 
 // 462     IRC_ERR_ALREADYREGISTRED
@@ -111,13 +136,19 @@ namespace irc
 
 // 471     IRC_ERR_CHANNELISFULL
 //             "<channel> :Cannot join channel (+l)"
+	ChannelIsFullError::ChannelIsFullError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_CHANNELISFULL)
+	{
+		message.append(channelName).append(" :Cannot join channel (+l)");
+	}
 
 // 472     IRC_ERR_UNKNOWNMODE
 //             "<char> :is unknown mode char to me"
 
 // 473     IRC_ERR_INVITEONLYCHAN
 //             "<channel> :Cannot join channel (+i)"
-	InviteOnlyChanReply::InviteOnlyChanReply(std::string const& serverName,
+	InviteOnlyChanError::InviteOnlyChanError(std::string const& serverName,
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_INVITEONLYCHAN)
 	{
@@ -126,9 +157,33 @@ namespace irc
 
 // 474     IRC_ERR_BANNEDFROMCHAN
 //             "<channel> :Cannot join channel (+b)"
+	BannedFromChanError::BannedFromChanError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_BANNEDFROMCHAN)
+	{
+		message.append(channelName).append(" :Cannot join channel (+b)");
+	}
 
 // 475     IRC_ERR_BADCHANNELKEY
 //             "<channel> :Cannot join channel (+k)"
+	BadChannelKeyError::BadChannelKeyError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_BADCHANNELKEY)
+	{
+		message.append(channelName).append(" :Cannot join channel (+k)");
+	}
+// 476		IRC_ERR_BADCHANMASK
+//             	"<channel> :Bad Channel Mask"
+	BadChanMaskError::BadChanMaskError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_BADCHANMASK)
+	{
+		message.append(channelName).append(" :Bad Channel Mask");
+	}
+// 477		IRC_ERR_NOCHANMODES
+//             	"<channel> :Channel doesn't support modes"
+// 478		IRC_ERR_BANLISTFULL
+//             	"<channel> <char> :Channel list is full"
 
 // 481     IRC_ERR_NOPRIVILEGES
 //             ":Permission Denied- You're not an IRC operator"
@@ -147,5 +202,6 @@ namespace irc
 
 // 502     IRC_ERR_USERSDONTMATCH
 //             ":Cant change mode for other users"
+
 
 }

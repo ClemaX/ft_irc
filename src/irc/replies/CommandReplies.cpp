@@ -1,9 +1,10 @@
+#include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/Client.hpp>
+#include <irc/Channel.hpp>
 
 namespace irc
 {
-
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
@@ -70,6 +71,12 @@ namespace irc
 //             "<channel> :No topic is set"
 // 332     IRC_RPL_TOPIC
 //             "<channel> :<topic>"
+	TopicReply::TopicReply(std::string const& serverName, std::string const &channelName,
+							std::string const &topic)
+		: NumericReply(serverName, IRC_RPL_TOPIC)
+	{
+		message.append(channelName).append(" :").append(topic);
+	}
 
 // 341     IRC_RPL_INVITING
 //             "<channel> <nick>"
@@ -87,6 +94,19 @@ namespace irc
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
+	ChannelNamesReply::ChannelNamesReply(std::string const& serverName, Channel *channel)
+		: NumericReply(serverName, IRC_RPL_NAMREPLY)
+	{
+		message.append(channel->name).append(" :");
+		for (Channel::channelClientMap::const_iterator it = channel->clientsMap.begin(); it != channel->clientsMap.end(); it++)
+		{
+			if (channel->isOperator(it->first))
+				message.append("@");
+			else
+				message.append("+");		// need to be checked
+			message.append(it->first->nickname).append(" ");
+		}
+	}
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
 

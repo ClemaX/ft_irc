@@ -1,9 +1,10 @@
 #pragma once
 
-#include <irc/replies/NumericReplies.hpp>
-
 namespace irc
 {
+	struct	NumericReply;
+	class	Client;
+	class	Channel;
 
 // 401     IRC_ERR_NOSUCHNICK
 //             "<nickname> :No such nick/channel"
@@ -13,19 +14,31 @@ namespace irc
 
 // 403     IRC_ERR_NOSUCHCHANNEL
 //             "<channel name> :No such channel"
-
+	struct NoSuchChannelError	:	NumericReply
+	{
+		NoSuchChannelError(std::string const& serverName,
+			std::string const& channelName);
+	};
 // 404     IRC_ERR_CANNOTSENDTOCHAN
 //             "<channel name> :Cannot send to channel"
 
 // 405     IRC_ERR_TOOMANYCHANNELS
 //             "<channel name> :You have joined too many channels"
-
+	struct TooManyChannelsError	:	NumericReply
+	{
+		TooManyChannelsError(std::string const& serverName,
+			std::string const& channelName);
+	};
 // 406     IRC_ERR_WASNOSUCHNICK
 //             "<nickname> :There was no such nickname"
 
 // 407     IRC_ERR_TOOMANYTARGETS
 //             "<target> :Duplicate recipients. No message"
-
+	struct TooManyTargetError	:	NumericReply
+	{
+		TooManyTargetError(std::string const& serverName,
+			std::string const& TargetName);
+	};
 // 409     IRC_ERR_NOORIGIN
 //             ":No origin specified"
 
@@ -65,6 +78,14 @@ namespace irc
 // 436     IRC_ERR_NICKCOLLISION
 //             "<nick> :Nickname collision KILL"
 
+// 437     IRC_ERR_UNAVAILRESOURCE
+//             "<nick/channel> :Nick/channel is temporarily unavailable"
+	struct UnavailableResourceError	:	NumericReply
+	{
+		UnavailableResourceError(std::string const& serverName, std::string const &nickname,
+				std::string const& channelName);
+	};
+
 // 441     IRC_ERR_USERNOTINCHANNEL
 //             "<nick> <channel> :They aren't on that channel"
 
@@ -88,9 +109,9 @@ namespace irc
 
 // 461     IRC_ERR_NEEDMOREPARAMS
 //             "<command> :Not enough parameters"
-	struct NeedMoreParamsReply	:	NumericReply
+	struct NeedMoreParamsError	:	NumericReply
 	{
-		NeedMoreParamsReply(std::string const& serverName,
+		NeedMoreParamsError(std::string const& serverName,
 			std::string const& commandName);
 	};
 
@@ -111,22 +132,46 @@ namespace irc
 
 // 471     IRC_ERR_CHANNELISFULL
 //             "<channel> :Cannot join channel (+l)"
-
+	struct ChannelIsFullError	:	NumericReply
+	{
+		ChannelIsFullError(std::string const& serverName,
+			std::string const& channelName);
+	};
 // 472     IRC_ERR_UNKNOWNMODE
 //             "<char> :is unknown mode char to me"
 
 // 473     IRC_ERR_INVITEONLYCHAN
 //             "<channel> :Cannot join channel (+i)"
-	struct InviteOnlyChanReply	:	NumericReply
+	struct InviteOnlyChanError	:	NumericReply
 	{
-		InviteOnlyChanReply(std::string const& serverName,
+		InviteOnlyChanError(std::string const& serverName,
 			std::string const& channelName);
 	};
 // 474     IRC_ERR_BANNEDFROMCHAN
 //             "<channel> :Cannot join channel (+b)"
-
+	struct BannedFromChanError	:	NumericReply
+	{
+		BannedFromChanError(std::string const& serverName,
+			std::string const& channelName);
+	};
 // 475     IRC_ERR_BADCHANNELKEY
 //             "<channel> :Cannot join channel (+k)"
+	struct BadChannelKeyError	:	NumericReply
+	{
+		BadChannelKeyError(std::string const& serverName,
+			std::string const& channelName);
+	};
+// 476    ERR_BADCHANMASK
+//             	"<channel> :Bad Channel Mask"
+	struct BadChanMaskError	:	NumericReply
+	{
+		BadChanMaskError(std::string const& serverName,
+			std::string const& channelName);
+	};
+// 477    ERR_NOCHANMODES
+//             	"<channel> :Channel doesn't support modes"
+// 478    ERR_BANLISTFULL
+//             	"<channel> <char> :Channel list is full"
 
 // 481     IRC_ERR_NOPRIVILEGES
 //             ":Permission Denied- You're not an IRC operator"

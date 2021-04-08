@@ -9,11 +9,12 @@
 
 #include <irc/ircdef.hpp>
 
-#include <irc/IReply.hpp>
+#include <irc/replies/IReply.hpp>
 
 namespace irc
 {
 	class	Client;
+	class	Channel;
 
 	template<typename Cstart, typename Ccontent, typename Cend>
 	std::string	serializeReplyList(std::string const& serverName,

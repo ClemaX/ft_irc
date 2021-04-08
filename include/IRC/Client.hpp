@@ -6,7 +6,7 @@
 
 #include <socket/SocketConnection.hpp>
 
-#include <irc/IReply.hpp>
+#include <irc/replies/IReply.hpp>
 
 #include <irc/Channel.hpp>
 #include <irc/Server.hpp>

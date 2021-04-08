@@ -87,7 +87,7 @@ namespace irc
 
 	class	Channel
 	{
-	protected:
+	public:
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
 		typedef std::map<std::string, std::string> channelNicknameMap;

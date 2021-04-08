@@ -23,7 +23,7 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsReply(SERVER_NAME, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
+			*user << NeedMoreParamsError(SERVER_NAME, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
@@ -154,7 +154,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsReply(SERVER_NAME, name);
+			*user << NeedMoreParamsError(SERVER_NAME, name);
 			return false;
 		}
 		bool isOp = false;
