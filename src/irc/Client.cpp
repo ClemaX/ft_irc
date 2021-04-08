@@ -29,7 +29,7 @@ namespace irc
 
 	Client const&	Client::operator<<(NumericReply const& reply)
 	{
-		*this << reply.message;
+		*this << reply.serialize();
 		return *this;
 	}
 
