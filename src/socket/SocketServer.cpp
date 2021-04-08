@@ -124,7 +124,7 @@ SocketServer::~SocketServer()
 # define SOCK_NONBLOCK 0
 #endif
 
-void	SocketServer::start()
+void	SocketServer::start() throw(ServerException, SocketException)
 {
 	int	opt = 1;
 
@@ -139,37 +139,22 @@ void	SocketServer::start()
 	#endif
 
 	if (listenFd < 0)
-	{
-		std::cerr << "socket: " << strerror(errno) << std::endl;
 		throw SocketOpenException(errno);
-	}
 
 	// Allow multiple concurrent connections
-	if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&opt), sizeof(opt)) < 0 )
-	{
-		int err = errno;
-		std::cerr << "setsockopt: " << strerror(err) << std::endl;
-		stop();
-		throw SocketOptionException(err);
-	}
+	if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR,
+		reinterpret_cast<char*>(&opt), sizeof(opt)) < 0 )
+	{ int err = errno; stop(); throw SocketOptionException(err); }
 
 	// Bind the socket to the server address
-	if (bind(listenFd, reinterpret_cast<struct sockaddr*>(&serverAddr), sizeof(serverAddr)) < 0)
-	{
-		int err = errno;
-		std::cerr << "bind: " << strerror(err) << std::endl;
-		stop();
-		throw SocketBindException(err);
-	}
+	if (bind(listenFd,
+		reinterpret_cast<struct sockaddr*>(&serverAddr),sizeof(serverAddr)) < 0)
+	{ int err = errno; stop(); throw SocketBindException(err); }
 
 	// Listen for new connections
 	if (listen(listenFd, 10) < 0)
-	{
-		int err = errno;
-		std::cerr << "listen: " << strerror(errno) << std::endl;
-		stop();
-		throw SocketListenException(err);
-	}
+	{ int err = errno; stop(); throw SocketListenException(err); }
+
 	std::cout << "Listening on port " << portNumber << "..." << std::endl;
 
 	// Add listening socket to connections
@@ -196,10 +181,7 @@ void	SocketServer::start()
 		{
 			if (errno == EINTR)
 				break;
-			int	err = errno;
-			std::cerr << "select: " << strerror(err) << std::endl;
-			stop();
-			throw SocketSelectException(err);
+			int	err = errno; stop(); throw SocketSelectException(err);
 		}
 
 		// Accept incoming connections
@@ -208,8 +190,7 @@ void	SocketServer::start()
 			int	incomingFd;
 
 			incomingFd = accept(listenFd,
-				reinterpret_cast<struct sockaddr*>(&clientAddr),
-				&addrLen);
+				reinterpret_cast<struct sockaddr*>(&clientAddr), &addrLen);
 
 			if (incomingFd < 0)
 			{
@@ -236,8 +217,10 @@ void	SocketServer::start()
 			disconnectedFds.pop();
 		}
 
+		// Flush connections
 		onFlush();
 	}
+	// Stop server
 	stop();
 }
 
