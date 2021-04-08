@@ -47,10 +47,11 @@ namespace irc
 
 	// --- Mode pointer functions --- //
 		void	createModeFunctionsMap();
-		signedFunctionPointerMap	getPlusChannelMap();
-		signedFunctionPointerMap	getMinusChannelMap();
-		signedFunctionPointerMap	getPlusUserMap();
-		signedFunctionPointerMap	getMinusUserMap();
+
+		static signedFunctionPointerMap	getPlusChannelMap();
+		static signedFunctionPointerMap	getMinusChannelMap();
+		static signedFunctionPointerMap	getPlusUserMap();
+		static signedFunctionPointerMap	getMinusUserMap();
 	};
 
 
