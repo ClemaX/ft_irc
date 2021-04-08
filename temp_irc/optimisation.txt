@@ -23,7 +23,7 @@ Channel.hpp
 Client.hpp
 - MUST use bitwise for member bools in ClientModes
 - ClientModes doesn't need the declaration(/definition) of this constructor/destructor
-- Some pattern repetition that can be avoided and some fucntion members can be inline
+- Some pattern repetition that can be avoided and some function members can be inline
 - And perhabs, some pointers pointed addresses can be const
 
 Database.hpp

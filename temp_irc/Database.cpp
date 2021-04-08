@@ -165,7 +165,8 @@ namespace IRC
 
 // --- User Mode pointer functions --- //
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getPlusUserMap()
+	inline IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getPlusUserMap()
 	{
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &setUserInvisible,
@@ -178,7 +179,8 @@ namespace IRC
         return (for_each_assign(flags, f, sizeof(f) / sizeof(*f)));
 	}
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusUserMap()
+	inline IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getMinusUserMap()
 	{
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &unsetUserInvisible,
