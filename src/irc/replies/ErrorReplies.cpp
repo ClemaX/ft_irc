@@ -4,7 +4,7 @@
 
 namespace irc
 {
-	
+
 // 401     IRC_ERR_NOSUCHNICK
 //             "<nickname> :No such nick/channel"
 
@@ -17,7 +17,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_NOSUCHCHANNEL)
 	{
-		message << channelName << " :No such channel\n";
+		message << channelName << " :No such channel";
 	}
 // 404     IRC_ERR_CANNOTSENDTOCHAN
 //             "<channel name> :Cannot send to channel"
@@ -28,7 +28,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_TOOMANYCHANNELS)
 	{
-		message << channelName << " :You have joined too many channels\n";
+		message << channelName << " :You have joined too many channels";
 	}
 // 406     IRC_ERR_WASNOSUCHNICK
 //             "<nickname> :There was no such nickname"
@@ -39,7 +39,7 @@ namespace irc
 		std::string const& targetName)
 		:	NumericReply(serverName, IRC_ERR_TOOMANYTARGETS)
 	{
-		message << targetName << " :Duplicate recipients. No message\n";
+		message << targetName << " :Duplicate recipients. No message";
 	}
 // 409     IRC_ERR_NOORIGIN
 //             ":No origin specified"
@@ -86,7 +86,7 @@ namespace irc
 			std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_UNAVAILRESOURCE)
 	{
-		message << nickname << "/" << channelName << " :Nick/channel is temporarily unavailable\n";
+		message << nickname << "/" << channelName << " :Nick/channel is temporarily unavailable";
 	}
 
 // 441     IRC_ERR_USERNOTINCHANNEL
@@ -116,7 +116,7 @@ namespace irc
 		std::string const& commandName)
 		:	NumericReply(serverName, IRC_ERR_NEEDMOREPARAMS)
 	{
-		message << commandName << " :Not enough parameters\n";
+		message << commandName << " :Not enough parameters";
 	}
 
 // 462     IRC_ERR_ALREADYREGISTRED
@@ -140,7 +140,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_CHANNELISFULL)
 	{
-		message << channelName << " :Cannot join channel (+l)\n";
+		message << channelName << " :Cannot join channel (+l)";
 	}
 
 // 472     IRC_ERR_UNKNOWNMODE
@@ -152,7 +152,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_INVITEONLYCHAN)
 	{
-		message << channelName << " :Cannot join channel (+i)\n";
+		message << channelName << " :Cannot join channel (+i)";
 	}
 
 // 474     IRC_ERR_BANNEDFROMCHAN
@@ -161,7 +161,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_BANNEDFROMCHAN)
 	{
-		message << channelName << " :Cannot join channel (+b)\n";
+		message << channelName << " :Cannot join channel (+b)";
 	}
 
 // 475     IRC_ERR_BADCHANNELKEY
@@ -170,7 +170,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_BADCHANNELKEY)
 	{
-		message << channelName << " :Cannot join channel (+k)\n";
+		message << channelName << " :Cannot join channel (+k)";
 	}
 // 476		IRC_ERR_BADCHANMASK
 //             	"<channel> :Bad Channel Mask"
@@ -178,7 +178,7 @@ namespace irc
 		std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_BADCHANMASK)
 	{
-		message << channelName << " :Bad Channel Mask\n";
+		message << channelName << " :Bad Channel Mask";
 	}
 // 477		IRC_ERR_NOCHANMODES
 //             	"<channel> :Channel doesn't support modes"
