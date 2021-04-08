@@ -7,4 +7,15 @@ Connection client :
 Creation channel:
 	- channel status (!, #...) ?
 
+Ajouter un argument '& Connection' aux fonctions execute
+	--> pour pouvoir write sur les fd avec '<<'
+
+
+
+A changer:
+	- Client*	client
+			= static_cast<Client*>(connection);
+		--> A changer en dynamic_cast ?
+
+
 nc irc.freenode.org 6665

@@ -15,6 +15,8 @@ int			main(void)
 	try { server.start(); }
 	catch (SocketException const& e)
 	{ std::cerr << e.what() << ": " << e.why() << std::endl; err = 1; }
+	catch (...)
+	{ std::cerr << "Unexpected exception!"; }
 
 	// std::cout << "Current config:" << std::endl << config;
 
