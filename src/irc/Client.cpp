@@ -27,6 +27,12 @@ namespace irc
 		return *this;
 	}
 
+	Client const&	Client::operator<<(NumericReply const& reply)
+	{
+		*this << reply.message;
+		return *this;
+	}
+
 	void	Client::flush() throw(SocketWriteException)
 	{
 		SocketConnection::operator<<(writeBuffer);

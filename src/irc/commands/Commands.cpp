@@ -172,6 +172,12 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			channel->addServer(&server);		// add server to the channel servers list
 		}
 		return channel->addClient(user, password, isOp);
+
+	// Errors not used yet 
+        //    ERR_BADCHANMASK
+        //    ERR_NOSUCHCHANNEL               ERR_TOOMANYCHANNELS
+        //    ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE
+
 	}
 
 // --- command PART ---//

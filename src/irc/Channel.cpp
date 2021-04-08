@@ -192,21 +192,37 @@ namespace irc
 	bool	Channel::addClient(Client* client, std::string & password, bool	isChannelOperator)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
-			return false;
+		{
+			// *client << 
+			return false;	// is there an error when joining a channel you're already in ?
+		}
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
+		{
+			*client << ChannelIsFullError(SERVER_NAME, name);
 			return false;
+		}
 		if (isStatusBanned(client) && !isStatusException(client))
+		{
+			*client << BannedFromChanError(SERVER_NAME, name);
 			return false;
+		}
 		if (channelModes.i == true && !isStatusInvite(client))
+		{
+			*client << InviteOnlyChanError(SERVER_NAME, name);
 			return false;
+		}
 		if (channelModes.k.compare("") && channelModes.k.compare(password))
+		{
+			*client << BadChannelKeyError(SERVER_NAME, name);
 			return false;
+		}
 		clientsMap[client] = ChannelClient(client, isChannelOperator);
 		if (isChannelOperator)
 			addOperator(client->nickname);
 		client->joinChannel(this);
 
-std::cout << name << ": new client added - number of clients in channel = " << clientsMap.size() << "\n";
+		*client <<  TopicReply(SERVER_NAME, name, topic);
+		*client <<  ChannelNamesReply(SERVER_NAME, this);
 
 		return true;
 	}

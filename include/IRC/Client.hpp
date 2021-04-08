@@ -7,6 +7,7 @@
 #include <socket/SocketConnection.hpp>
 
 #include <irc/replies/IReply.hpp>
+#include <irc/replies/NumericReplies.hpp>
 
 #include <irc/Channel.hpp>
 #include <irc/Server.hpp>
@@ -65,6 +66,7 @@ namespace irc
 		Client(int fd, address const& address);
 
 		Client const&	operator<<(std::string const& str);
+		Client const&	operator<<(NumericReply const& reply);
 
 		void	flush() throw(SocketWriteException);
 

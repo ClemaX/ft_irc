@@ -75,7 +75,7 @@ namespace irc
 							std::string const &topic)
 		: NumericReply(serverName, IRC_RPL_TOPIC)
 	{
-		message << channelName << " :" << topic;
+		message << channelName << " :" << topic << "\n";
 	}
 
 // 341     IRC_RPL_INVITING
@@ -106,6 +106,7 @@ namespace irc
 				message << "+";		// need to be checked
 			message << it->first->nickname << " ";
 		}
+		message << "\n";
 	}
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
@@ -136,7 +137,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message << ":- " << serverName << " " << motd << " -";
+		message << ":- " << serverName << " " << motd << " -\n";
 	}
 
 // 372     IRC_RPL_MOTD
@@ -150,7 +151,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 			throw (InvalidMessageException()); // TODO: Maybe use another (Reply-)exception type
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message << ":- " << motd << " -";
+		message << ":- " << motd << " -\n";
 	}
 
 // 376     IRC_RPL_ENDOFMOTD
@@ -161,7 +162,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 	{
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message << ":End of /MOTD command.";
+		message << ":End of /MOTD command.\n";
 	}
 
 // 381     IRC_RPL_YOUREOPER
