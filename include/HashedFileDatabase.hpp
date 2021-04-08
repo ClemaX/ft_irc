@@ -2,7 +2,7 @@
 
 #include <FileDatabase.hpp>
 
-#include <crypto.hpp>
+#include <utils/crypto.hpp>
 
 class HashedFileDatabase	:	public FileDatabase
 {

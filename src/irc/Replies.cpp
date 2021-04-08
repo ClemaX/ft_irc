@@ -1,5 +1,5 @@
-#include <IRCReplies.hpp>
-#include <IRCClient.hpp>
+#include <irc/Replies.hpp>
+#include <irc/Client.hpp>
 
 namespace irc
 {

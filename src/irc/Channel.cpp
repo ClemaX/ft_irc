@@ -1,4 +1,4 @@
-#include <IRCChannel.hpp>
+#include <irc/Channel.hpp>
 
 namespace irc
 {
@@ -42,7 +42,7 @@ namespace irc
 	ChannelModes::ChannelModes()
 		:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
 			p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
-	{ }	
+	{ }
 
 	ChannelModes::~ChannelModes() {}
 
@@ -65,7 +65,7 @@ namespace irc
 			std::cout << "Wrong channel name\n";
 			// return ;	// throw exception ?
 	}
-	
+
 	Channel::~Channel() {}
 
 
@@ -207,7 +207,7 @@ namespace irc
 		client->joinChannel(this);
 
 std::cout << name << ": new client added - number of clients in channel = " << clientsMap.size() << "\n";
-	
+
 		return true;
 	}
 
@@ -218,7 +218,7 @@ std::cout << name << ": new client added - number of clients in channel = " << c
 		serversMap[server] = server;
 
 std::cout << name << ": new server added - number of servers linked to channel = " << serversMap.size() << "\n";
-	
+
 		return true;
 	}
 
@@ -230,9 +230,9 @@ std::cout << name << ": new server added - number of servers linked to channel =
 		clientsMap.erase(client);
 
 std::cout << "client " << client->nickname << " has been removed from channel " << name << "\n";
-		
+
 		if (clientsMap.empty())
-			return close();	
+			return close();
 
 
 		return true;
@@ -243,7 +243,7 @@ std::cout << "client " << client->nickname << " has been removed from channel " 
 		if (!serversMap.empty())
 			serversMap.begin()->second->database->dataChannelsMap.erase(name);
 		delete this;
-		
+
 std::cout << "channel " << name << " has been closed\n";
 
 		return true;
@@ -386,5 +386,5 @@ std::cout << "channel " << name << " has removed " << nickname << " from the Inv
 	}
 
 
-	
+
 }

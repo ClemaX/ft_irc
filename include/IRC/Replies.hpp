@@ -5,11 +5,11 @@
 #include <string> // using std::string
 #include <vector> // using std::vector
 
-#include <itoa.hpp>
+#include <utils/itoa.hpp>
 
-#include <ircdef.hpp>
+#include <irc/ircdef.hpp>
 
-#include <IRCIReply.hpp>
+#include <irc/IReply.hpp>
 
 namespace irc
 {

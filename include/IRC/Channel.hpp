@@ -5,9 +5,9 @@
 
 #include <iostream> // using std::cout // for testing for now
 
-#include <IRCClient.hpp>
-#include <IRCServer.hpp>
-#include <strings.hpp>
+#include <irc/Client.hpp>
+#include <irc/Server.hpp>
+#include <utils/strings.hpp>
 
 namespace irc
 {
@@ -16,7 +16,7 @@ namespace irc
 	class Client;
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 	struct	ChannelClient
-	{	
+	{
 		Client*	client;
 		// bool	isChannelOperator;	// not used, the operators are stored in the channelNicknameMap channel->channelModes.o
 
@@ -41,7 +41,7 @@ namespace irc
 		channelNicknameMap	O;
 		channelNicknameMap	o;
 		channelNicknameMap	v;
-	
+
 		bool	a;
 		bool	i;
 		bool	m;
@@ -51,10 +51,10 @@ namespace irc
 		bool	s;
 		bool	r;
 		bool	t;
-	
+
 		size_t	l;
 		std::string	k;
-	
+
 		channelNicknameMap	b;
 		channelNicknameMap	e;
 		channelNicknameMap	I;
@@ -62,7 +62,7 @@ namespace irc
 		// O - give "channel creator" status;
     	// o - give/take channel operator privilege;
     	// v - give/take the voice privilege;
-	
+
 		// a - toggle the anonymous channel flag;
     	// i - toggle the invite-only channel flag;
     	// m - toggle the moderated channel;
@@ -72,10 +72,10 @@ namespace irc
     	// s - toggle the secret channel flag;
  		// r - toggle the server reop channel flag;
     	// t - toggle the topic settable by channel operator only flag;
-	
+
     	// k - set/remove the channel key (password);
     	// l - set/remove the user limit to channel;
-	
+
     	// b - set/remove ban mask to keep users out;
  		// e - set/remove an exception mask to override a ban mask;
  		// I - set/remove an invitation mask to automatically override the invite-only flag;
@@ -101,7 +101,7 @@ namespace irc
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
 		std::string			topic;
-		
+
 		ChannelModes		channelModes;
 		std::string const			name;
 
@@ -152,17 +152,17 @@ namespace irc
 
 		bool	addOperator(std::string nickname);
 		bool	removeOperator(std::string nickname);
-		
+
 		bool	addVoice(std::string nickname);
 		bool	removeVoice(std::string nickname);
 
 
 		bool	addBanned(std::string nickname);
 		bool	removeBanned(std::string nickname);
-		
+
 		bool	addException(std::string nickname);
 		bool	removeException(std::string nickname);
-		
+
 		bool	addInviteList(std::string nickname);
 		bool	removeInviteList(std::string nickname);
 

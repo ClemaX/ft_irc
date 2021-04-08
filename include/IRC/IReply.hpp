@@ -1,6 +1,6 @@
 #pragma once
 
-#include <IRCAMessage.hpp>
+#include <irc/AMessage.hpp>
 
 namespace irc
 {

@@ -1,4 +1,4 @@
-#include <IRCClient.hpp>
+#include <irc/Client.hpp>
 
 namespace irc
 {
@@ -6,7 +6,7 @@ namespace irc
 // --- ClientModes ---
 	ClientModes::ClientModes()
 		:	i(false), s(false), w(false), o(false)
-	{ }	
+	{ }
 
 	ClientModes::~ClientModes() {}
 
@@ -89,7 +89,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		Channel *channel = getChannel(channelName);
 		if (channel)
 			return channel;
-		
+
 		IRCDatabase::databaseChannelsMap channelMap = server->database->dataChannelsMap;
 		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(ft::strToLower(channelName));
 		if (it == channelMap.end())

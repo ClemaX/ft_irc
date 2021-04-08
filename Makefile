@@ -5,18 +5,16 @@ CXX = clang++
 LD = clang++
 
 # Paths
-SRCDIR = src
-SRC_SUBDIRS = "" IRC main socket utils
-INCDIR = include/
+include srcs.mk
+
+INCDIR = include
 LIBDIR = ..
 
-OBJDIR = obj/
+OBJDIR = obj
 BINDIR = .
 
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
-
-INCDIRS = $(addprefix $(INCDIR), $(SRC_SUBDIRS))
 
 LIBDIRS = $(dir $(LIBS))
 LIBINCS = $(addsuffix $(INCDIR), $(LIBDIRS))
@@ -45,37 +43,16 @@ $(error Could not find OpenSSL library!)
 	LIBDIRS += $(dir $(USRLIB))
 endif
 
-INCS = $(LIBINCS) $(INCDIRS)
+INCS = $(LIBINCS) $(INCDIR)
 
-# Sources
-PRE_SRCS = IRC/IRCAMessage\
-	IRC/IRCChannel\
-	IRC/IRCCommand\
-	IRC/IRCCommands\
-	IRC/IRCClient\
-	IRC/IRCDatabase\
-	IRC/IRCMessage\
-	IRC/IRCModes\
-	IRC/IRCReplies\
-	IRC/IRCServer\
-	IRC/IRCServerConfig\
-	main/main\
-	socket/SocketConnection\
-	socket/SocketServer\
-	utils/atoi\
-	utils/crypto\
-	utils/itoa\
-	utils/parseField\
-
-
-# OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-OBJS = $(addsuffix .o, $(addprefix $(OBJDIR), $(PRE_SRCS)))
+OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+#OBJS = $(addsuffix .o, $(addprefix $(OBJDIR), $(PRE_SRCS)))
 
 DEPS = $(OBJS:.o=.d)
 
 # Flags
 CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
-DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)$*.d
+DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
 LDFLAGS = $(LIBDIRS:%=-L%)
 LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
@@ -84,7 +61,6 @@ COMPILE.cpp = $(CXX) $(DFLAGS) $(CXXFLAGS) -c
 COMPILE.o = $(LD) $(LDFLAGS)
 
 all: $(BINDIR)/$(NAME)
-	./$(NAME)
 
 # Directories
 $(OBJDIR) $(BINDIR):
@@ -96,7 +72,7 @@ $(LIBS): %.a: FORCE
 	make -C $(dir $@) NAME=$(@F)
 
 # Objects
-$(OBJS): $(OBJDIR)%.o: $(SRCDIR)/%.cpp $(OBJDIR)%.d | $(OBJDIR)
+$(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)/%.d | $(OBJDIR)
 	@mkdir -p '$(@D)'
 	@echo "CXX $<"
 	$(COMPILE.cpp) $< -o $@
@@ -127,6 +103,9 @@ fclean: clean
 
 # Remove and rebuild all binaries
 re: fclean all
+
+run: $(BINDIR)/$(NAME)
+	./$(NAME)
 
 FORCE: ;
 

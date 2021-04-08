@@ -2,9 +2,9 @@
 
 #include <string> // using std::string
 
-#include <ircdef.hpp>
+#include <irc/ircdef.hpp>
 
-#include <parseField.hpp>
+#include <utils/parseField.hpp>
 
 namespace irc
 {

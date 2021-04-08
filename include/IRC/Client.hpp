@@ -2,14 +2,14 @@
 
 #include <string>
 
-#include <ircdef.hpp>
+#include <irc/ircdef.hpp>
 
-#include <SocketConnection.hpp>
+#include <socket/SocketConnection.hpp>
 
-#include <IRCIReply.hpp>
+#include <irc/IReply.hpp>
 
-#include <IRCChannel.hpp>
-#include <IRCServer.hpp>
+#include <irc/Channel.hpp>
+#include <irc/Server.hpp>
 
 namespace irc
 {

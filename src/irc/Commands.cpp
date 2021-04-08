@@ -1,4 +1,4 @@
-#include <IRCServer.hpp>
+#include <irc/Server.hpp>
 
 namespace irc
 {
@@ -51,11 +51,11 @@ namespace irc
 			return false;
 		Channel *channel = user->getChannel(channelName);
 		if (!channel->isOperator(user))
-			return false;	
+			return false;
 		Client *victim = channel->getUser(clientNickname); // do we check the username ? Nickname ?
 		if (!victim)	// if victim not found in channel
 			return false;
-		
+
 		victim->leaveChannel(channelName);
 
 		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)
@@ -80,7 +80,7 @@ namespace irc
 		(void)server;
 		if (arguments.size() < 2)
 			return false;
-		
+
 		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
 		if (!flags.size())
@@ -184,7 +184,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			return false;
 		if (!user->isInChannel(channelName))
 			return false;
-		
+
 		return channel->removeClient(user);
 	}
 
