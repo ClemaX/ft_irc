@@ -73,7 +73,7 @@ namespace IRC
 	}
 
 	// DOCUMENTATION: https://stackoverflow.com/questions/10876930/should-one-never-use-static-inline-function
-	// Static seems to be deprecated in C++
+	// Static seems to be deprecated in C++ (for this kind of use)
 	// Anonymous namespace used for deprecated "static inline".
 	namespace {
 		/**
@@ -104,8 +104,6 @@ namespace IRC
 	inline IRCDatabase::signedFunctionPointerMap
     IRCDatabase::getPlusChannelMap()
 	{
-		signedFunctionPointerMap	signedMap;
-
         // TO DO: Check if the std::string can be const
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &addChannelCreator,
@@ -137,8 +135,6 @@ namespace IRC
 	inline IRCDatabase::signedFunctionPointerMap
     IRCDatabase::getMinusChannelMap()
 	{
-		signedFunctionPointerMap	signedMap;
-
         // TO DO: Check if the std::string can be const
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &removeChannelOperator,
@@ -171,8 +167,6 @@ namespace IRC
 
 	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getPlusUserMap()
 	{
-		signedFunctionPointerMap	signedMap;
-
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &setUserInvisible,
             &setUserServerNotice,
@@ -186,8 +180,6 @@ namespace IRC
 
 	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusUserMap()
 	{
-		signedFunctionPointerMap	signedMap;
-
         static bool (*const f[])(Client* const, Channel* const, std::string&) = {
             &unsetUserInvisible,
             &unsetUserServerNotice,
