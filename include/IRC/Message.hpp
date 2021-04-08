@@ -13,8 +13,10 @@ namespace irc
 	struct	Message	:	AMessage
 	{
 		Server::Command const*		command;
-		// std::string					str_arguments;
 		std::vector<std::string>	arguments;
+
+		Message();
+		~Message();
 
 		Message(std::string& buffer) throw(MessageException);
 	};
