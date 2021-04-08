@@ -72,28 +72,33 @@ namespace IRC
     */
 	}
 
-	/**
-	 * 	@brief assing a function using operator [] to a signedMap
-	 * 	index.
-	 * 
-	 *  @param flags A array of chars (the indexes)
-	 * 	@param f A pointer to function, that will be assigned to each flags
-	 * 	@param amount A integer defining the lenght of @p flags or @p f .
-	 * 
-	 * 	NOTE: indexes in @p flags and @p f need that mach perform the assignation.
-	*/
-	inline signedFunctionPointerMap
-	for_each_assign(const char*const flags,
-	bool (*const f[])(Client* const, Channel* const, std::string&),
-	size_t amount)
-	throw()
-	{
-		signedFunctionPointerMap	signedMap;
+	// DOCUMENTATION: https://stackoverflow.com/questions/10876930/should-one-never-use-static-inline-function
+	// Static seems to be deprecated in C++
+	// Anonymous namespace used for deprecated "static inline".
+	namespace {
+		/**
+		 * 	@brief assing a function using operator [] to a signedMap
+		 * 	index.
+		 * 
+		 *  @param flags A array of chars (the indexes)
+		 * 	@param f A pointer to function, that will be assigned to each flags
+		 * 	@param amount A integer defining the lenght of @p flags or @p f .
+		 * 
+		 * 	NOTE: indexes in @p flags and @p f need that mach perform the assignation.
+		*/
+		inline signedFunctionPointerMap
+		for_each_assign(const char*const flags,
+		bool (*const f[])(Client* const, Channel* const, std::string&),
+		size_t amount)
+		throw()
+		{
+			signedFunctionPointerMap	signedMap;
 
-		for (size_t i = 0 ; i < amount ; i++)
-        	signedMap[flags[i]] = f[i];
+			for (size_t i = 0 ; i < amount ; i++)
+				signedMap[flags[i]] = f[i];
 
-		return (signedMap)
+			return (signedMap)
+		}
 	}
 
 	inline IRCDatabase::signedFunctionPointerMap
