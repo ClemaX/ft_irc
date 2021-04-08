@@ -11,9 +11,13 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		Database.cpp\
 		Message.cpp\
 		Modes.cpp\
-		Replies.cpp\
 		Server.cpp\
 		ServerConfig.cpp\
+		$(addprefix replies/,\
+			NumericReplies.cpp\
+			CommandReplies.cpp\
+			ErrorReplies.cpp\
+		)\
 	)\
 	$(addprefix main/,\
 		main.cpp\

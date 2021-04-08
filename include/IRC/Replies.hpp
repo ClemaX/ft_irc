@@ -61,7 +61,7 @@ namespace irc
 		std::string	message;
 
 		NumericReply(std::string const& serverName, int code,
-			std::string const& message);
+			std::string const& message = "");
 
 		virtual ~NumericReply();
 
