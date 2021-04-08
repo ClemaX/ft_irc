@@ -108,11 +108,7 @@ namespace irc
 		} // TODO: Check if we need to delete ircMessage on catch
 
 		if (ircMessage && ircMessage->command)
-		{
-			std::string strTest("Message received!\n");
-			*connection << strTest;
 			ircMessage->command->execute(*this, client, ircMessage->arguments);
-		}
 	}
 
 	void	Server::onFlush() const throw(SocketWriteException)

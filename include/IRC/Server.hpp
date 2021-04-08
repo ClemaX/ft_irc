@@ -12,7 +12,9 @@
 
 #include <socket/SocketServer.hpp>
 #include <irc/Channel.hpp>
-#include <irc/Replies.hpp>
+#include <irc/replies/NumericReplies.hpp>
+#include <irc/replies/CommandReplies.hpp>
+#include <irc/replies/ErrorReplies.hpp>
 #include <irc/Client.hpp>
 #include <irc/Database.hpp>
 #include <irc/ServerConfig.hpp>

@@ -1,5 +1,6 @@
-#include <irc/replies/ErrorReplies.hpp>
-#include <irc/Client.hpp>
+#pragma once
+
+#include <irc/replies/NumericReplies.hpp>
 
 namespace irc
 {
@@ -87,12 +88,11 @@ namespace irc
 
 // 461     IRC_ERR_NEEDMOREPARAMS
 //             "<command> :Not enough parameters"
-	NeedMoreParamsReply::NeedMoreParamsReply(std::string const& serverName,
-		std::string const& commandName)
-		:	NumericReply(serverName, IRC_ERR_NEEDMOREPARAMS)
+	struct NeedMoreParamsReply	:	NumericReply
 	{
-		message.append(commandName).append(": Not enough parameters");
-	}
+		NeedMoreParamsReply(std::string const& serverName,
+			std::string const& commandName);
+	};
 
 // 462     IRC_ERR_ALREADYREGISTRED
 //             ":You may not reregister"
@@ -117,13 +117,11 @@ namespace irc
 
 // 473     IRC_ERR_INVITEONLYCHAN
 //             "<channel> :Cannot join channel (+i)"
-	InviteOnlyChanReply::InviteOnlyChanReply(std::string const& serverName,
-		std::string const& channelName)
-		:	NumericReply(serverName, IRC_ERR_INVITEONLYCHAN)
+	struct InviteOnlyChanReply	:	NumericReply
 	{
-		message.append(channelName).append(" :Cannot join channel (+i)");
-	}
-
+		InviteOnlyChanReply(std::string const& serverName,
+			std::string const& channelName);
+	};
 // 474     IRC_ERR_BANNEDFROMCHAN
 //             "<channel> :Cannot join channel (+b)"
 
@@ -147,5 +145,6 @@ namespace irc
 
 // 502     IRC_ERR_USERSDONTMATCH
 //             ":Cant change mode for other users"
+
 
 }

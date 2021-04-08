@@ -23,7 +23,7 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsReply("localhost", name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
+			*user << NeedMoreParamsReply(SERVER_NAME, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
@@ -152,6 +152,11 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 	bool	Server::JoinCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		if (!arguments.size())
+		{
+			*user << NeedMoreParamsReply(SERVER_NAME, name);
+			return false;
+		}
 		bool isOp = false;
 		const std::string channelName = ft::strToLower(arguments[0]);
 		std::string password = "";
@@ -244,7 +249,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 		std::cout << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
-			"localhost", user->nickname, server.config["MOTD"], '\n', 80);
+			SERVER_NAME, user->nickname, server.config["MOTD"], '\n', 80);
 
 		if (arguments.size())
 		{

@@ -61,6 +61,7 @@ COMPILE.cpp = $(CXX) $(DFLAGS) $(CXXFLAGS) -c
 COMPILE.o = $(LD) $(LDFLAGS)
 
 all: $(BINDIR)/$(NAME)
+	./ircserv
 
 # Directories
 $(OBJDIR) $(BINDIR):

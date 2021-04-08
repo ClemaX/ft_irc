@@ -26,6 +26,8 @@
 /// Maximal length of IRC messages (as defined in RFC1459 2.3).
 #define IRC_MESSAGE_MAXLEN 512
 
+#define SERVER_NAME "localhost"
+
 /// Used to indicate the nickname parameter supplied to a command is currently unused.
 #define IRC_ERR_NOSUCHNICK 401
 /// Used to indicate the server name given currently doesn't exist.
