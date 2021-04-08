@@ -3,6 +3,12 @@
 
 namespace irc
 {
+	std::string &	operator<<(std::string &src, std::string const& str)
+	{
+		src.append(str);
+		return src;
+	}
+
 	NumericReply::NumericReply(std::string const& serverName,
 		int code, std::string const& message)
 		:	prefix(serverName),

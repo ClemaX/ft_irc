@@ -1,5 +1,7 @@
 #pragma once
 
+	#include <string>
+
 namespace irc
 {
 	struct	NumericReply;
@@ -37,7 +39,7 @@ namespace irc
 	struct TooManyTargetError	:	NumericReply
 	{
 		TooManyTargetError(std::string const& serverName,
-			std::string const& TargetName);
+			std::string const& targetName);
 	};
 // 409     IRC_ERR_NOORIGIN
 //             ":No origin specified"

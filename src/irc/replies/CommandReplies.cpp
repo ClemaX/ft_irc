@@ -75,7 +75,7 @@ namespace irc
 							std::string const &topic)
 		: NumericReply(serverName, IRC_RPL_TOPIC)
 	{
-		message.append(channelName).append(" :").append(topic);
+		message << channelName << " :" << topic;
 	}
 
 // 341     IRC_RPL_INVITING
@@ -97,14 +97,14 @@ namespace irc
 	ChannelNamesReply::ChannelNamesReply(std::string const& serverName, Channel *channel)
 		: NumericReply(serverName, IRC_RPL_NAMREPLY)
 	{
-		message.append(channel->name).append(" :");
+		message << channel->name << " :";
 		for (Channel::channelClientMap::const_iterator it = channel->clientsMap.begin(); it != channel->clientsMap.end(); it++)
 		{
 			if (channel->isOperator(it->first))
-				message.append("@");
+				message << "@";
 			else
-				message.append("+");		// need to be checked
-			message.append(it->first->nickname).append(" ");
+				message << "+";		// need to be checked
+			message << it->first->nickname << " ";
 		}
 	}
 // 366     IRC_RPL_ENDOFNAMES
@@ -136,8 +136,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message.append(":- ").append(serverName).append(" ").append(motd)
-			.append(" -");
+		message << ":- " << serverName << " " << motd << " -";
 	}
 
 // 372     IRC_RPL_MOTD
@@ -151,7 +150,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 			throw (InvalidMessageException()); // TODO: Maybe use another (Reply-)exception type
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message.append(":- ").append(motd).append(" -");
+		message << ":- " << motd << " -";
 	}
 
 // 376     IRC_RPL_ENDOFMOTD
@@ -162,7 +161,7 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 	{
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);
-		message.append(":End of /MOTD command.");
+		message << ":End of /MOTD command.";
 	}
 
 // 381     IRC_RPL_YOUREOPER

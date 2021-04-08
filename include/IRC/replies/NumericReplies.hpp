@@ -16,6 +16,8 @@ namespace irc
 	class	Client;
 	class	Channel;
 
+	std::string &	operator<<(std::string &src, std::string const& str);
+
 	template<typename Cstart, typename Ccontent, typename Cend>
 	std::string	serializeReplyList(std::string const& serverName,
 		std::string const& nickName, std::string const& list, char delim = '\n',
