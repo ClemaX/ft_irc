@@ -72,6 +72,30 @@ namespace IRC
     */
 	}
 
+	/**
+	 * 	@brief assing a function using operator [] to a signedMap
+	 * 	index.
+	 * 
+	 *  @param flags A array of chars (the indexes)
+	 * 	@param f A pointer to function, that will be assigned to each flags
+	 * 	@param amount A integer defining the lenght of @p flags or @p f .
+	 * 
+	 * 	NOTE: indexes in @p flags and @p f need that mach perform the assignation.
+	*/
+	inline signedFunctionPointerMap
+	for_each_assign(const char*const flags,
+	bool (*const f[])(Client* const, Channel* const, std::string&),
+	size_t amount)
+	throw()
+	{
+		signedFunctionPointerMap	signedMap;
+
+		for (size_t i = 0 ; i < amount ; i++)
+        	signedMap[flags[i]] = f[i];
+
+		return (signedMap)
+	}
+
 	inline IRCDatabase::signedFunctionPointerMap
     IRCDatabase::getPlusChannelMap()
 	{
@@ -102,10 +126,7 @@ namespace IRC
             'k', 'b', 'e', 'I'
         };
 
-        for (size_t i = 0 ; i < sizeof(f) / sizeof(*f) ; i++)
-            signedMap[flags[i]] = f[i];
-
-		return signedMap;
+		return (for_each_assign(flags, f, sizeof(f) / sizeof(*f)));
 	}
 
 	inline IRCDatabase::signedFunctionPointerMap
@@ -137,10 +158,7 @@ namespace IRC
             's', 'r', 't', 'l', 'k', 'b', 'e', 'I'
         };
 
-        for (size_t i = 0 ; i < sizeof(f) / sizeof(*f) ; i++)
-            signedMap[flags[i]] = f[i];
-
-		return signedMap;
+		return (for_each_assign(flags, f, sizeof(f) / sizeof(*f)));
 	}
 
 
@@ -158,10 +176,7 @@ namespace IRC
         };
         static const char flags[] = {'i', 's', 'w', 'o'};
 
-        for (size_t i = 0 ; i < sizeof(f) / sizeof(*f) ; i++)
-            signedMap[flags[i]] = f[i];
-
-		return signedMap;
+        return (for_each_assign(flags, f, sizeof(f) / sizeof(*f)));
 	}
 
 	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusUserMap()
@@ -176,9 +191,6 @@ namespace IRC
         };
         static const char flags[] = {'i', 's', 'w', 'o'};
 
-        for (size_t i = 0 ; i < sizeof(f) / sizeof(*f) ; i++)
-            signedMap[flags[i]] = f[i];
-
-		return signedMap;
+        return (for_each_assign(flags, f, sizeof(f) / sizeof(*f)));
 	}
 }
