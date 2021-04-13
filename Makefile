@@ -43,6 +43,8 @@ $(error Could not find OpenSSL library!)
 	LIBDIRS += $(dir $(USRLIB))
 endif
 
+
+
 INCS = $(LIBINCS) $(INCDIR)
 
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)

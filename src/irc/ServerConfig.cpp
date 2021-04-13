@@ -20,7 +20,8 @@ namespace irc
 
 	ServerConfig::ServerConfig(std::string const& filepath)
 	{
-		std::ifstream	file(filepath);
+		// std::ifstream	file(filepath);
+		std::ifstream	file(filepath.c_str());
 
 		operator>>(file);
 		file.close();
