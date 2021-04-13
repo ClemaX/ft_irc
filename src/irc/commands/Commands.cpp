@@ -164,9 +164,20 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			password = arguments[1];
 		Channel *channel = server.getChannel(channelName);
 
+		if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
+		{
+			*user << TooManyChannelsError(SERVER_NAME, channelName);
+			return false;
+		}
+
 		if (!channel)	// if channel not present in serverChannels map
 		{
-			channel = new Channel(channelName);
+			try{channel = new Channel(channelName);}
+			catch(Channel::InvalidChannelNameException const& e)
+			{
+				*user << NoSuchChannelError(SERVER_NAME, name);
+				return false;
+			}
 			server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
 			isOp = true;										// will set user as operator
 			channel->addServer(&server);		// add server to the channel servers list
@@ -175,7 +186,6 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 
 	// Errors not used yet 
         //    ERR_BADCHANMASK
-        //    ERR_NOSUCHCHANNEL               ERR_TOOMANYCHANNELS
         //    ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE
 
 	}

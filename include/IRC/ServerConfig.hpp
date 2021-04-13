@@ -4,6 +4,7 @@
 #include <map> // using std::map
 #include <istream> // using std::istream, std::peek, std::skipws, std::getline
 #include <fstream> // using std::ifstream
+#include <algorithm> // using std::find
 
 #define IRC_CONF_NAME	"ircserv.conf"
 #define IRC_CONF_DELIM	'='

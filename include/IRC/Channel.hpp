@@ -87,12 +87,22 @@ namespace irc
 
 	class	Channel
 	{
+
+
 	public:
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
 		typedef std::map<std::string, std::string> channelNicknameMap;
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
+		
+		class	ChannelException		:	public std::exception { };
+
+		class	InvalidChannelNameException	:	public ChannelException
+		{
+			public: char const*	what() const throw()
+			{ return "Invalid channel name"; };
+		};
 
 	private:
 		Channel();
@@ -105,7 +115,7 @@ namespace irc
 		ChannelModes		channelModes;
 		std::string const			name;
 
-		Channel(std::string const& channelName);
+		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
 
 	// Get functions

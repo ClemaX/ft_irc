@@ -28,6 +28,9 @@
 
 #define SERVER_NAME "localhost"
 
+// Maximal number of channels that a user can join
+#define IRC_MAX_JOINED_CHANNEL 10
+
 /// Used to indicate the nickname parameter supplied to a command is currently unused.
 #define IRC_ERR_NOSUCHNICK 401
 /// Used to indicate the server name given currently doesn't exist.

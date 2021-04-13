@@ -58,12 +58,11 @@ namespace irc
 	// 	:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
 	// { }
 
-	Channel::Channel(std::string const& channelName)
+	Channel::Channel(std::string const& channelName) throw(InvalidChannelNameException)
 		:	clientsMap(), serversMap(), topic(""), channelModes(), name(ft::strToLower(channelName))
 	{
 		if (checkChannelName(name) == false)
-			std::cout << "Wrong channel name\n";
-			// return ;	// throw exception ?
+			throw InvalidChannelNameException();
 	}
 
 	Channel::~Channel() {}
