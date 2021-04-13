@@ -43,19 +43,35 @@ namespace irc
 	{
 		(void)server;
 		if (arguments.size() < 2)
+		{
+			*user << NeedMoreParamsError(SERVER_NAME, name);
 			return false;
+		}
 		std::string channelName = ft::strToLower(arguments[0]);
 		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
-
+		
+		Channel *channel = user->getChannelGlobal(channelName);
+		if (!channel)
+		{
+			*user << NoSuchChannelError(SERVER_NAME, channelName);
+			return false;
+		}
 		if (!user->isInChannel(channelName))
+		{
+			*user << NotInChannelError(SERVER_NAME, channelName);
 			return false;
-		Channel *channel = user->getChannel(channelName);
+		}
 		if (!channel->isOperator(user))
+		{
+			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
 			return false;
+		}
 		Client *victim = channel->getUser(clientNickname); // do we check the username ? Nickname ?
-		if (!victim)	// if victim not found in channel
+		if (!victim)
+		{
+			*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
 			return false;
-
+		}
 		victim->leaveChannel(channelName);
 
 		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)
@@ -65,6 +81,9 @@ namespace irc
 			std::cout << "Reason: \"" << comment << "\"\n";
 		}
 		return true;
+
+		// Errors not used yet
+			// ERR_BADCHANMASK                 
 	}
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +103,7 @@ namespace irc
 		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
 		if (!flags.size())
-			return false;	// necessary ?
+			return false;
 
 		std::string	flagArgument = "";
 		if (arguments.size() > 2)
@@ -93,6 +112,20 @@ namespace irc
 		if (!user->nickname.compare(nameArgument))
 			return server.parseUserMode(user, flags, flagArgument);
 		return server.parseChannelMode(user, nameArgument, flags, flagArgument);
+
+		// Errors/replies not used yet - user
+			// ERR_NEEDMOREPARAMS              ERR_USERSDONTMATCH
+			// ERR_UMODEUNKNOWNFLAG            RPL_UMODEIS
+
+		// Errors/replies not used yet - channel
+			// ERR_NEEDMOREPARAMS              ERR_KEYSET
+			// ERR_NOCHANMODES                 ERR_CHANOPRIVSNEEDED
+			// ERR_USERNOTINCHANNEL            ERR_UNKNOWNMODE
+			// RPL_CHANNELMODEIS
+			// RPL_BANLIST                     RPL_ENDOFBANLIST
+			// RPL_EXCEPTLIST                  RPL_ENDOFEXCEPTLIST
+			// RPL_INVITELIST                  RPL_ENDOFINVITELIST
+			// RPL_UNIQOPIS
 
 	}
 
@@ -111,6 +144,12 @@ namespace irc
 		(void)arguments;
 		std::cout << user->username << " executes " << name << std::endl;
 		return false;
+
+		// Errors/replies not used yet
+			// ERR_NEEDMOREPARAMS	ERR_NOSUCHNICK
+			// ERR_NOTONCHANNEL		ERR_USERONCHANNEL
+			// ERR_CHANOPRIVSNE		
+			// RPL_INVITING    		RPL_AWAY
 	}
 
 // --- command TOPIC ---//
@@ -142,6 +181,11 @@ namespace irc
 std::cout << "channel " << channel->name << " topic has been set to '" << newTopic << "'\n";
 		}
 		return true;
+
+		// Errors/replies not used yet
+			// ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
+			// RPL_NOTOPIC                     RPL_TOPIC
+			// ERR_CHANOPRIVSNEEDED            ERR_NOCHANMODES
 	}
 
 // --- command JOIN ---//
@@ -207,6 +251,10 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			return false;
 
 		return channel->removeClient(user);
+
+		// Errors/replies not used yet
+			// ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
+			// ERR_NOTONCHANNEL
 	}
 
 // --- command NAMES ---//
@@ -228,6 +276,10 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			return false;
 		channel->displayNicknames();
 		return true;
+
+		// Errors/replies not used yet
+			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
+			// RPL_NAMREPLY                    RPL_ENDOFNAMES
 	}
 
 // --- command LIST ---//
@@ -249,6 +301,10 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 			return false;
 		channel->displayInfo();
 		return true;
+
+		// Errors/replies not used yet
+			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
+			// RPL_LIST                        RPL_LISTEND
 	}
 
 

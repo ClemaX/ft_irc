@@ -31,6 +31,9 @@
 // Maximal number of channels that a user can join
 #define IRC_MAX_JOINED_CHANNEL 10
 
+
+// ===== Errors ===== //
+
 /// Used to indicate the nickname parameter supplied to a command is currently unused.
 #define IRC_ERR_NOSUCHNICK 401
 /// Used to indicate the server name given currently doesn't exist.
@@ -56,6 +59,9 @@
 /// Used to indicate a wildcard in a toplevel domain parameter.
 #define IRC_ERR_WILDTOPLEVEL 414
 /// Returned to a registered client to indicate that the command sent is unknown by the server.
+#define IRC_ERR_BADMASK 415
+#define IRC_ERR_TOOMANYMATCHES 416
+
 #define IRC_ERR_UNKNOWNCOMMAND 421
 /// Server's MOTD file could not be opened by the server.
 #define IRC_ERR_NOMOTD 422
@@ -74,7 +80,7 @@
 /// Returned by the server to indicate that the target user of the command is not on the given channel.
 #define IRC_ERR_UNAVAILRESOURCE 437
 /// Returned by the server to indicate that the target user of the command is not on the given channel.
-#define IRC_ERR_NOTINCHANNEL 441
+#define IRC_ERR_USERNOTINCHANNEL 441
 /// Returned by the server whenever a client tries to perform a channel effecting command for which the client isn't a member.
 #define IRC_ERR_NOTONCHANNEL 442
 /// Returned when a client tries to invite a user to a channel they are already on.
@@ -118,7 +124,7 @@
 ///
 #define IRC_ERR_NOPRIVILEGES 481
 /// Any command requiring 'chanop' privileges (such as MODE messages) must return this error if the client making the attempt is not a chanop on the specified channel.
-#define IRC_ERR_CHANOPIVSNEEDED 482
+#define IRC_ERR_CHANOPRIVSNEEDED 482
 /// Any attempts to use the KILL command on a serve are to be refused and this error returned directl to the client.
 #define IRC_ERR_CANTKILLSERVER 483
 /// If a client sends an OPER message and the server has not been configured to allow connections from the client's host as an operator, this error must be returned.
@@ -127,6 +133,9 @@
 #define IRC_ERR_UMODEUNKNOWNFLAG 501
 /// Error sent to any user trying to view or change the user mode for a user other than themselves.
 #define IRC_ERR_USERSDONTMATCH 502
+
+
+// ===== Replies ===== //
 
 /// Dummy reply number. Not used.
 #define IRC_RPL_NONE 300
@@ -163,6 +172,7 @@
 /// LIST command reply number used to indicate the end of the reply.
 #define IRC_RPL_LISTEND 323
 /// Numeric reply used to indicate the channel mode.
+#define IRC_RPL_UNIQOPIS 325
 #define IRC_RPL_CHANNELMODEIS 324
 /// TOPIC command reply number used to indicate the absence of a topic.
 #define IRC_RPL_NOTOPIC 331
@@ -173,6 +183,12 @@
 /// SUMMON command reply number used to indicate a successful summoning.
 #define IRC_RPL_SUMMONING 342
 /// Reply by the server using its version details.
+#define IRC_RPL_INVITELIST 346
+#define IRC_RPL_ENDOFINVITELIST 347
+// When listing the 'invitations masks' for a given channel, a server is required to send the list back using the RPL_INVITELIST and RPL_ENDOFINVITELIST messages.  A separate RPL_INVITELIST is sent for each active mask. After the masks have been listed (or if none present) a RPL_ENDOFINVITELIST MUST be sent.
+#define IRC_RPL_EXCEPTLIST 348
+#define IRC_RPL_ENDOFEXCEPTLIST 349
+// When listing the 'exception masks' for a given channel, a server is required to send the list back using the RPL_EXCEPTLIST and RPL_ENDOFEXCEPTLIST messages.  A separate RPL_EXCEPTLIST is sent for each active mask. After the masks have been listed (or if none present) a RPL_ENDOFEXCEPTLIST MUST be sent.
 #define IRC_RPL_VERSION 351
 /// WHO command reply number used to indicate a match.
 #define IRC_RPL_WHOREPLY 352
@@ -214,6 +230,49 @@
 #define IRC_RPL_ENDOFUSERS 394
 /// USERS command reply number used to indicate the absence of users.
 #define IRC_RPL_NOUSERS 395
+
+#define IRC_RPL_TRACELINK 200
+#define IRC_RPL_TRACECONNECTING 201
+#define IRC_RPL_TRACEHANDSHAKE 202
+#define IRC_RPL_TRACEUNKNOWN 203
+#define IRC_RPL_TRACEOPERATOR 204
+#define IRC_RPL_TRACEUSER 205
+#define IRC_RPL_TRACESERVER 206
+#define IRC_RPL_TRACESERVICE 207
+#define IRC_RPL_TRACENEWTYPE 208
+#define IRC_RPL_TRACECLASS 209
+#define IRC_RPL_TRACERECONNECT 210
+
+#define IRC_RPL_TRACELOG 261
+#define IRC_RPL_TRACEEND 262
+
+#define IRC_RPL_STATSLINKINFO 211
+#define IRC_RPL_STATSCOMMANDS 212
+
+#define IRC_RPL_ENDOFSTATS 219
+
+#define IRC_RPL_STATSUPTIME 242
+#define IRC_RPL_STATSOLINE 243
+
+#define IRC_RPL_UMODEIS 221
+
+#define IRC_RPL_SERVLIST 234
+#define IRC_RPL_SERVLISTEND 235
+
+#define IRC_RPL_LUSERCLIENT 251
+#define IRC_RPL_LUSEROP 252
+#define IRC_RPL_LUSERUNKNOWN 253
+#define IRC_RPL_LUSERCHANNELS 254
+#define IRC_RPL_LUSERME 255
+#define IRC_RPL_ADMINME 256
+#define IRC_RPL_ADMINLOC1 257
+#define IRC_RPL_ADMINLOC2 258
+#define IRC_RPL_ADMINEMAIL 259
+
+#define IRC_RPL_TRYAGAIN 263
+
+
+
 // TODO: Trace messages
 // TODO: Stats messages
 // TODO: Admin messages

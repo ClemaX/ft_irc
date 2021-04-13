@@ -32,6 +32,9 @@ namespace irc
 
 // 301     IRC_RPL_AWAY
 //             "<nick> :<away message>"
+	struct AwayReply	:	NumericReply
+	{ AwayReply(std::string const& serverName, std::string const &nickName,
+		std::string const& awayMessage); };
 
 // 305     IRC_RPL_UNAWAY
 //             ":You are no longer marked as being away"
@@ -60,14 +63,31 @@ namespace irc
 //             "Channel :Users Name"
 // 322     IRC_RPL_LIST
 //             "<channel> <# visible> :<topic>"
+	struct ListReply	:	NumericReply
+	{ ListReply(std::string const& serverName, std::string const &channelName,
+							bool visible, std::string const &topic); };
 // 323     IRC_RPL_LISTEND
 //             ":End of /LIST"
+	struct EndOfListReply	:	NumericReply
+	{ EndOfListReply(std::string const& serverName); };
+
+// 325     IRC_RPL_UNIQOPIS
+//             "<channel> <nickname>"
+	struct UniqOpIsReply	:	NumericReply
+	{ UniqOpIsReply(std::string const& serverName, std::string const &channelName,
+							std::string const &nickName); };
 
 // 324     IRC_RPL_CHANNELMODEIS
 //             "<channel> <mode> <mode params>"
+	struct ChannelModeIsReply	:	NumericReply
+	{ ChannelModeIsReply(std::string const& serverName, std::string const &channelName,
+							std::string const &mode, std::string const &modeParams); };
 
 // 331     IRC_RPL_NOTOPIC
 //             "<channel> :No topic is set"
+	struct NoTopicReply	:	NumericReply
+	{ NoTopicReply(std::string const& serverName, std::string const &channelName); };
+
 // 332     IRC_RPL_TOPIC
 //             "<channel> :<topic>"
 	struct TopicReply	:	NumericReply
@@ -76,9 +96,31 @@ namespace irc
 
 // 341     IRC_RPL_INVITING
 //             "<channel> <nick>"
+	struct InvitingReply	:	NumericReply
+	{ InvitingReply(std::string const& serverName, std::string const &channelName,
+							std::string const &nickname); };
 
 // 342     IRC_RPL_SUMMONING
 //             "<user> :Summoning user to IRC"
+
+// 346 IRC_RPL_INVITELIST
+//             "<channel> <invitemask>"
+	struct InviteListReply	:	NumericReply
+	{ InviteListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &inviteMask); };
+// 347 IRC_RPL_ENDOFINVITELIST
+//             "<channel> :End of channel invite list"
+	struct EndOfInviteListReply	:	NumericReply
+	{ EndOfInviteListReply(std::string const& serverName, std::string const &channelName); };
+// 348 IRC_RPL_EXCEPTLIST
+//             "<channel> <exceptionmask>"
+	struct ExceptionListReply	:	NumericReply
+	{ ExceptionListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &exceptionMask); };
+// 349 IRC_RPL_ENDOFEXCEPTLIST
+//             "<channel> :End of channel exception list"
+	struct EndOfExceptionListReply	:	NumericReply
+	{ EndOfExceptionListReply(std::string const& serverName, std::string const &channelName); };
 
 // 351     IRC_RPL_VERSION
 //             "<version>.<debuglevel> <server> :<comments>"
@@ -94,6 +136,8 @@ namespace irc
 	{ ChannelNamesReply(std::string const& serverName, Channel *channel); };
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
+	struct EndOfNamesReply	:	NumericReply
+	{ EndOfNamesReply(std::string const& serverName, std::string const &channelName); };
 
 // 364     IRC_RPL_LINKS
 //             "<mask> <server> :<hopcount> <server info>"
@@ -102,8 +146,13 @@ namespace irc
 
 // 367     IRC_RPL_BANLIST
 //             "<channel> <banid>"
+	struct BanListReply	:	NumericReply
+	{ BanListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &banid); };
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"
+	struct EndOfBanListReply	:	NumericReply
+	{ EndOfBanListReply(std::string const& serverName, std::string const &channelName); };
 
 // 371     IRC_RPL_INFO
 //             ":<string>"
@@ -197,6 +246,8 @@ namespace irc
 
 // 221     IRC_RPL_UMODEIS
 //             "<user mode string>"
+	struct UModeIsReply	:	NumericReply
+	{ UModeIsReply(std::string const& serverName, std::string const &userMode); };
 
 // 251     IRC_RPL_LUSERCLIENT
 //             ":There are <integer> users and <integer> invisible on <integer> servers"
@@ -217,4 +268,8 @@ namespace irc
 //             ":<admin info>"
 // 259     IRC_RPL_ADMINEMAIL
 //             ":<admin info>"
+
+// 263    IRC_RPL_TRYAGAIN
+//             "<command> :Please wait a while and try again."
+
 }

@@ -33,6 +33,12 @@ namespace irc
 
 // 301     IRC_RPL_AWAY
 //             "<nick> :<away message>"
+	AwayReply::AwayReply(std::string const& serverName, std::string const &nickName,
+							std::string const &awayMessage)
+		: NumericReply(serverName, IRC_RPL_AWAY)
+	{
+		message << nickName << " :" << awayMessage;
+	}
 
 // 305     IRC_RPL_UNAWAY
 //             ":You are no longer marked as being away"
@@ -61,14 +67,48 @@ namespace irc
 //             "Channel :Users Name"
 // 322     IRC_RPL_LIST
 //             "<channel> <# visible> :<topic>"
+	ListReply::ListReply(std::string const& serverName, std::string const &channelName,
+							bool visible, std::string const &topic)
+		: NumericReply(serverName, IRC_RPL_LISTSTART)
+	{
+		message << channelName << " ";
+		if (visible == true)				// not sure about that
+			message << "#";
+		message << " :" << topic;
+	}
 // 323     IRC_RPL_LISTEND
 //             ":End of /LIST"
+	EndOfListReply::EndOfListReply(std::string const& serverName)
+		: NumericReply(serverName, IRC_RPL_ENDOFNAMES)
+	{
+		message << ":End of /LIST";
+	}
+
+// 325     IRC_RPL_UNIQOPIS
+//             "<channel> <nickname>"
+	UniqOpIsReply::UniqOpIsReply(std::string const& serverName, std::string const &channelName,
+							std::string const &nickName)
+		: NumericReply(serverName, IRC_RPL_UNIQOPIS)
+	{
+		message << channelName << " " << nickName;
+	}
 
 // 324     IRC_RPL_CHANNELMODEIS
 //             "<channel> <mode> <mode params>"
+	ChannelModeIsReply::ChannelModeIsReply(std::string const& serverName, std::string const &channelName,
+							std::string const &mode, std::string const &modeParams)
+		: NumericReply(serverName, IRC_RPL_CHANNELMODEIS)
+	{
+		message << channelName << " " << mode << " " << modeParams;
+	}
 
 // 331     IRC_RPL_NOTOPIC
 //             "<channel> :No topic is set"
+	NoTopicReply::NoTopicReply(std::string const& serverName, std::string const &channelName)
+		: NumericReply(serverName, IRC_RPL_NOTOPIC)
+	{
+		message << channelName << " :No topic is set";
+	}
 // 332     IRC_RPL_TOPIC
 //             "<channel> :<topic>"
 	TopicReply::TopicReply(std::string const& serverName, std::string const &channelName,
@@ -80,10 +120,46 @@ namespace irc
 
 // 341     IRC_RPL_INVITING
 //             "<channel> <nick>"
+	InvitingReply::InvitingReply(std::string const& serverName, std::string const &channelName,
+							std::string const &nickname)
+		: NumericReply(serverName, IRC_RPL_INVITING)
+	{
+		message << channelName << " " << nickname;
+	}
 
 // 342     IRC_RPL_SUMMONING
 //             "<user> :Summoning user to IRC"
 
+// 346 IRC_RPL_INVITELIST
+//             "<channel> <invitemask>"
+	InviteListReply::InviteListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &inviteMask)
+		: NumericReply(serverName, IRC_RPL_INVITELIST)
+	{
+		message << channelName << " " << inviteMask;
+	}
+// 347 IRC_RPL_ENDOFINVITELIST
+//             "<channel> :End of channel invite list"
+	EndOfInviteListReply::EndOfInviteListReply(std::string const& serverName, std::string const &channelName)
+		: NumericReply(serverName, IRC_RPL_ENDOFINVITELIST)
+	{
+		message << channelName << " :End of channel invite list";
+	}
+// 348 IRC_RPL_EXCEPTLIST
+//             "<channel> <exceptionmask>"
+	ExceptionListReply::ExceptionListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &exceptionMask)
+		: NumericReply(serverName, IRC_RPL_EXCEPTLIST)
+	{
+		message << channelName << " " << exceptionMask;
+	}
+// 349 IRC_RPL_ENDOFEXCEPTLIST
+//             "<channel> :End of channel exception list"
+	EndOfExceptionListReply::EndOfExceptionListReply(std::string const& serverName, std::string const &channelName)
+		: NumericReply(serverName, IRC_RPL_ENDOFEXCEPTLIST)
+	{
+		message << channelName << " :End of channel exception list";
+	}
 // 351     IRC_RPL_VERSION
 //             "<version>.<debuglevel> <server> :<comments>"
 
@@ -109,7 +185,11 @@ namespace irc
 	}
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
-
+	EndOfNamesReply::EndOfNamesReply(std::string const& serverName, std::string const &channelName)
+		: NumericReply(serverName, IRC_RPL_ENDOFNAMES)
+	{
+		message << channelName << " :End of /NAMES list";
+	}
 // 364     IRC_RPL_LINKS
 //             "<mask> <server> :<hopcount> <server info>"
 // 365     IRC_RPL_ENDOFLINKS
@@ -117,8 +197,19 @@ namespace irc
 
 // 367     IRC_RPL_BANLIST
 //             "<channel> <banid>"
+	BanListReply::BanListReply(std::string const& serverName, std::string const &channelName,
+							std::string const &banid)
+		: NumericReply(serverName, IRC_RPL_BANLIST)
+	{
+		message << channelName << " " << banid;
+	}
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"
+	EndOfBanListReply::EndOfBanListReply(std::string const& serverName, std::string const &channelName)
+		: NumericReply(serverName, IRC_RPL_ENDOFBANLIST)
+	{
+		message << channelName << " :End of channel ban list";
+	}
 
 // 371     IRC_RPL_INFO
 //             ":<string>"
@@ -228,6 +319,11 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 
 // 221     IRC_RPL_UMODEIS
 //             "<user mode string>"
+	UModeIsReply::UModeIsReply(std::string const& serverName, std::string const &userMode)
+		: NumericReply(serverName, IRC_RPL_UMODEIS)
+	{
+		message << userMode;
+	}
 
 // 251     IRC_RPL_LUSERCLIENT
 //             ":There are <integer> users and <integer> invisible on <integer> servers"
@@ -248,5 +344,8 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 //             ":<admin info>"
 // 259     IRC_RPL_ADMINEMAIL
 //             ":<admin info>"
+
+// 263    IRC_RPL_TRYAGAIN
+//             "<command> :Please wait a while and try again."
 
 }

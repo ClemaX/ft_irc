@@ -7,10 +7,19 @@ namespace irc
 
 // 401     IRC_ERR_NOSUCHNICK
 //             "<nickname> :No such nick/channel"
-
+	NoSuchNicknameError::NoSuchNicknameError(std::string const& serverName,
+		std::string const& nickname)
+		:	NumericReply(serverName, IRC_ERR_NOSUCHNICK)
+	{
+		message << nickname << " :No such nick/channel";
+	}
 // 402     IRC_ERR_NOSUCHSERVER
 //             "<server name> :No such server"
-
+	NoSuchServerError::NoSuchServerError(std::string const& serverName)
+		:	NumericReply(serverName, IRC_ERR_NOSUCHSERVER)
+	{
+		message << serverName << " :No such server";
+	}
 // 403     IRC_ERR_NOSUCHCHANNEL
 //             "<channel name> :No such channel"
 	NoSuchChannelError::NoSuchChannelError(std::string const& serverName,
@@ -56,6 +65,16 @@ namespace irc
 // 414     IRC_ERR_WILDTOPLEVEL
 //             "<mask> :Wildcard in toplevel domain"
 
+// 415     IRC_ERR_BADMASK
+//             "<mask> :Bad Server/host mask"
+
+// 416     IRC_ERR_TOOMANYMATCHES
+	TooManyMatchesError::TooManyMatchesError(std::string const& serverName)
+		:	NumericReply(serverName, IRC_ERR_TOOMANYMATCHES)
+	{
+		message << "Too many matches";
+	}
+
 // 421     IRC_ERR_UNKNOWNCOMMAND
 //             "<command> :Unknown command"
 
@@ -82,7 +101,7 @@ namespace irc
 
 // 437     IRC_ERR_UNAVAILRESOURCE
 //             "<nick/channel> :Nick/channel is temporarily unavailable"
-	UnavailableResourceError::UnavailableResourceError(std::string const& serverName,  std::string const &nickname,
+	UnavailableResourceError::UnavailableResourceError(std::string const& serverName, std::string const &nickname,
 			std::string const& channelName)
 		:	NumericReply(serverName, IRC_ERR_UNAVAILRESOURCE)
 	{
@@ -91,12 +110,28 @@ namespace irc
 
 // 441     IRC_ERR_USERNOTINCHANNEL
 //             "<nick> <channel> :They aren't on that channel"
+	UserNotInChannelError::UserNotInChannelError(std::string const& serverName, std::string const &nickname,
+			std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_USERNOTINCHANNEL)
+	{
+		message << nickname << " " << channelName << " :They aren't on that channel";
+	}
 
 // 442     IRC_ERR_NOTONCHANNEL
 //             "<channel> :You're not on that channel"
-
+	NotInChannelError::NotInChannelError(std::string const& serverName, std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_NOTONCHANNEL)
+	{
+		message << channelName << " :You're not on that channel";
+	}
 // 443     IRC_ERR_USERONCHANNEL
 //             "<user> <channel> :is already on channel"
+	UserOnChannelError::UserOnChannelError(std::string const& serverName, std::string const& nickname,
+			std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_USERONCHANNEL)
+	{
+		message << nickname << " " << channelName << " :is already on channel";
+	}
 
 // 444     IRC_ERR_NOLOGIN
 //             "<user> :User not logged in"
@@ -145,7 +180,12 @@ namespace irc
 
 // 472     IRC_ERR_UNKNOWNMODE
 //             "<char> :is unknown mode char to me"
-
+	UnkownModeError::UnkownModeError(std::string const& serverName,
+		std::string const& character)
+		:	NumericReply(serverName, IRC_ERR_UNKNOWNMODE)
+	{
+		message << character << " :is unknown mode char to me";
+	}
 // 473     IRC_ERR_INVITEONLYCHAN
 //             "<channel> :Cannot join channel (+i)"
 	InviteOnlyChanError::InviteOnlyChanError(std::string const& serverName,
@@ -182,6 +222,12 @@ namespace irc
 	}
 // 477		IRC_ERR_NOCHANMODES
 //             	"<channel> :Channel doesn't support modes"
+	NoChanModesError::NoChanModesError(std::string const& serverName,
+		std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_NOCHANMODES)
+	{
+		message << channelName << " :Channel doesn't support modes";
+	}
 // 478		IRC_ERR_BANLISTFULL
 //             	"<channel> <char> :Channel list is full"
 
@@ -190,6 +236,11 @@ namespace irc
 
 // 482     IRC_ERR_CHANOPRIVSNEEDED
 //             "<channel> :You're not channel operator"
+	ChannelOperatorPrivilegiesError::ChannelOperatorPrivilegiesError(std::string const& serverName, std::string const& channelName)
+		:	NumericReply(serverName, IRC_ERR_CHANOPRIVSNEEDED)
+	{
+		message << channelName << " :You're not channel operator";
+	}
 
 // 483     IRC_ERR_CANTKILLSERVER
 //             ":You cant kill a server!"
@@ -199,9 +250,18 @@ namespace irc
 
 // 501     IRC_ERR_UMODEUNKNOWNFLAG
 //             ":Unknown MODE flag"
+	UModeUnkownFlagError::UModeUnkownFlagError(std::string const& serverName)
+		:	NumericReply(serverName, IRC_ERR_UMODEUNKNOWNFLAG)
+	{
+		message << ":Unknown MODE flag";
+	}
 
 // 502     IRC_ERR_USERSDONTMATCH
 //             ":Cant change mode for other users"
-
+	UsersDontMatchError::UsersDontMatchError(std::string const& serverName)
+		:	NumericReply(serverName, IRC_ERR_USERSDONTMATCH)
+	{
+		message << ":Cant change mode for other users";
+	}
 
 }
