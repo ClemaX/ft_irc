@@ -5,6 +5,7 @@
 #include <istream> // using std::istream, std::peek, std::skipws, std::getline
 #include <fstream> // using std::ifstream
 
+#define IRC_CONF_NAME	"ircserv.conf"
 #define IRC_CONF_DELIM	'='
 #define IRC_CONF_SEP	';'
 #define IRC_CONF_NL		'\n'
@@ -28,13 +29,22 @@ namespace irc
 			throw(std::out_of_range);
 
 	public:
-		static char const*	keys[];
+		static unsigned char const	argOptStart;
+		static unsigned char const	argOptEnd;
+		static unsigned char const	argReqStart;
+		static unsigned char const	argReqEnd;
+
+		static char const*			keys[];
 
 		ServerConfig();
 		virtual ~ServerConfig();
 
 		ServerConfig(std::istream &is);
 		ServerConfig(std::string const& filepath);
+		ServerConfig(int ac, char const* av[]) throw(std::invalid_argument);
+
+		bool	loadNetworkString(std::string const& network)
+			throw(std::invalid_argument);
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
@@ -68,5 +78,6 @@ namespace irc
 			return it->second;
 		}
 	};
+
 	std::ostream&	operator<<(std::ostream& os, ServerConfig const& config);
 }

@@ -88,27 +88,24 @@ namespace irc
 
 	void	Server::onMessage(connection* connection, std::string const& message)
 	{
-		Client*	client
-			= static_cast<Client*>(connection);
-
-
-		Message const*	ircMessage = NULL;
+		Client*	client = static_cast<Client*>(connection);
+		Message	ircMessage;
 
 		client->readBuffer.append(message);
 
 		std::cout << client->username << ": " << static_cast<Client*>(connection)->readBuffer;
 
-		try { ircMessage = new Message(client->readBuffer); }
+		try { ircMessage = Message(client->readBuffer); }
 		catch(Message::IncompleteMessageException const& e)
 		{ std::cerr << "Waiting for more input..." << std::endl; }
 		catch(Message::MessageException const& e)
 		{
 			std::cerr << e.what() << std::endl;
 			client->readBuffer.clear();
-		} // TODO: Check if we need to delete ircMessage on catch
+		}
 
-		if (ircMessage && ircMessage->command)
-			ircMessage->command->execute(*this, client, ircMessage->arguments);
+		if (ircMessage.command)
+			ircMessage.command->execute(*this, client, ircMessage.arguments);
 	}
 
 	void	Server::onFlush() const throw(SocketWriteException)

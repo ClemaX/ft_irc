@@ -1,7 +1,14 @@
 #include <irc/ServerConfig.hpp>
 
+	#include <iostream>
+
 namespace irc
 {
+	unsigned char const	ServerConfig::argOptStart = 0;
+	unsigned char const	ServerConfig::argOptEnd = 3;
+	unsigned char const	ServerConfig::argReqStart = 3;
+	unsigned char const	ServerConfig::argReqEnd = 5;
+
 	char const* ServerConfig::keys[] = {
 		IRC_CONF_HOST,
 		IRC_CONF_NETPORT,
@@ -25,6 +32,63 @@ namespace irc
 
 		operator>>(file);
 		file.close();
+	}
+
+	bool	ServerConfig::loadNetworkString(std::string const& arg)
+		throw(std::invalid_argument)
+	{
+		unsigned char						keyIndex = 0;
+		std::string::const_iterator			it = arg.begin();
+		std::string::const_iterator const	last = arg.end();
+		std::string::const_iterator			next = std::find(it, last, ':');
+
+		if (next == last)
+			return false;
+
+		for (; it != last && keyIndex != argOptEnd; keyIndex++)
+		{
+			operator[](keys[keyIndex]).assign(it, next);
+			if (next != last)
+				it = next + 1;
+			else
+				it = next;
+			next = std::find(it, last, ':');
+		}
+		if (keyIndex != argOptEnd || it != last)
+			throw std::invalid_argument(keys[keyIndex]);
+		return true;
+	}
+
+	ServerConfig::ServerConfig(int ac, char const *av[])
+		throw(std::invalid_argument)
+	{
+		int	i = 1;
+
+		if (ac <= i)
+		{
+			// TODO: Try to load from /etc/ first
+			std::ifstream	file(IRC_CONF_NAME);
+
+			operator>>(file);
+			file.close();
+		}
+		else
+		{
+			unsigned char	keyIndex = argReqStart;
+
+			if (loadNetworkString(av[i]))
+				i++;
+
+			while (keyIndex < argReqEnd && i != ac)
+			{
+				operator[](keys[keyIndex]) = av[i];
+				keyIndex++;
+				i++;
+			}
+
+			if (keyIndex != argReqEnd || i != ac)
+				throw std::invalid_argument(keys[keyIndex]);
+		}
 	}
 
 	ServerConfig::~ServerConfig()

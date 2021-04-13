@@ -56,6 +56,6 @@ public:
 
 	virtual ~SocketServer();
 
-	void	start();
+	void	start() throw(ServerException, SocketException);
 	void	stop() throw();
 };

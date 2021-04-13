@@ -2,6 +2,13 @@
 
 namespace irc
 {
+	Message::Message()
+		:	command(NULL), arguments()
+	{ }
+
+	Message::~Message()
+	{ }
+
 	Message::Message(std::string& buffer) throw(MessageException)
 	{
 		static const unsigned		suffixLength = sizeof(IRC_MESSAGE_SUFFIX) - 1;
