@@ -48,6 +48,13 @@ namespace irc
 		bool	loadNetworkString(std::string const& network)
 			throw(std::invalid_argument);
 
+		inline ServerConfig const&	operator=(ServerConfig const& src)
+		{
+			if (this != &src)
+				data = src.data;
+			return *this;
+		}
+
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
 		inline std::string&	operator[](std::string const& key)
