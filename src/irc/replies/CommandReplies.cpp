@@ -68,18 +68,19 @@ namespace irc
 // 322     IRC_RPL_LIST
 //             "<channel> <# visible> :<topic>"
 	ListReply::ListReply(std::string const& serverName, std::string const &channelName,
-							bool visible, std::string const &topic)
-		: NumericReply(serverName, IRC_RPL_LISTSTART)
+							int numberOfUsers, std::string const &topic)
+		: NumericReply(serverName, IRC_RPL_LIST)
 	{
-		message << channelName << " ";
-		if (visible == true)				// not sure about that
-			message << "#";
-		message << " :" << topic;
+		message << channelName;
+		if (numberOfUsers)
+			message << " " << ft::itoa(numberOfUsers);
+		if (topic.compare(""))
+			message << " " << topic;
 	}
 // 323     IRC_RPL_LISTEND
 //             ":End of /LIST"
 	EndOfListReply::EndOfListReply(std::string const& serverName)
-		: NumericReply(serverName, IRC_RPL_ENDOFNAMES)
+		: NumericReply(serverName, IRC_RPL_LISTEND)
 	{
 		message << ":End of /LIST";
 	}

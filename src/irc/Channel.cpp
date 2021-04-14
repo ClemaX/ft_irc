@@ -128,6 +128,10 @@ namespace irc
 		return false;
 	}
 
+	bool	Channel::isVisible(Client *client) const
+	{return (isInChannel(client) || (channelModes.p == false && channelModes.s == false));}
+
+
 	bool	Channel::isOperator(Client *client) const
 	{
 		return (channelModes.o.find(client->nickname) != channelModes.o.end() ||
@@ -155,30 +159,6 @@ namespace irc
 
 	bool	Channel::isStatusInvite(Client *user) const
 	{return (channelModes.I.find(user->nickname) != channelModes.I.end());}
-
-
-
-
-
-
-
-
-// Display functions
-	void	Channel::displayNicknames(void) const
-	{
-		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
-			std::cout << it->first->nickname << "\n";
-	}
-
-	void	Channel::displayInfo(void) const
-	{
-			std::cout << name << " ";
-			std::cout << clientsMap.size() << " ";
-			std::cout << topic << "\n";
-	}
-
-
-
 
 
 

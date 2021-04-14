@@ -65,7 +65,7 @@ namespace irc
 //             "<channel> <# visible> :<topic>"
 	struct ListReply	:	NumericReply
 	{ ListReply(std::string const& serverName, std::string const &channelName,
-							bool visible, std::string const &topic); };
+							int numberOfUsers, std::string const &topic); };
 // 323     IRC_RPL_LISTEND
 //             ":End of /LIST"
 	struct EndOfListReply	:	NumericReply

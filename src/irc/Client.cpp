@@ -90,6 +90,15 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		return NULL;
 	}
 
+
+	/**
+	 * 	@brief Return a pointer to the channel which name is channelName.
+	 * 
+	 * 	@param channelName The name of the channel.
+	 * 
+	 * 	NOTE: The search is done among all the channels in the database
+	*/
+
 	Channel	*Client::getChannelGlobal(std::string const & channelName) const
 	{
 		Channel *channel = getChannel(channelName);
@@ -101,9 +110,33 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		if (it == channelMap.end())
 			return NULL;
 		channel = it->second;
-		if (channel->channelModes.p == false && channel->channelModes.s == false)
-			return channel;
-		return NULL;
+		return channel;
 	}
 
+	bool	Client::listChannelInfo(Channel *channel)
+	{
+		if (!channel)
+			return false;
+		
+		std::string const &channelName = channel->name;
+
+		if (!isInChannel(channelName))
+		{
+			if (channel->channelModes.s == true)
+				return false;
+			if (channel->channelModes.p == true)
+			{
+				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
+				return false;
+			}
+		}
+		*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+		return true;
+	}
+
+	bool	Client::listAllChannelsInfo(void)
+	{
+		server->database->displayAllChannelsInfo(this);
+		return true;
+	}
 }

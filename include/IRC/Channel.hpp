@@ -132,6 +132,8 @@ namespace irc
 		bool	isInChannel(Client *client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
 
+		bool	isVisible(Client *client) const;
+
 		bool	isOperator(Client *client) const;						// also check for Creators
 		bool	isOperator(std::string const & clientNickname) const;	// also check for Creators
 
@@ -141,10 +143,6 @@ namespace irc
 		bool	isStatusBanned(Client *user) const;
 		bool	isStatusException(Client *user) const;
 		bool	isStatusInvite(Client *user) const;
-
-	// Display functions
-		void	displayNicknames(void) const;
-		void	displayInfo(void) const;
 
 
 	// Add/Remove functions

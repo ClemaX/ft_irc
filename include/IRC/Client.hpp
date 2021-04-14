@@ -8,6 +8,8 @@
 
 #include <irc/replies/IReply.hpp>
 #include <irc/replies/NumericReplies.hpp>
+#include <irc/replies/CommandReplies.hpp>
+#include <irc/replies/ErrorReplies.hpp>
 
 #include <irc/Channel.hpp>
 #include <irc/Server.hpp>
@@ -83,5 +85,8 @@ namespace irc
 		Channel	*getChannel(std::string const & channelName) const;
 		Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
+		
+		bool	listChannelInfo(Channel *channel);
+		bool	listAllChannelsInfo(void);
 	};
 }

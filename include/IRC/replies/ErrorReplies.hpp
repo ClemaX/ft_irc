@@ -115,9 +115,9 @@ namespace irc
 
 // 442     IRC_ERR_NOTONCHANNEL
 //             "<channel> :You're not on that channel"
-	struct NotInChannelError	:	NumericReply
+	struct NotOnChannelError	:	NumericReply
 	{
-		NotInChannelError(std::string const& serverName, std::string const& channelName);
+		NotOnChannelError(std::string const& serverName, std::string const& channelName);
 	};
 // 443     IRC_ERR_USERONCHANNEL
 //             "<user> <channel> :is already on channel"

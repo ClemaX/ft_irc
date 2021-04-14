@@ -50,15 +50,15 @@ namespace irc
 		std::string channelName = ft::strToLower(arguments[0]);
 		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
 		
-		Channel *channel = user->getChannelGlobal(channelName);
-		if (!channel)
+		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
+		if (!channel || !channel->isVisible(user))
 		{
 			*user << NoSuchChannelError(SERVER_NAME, channelName);
 			return false;
 		}
 		if (!user->isInChannel(channelName))
 		{
-			*user << NotInChannelError(SERVER_NAME, channelName);
+			*user << NotOnChannelError(SERVER_NAME, channelName);
 			return false;
 		}
 		if (!channel->isOperator(user))
@@ -162,30 +162,43 @@ namespace irc
 	{
 		(void)server;
 		if (!arguments.size())
-			return false; // throw exeception ?
+		{
+			*user <<  NeedMoreParamsError(SERVER_NAME, name);
+			return false;
+		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel	*channel = user->getChannelGlobal(channelName);
+		Channel	*channel = user->getChannel(channelName);		// global or not ?
 
 		if (!channel)
-			; // throw exception ?
+		{
+			*user <<  NotOnChannelError(SERVER_NAME, channelName);
+			return false;
+		}
 		else if (arguments.size() == 1)
-			std::cout << channel->getTopic() << "\n";
+		{
+			const std::string	topic = channel->getTopic();
+			if (!topic.compare(""))
+				*user << NoTopicReply(SERVER_NAME, channelName);
+			else
+				*user << TopicReply(SERVER_NAME, channelName, topic);
+			return true;
+		}
 		else if (!channel->isOperator(user))
-			; // throw exception ?
+		{
+			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+			return false;
+		}
 		else
 		{
 			const std::string newTopic = arguments[1];
-			// const std::string newTopic = mergeArguments(arguments, 1);
 			channel->setTopic(newTopic);
-std::cout << "channel " << channel->name << " topic has been set to '" << newTopic << "'\n";
+			*user << TopicReply(SERVER_NAME, channelName, newTopic);
 		}
 		return true;
 
 		// Errors/replies not used yet
-			// ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
-			// RPL_NOTOPIC                     RPL_TOPIC
-			// ERR_CHANOPRIVSNEEDED            ERR_NOCHANMODES
+			// ERR_NOCHANMODES
 	}
 
 // --- command JOIN ---//
@@ -206,7 +219,7 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 		std::string password = "";
 		if (arguments.size() > 1)
 			password = arguments[1];
-		Channel *channel = server.getChannel(channelName);
+		Channel *channel = server.getChannel(channelName); // what happens if the server is private or secret ?
 
 		if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
 		{
@@ -242,19 +255,29 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 	bool	Server::PartCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		if (!arguments.size())
+		{
+			*user << NeedMoreParamsError(SERVER_NAME, name);
+			return false;
+		}
+
 		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel *channel = server.getChannel(channelName);
 
 		if (!channel)
+		{
+			*user << NoSuchChannelError(SERVER_NAME, channelName);
 			return false;
+		}
 		if (!user->isInChannel(channelName))
+		{
+			*user << NotOnChannelError(SERVER_NAME, channelName);
 			return false;
-
+		}
 		return channel->removeClient(user);
 
 		// Errors/replies not used yet
-			// ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
-			// ERR_NOTONCHANNEL
+			// no reply ?
 	}
 
 // --- command NAMES ---//
@@ -267,44 +290,46 @@ std::cout << "channel " << channel->name << " topic has been set to '" << newTop
 	{
 		(void)server;
 		if (!arguments.size())
-			return true;		// to manage by checking every channel
+		{
+			
+			return true;		// to manage by checking every channel seen by user
+		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel *channel = user->getChannelGlobal(channelName);
+		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
 
-		if (!channel)
+		if (!channel || !channel->isVisible(user))
 			return false;
-		channel->displayNicknames();
+		*user << ChannelNamesReply(SERVER_NAME, channel);
+		*user << EndOfNamesReply(SERVER_NAME, channelName);
 		return true;
 
 		// Errors/replies not used yet
 			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
-			// RPL_NAMREPLY                    RPL_ENDOFNAMES
 	}
 
 // --- command LIST ---//
 	Server::ListCommand::ListCommand()
-		:	ChannelCommand("LIST", true)	// need to check if channels are private/secret ?
+		:	ChannelCommand("LIST", true)
 	{ }
 
 	bool	Server::ListCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		(void)server;
 		if (!arguments.size())
+			user->listAllChannelsInfo();
+		else
 		{
-			server.database->displayAllChannelsInfo();
-			return true;
+			const std::string channelName = ft::strToLower(arguments[0]);
+			Channel *channel = user->getChannelGlobal(channelName);
+			user->listChannelInfo(channel);						// need to be adjusted ?
 		}
-		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel *channel = user->getChannelGlobal(channelName);
-		if (!channel)
-			return false;
-		channel->displayInfo();
+		*user << EndOfListReply(SERVER_NAME);
 		return true;
 
 		// Errors/replies not used yet
 			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
-			// RPL_LIST                        RPL_LISTEND
 	}
 
 
