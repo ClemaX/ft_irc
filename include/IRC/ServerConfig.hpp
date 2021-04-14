@@ -63,7 +63,7 @@ namespace irc
 			return data[key];
 		}
 
-		inline std::string	operator[](std::string const& key) const
+		inline std::string const&	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
 			std::map<std::string, std::string>::const_iterator	it;
