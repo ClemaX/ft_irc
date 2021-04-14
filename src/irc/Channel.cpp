@@ -173,31 +173,31 @@ namespace irc
 
 
 // Add/Remove functions
-	bool	Channel::addClient(Server const &server, Client* client, std::string& password, bool isChannelOperator)
+	bool	Channel::addClient(Client* client, std::string & password, bool	isChannelOperator)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
 		{
-			// *client <<
+			// *client << 
 			return false;	// is there an error when joining a channel you're already in ?
 		}
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
 		{
-			*client << ChannelIsFullError(server.getHostname(), name);
+			*client << ChannelIsFullError(SERVER_NAME, name);
 			return false;
 		}
 		if (isStatusBanned(client) && !isStatusException(client))
 		{
-			*client << BannedFromChanError(server.getHostname(), name);
+			*client << BannedFromChanError(SERVER_NAME, name);
 			return false;
 		}
 		if (channelModes.i == true && !isStatusInvite(client))
 		{
-			*client << InviteOnlyChanError(server.getHostname(), name);
+			*client << InviteOnlyChanError(SERVER_NAME, name);
 			return false;
 		}
 		if (channelModes.k.compare("") && channelModes.k.compare(password))
 		{
-			*client << BadChannelKeyError(server.getHostname(), name);
+			*client << BadChannelKeyError(SERVER_NAME, name);
 			return false;
 		}
 		clientsMap[client] = ChannelClient(client, isChannelOperator);
@@ -205,8 +205,8 @@ namespace irc
 			addOperator(client->nickname);
 		client->joinChannel(this);
 
-		*client <<  TopicReply(server.getHostname(), name, topic);
-		*client <<  ChannelNamesReply(server.getHostname(), this);
+		*client <<  TopicReply(SERVER_NAME, name, topic);
+		*client <<  ChannelNamesReply(SERVER_NAME, this);
 
 		return true;
 	}

@@ -26,8 +26,11 @@
 /// Maximal length of IRC messages (as defined in RFC1459 2.3).
 #define IRC_MESSAGE_MAXLEN 512
 
+#define SERVER_NAME "localhost"
+
 // Maximal number of channels that a user can join
 #define IRC_MAX_JOINED_CHANNEL 10
+
 
 // ===== Errors ===== //
 
