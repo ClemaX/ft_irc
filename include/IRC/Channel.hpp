@@ -95,7 +95,7 @@ namespace irc
 		typedef std::map<std::string, std::string> channelNicknameMap;
 		// typedef std::pair<Client*, ChannelClient> channelClientPair;
 		// typedef std::pair<Server*, Server*> channelServerPair;
-
+		
 		class	ChannelException		:	public std::exception { };
 
 		class	InvalidChannelNameException	:	public ChannelException
@@ -148,7 +148,7 @@ namespace irc
 
 
 	// Add/Remove functions
-		bool	addClient(Server const& server, Client* client, std::string& password, bool isChannelOperator = false);
+		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
 		bool	removeClient(Client* client);

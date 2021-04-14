@@ -10,15 +10,12 @@
 #define IRC_CONF_DELIM	'='
 #define IRC_CONF_SEP	';'
 #define IRC_CONF_NL		'\n'
-#define IRC_CONF_NETHOST "NETHOST"
+#define IRC_CONF_HOST	"HOST"
 #define IRC_CONF_NETPASS "NETPASS"
 #define IRC_CONF_NETPORT "NETPORT"
 #define IRC_CONF_PORT "PORT"
 #define IRC_CONF_PASS "PASS"
 #define IRC_CONF_MOTD "MOTD"
-#define IRC_CONF_HOSTNAME "HOSTNAME"
-
-#define IRC_CONF_DEF_HOSTNAME "localhost"
 
 namespace irc
 {
@@ -37,7 +34,6 @@ namespace irc
 		static unsigned char const	argOptEnd;
 		static unsigned char const	argReqStart;
 		static unsigned char const	argReqEnd;
-		std::string const			defaultValue;
 
 		static char const*			keys[];
 
@@ -50,13 +46,6 @@ namespace irc
 
 		bool	loadNetworkString(std::string const& network)
 			throw(std::invalid_argument);
-
-		inline ServerConfig const&	operator=(ServerConfig const& src)
-		{
-			if (this != &src)
-				data = src.data;
-			return *this;
-		}
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
@@ -73,7 +62,7 @@ namespace irc
 			return data[key];
 		}
 
-		inline std::string const&	operator[](std::string const& key) const
+		inline std::string	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
 			std::map<std::string, std::string>::const_iterator	it;
@@ -86,7 +75,7 @@ namespace irc
 
 			it = data.find(key);
 			if (it == data.end())
-				return defaultValue;
+				return "";
 			return it->second;
 		}
 	};

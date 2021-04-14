@@ -93,9 +93,9 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 
 	/**
 	 * 	@brief Return a pointer to the channel which name is channelName.
-	 *
+	 * 
 	 * 	@param channelName The name of the channel.
-	 *
+	 * 
 	 * 	NOTE: The search is done among all the channels in the database
 	*/
 
@@ -117,7 +117,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 	{
 		if (!channel)
 			return false;
-
+		
 		std::string const &channelName = channel->name;
 
 		if (!isInChannel(channelName))
@@ -126,11 +126,11 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 				return false;
 			if (channel->channelModes.p == true)
 			{
-				*this << ListReply(server->getHostname(), channelName, 0, "Prv");
+				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
 				return false;
 			}
 		}
-		*this << ListReply(server->getHostname(), channelName, channel->clientsMap.size(), channel->topic);
+		*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
 		return true;
 	}
 
