@@ -60,6 +60,9 @@ namespace irc
 
 		~Server();
 
+		inline std::string const&	getHostname() const throw()
+		{ return config[IRC_CONF_HOSTNAME]; }
+
 		Channel *getChannel(const std::string & channelName) const;
 
 		struct	Command
