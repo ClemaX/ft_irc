@@ -118,6 +118,8 @@ namespace irc
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
 
+		Channel const&	operator<<(NumericReply const& reply);
+
 	// Get functions
 		// ChannelModes	getModes() const;
 		std::string	getTopic() const;

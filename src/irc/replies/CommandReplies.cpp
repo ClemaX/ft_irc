@@ -100,7 +100,9 @@ namespace irc
 							std::string const &mode, std::string const &modeParams)
 		: NumericReply(serverName, IRC_RPL_CHANNELMODEIS)
 	{
-		message << channelName << " " << mode << " " << modeParams;
+		message << channelName << " " << mode;
+		if (!modeParams.compare(""))
+			message << " " << modeParams;
 	}
 
 // 331     IRC_RPL_NOTOPIC

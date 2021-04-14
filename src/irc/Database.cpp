@@ -27,8 +27,16 @@ namespace irc
 	{dataChannelsMap[channel->name] = channel;}
 
 	void	IRCDatabase::addClient(Client *client)
-	{dataClientsMap[client->nickname] = client;}		// use of nickname ?
+	{dataClientsMap[client->nickname] = client;}
 
+	Client	*IRCDatabase::getClient(std::string const &nickname) const
+	{
+		databaseClientsMap::const_iterator it;
+		it = dataClientsMap.find(nickname);
+		if (it == dataClientsMap.end())
+			return NULL;
+		return it->second;
+	}
 
 // --- Display functions --- //
 

@@ -67,7 +67,12 @@ namespace irc
 
 	Channel::~Channel() {}
 
-
+	Channel const&	Channel::operator<<(NumericReply const& reply)
+	{
+		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+			*(it->first) << reply;
+		return *this;
+	}
 
 // Get functions
 

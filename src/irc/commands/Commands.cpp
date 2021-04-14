@@ -98,7 +98,10 @@ namespace irc
 	{
 		(void)server;
 		if (arguments.size() < 2)
+		{
+			*user << NeedMoreParamsError(SERVER_NAME, name);
 			return false;
+		}
 
 		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
@@ -109,18 +112,20 @@ namespace irc
 		if (arguments.size() > 2)
 			flagArgument = arguments[2];
 
-		if (!user->nickname.compare(nameArgument))
+		if (!server.database->getClient(nameArgument))
+			return server.parseChannelMode(user, nameArgument, flags, flagArgument);		
+		if (!user->nickname.compare(nameArgument))	// need to check if a user exists
 			return server.parseUserMode(user, flags, flagArgument);
-		return server.parseChannelMode(user, nameArgument, flags, flagArgument);
+		*user << UsersDontMatchError(SERVER_NAME);
+		return false;
 
 		// Errors/replies not used yet - user
-			// ERR_NEEDMOREPARAMS              ERR_USERSDONTMATCH
-			// ERR_UMODEUNKNOWNFLAG            RPL_UMODEIS
 
 		// Errors/replies not used yet - channel
-			// ERR_NEEDMOREPARAMS              ERR_KEYSET
+			// ERR_KEYSET
 			// ERR_NOCHANMODES                 ERR_CHANOPRIVSNEEDED
-			// ERR_USERNOTINCHANNEL            ERR_UNKNOWNMODE
+			// ERR_USERNOTINCHANNEL
+			
 			// RPL_CHANNELMODEIS
 			// RPL_BANLIST                     RPL_ENDOFBANLIST
 			// RPL_EXCEPTLIST                  RPL_ENDOFEXCEPTLIST
@@ -168,7 +173,7 @@ namespace irc
 		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel	*channel = user->getChannel(channelName);		// global or not ?
+		Channel	*channel = user->getChannel(channelName);
 
 		if (!channel)
 		{

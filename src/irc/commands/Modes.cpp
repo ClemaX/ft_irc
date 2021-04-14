@@ -47,7 +47,7 @@ namespace irc
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.a = true;
-std::cout << "channel " << channel->name << " has been set Anonymous!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+a", "");
 		return true;
 	}
 
@@ -57,7 +57,7 @@ std::cout << "channel " << channel->name << " has been set Anonymous!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.a = false;
-std::cout << "channel " << channel->name << " has been set non Anonymous!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-a", "");
 		return true;
 	}
 
@@ -68,7 +68,7 @@ std::cout << "channel " << channel->name << " has been set non Anonymous!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.i = true;
-std::cout << "channel " << channel->name << " has been set InviteOnly!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+i", "");
 		return true;
 	}
 
@@ -78,7 +78,7 @@ std::cout << "channel " << channel->name << " has been set InviteOnly!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.i = false;
-std::cout << "channel " << channel->name << " has been set non InviteOnly!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-i", "");
 		return true;
 	}
 
@@ -88,7 +88,7 @@ std::cout << "channel " << channel->name << " has been set non InviteOnly!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.m = true;
-std::cout << "channel " << channel->name << " has been set Moderated!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+m", "");
 		return true;
 	}
 
@@ -98,7 +98,7 @@ std::cout << "channel " << channel->name << " has been set Moderated!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.m = false;
-std::cout << "channel " << channel->name << " has been set non Moderated!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-m", "");
 		return true;
 	}
 
@@ -108,7 +108,7 @@ std::cout << "channel " << channel->name << " has been set non Moderated!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.n = true;
-std::cout << "channel " << channel->name << " has been set NoExternalMessage!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+n", "");
 		return true;
 	}
 
@@ -118,7 +118,7 @@ std::cout << "channel " << channel->name << " has been set NoExternalMessage!\n"
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.n = false;
-std::cout << "channel " << channel->name << " has been set non NoExternalMessage!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-n", "");
 		return true;
 	}
 
@@ -128,7 +128,7 @@ std::cout << "channel " << channel->name << " has been set non NoExternalMessage
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.q = true;
-std::cout << "channel " << channel->name << " has been set quiet!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+q", "");
 		return true;
 	}
 
@@ -138,7 +138,7 @@ std::cout << "channel " << channel->name << " has been set quiet!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.q = false;
-std::cout << "channel " << channel->name << " has been set non quiet!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-q", "");
 		return true;
 	}
 
@@ -148,7 +148,7 @@ std::cout << "channel " << channel->name << " has been set non quiet!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.p = true;
-std::cout << "channel " << channel->name << " has been set private!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+p", "");
 		return true;
 	}
 
@@ -158,7 +158,7 @@ std::cout << "channel " << channel->name << " has been set private!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.p = false;
-std::cout << "channel " << channel->name << " has been set non private!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-p", "");
 		return true;
 	}
 
@@ -168,7 +168,7 @@ std::cout << "channel " << channel->name << " has been set non private!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.s = true;
-std::cout << "channel " << channel->name << " has been set Secret!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+s", "");
 		return true;
 	}
 
@@ -178,7 +178,7 @@ std::cout << "channel " << channel->name << " has been set Secret!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.s = false;
-std::cout << "channel " << channel->name << " has been set non Secret!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-s", "");
 		return true;
 	}
 
@@ -188,7 +188,7 @@ std::cout << "channel " << channel->name << " has been set non Secret!\n";
 		if (!channel->isCreator(user))
 			return false;
 		channel->channelModes.r = true;
-std::cout << "channel " << channel->name << " has been set Reop!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+r", "");
 		return true;
 	}
 
@@ -198,7 +198,7 @@ std::cout << "channel " << channel->name << " has been set Reop!\n";
 		if (!channel->isCreator(user))
 			return false;
 		channel->channelModes.r = false;
-std::cout << "channel " << channel->name << " has been set non Reop!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-r", "");
 		return true;
 	}
 
@@ -208,7 +208,7 @@ std::cout << "channel " << channel->name << " has been set non Reop!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.t = true;
-std::cout << "channel " << channel->name << " has been set RestrictTopic!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+t", "");
 		return true;
 	}
 
@@ -218,7 +218,7 @@ std::cout << "channel " << channel->name << " has been set RestrictTopic!\n";
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.t = false;
-std::cout << "channel " << channel->name << " has been set non RestrictTopic!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-t", "");
 		return true;
 	}
 
@@ -231,7 +231,7 @@ std::cout << "channel " << channel->name << " has been set non RestrictTopic!\n"
 			return false;
 
 		channel->channelModes.l = ft::atoi(flagArguments);	// error to manage if flagArgument is not valid ?
-std::cout << "channel " << channel->name << " limit has been set to " << channel->channelModes.l << "!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+l", flagArguments);
 		return true;
 	}
 
@@ -241,7 +241,7 @@ std::cout << "channel " << channel->name << " limit has been set to " << channel
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.l = 0;
-std::cout << "channel " << channel->name << " limit has been set to " << channel->channelModes.l << "!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-l", "");
 		return true;
 	}
 
@@ -250,7 +250,7 @@ std::cout << "channel " << channel->name << " limit has been set to " << channel
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.k = flagArguments;
-std::cout << "channel " << channel->name << " key has been set to " << flagArguments << "!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+k", flagArguments);
 		return true;
 	}
 
@@ -260,7 +260,7 @@ std::cout << "channel " << channel->name << " key has been set to " << flagArgum
 		if (!channel->isOperator(user))
 			return false;
 		channel->channelModes.k = "";
-std::cout << "channel " << channel->name << " key has been removed!\n";
+		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-k", "");
 		return true;
 	}
 
@@ -318,7 +318,10 @@ std::cout << "channel " << channel->name << " key has been removed!\n";
 	{
 		char sign = flags[0];
 		if (sign != '+' && sign != '-')
+		{
+			*user << UModeUnkownFlagError(SERVER_NAME);
 			return false;
+		}
 
 		Channel *channel = user->getChannelGlobal(channelName);
 		if (!channel)
@@ -333,6 +336,8 @@ std::cout << "channel " << channel->name << " key has been removed!\n";
 		}
 		return true;
 	}
+
+
 
 
 
@@ -418,15 +423,25 @@ std::cout << "user " << user->nickname << " has been unset as an operator!\n";
 	bool	Server::parseUserMode(Client *user,	std::string & flags, std::string & flagArguments)
 	{
 		char sign = flags[0];
+		std::string userMode = "";
+		userMode.push_back(sign);
 		if (sign != '+' && sign != '-')
+		{
+			*user << UModeUnkownFlagError(SERVER_NAME);
 			return false;
+		}
 
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{
 			if (database->modeUserFunctionsMap[sign].find(*it) == database->modeUserFunctionsMap[sign].end())
-				return false;
-			database->modeUserFunctionsMap[sign][*it](user, NULL, flagArguments);	// is it an error if there is a flagArgument ?
+				*user << UModeUnkownFlagError(SERVER_NAME);
+			else
+			{
+				database->modeUserFunctionsMap[sign][*it](user, NULL, flagArguments);	// is it an error if there is a flagArgument ?
+				userMode.replace(1, 1, 1, *it);
+				*user << UModeIsReply(SERVER_NAME, userMode);	// what do we do if flag = 'o' or 's' ?
+			}
 		}
 		return true;
 	}
