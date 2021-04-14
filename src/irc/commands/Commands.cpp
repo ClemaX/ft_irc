@@ -23,7 +23,7 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
+			*user << NeedMoreParamsError(server.config[IRC_CONF_HOSTNAME], name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;
@@ -44,32 +44,32 @@ namespace irc
 		(void)server;
 		if (arguments.size() < 2)
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(server.config[IRC_CONF_HOSTNAME], name);
 			return false;
 		}
 		std::string channelName = ft::strToLower(arguments[0]);
 		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
-		
+
 		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
 		if (!channel || !channel->isVisible(user))
 		{
-			*user << NoSuchChannelError(SERVER_NAME, channelName);
+			*user << NoSuchChannelError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		if (!user->isInChannel(channelName))
 		{
-			*user << NotOnChannelError(SERVER_NAME, channelName);
+			*user << NotOnChannelError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+			*user << ChannelOperatorPrivilegiesError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		Client *victim = channel->getUser(clientNickname); // do we check the username ? Nickname ?
 		if (!victim)
 		{
-			*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
+			*user << UserNotInChannelError(server.config[IRC_CONF_HOSTNAME], clientNickname, channelName);
 			return false;
 		}
 		victim->leaveChannel(channelName);
@@ -83,7 +83,7 @@ namespace irc
 		return true;
 
 		// Errors not used yet
-			// ERR_BADCHANMASK                 
+			// ERR_BADCHANMASK
 	}
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@ namespace irc
 		// Errors/replies not used yet
 			// ERR_NEEDMOREPARAMS	ERR_NOSUCHNICK
 			// ERR_NOTONCHANNEL		ERR_USERONCHANNEL
-			// ERR_CHANOPRIVSNE		
+			// ERR_CHANOPRIVSNE
 			// RPL_INVITING    		RPL_AWAY
 	}
 
@@ -163,7 +163,7 @@ namespace irc
 		(void)server;
 		if (!arguments.size())
 		{
-			*user <<  NeedMoreParamsError(SERVER_NAME, name);
+			*user <<  NeedMoreParamsError(server.config[IRC_CONF_HOSTNAME], name);
 			return false;
 		}
 
@@ -172,28 +172,28 @@ namespace irc
 
 		if (!channel)
 		{
-			*user <<  NotOnChannelError(SERVER_NAME, channelName);
+			*user <<  NotOnChannelError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		else if (arguments.size() == 1)
 		{
 			const std::string	topic = channel->getTopic();
 			if (!topic.compare(""))
-				*user << NoTopicReply(SERVER_NAME, channelName);
+				*user << NoTopicReply(server.config[IRC_CONF_HOSTNAME], channelName);
 			else
-				*user << TopicReply(SERVER_NAME, channelName, topic);
+				*user << TopicReply(server.config[IRC_CONF_HOSTNAME], channelName, topic);
 			return true;
 		}
 		else if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+			*user << ChannelOperatorPrivilegiesError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		else
 		{
 			const std::string newTopic = arguments[1];
 			channel->setTopic(newTopic);
-			*user << TopicReply(SERVER_NAME, channelName, newTopic);
+			*user << TopicReply(server.config[IRC_CONF_HOSTNAME], channelName, newTopic);
 		}
 		return true;
 
@@ -211,7 +211,7 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(server.config[IRC_CONF_HOSTNAME], name);
 			return false;
 		}
 		bool isOp = false;
@@ -223,7 +223,7 @@ namespace irc
 
 		if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
 		{
-			*user << TooManyChannelsError(SERVER_NAME, channelName);
+			*user << TooManyChannelsError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 
@@ -232,16 +232,16 @@ namespace irc
 			try{channel = new Channel(channelName);}
 			catch(Channel::InvalidChannelNameException const& e)
 			{
-				*user << NoSuchChannelError(SERVER_NAME, name);
+				*user << NoSuchChannelError(server.config[IRC_CONF_HOSTNAME], name);
 				return false;
 			}
 			server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
 			isOp = true;										// will set user as operator
 			channel->addServer(&server);		// add server to the channel servers list
 		}
-		return channel->addClient(user, password, isOp);
+		return channel->addClient(server, user, password, isOp);
 
-	// Errors not used yet 
+	// Errors not used yet
         //    ERR_BADCHANMASK
         //    ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE
 
@@ -257,7 +257,7 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(server.config[IRC_CONF_HOSTNAME], name);
 			return false;
 		}
 
@@ -266,12 +266,12 @@ namespace irc
 
 		if (!channel)
 		{
-			*user << NoSuchChannelError(SERVER_NAME, channelName);
+			*user << NoSuchChannelError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		if (!user->isInChannel(channelName))
 		{
-			*user << NotOnChannelError(SERVER_NAME, channelName);
+			*user << NotOnChannelError(server.config[IRC_CONF_HOSTNAME], channelName);
 			return false;
 		}
 		return channel->removeClient(user);
@@ -291,7 +291,7 @@ namespace irc
 		(void)server;
 		if (!arguments.size())
 		{
-			
+
 			return true;		// to manage by checking every channel seen by user
 		}
 
@@ -300,8 +300,8 @@ namespace irc
 
 		if (!channel || !channel->isVisible(user))
 			return false;
-		*user << ChannelNamesReply(SERVER_NAME, channel);
-		*user << EndOfNamesReply(SERVER_NAME, channelName);
+		*user << ChannelNamesReply(server.config[IRC_CONF_HOSTNAME], channel);
+		*user << EndOfNamesReply(server.config[IRC_CONF_HOSTNAME], channelName);
 		return true;
 
 		// Errors/replies not used yet
@@ -325,7 +325,7 @@ namespace irc
 			Channel *channel = user->getChannelGlobal(channelName);
 			user->listChannelInfo(channel);						// need to be adjusted ?
 		}
-		*user << EndOfListReply(SERVER_NAME);
+		*user << EndOfListReply(server.config[IRC_CONF_HOSTNAME]);
 		return true;
 
 		// Errors/replies not used yet
@@ -346,7 +346,7 @@ namespace irc
 		std::cout << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
-			SERVER_NAME, user->nickname, server.config["MOTD"], '\n', 80);
+			server.config[IRC_CONF_HOSTNAME], user->nickname, server.config["MOTD"], '\n', 80);
 
 		if (arguments.size())
 		{
