@@ -1,6 +1,6 @@
 #include <irc/ServerConfig.hpp>
 
-	#include <iostream>
+#include <iostream>
 
 namespace irc
 {
@@ -8,14 +8,16 @@ namespace irc
 	unsigned char const	ServerConfig::argOptEnd = 3;
 	unsigned char const	ServerConfig::argReqStart = 3;
 	unsigned char const	ServerConfig::argReqEnd = 5;
+	std::string const	defaultValue = "";
 
 	char const* ServerConfig::keys[] = {
-		IRC_CONF_HOST,
+		IRC_CONF_NETHOST,
 		IRC_CONF_NETPORT,
 		IRC_CONF_NETPASS,
 		IRC_CONF_PORT,
 		IRC_CONF_PASS,
 		IRC_CONF_MOTD,
+		IRC_CONF_HOSTNAME,
 		NULL
 	};
 
@@ -64,6 +66,8 @@ namespace irc
 	{
 		int	i = 1;
 
+		// Set the default hostname
+		operator[](IRC_CONF_HOSTNAME) = IRC_CONF_DEF_HOSTNAME;
 		if (ac <= i)
 		{
 			// TODO: Try to load from /etc/ first
