@@ -16,6 +16,9 @@
 #define IRC_CONF_PORT "PORT"
 #define IRC_CONF_PASS "PASS"
 #define IRC_CONF_MOTD "MOTD"
+#define IRC_CONF_HOSTNAME "HOSTNAME"
+
+#define IRC_CONF_DEF_HOSTNAME "localhost"
 
 namespace irc
 {

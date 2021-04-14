@@ -1,6 +1,6 @@
 #include <irc/ServerConfig.hpp>
 
-	#include <iostream>
+#include <iostream>
 
 namespace irc
 {
@@ -17,6 +17,7 @@ namespace irc
 		IRC_CONF_PORT,
 		IRC_CONF_PASS,
 		IRC_CONF_MOTD,
+		IRC_CONF_HOSTNAME,
 		NULL
 	};
 
@@ -65,6 +66,8 @@ namespace irc
 	{
 		int	i = 1;
 
+		// Set the default hostname
+		operator[](IRC_CONF_HOSTNAME) = IRC_CONF_DEF_HOSTNAME;
 		if (ac <= i)
 		{
 			// TODO: Try to load from /etc/ first
