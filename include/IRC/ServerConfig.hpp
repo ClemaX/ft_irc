@@ -34,6 +34,7 @@ namespace irc
 		static unsigned char const	argOptEnd;
 		static unsigned char const	argReqStart;
 		static unsigned char const	argReqEnd;
+		std::string const			defaultValue;
 
 		static char const*			keys[];
 
@@ -75,7 +76,7 @@ namespace irc
 
 			it = data.find(key);
 			if (it == data.end())
-				return "";
+				return defaultValue;
 			return it->second;
 		}
 	};

@@ -8,6 +8,7 @@ namespace irc
 	unsigned char const	ServerConfig::argOptEnd = 3;
 	unsigned char const	ServerConfig::argReqStart = 3;
 	unsigned char const	ServerConfig::argReqEnd = 5;
+	std::string const	defaultValue = "";
 
 	char const* ServerConfig::keys[] = {
 		IRC_CONF_HOST,
