@@ -10,7 +10,7 @@
 #define IRC_CONF_DELIM	'='
 #define IRC_CONF_SEP	';'
 #define IRC_CONF_NL		'\n'
-#define IRC_CONF_HOST	"HOST"
+#define IRC_CONF_NETHOST "NETHOST"
 #define IRC_CONF_NETPASS "NETPASS"
 #define IRC_CONF_NETPORT "NETPORT"
 #define IRC_CONF_PORT "PORT"

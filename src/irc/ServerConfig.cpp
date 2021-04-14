@@ -11,7 +11,7 @@ namespace irc
 	std::string const	defaultValue = "";
 
 	char const* ServerConfig::keys[] = {
-		IRC_CONF_HOST,
+		IRC_CONF_NETHOST,
 		IRC_CONF_NETPORT,
 		IRC_CONF_NETPASS,
 		IRC_CONF_PORT,
