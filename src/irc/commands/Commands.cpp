@@ -31,7 +31,43 @@ namespace irc
 	}
 
 
+
+// ============================================== //
+// ============   Private Messages   ============ //
+// ============================================== //
+
+	Server::PRIVMSGCommand::PRIVMSGCommand()
+		:	Command("PRIVMSG")
+	{ }
+
+	bool	Server::PRIVMSGCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		if (!arguments.size())
+		{
+			*user << NeedMoreParamsError(SERVER_NAME, name);
+			return false;
+		}
+		std::string receiverNickname = arguments[0];
+		IRCDatabase::databaseClientsMap::iterator it = server.database->dataClientsMap.find(receiverNickname);
+		if (it == server.database->dataClientsMap.end())
+			return false;
+		std::string message = "";
+		if (arguments.size() > 1)
+			message = arguments[1];
+		*(it->second) << PrivateMessage(user->nickname, message);
+		return true;
+	}
+
+
+
+// ============================================== //
+// ============================================== //
+// ============================================== //
+
+// ============================================== //
 // ============   CHANNEL commands   ============ //
+// ============================================== //
 
 // --- command KICK ---//
 	Server::KickCommand::KickCommand()
@@ -86,8 +122,6 @@ namespace irc
 			// ERR_BADCHANMASK                 
 	}
 
-//////////////////////////////////////////////////////////////////////////////////
-
 // --- command MODE ---//
 	Server::ModeCommand::ModeCommand()
 		:	ChannelCommand("MODE", true)
@@ -114,7 +148,7 @@ namespace irc
 
 		if (!server.database->getClient(nameArgument))
 			return server.parseChannelMode(user, nameArgument, flags, flagArgument);		
-		if (!user->nickname.compare(nameArgument))	// need to check if a user exists
+		if (!user->nickname.compare(nameArgument))
 			return server.parseUserMode(user, flags, flagArgument);
 		*user << UsersDontMatchError(SERVER_NAME);
 		return false;
@@ -125,18 +159,13 @@ namespace irc
 			// ERR_KEYSET
 			// ERR_NOCHANMODES
 
-			// RPL_BANLIST                     RPL_ENDOFBANLIST
-			// RPL_EXCEPTLIST                  RPL_ENDOFEXCEPTLIST
-			// RPL_INVITELIST                  RPL_ENDOFINVITELIST
 			// RPL_UNIQOPIS
 
 	}
 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 // --- command INVITE ---//
-	Server::InviteCommand::InviteCommand()
+	Server::InviteCommand::InviteCommand()		// Not done yet --> How does it work ? //
 		:	ChannelCommand("INVITE", true)
 	{ }
 
@@ -336,6 +365,8 @@ namespace irc
 	}
 
 
+// ============================================== //
+// ============================================== //
 // ============================================== //
 
 // --- command MOTD ---//

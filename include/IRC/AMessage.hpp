@@ -8,6 +8,8 @@
 
 namespace irc
 {
+	std::string &	operator<<(std::string &src, std::string const& str);
+
 	struct	AMessage // TODO: Interface Prefix or make message abstract
 	{
 		class	MessageException		:	public std::exception { };

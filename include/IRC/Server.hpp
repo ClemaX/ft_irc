@@ -12,6 +12,7 @@
 
 #include <socket/SocketServer.hpp>
 #include <irc/Channel.hpp>
+#include <irc/PrivateMessage.hpp>
 #include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
@@ -83,6 +84,14 @@ namespace irc
 		struct	PassCommand		:	public Command
 		{
 			PassCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	PRIVMSGCommand		:	public Command
+		{
+			PRIVMSGCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -170,6 +179,7 @@ namespace irc
 		std::string::const_iterator last);
 
 	static const Server::PassCommand	passCommand;
+	static const Server::PRIVMSGCommand	privmsgCommand;
 	static const Server::JoinCommand	joinCommand;
 	static const Server::KickCommand	kickCommand;
 	static const Server::ModeCommand	modeCommand;
@@ -183,6 +193,7 @@ namespace irc
 	static Server::Command const*const	commands[] =
 	{
 		&passCommand,
+		&privmsgCommand,
 	  	&joinCommand,
 		&kickCommand,
 		&modeCommand,

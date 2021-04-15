@@ -83,6 +83,8 @@ namespace irc
 			<< "\n\tport: " << address.sin_port
 			<< std::endl;
 
+		database->addClient(newClient);
+
 		return newClient;
 	}
 

@@ -33,6 +33,12 @@ namespace irc
 		return *this;
 	}
 
+	Client const&	Client::operator<<(PrivateMessage const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
 	void	Client::flush() throw(SocketWriteException)
 	{
 		SocketConnection::operator<<(writeBuffer);
