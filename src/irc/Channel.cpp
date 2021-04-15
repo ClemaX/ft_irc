@@ -39,9 +39,13 @@ namespace irc
 
 
 // ======== ChannelModes ========
+	// ChannelModes::ChannelModes()
+	// 	:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
+	// 		p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
+	// { }
+
 	ChannelModes::ChannelModes()
-		:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
-			p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
+		:	O(), o(), v(), binMode(0), l(0), k(""), b(), e(), I()
 	{ }
 
 	ChannelModes::~ChannelModes() {}
@@ -141,7 +145,8 @@ namespace irc
 	}
 
 	bool	Channel::isVisible(Client *client) const
-	{return (isInChannel(client) || (channelModes.p == false && channelModes.s == false));}
+	{return (isInChannel(client) || (!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s)));}
+	// {return (isInChannel(client) || (channelModes.p == false && channelModes.s == false));}
 
 
 	bool	Channel::isOperator(Client *client) const
@@ -197,7 +202,7 @@ namespace irc
 			*client << BannedFromChanError(SERVER_NAME, name);
 			return false;
 		}
-		if (channelModes.i == true && !isStatusInvite(client))
+		if ((channelModes.binMode & M_i) && !isStatusInvite(client))
 		{
 			*client << InviteOnlyChanError(SERVER_NAME, name);
 			return false;

@@ -128,9 +128,9 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 
 		if (!isInChannel(channelName))
 		{
-			if (channel->channelModes.s == true)
+			if (channel->channelModes.binMode & M_s)
 				return false;
-			if (channel->channelModes.p == true)
+			if (channel->channelModes.binMode & M_p)
 			{
 				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
 				return false;

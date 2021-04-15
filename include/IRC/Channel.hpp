@@ -38,19 +38,22 @@ namespace irc
 			typedef std::map<std::string, std::string> channelNicknameMap;
 
 	public:
+
+		#define	M_a 1
+		#define	M_i 2
+		#define	M_m 4
+		#define	M_n 8
+		#define	M_q 16
+		#define	M_p 32
+		#define	M_s 64
+		#define	M_r 128
+		#define	M_t 256
+
 		channelNicknameMap	O;
 		channelNicknameMap	o;
 		channelNicknameMap	v;
 
-		bool	a;
-		bool	i;
-		bool	m;
-		bool	n;
-		bool	q;
-		bool	p;
-		bool	s;
-		bool	r;
-		bool	t;
+		unsigned int	binMode;
 
 		size_t	l;
 		std::string	k;

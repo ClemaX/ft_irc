@@ -64,7 +64,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.a = true;
+		channel->channelModes.binMode |= M_a;
+		// channel->channelModes.a = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+a", "");
 		return true;
 	}
@@ -77,7 +78,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.a = false;
+		channel->channelModes.binMode &= ~M_a;
+		// channel->channelModes.a = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-a", "");
 		return true;
 	}
@@ -91,7 +93,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.i = true;
+		channel->channelModes.binMode |= M_i;
+		// channel->channelModes.i = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+i", "");
 		return true;
 	}
@@ -104,7 +107,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.i = false;
+		channel->channelModes.binMode &= ~M_i;
+		// channel->channelModes.i = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-i", "");
 		return true;
 	}
@@ -117,7 +121,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.m = true;
+		channel->channelModes.binMode |= M_m;
+		// channel->channelModes.m = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+m", "");
 		return true;
 	}
@@ -130,7 +135,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.m = false;
+		channel->channelModes.binMode &= ~M_m;
+		// channel->channelModes.m = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-m", "");
 		return true;
 	}
@@ -143,7 +149,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.n = true;
+		channel->channelModes.binMode |= M_n;
+		// channel->channelModes.n = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+n", "");
 		return true;
 	}
@@ -156,7 +163,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.n = false;
+		channel->channelModes.binMode &= ~M_n;
+		// channel->channelModes.n = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-n", "");
 		return true;
 	}
@@ -169,7 +177,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.q = true;
+		channel->channelModes.binMode |= M_q;
+		// channel->channelModes.q = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+q", "");
 		return true;
 	}
@@ -182,7 +191,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.q = false;
+		channel->channelModes.binMode &= ~M_q;
+		// channel->channelModes.q = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-q", "");
 		return true;
 	}
@@ -195,7 +205,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.p = true;
+		channel->channelModes.binMode |= M_p;
+		// channel->channelModes.p = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+p", "");
 		return true;
 	}
@@ -208,7 +219,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.p = false;
+		channel->channelModes.binMode &= ~M_p;
+		// channel->channelModes.p = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-p", "");
 		return true;
 	}
@@ -221,7 +233,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.s = true;
+		channel->channelModes.binMode |= M_s;
+		// channel->channelModes.s = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+s", "");
 		return true;
 	}
@@ -234,7 +247,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.s = false;
+		channel->channelModes.binMode &= ~M_s;
+		// channel->channelModes.s = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-s", "");
 		return true;
 	}
@@ -247,7 +261,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.r = true;
+		channel->channelModes.binMode |= M_r;
+		// channel->channelModes.r = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+r", "");
 		return true;
 	}
@@ -260,7 +275,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.r = false;
+		channel->channelModes.binMode &= ~M_r;
+		// channel->channelModes.r = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-r", "");
 		return true;
 	}
@@ -273,7 +289,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.t = true;
+		channel->channelModes.binMode |= M_t;
+		// channel->channelModes.t = true;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+t", "");
 		return true;
 	}
@@ -286,7 +303,8 @@ namespace irc
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
 			return false;
 		}
-		channel->channelModes.t = false;
+		channel->channelModes.binMode &= ~M_t;
+		// channel->channelModes.t = false;
 		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-t", "");
 		return true;
 	}
