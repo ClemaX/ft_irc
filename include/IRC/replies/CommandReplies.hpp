@@ -107,7 +107,7 @@ namespace irc
 //             "<channel> <invitemask>"
 	struct InviteListReply	:	NumericReply
 	{ InviteListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &inviteMask); };
+							std::string const &sign, std::string const &inviteMask); };
 // 347 IRC_RPL_ENDOFINVITELIST
 //             "<channel> :End of channel invite list"
 	struct EndOfInviteListReply	:	NumericReply
@@ -116,7 +116,7 @@ namespace irc
 //             "<channel> <exceptionmask>"
 	struct ExceptionListReply	:	NumericReply
 	{ ExceptionListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &exceptionMask); };
+							std::string const &sign, std::string const &exceptionMask); };
 // 349 IRC_RPL_ENDOFEXCEPTLIST
 //             "<channel> :End of channel exception list"
 	struct EndOfExceptionListReply	:	NumericReply
@@ -148,7 +148,7 @@ namespace irc
 //             "<channel> <banid>"
 	struct BanListReply	:	NumericReply
 	{ BanListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &banid); };
+							std::string const &sign, std::string const &banid); };
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"
 	struct EndOfBanListReply	:	NumericReply

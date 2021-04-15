@@ -136,10 +136,10 @@ namespace irc
 // 346 IRC_RPL_INVITELIST
 //             "<channel> <invitemask>"
 	InviteListReply::InviteListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &inviteMask)
+							std::string const &sign, std::string const &inviteMask)
 		: NumericReply(serverName, IRC_RPL_INVITELIST)
 	{
-		message << channelName << " " << inviteMask;
+		message << channelName << " " << sign << "I " << inviteMask;
 	}
 // 347 IRC_RPL_ENDOFINVITELIST
 //             "<channel> :End of channel invite list"
@@ -151,10 +151,10 @@ namespace irc
 // 348 IRC_RPL_EXCEPTLIST
 //             "<channel> <exceptionmask>"
 	ExceptionListReply::ExceptionListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &exceptionMask)
+							std::string const &sign, std::string const &exceptionMask)
 		: NumericReply(serverName, IRC_RPL_EXCEPTLIST)
 	{
-		message << channelName << " " << exceptionMask;
+		message << channelName << " " << sign << "e " << exceptionMask;
 	}
 // 349 IRC_RPL_ENDOFEXCEPTLIST
 //             "<channel> :End of channel exception list"
@@ -201,10 +201,10 @@ namespace irc
 // 367     IRC_RPL_BANLIST
 //             "<channel> <banid>"
 	BanListReply::BanListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &banid)
+							std::string const &sign, std::string const &banid)
 		: NumericReply(serverName, IRC_RPL_BANLIST)
 	{
-		message << channelName << " " << banid;
+		message << channelName << " " << sign << "b " << banid;
 	}
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"

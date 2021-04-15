@@ -123,10 +123,8 @@ namespace irc
 
 		// Errors/replies not used yet - channel
 			// ERR_KEYSET
-			// ERR_NOCHANMODES                 ERR_CHANOPRIVSNEEDED
-			// ERR_USERNOTINCHANNEL
-			
-			// RPL_CHANNELMODEIS
+			// ERR_NOCHANMODES
+
 			// RPL_BANLIST                     RPL_ENDOFBANLIST
 			// RPL_EXCEPTLIST                  RPL_ENDOFEXCEPTLIST
 			// RPL_INVITELIST                  RPL_ENDOFINVITELIST
