@@ -489,7 +489,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.i = true;
-std::cout << "user " << user->nickname << " has been set invisible!\n";
+		*user << UModeIsReply(SERVER_NAME, "+i");	// send reply to user or server ? same for the functions below
 		return true;
 	}
 
@@ -498,7 +498,7 @@ std::cout << "user " << user->nickname << " has been set invisible!\n";
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.i = false;
-std::cout << "user " << user->nickname << " has been unset invisible!\n";
+		*user << UModeIsReply(SERVER_NAME, "-i");
 		return true;
 	}
 
@@ -507,7 +507,7 @@ std::cout << "user " << user->nickname << " has been unset invisible!\n";
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.s = true;
-std::cout << "user " << user->nickname << " has been marked for receipt of server notices!\n";
+		*user << UModeIsReply(SERVER_NAME, "+s");
 		return true;
 	}
 
@@ -516,7 +516,7 @@ std::cout << "user " << user->nickname << " has been marked for receipt of serve
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.s = false;
-std::cout << "user " << user->nickname << " has been unmarked for receipt of server notices!\n";
+		*user << UModeIsReply(SERVER_NAME, "-s");
 		return true;
 	}
 
@@ -525,7 +525,7 @@ std::cout << "user " << user->nickname << " has been unmarked for receipt of ser
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.w = true;
-std::cout << "user " << user->nickname << " has been set to receive wallops!\n";
+		*user << UModeIsReply(SERVER_NAME, "+w");
 		return true;
 	}
 
@@ -534,7 +534,7 @@ std::cout << "user " << user->nickname << " has been set to receive wallops!\n";
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.w = false;
-std::cout << "user " << user->nickname << " has been unset to receive wallops!\n";
+		*user << UModeIsReply(SERVER_NAME, "-w");
 		return true;
 	}
 
@@ -543,7 +543,7 @@ std::cout << "user " << user->nickname << " has been unset to receive wallops!\n
 		(void)user;
 		(void)channel;
 		(void)flagArguments;
-std::cout << "user " << user->nickname << " can't set himself as an operator!\n";
+		*user << UModeIsReply(SERVER_NAME, "+o");
 		return true;
 	}
 
@@ -552,7 +552,7 @@ std::cout << "user " << user->nickname << " can't set himself as an operator!\n"
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.o = false;
-std::cout << "user " << user->nickname << " has been unset as an operator!\n";
+		*user << UModeIsReply(SERVER_NAME, "-o");
 		return true;
 	}
 
