@@ -119,6 +119,13 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		return channel;
 	}
 
+
+	void	Client::receiveMessage(Client *client, std::string const &message)
+	{
+		*this << PrivateMessage(client->nickname, message);
+	}
+
+
 	bool	Client::listChannelInfo(Channel *channel)
 	{
 		if (!channel)

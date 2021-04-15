@@ -48,14 +48,21 @@ namespace irc
 			*user << NeedMoreParamsError(SERVER_NAME, name);
 			return false;
 		}
-		std::string receiverNickname = arguments[0];
-		IRCDatabase::databaseClientsMap::iterator it = server.database->dataClientsMap.find(receiverNickname);
-		if (it == server.database->dataClientsMap.end())
-			return false;
+		std::string nameArgument = arguments[0];
+
 		std::string message = "";
 		if (arguments.size() > 1)
 			message = arguments[1];
-		*(it->second) << PrivateMessage(user->nickname, message);
+
+		Client *receiver = server.database->getClient(nameArgument);
+		if (receiver)
+			receiver->receiveMessage(user, message);	// check to add ? invisible ?
+		else
+		{
+			Channel *channel = server.getChannel(nameArgument);
+			if (channel)
+				channel->receiveMessage(user, message);
+		}
 		return true;
 	}
 
@@ -86,7 +93,7 @@ namespace irc
 		std::string clientNickname = arguments[1]; // do we check the username ? Nickname ?
 		
 		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
-		if (!channel || !channel->isVisible(user))
+		if (!channel || !channel->isVisibleForClient(user))
 		{
 			*user << NoSuchChannelError(SERVER_NAME, channelName);
 			return false;
@@ -329,7 +336,7 @@ namespace irc
 		const std::string channelName = ft::strToLower(arguments[0]);
 		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
 
-		if (!channel || !channel->isVisible(user))
+		if (!channel || !channel->isVisibleForClient(user))
 			return false;
 		*user << ChannelNamesReply(SERVER_NAME, channel);
 		*user << EndOfNamesReply(SERVER_NAME, channelName);

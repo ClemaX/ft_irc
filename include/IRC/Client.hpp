@@ -87,6 +87,8 @@ namespace irc
 		Channel	*getChannel(std::string const & channelName) const;
 		Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
+
+		void	receiveMessage(Client *client, std::string const &message);
 		
 		bool	listChannelInfo(Channel *channel);
 		bool	listAllChannelsInfo(void);

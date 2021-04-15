@@ -144,7 +144,7 @@ namespace irc
 		return false;
 	}
 
-	bool	Channel::isVisible(Client *client) const
+	bool	Channel::isVisibleForClient(Client *client) const
 	{return (isInChannel(client) || (!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s)));}
 	// {return (isInChannel(client) || (channelModes.p == false && channelModes.s == false));}
 
@@ -167,6 +167,8 @@ namespace irc
 	bool	Channel::isCreator(std::string const & clientNickname) const
 	{return (channelModes.O.find(clientNickname) != channelModes.O.end());}
 
+	bool	Channel::isStatusVoice(Client *user) const
+	{return (channelModes.v.find(user->nickname) != channelModes.v.end());}
 
 	bool	Channel::isStatusBanned(Client *user) const
 	{return (channelModes.b.find(user->nickname) != channelModes.b.end());}
@@ -179,6 +181,16 @@ namespace irc
 
 
 
+// Message
+
+	void	Channel::receiveMessage(Client *client, std::string const &message)
+	{
+		if (!isInChannel(client) && !(channelModes.binMode & M_n))
+			return ;
+		if ((channelModes.binMode & M_q) && !isStatusVoice(client))
+			return ;
+		*this << PrivateMessage(client->nickname, message);
+	}
 
 
 
