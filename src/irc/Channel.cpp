@@ -74,6 +74,13 @@ namespace irc
 		return *this;
 	}
 
+	Channel const&	Channel::operator<<(PrivateMessage const& reply)
+	{
+		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+			*(it->first) << reply;
+		return *this;
+	}
+
 // Get functions
 
 	// ChannelModes	Channel::getModes() const
@@ -204,9 +211,9 @@ namespace irc
 		if (isChannelOperator)
 			addOperator(client->nickname);
 		client->joinChannel(this);
-
-		*client <<  TopicReply(SERVER_NAME, name, topic);
-		*client <<  ChannelNamesReply(SERVER_NAME, this);
+		*this << JoinChannelMessage(client->nickname, name);
+		*client << TopicReply(SERVER_NAME, name, topic);
+		*client << ChannelNamesReply(SERVER_NAME, this);
 
 		return true;
 	}
@@ -228,13 +235,9 @@ std::cout << name << ": new server added - number of servers linked to channel =
 			return false;
 		client->leaveChannel(this);
 		clientsMap.erase(client);
-
-std::cout << "client " << client->nickname << " has been removed from channel " << name << "\n";
-
 		if (clientsMap.empty())
 			return close();
-
-
+		*this << LeaveChannelMessage(client->nickname, name);
 		return true;
 	}
 

@@ -23,4 +23,23 @@ namespace irc
 
 		return serialized;
 	}
+
+
+
+
+	JoinChannelMessage::JoinChannelMessage(std::string const& nickname,
+		std::string const& channelName)
+		: PrivateMessage(nickname)
+	{
+		message << "has joined " << channelName;
+	}
+
+	LeaveChannelMessage::LeaveChannelMessage(std::string const& nickname,
+		std::string const& channelName)
+		: PrivateMessage(nickname)
+	{
+		message << "has left " << channelName;
+	}
+
+
 }

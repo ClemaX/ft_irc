@@ -118,6 +118,7 @@ namespace irc
 		~Channel();
 
 		Channel const&	operator<<(NumericReply const& reply);
+		Channel const&	operator<<(PrivateMessage const& reply);
 
 	// Get functions
 		// ChannelModes	getModes() const;

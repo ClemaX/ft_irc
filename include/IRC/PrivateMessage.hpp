@@ -15,4 +15,11 @@ namespace irc
 		Prefix		prefix;
 		std::string	message;
 	};
+
+
+	struct JoinChannelMessage: PrivateMessage
+	{ JoinChannelMessage(std::string const& nickname, std::string const& channelName); };
+	
+	struct LeaveChannelMessage: PrivateMessage
+	{ LeaveChannelMessage(std::string const& nickname, std::string const& channelName); };
 }
