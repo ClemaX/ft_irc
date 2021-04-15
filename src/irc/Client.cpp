@@ -5,7 +5,7 @@ namespace irc
 
 // --- ClientModes ---
 	ClientModes::ClientModes()
-		:	i(false), s(false), w(false), o(false)
+		:	binMode(0)
 	{ }
 
 	ClientModes::~ClientModes() {}
@@ -120,7 +120,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 	}
 
 
-	void	Client::receiveMessage(Client *client, std::string const &message)
+	void	Client::receiveMessage(Client *client, std::string const &message)	// check if invisible ?
 	{
 		*this << PrivateMessage(client->nickname, message);
 	}

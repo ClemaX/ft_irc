@@ -31,10 +31,18 @@ namespace irc
 	private:
 
 	public:
-		bool	i;
-		bool	s;
-		bool	w;
-		bool	o;
+
+		#define	Mu_i 1
+		#define	Mu_s 2
+		#define	Mu_w 4
+		#define	Mu_o 8
+
+		int	binMode;
+
+		// bool	i;
+		// bool	s;
+		// bool	w;
+		// bool	o;
 
 		// i - marks a users as invisible;
         // s - marks a user for receipt of server notices;

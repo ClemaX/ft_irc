@@ -506,7 +506,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.i = true;
+		user->clientModes.binMode |= Mu_i;
+		// user->clientModes.i = true;
 		*user << UModeIsReply(SERVER_NAME, "+i");	// send reply to user or server ? same for the functions below
 		return true;
 	}
@@ -515,7 +516,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.i = false;
+		user->clientModes.binMode &= ~Mu_i;
+		// user->clientModes.i = false;
 		*user << UModeIsReply(SERVER_NAME, "-i");
 		return true;
 	}
@@ -524,7 +526,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.s = true;
+		user->clientModes.binMode |= Mu_s;
+		// user->clientModes.s = true;
 		*user << UModeIsReply(SERVER_NAME, "+s");
 		return true;
 	}
@@ -533,7 +536,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.s = false;
+		user->clientModes.binMode &= ~Mu_s;
+		// user->clientModes.s = false;
 		*user << UModeIsReply(SERVER_NAME, "-s");
 		return true;
 	}
@@ -542,7 +546,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.w = true;
+		user->clientModes.binMode |= Mu_w;
+		// user->clientModes.w = true;
 		*user << UModeIsReply(SERVER_NAME, "+w");
 		return true;
 	}
@@ -551,7 +556,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.w = false;
+		user->clientModes.binMode &= ~Mu_w;
+		// user->clientModes.w = false;
 		*user << UModeIsReply(SERVER_NAME, "-w");
 		return true;
 	}
@@ -569,7 +575,8 @@ namespace irc
 	{
 		(void)channel;
 		(void)flagArguments;
-		user->clientModes.o = false;
+		user->clientModes.binMode &= ~Mu_o;
+		// user->clientModes.o = false;
 		*user << UModeIsReply(SERVER_NAME, "-o");
 		return true;
 	}
