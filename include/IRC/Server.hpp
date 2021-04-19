@@ -74,13 +74,6 @@ namespace irc
 				argumentList const& arguments) const = 0;
 		};
 
-		struct	ChannelCommand	:	public Command
-		{
-			bool const	isOperatorCommand;
-
-			ChannelCommand(std::string const& name, bool isOperatorCommand);
-		};
-
 		struct	PassCommand		:	public Command
 		{
 			PassCommand();
@@ -97,9 +90,26 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	KickCommand		:	public ChannelCommand
+// ============================================== //
+// ============================================== //
+		struct	ChannelCommand	:	public Command
 		{
-			KickCommand();
+			bool const	isOperatorCommand;
+
+			ChannelCommand(std::string const& name, bool isOperatorCommand);
+		};
+// ============================================== //
+		struct	JoinCommand		:	public ChannelCommand
+		{
+			JoinCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	PartCommand		:	public ChannelCommand
+		{
+			PartCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -113,41 +123,9 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	InviteCommand	:	public ChannelCommand
-		{
-			InviteCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
 		struct	TopicCommand	:	public ChannelCommand
 		{
 			TopicCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	JoinCommand		:	public ChannelCommand
-		{
-			JoinCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	MotdCommand		:	public Command
-		{
-			MotdCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	PartCommand		:	public ChannelCommand
-		{
-			PartCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -168,6 +146,35 @@ namespace irc
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
+
+		struct	InviteCommand	:	public ChannelCommand
+		{
+			InviteCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	KickCommand		:	public ChannelCommand
+		{
+			KickCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+// ============================================== //
+// ============================================== //
+		struct	MotdCommand		:	public Command
+		{
+			MotdCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+
+
+
 
 		bool	parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
@@ -204,6 +211,8 @@ namespace irc
 		&namesCommand,
 		&listCommand
 	};
+
+	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue);
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
 }

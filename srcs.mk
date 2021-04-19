@@ -18,6 +18,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		)\
 		$(addprefix commands/,\
 			Command.cpp\
+			Commands_utils.cpp\
 			Commands.cpp\
 			Modes.cpp\
 		)\

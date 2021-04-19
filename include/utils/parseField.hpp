@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <queue>
 
 #include <irc/ircdef.hpp>
 
