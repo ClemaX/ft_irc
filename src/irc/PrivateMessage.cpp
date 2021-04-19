@@ -38,9 +38,10 @@ namespace irc
 		std::string const& channelName, std::string const &leaveMessage)
 		: PrivateMessage(nickname)
 	{
-		message << "has left " << channelName;
 		if (leaveMessage.compare(""))
-			message << ": " << leaveMessage;
+			message << leaveMessage;
+		else
+			message << "has left " << channelName;
 	}
 
 	InviteChannelMessage::InviteChannelMessage(std::string const& nickname,

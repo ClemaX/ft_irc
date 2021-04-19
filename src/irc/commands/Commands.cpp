@@ -162,10 +162,6 @@ namespace irc
 		std::queue<std::string> channelsQueue;
 		parseArgumentsQueue(arguments[0], channelsQueue);
 
-		std::string leaveMessage = "";
-		if (arguments.size() > 1)
-			leaveMessage = arguments[1];
-
 		while (channelsQueue.size())
 		{
 			const std::string channelName = ft::strToLower(channelsQueue.front());
@@ -184,7 +180,12 @@ namespace irc
 				// return false;
 			}
 			else
+			{
+				std::string leaveMessage = "";
+				if (arguments.size() > 1)
+					leaveMessage << user->nickname << " has left " << channelName << ": " << arguments[1];
 				channel->removeClient(user, leaveMessage);
+			}
 		}
 
 		return true;
@@ -441,39 +442,62 @@ namespace irc
 			*user << NeedMoreParamsError(SERVER_NAME, name);
 			return false;
 		}
-		std::string channelName = ft::strToLower(arguments[0]);
-		std::string clientNickname = arguments[1];
-		
-		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
-		if (!channel || !channel->isVisibleForClient(user))
-		{
-			*user << NoSuchChannelError(SERVER_NAME, channelName);
-			return false;
-		}
-		if (!user->isInChannel(channelName))
-		{
-			*user << NotOnChannelError(SERVER_NAME, channelName);
-			return false;
-		}
-		if (!channel->isOperator(user))
-		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
-			return false;
-		}
-		Client *victim = channel->getUser(clientNickname);
-		if (!victim)
-		{
-			*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
-			return false;
-		}
-		channel->removeClient(victim, "");
 
-		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)
+		std::queue<std::string> channelsQueue;
+		std::queue<std::string> usersQueue;
+
+		parseArgumentsQueue(arguments[0], channelsQueue);
+		parseArgumentsQueue(arguments[1], usersQueue);
+
+		if (channelsQueue.size() != usersQueue.size() && channelsQueue.size() != 1)
 		{
-			std::string comment = arguments[2];
-			comment.erase(0,1);
-			std::cout << "Reason: \"" << comment << "\"\n";
+			*user << NeedMoreParamsError(SERVER_NAME, name);
+			return false;
 		}
+
+		while (usersQueue.size())
+		{
+			const std::string channelName = ft::strToLower(channelsQueue.front());
+			if (channelsQueue.size() > 1)
+				channelsQueue.pop();
+			const std::string clientNickname = usersQueue.front();
+			usersQueue.pop();
+		
+			Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
+			if (!channel || !channel->isVisibleForClient(user))
+			{
+				*user << NoSuchChannelError(SERVER_NAME, channelName);
+				// return false;
+			}
+			else if (!user->isInChannel(channelName))
+			{
+				*user << NotOnChannelError(SERVER_NAME, channelName);
+				// return false;
+			}
+			else if (!channel->isOperator(user))
+			{
+				*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+				// return false;
+			}
+			else
+			{
+				Client *victim = channel->getUser(clientNickname);
+				if (!victim)
+				{
+					*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
+					// return false;
+				}
+				else
+				{
+					std::string comment = "";
+					comment << clientNickname << " has been kicked from " << channelName;
+					if (arguments.size() > 2)
+						comment << ": " << arguments[2];
+					channel->removeClient(victim, comment);
+				}
+			}
+		}
+		
 		return true;
 
 		// Errors not used yet
