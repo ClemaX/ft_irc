@@ -89,6 +89,12 @@ namespace irc
 			return false;
 		}
 
+		if (!arguments[0].compare("0"))
+		{
+			user->leaveAllChannels();
+			return true;
+		}
+
 		std::queue<std::string> channelsQueue;
 		std::queue<std::string> passwordsQueue;
 
