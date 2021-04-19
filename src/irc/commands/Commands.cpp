@@ -293,20 +293,36 @@ namespace irc
 	bool	Server::NamesCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
 		if (!arguments.size())
 		{
-			
-			return true;		// to manage by checking every channel seen by user
+			IRCDatabase::databaseChannelsMap::iterator itb = server.database->dataChannelsMap.begin();
+			IRCDatabase::databaseChannelsMap::iterator ite = server.database->dataChannelsMap.end();
+			while (itb != ite)
+			{
+				if (itb->second->isVisibleForClient(user))
+				{
+					*user << ChannelNamesReply(SERVER_NAME, itb->second);
+					*user << EndOfNamesReply(SERVER_NAME, itb->first);
+				}
+				itb++;
+			}
+			return true;
 		}
 
-		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
+		std::queue<std::string> channelsQueue;
+		parseArgumentsQueue(arguments[0], channelsQueue);
+		while (channelsQueue.size())
+		{
+			const std::string channelName = ft::strToLower(channelsQueue.front());
+			channelsQueue.pop();
+			Channel *channel = user->getChannelGlobal(channelName);
 
-		if (!channel || !channel->isVisibleForClient(user))
-			return false;
-		*user << ChannelNamesReply(SERVER_NAME, channel);
-		*user << EndOfNamesReply(SERVER_NAME, channelName);
+			if (channel && channel->isVisibleForClient(user))
+			{
+				*user << ChannelNamesReply(SERVER_NAME, channel);
+				*user << EndOfNamesReply(SERVER_NAME, channelName);
+			}
+		}
 		return true;
 
 		// Errors/replies not used yet
