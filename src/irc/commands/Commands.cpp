@@ -311,6 +311,11 @@ namespace irc
 
 		std::queue<std::string> channelsQueue;
 		parseArgumentsQueue(arguments[0], channelsQueue);
+
+		std::string target = "";
+		if (arguments.size() > 1)
+			target = arguments[1];				// need to use target
+
 		while (channelsQueue.size())
 		{
 			const std::string channelName = ft::strToLower(channelsQueue.front());
@@ -343,9 +348,20 @@ namespace irc
 			user->listAllChannelsInfo();
 		else
 		{
-			const std::string channelName = ft::strToLower(arguments[0]);
-			Channel *channel = user->getChannelGlobal(channelName);
-			user->listChannelInfo(channel);						// need to be adjusted ?
+			std::queue<std::string> channelsQueue;
+			parseArgumentsQueue(arguments[0], channelsQueue);
+
+			std::string target = "";
+			if (arguments.size() > 1)
+				target = arguments[1];				// need to use target
+
+			while (channelsQueue.size())
+			{
+				const std::string channelName = ft::strToLower(channelsQueue.front());
+				channelsQueue.pop();
+				Channel *channel = user->getChannelGlobal(channelName);
+				user->listChannelInfo(channel);						// need to be adjusted ?
+			}
 		}
 		*user << EndOfListReply(SERVER_NAME);
 		return true;
