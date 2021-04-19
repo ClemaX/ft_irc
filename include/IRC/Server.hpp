@@ -172,6 +172,14 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
+		struct	WhoQuery		:	public Command
+		{
+			WhoQuery();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
 
 
 
@@ -188,28 +196,30 @@ namespace irc
 	static const Server::PassCommand	passCommand;
 	static const Server::PRIVMSGCommand	privmsgCommand;
 	static const Server::JoinCommand	joinCommand;
-	static const Server::KickCommand	kickCommand;
-	static const Server::ModeCommand	modeCommand;
-	static const Server::InviteCommand	inviteCommand;
-	static const Server::TopicCommand	topicCommand;
-	static const Server::MotdCommand	motdCommand;
 	static const Server::PartCommand	partCommand;
+	static const Server::ModeCommand	modeCommand;
+	static const Server::TopicCommand	topicCommand;
 	static const Server::NamesCommand	namesCommand;
 	static const Server::ListCommand	listCommand;
+	static const Server::InviteCommand	inviteCommand;
+	static const Server::KickCommand	kickCommand;
+	static const Server::MotdCommand	motdCommand;
+	static const Server::WhoQuery		whoQuery;
 
 	static Server::Command const*const	commands[] =
 	{
 		&passCommand,
 		&privmsgCommand,
 	  	&joinCommand,
-		&kickCommand,
-		&modeCommand,
-		&inviteCommand,
-		&topicCommand,
-		&motdCommand,
 		&partCommand,
+		&modeCommand,
+		&topicCommand,
 		&namesCommand,
-		&listCommand
+		&listCommand,
+		&inviteCommand,
+		&kickCommand,
+		&motdCommand,
+		&whoQuery
 	};
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue);

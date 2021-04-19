@@ -92,6 +92,8 @@ namespace irc
 		bool	isInChannel(Channel *channel) const;
 		bool	isInChannel(std::string const & channelName) const;
 
+		bool	isInSameChannel(Client *client) const;
+
 		Channel	*getChannel(std::string const & channelName) const;
 		Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
@@ -99,6 +101,10 @@ namespace irc
 		void	receiveMessage(Client *client, std::string const &message);
 		
 		bool	listChannelInfo(Channel *channel);
-		bool	listAllChannelsInfo(void);
+		bool	listAllChannelsListInfo(void);
+
+		bool	listChannelWhoQueryInfo(Channel *channel, int opFlag);
+		bool	listAllVisibleUsersWhoQueryInfo(void);
+		bool	matchMaskWhoQueryInfo(std::string const &mask);
 	};
 }

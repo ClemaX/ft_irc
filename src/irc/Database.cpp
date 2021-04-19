@@ -47,14 +47,6 @@ namespace irc
 		return it->second;
 	}
 
-// --- Display functions --- //
-
-	void	IRCDatabase::displayAllChannelsInfo(Client *client) const
-	{
-		for (databaseChannelsMap::const_iterator it = dataChannelsMap.begin(); it != dataChannelsMap.end(); it++)
-			client->listChannelInfo(it->second);
-	}
-
 
 // --- Channel Mode pointer functions --- //
 

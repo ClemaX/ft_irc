@@ -151,6 +151,9 @@ namespace irc
 		bool	isStatusInvite(Client *user) const;
 
 	// Message
+
+
+	// Message
 		void	receiveMessage(Client *client, std::string const &message);
 
 	// Add/Remove functions

@@ -127,8 +127,12 @@ namespace irc
 
 // 352     IRC_RPL_WHOREPLY
 //             "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>"
+	struct WhoReply	:	NumericReply
+	{ WhoReply(std::string const& serverName, std::string const &mask, Client *client, int op); };
 // 315     IRC_RPL_ENDOFWHO
 //             "<name> :End of /WHO list"
+	struct EndOfWhoReply	:	NumericReply
+	{ EndOfWhoReply(std::string const& serverName, std::string const &mask); };
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"

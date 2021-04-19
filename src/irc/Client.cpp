@@ -83,6 +83,19 @@ namespace irc
 	bool	Client::isInChannel(std::string const & channelName) const
 	{return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end());}
 
+	bool	Client::isInSameChannel(Client *client) const
+	{
+		clientChannelMap::const_iterator itb = clientChannels.begin();
+		clientChannelMap::const_iterator ite = clientChannels.end();
+		while (itb != ite)
+		{
+			if (client->isInChannel(itb->first))
+				return true;
+			itb++;
+		}
+		return false;
+	}
+
 	Channel	*Client::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
@@ -137,13 +150,60 @@ namespace irc
 				return false;
 			}
 		}
-		*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+		else
+			*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
 		return true;
 	}
 
-	bool	Client::listAllChannelsInfo(void)
+	bool	Client::listAllChannelsListInfo(void)
 	{
-		server->database->displayAllChannelsInfo(this);
+		for (IRCDatabase::databaseChannelsMap::const_iterator it = server->database->dataChannelsMap.begin();
+			it != server->database->dataChannelsMap.end(); it++)
+			this->listChannelInfo(it->second);
+		return true;
+	}
+
+
+		bool	Client::listChannelWhoQueryInfo(Channel *channel, int opFlag)
+	{
+		if (!channel)
+			return false;
+		
+		std::string const &channelName = channel->name;
+
+		if (!isInChannel(channelName) &&
+			((channel->channelModes.binMode & M_s) || (channel->channelModes.binMode & M_p)))
+				return false;
+		else
+		{
+			Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
+			Channel::channelClientMap::iterator ite = channel->clientsMap.end();
+			while (itb != ite)
+			{
+				if (!opFlag || channel->isOperator(itb->first))
+					*this << WhoReply(SERVER_NAME, channelName, itb->first, channel->isOperator(itb->first));
+				itb++;
+			}
+		}
+		return true;
+	}
+
+	bool	Client::listAllVisibleUsersWhoQueryInfo(void)
+	{
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
+			it != server->database->dataClientsMap.end(); it++)
+		{
+			Client *client = it->second;
+			if (!(client->clientModes.binMode & Mu_i) && !this->isInSameChannel(client))
+				*this << WhoReply(SERVER_NAME, "", client, -1);
+		}
+		return true;
+	}
+
+	bool	Client::matchMaskWhoQueryInfo(std::string const &mask)		// function to complete with '*'
+	{
+		/////////////////////////////////////////////////////////////////////////
+		(void)mask;
 		return true;
 	}
 }
