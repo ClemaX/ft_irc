@@ -41,5 +41,11 @@ namespace irc
 		message << "has left " << channelName;
 	}
 
+	InviteChannelMessage::InviteChannelMessage(std::string const& nickname,
+		std::string const& channelName)
+		: PrivateMessage(nickname)
+	{
+		message << nickname << " invites you to " << channelName;
+	}
 
 }

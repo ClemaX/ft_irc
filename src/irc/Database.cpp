@@ -38,6 +38,15 @@ namespace irc
 		return it->second;
 	}
 
+	Channel	*IRCDatabase::getChannel(std::string const &channelName) const
+	{
+		databaseChannelsMap::const_iterator it;
+		it = dataChannelsMap.find(ft::strToLower(channelName));
+		if (it == dataChannelsMap.end())
+			return NULL;
+		return it->second;
+	}
+
 // --- Display functions --- //
 
 	void	IRCDatabase::displayAllChannelsInfo(Client *client) const

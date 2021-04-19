@@ -22,4 +22,7 @@ namespace irc
 	
 	struct LeaveChannelMessage: PrivateMessage
 	{ LeaveChannelMessage(std::string const& nickname, std::string const& channelName); };
+
+	struct InviteChannelMessage: PrivateMessage
+	{ InviteChannelMessage(std::string const& nickname, std::string const& channelName); };
 }

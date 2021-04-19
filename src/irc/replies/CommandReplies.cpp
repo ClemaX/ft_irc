@@ -127,7 +127,7 @@ namespace irc
 							std::string const &nickname)
 		: NumericReply(serverName, IRC_RPL_INVITING)
 	{
-		message << channelName << " " << nickname;
+		message << nickname << " has been invited to join " << channelName;
 	}
 
 // 342     IRC_RPL_SUMMONING

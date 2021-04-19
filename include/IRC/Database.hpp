@@ -42,6 +42,7 @@ namespace irc
 		void	addClient(Client *client);
 
 		Client	*getClient(std::string const &nickname) const;
+		Channel	*getChannel(std::string const &channelName) const;
 
 		void	displayAllChannelsInfo(Client *client) const;
 

@@ -183,7 +183,7 @@ namespace irc
 	static const Server::JoinCommand	joinCommand;
 	static const Server::KickCommand	kickCommand;
 	static const Server::ModeCommand	modeCommand;
-	static const Server::ModeCommand	inviteCommand;
+	static const Server::InviteCommand	inviteCommand;
 	static const Server::TopicCommand	topicCommand;
 	static const Server::MotdCommand	motdCommand;
 	static const Server::PartCommand	partCommand;
