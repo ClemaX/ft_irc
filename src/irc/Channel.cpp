@@ -246,7 +246,7 @@ std::cout << name << ": new server added - number of servers linked to channel =
 		return true;
 	}
 
-	bool	Channel::removeClient(Client* client)
+	bool	Channel::removeClient(Client* client, std::string const &leaveMessage)
 	{
 		if (clientsMap.find(client) == clientsMap.end())
 			return false;
@@ -254,7 +254,7 @@ std::cout << name << ": new server added - number of servers linked to channel =
 		clientsMap.erase(client);
 		if (clientsMap.empty())
 			return close();
-		*this << LeaveChannelMessage(client->nickname, name);
+		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
 		return true;
 	}
 

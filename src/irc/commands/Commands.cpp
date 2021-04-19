@@ -159,21 +159,35 @@ namespace irc
 			return false;
 		}
 
-		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel *channel = server.getChannel(channelName);
+		std::queue<std::string> channelsQueue;
+		parseArgumentsQueue(arguments[0], channelsQueue);
 
-		if (!channel)
-		{
-			*user << NoSuchChannelError(SERVER_NAME, channelName);
-			return false;
-		}
-		if (!user->isInChannel(channelName))
-		{
-			*user << NotOnChannelError(SERVER_NAME, channelName);
-			return false;
-		}
-		return channel->removeClient(user);
+		std::string leaveMessage = "";
+		if (arguments.size() > 1)
+			leaveMessage = arguments[1];
 
+		while (channelsQueue.size())
+		{
+			const std::string channelName = ft::strToLower(channelsQueue.front());
+			channelsQueue.pop();
+
+			Channel *channel = server.getChannel(channelName);
+
+			if (!channel)
+			{
+				*user << NoSuchChannelError(SERVER_NAME, channelName);
+				// return false;
+			}
+			else if (!user->isInChannel(channelName))
+			{
+				*user << NotOnChannelError(SERVER_NAME, channelName);
+				// return false;
+			}
+			else
+				channel->removeClient(user, leaveMessage);
+		}
+
+		return true;
 		// Errors/replies not used yet
 			// no reply ?
 	}
@@ -420,7 +434,7 @@ namespace irc
 			*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
 			return false;
 		}
-		victim->leaveChannel(channelName);
+		channel->removeClient(victim, "");
 
 		if (arguments.size() > 2 && arguments[2][0] == IRC_MESSAGE_PREFIX_PREFIX)
 		{

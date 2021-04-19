@@ -157,7 +157,7 @@ namespace irc
 		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
-		bool	removeClient(Client* client);
+		bool	removeClient(Client* client, std::string const &leaveMessage);
 
 		bool	close();
 
