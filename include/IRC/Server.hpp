@@ -223,6 +223,7 @@ namespace irc
 	};
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue);
+	int		matchPattern(std::string const &str, std::string const &pattern);
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
 }

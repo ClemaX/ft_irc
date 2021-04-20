@@ -200,10 +200,21 @@ namespace irc
 		return true;
 	}
 
-	bool	Client::matchMaskWhoQueryInfo(std::string const &mask)		// function to complete with '*'
+	bool	Client::matchMaskWhoQueryInfo(std::string const &mask)
 	{
-		/////////////////////////////////////////////////////////////////////////
-		(void)mask;
+		// currently match with users' host, real name and nickname
+		// to do :
+		//		match with users' server
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
+			it != server->database->dataClientsMap.end(); it++)
+		{
+			Client *client = it->second;
+			if (!(client->clientModes.binMode & Mu_i) &&
+				(!matchPattern(client->nickname, mask) ||
+					!matchPattern(client->username, mask) ||
+					!matchPattern(client->hostname, mask)))
+				*this << WhoReply(SERVER_NAME, "", client, -1);
+		}
 		return true;
 	}
 }
