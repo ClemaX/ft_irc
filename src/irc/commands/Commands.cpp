@@ -12,7 +12,7 @@ namespace irc
 
 // --- command PASS --- //
 	Server::PassCommand::PassCommand()
-		:	Command("PASS")
+		:	Command("/pass")
 	{ }
 
 	bool	Server::PassCommand::execute(Server& server, Client* user,
@@ -37,7 +37,7 @@ namespace irc
 // ============================================== //
 
 	Server::PRIVMSGCommand::PRIVMSGCommand()
-		:	Command("PRIVMSG")
+		:	Command("/msg")
 	{ }
 
 	bool	Server::PRIVMSGCommand::execute(Server& server, Client* user,
@@ -77,7 +77,7 @@ namespace irc
 
 // --- command JOIN --- //
 	Server::JoinCommand::JoinCommand()
-		:	ChannelCommand("JOIN", false)
+		:	ChannelCommand("/join", false)
 	{ }
 
 	bool	Server::JoinCommand::execute(Server& server, Client* user,
@@ -124,17 +124,23 @@ namespace irc
 
 			if (!channel)	// if channel not present in serverChannels map
 			{
-				try{channel = new Channel(channelName);}
+				try
+				{
+					channel = new Channel(channelName);
+					server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
+					isOp = true;										// will set user as operator
+					channel->addServer(&server);		// add server to the channel servers list
+					channel->addClient(user, password, isOp);
+				}
 				catch(Channel::InvalidChannelNameException const& e)
 				{
 					*user << NoSuchChannelError(SERVER_NAME, name);
-					return false;										//do we leave or check the next arguments ?
+					// return false;										//do we leave or check the next arguments ?
 				}
-				server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
-				isOp = true;										// will set user as operator
-				channel->addServer(&server);		// add server to the channel servers list
+				
 			}
-			channel->addClient(user, password, isOp);
+			else
+				channel->addClient(user, password, isOp);
 		}
 		return true;
 
@@ -147,7 +153,7 @@ namespace irc
 
 // --- command PART --- //
 	Server::PartCommand::PartCommand()
-		:	ChannelCommand("PART", true)
+		:	ChannelCommand("/part", true)
 	{ }
 
 	bool	Server::PartCommand::execute(Server& server, Client* user,
@@ -196,7 +202,7 @@ namespace irc
 
 // --- command MODE --- //
 	Server::ModeCommand::ModeCommand()
-		:	ChannelCommand("MODE", true)
+		:	ChannelCommand("/mode", true)
 	{ }
 
 	bool	Server::ModeCommand::execute(Server& server, Client* user,
@@ -238,7 +244,7 @@ namespace irc
 
 // --- command TOPIC --- //
 	Server::TopicCommand::TopicCommand()
-		:	ChannelCommand("TOPIC", true)
+		:	ChannelCommand("/topic", true)
 	{ }
 
 	bool	Server::TopicCommand::execute(Server& server, Client* user,
@@ -288,7 +294,7 @@ namespace irc
 
 // --- command NAMES --- //
 	Server::NamesCommand::NamesCommand()
-		:	ChannelCommand("NAMES", true)
+		:	ChannelCommand("/names", true)
 	{ }
 
 	bool	Server::NamesCommand::execute(Server& server, Client* user,
@@ -338,7 +344,7 @@ namespace irc
 
 // --- command LIST --- //
 	Server::ListCommand::ListCommand()
-		:	ChannelCommand("LIST", true)
+		:	ChannelCommand("/list", true)
 	{ }
 
 	bool	Server::ListCommand::execute(Server& server, Client* user,
@@ -430,7 +436,7 @@ namespace irc
 
 // --- command KICK --- //
 	Server::KickCommand::KickCommand()
-		:	ChannelCommand("KICK", true)
+		:	ChannelCommand("/kick", true)
 	{ }
 
 	bool	Server::KickCommand::execute(Server& server, Client* user,
@@ -516,7 +522,7 @@ namespace irc
 // --- WHO query --- //
 
 	Server::WhoQuery::WhoQuery()
-		:	Command("WHO")
+		:	Command("/who")
 	{ }
 
 	bool	Server::WhoQuery::execute(Server& server, Client* user,
@@ -542,7 +548,6 @@ namespace irc
 
 		return true;
 
-
 		// Errors/replies not used yet
 			// ERR_NOSUCHSERVER
 
@@ -555,7 +560,7 @@ namespace irc
 
 // --- command MOTD --- //
 	Server::MotdCommand::MotdCommand()
-		:	Command("MOTD")
+		:	Command("/motd")
 	{ }
 
 	bool	Server::MotdCommand::execute(Server& server, Client* user,
