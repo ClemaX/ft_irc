@@ -124,7 +124,7 @@ namespace irc
 		channel = server->getChannel(channelName);
 		if (!channel)
 			return NULL;
-		if (channel->isLocalChannel() && channel->serversMap.size() && channel->serversMap.begin()->first != server)
+		if (!channel->isLocalChannelVisibleForClient(this))
 			return NULL;
 		return channel;
 	}
@@ -147,11 +147,14 @@ namespace irc
 		{
 			if (channel->channelModes.binMode & M_s)
 				return false;
-			if (channel->channelModes.binMode & M_p)
+			else if ((channel->channelModes.binMode & M_p) && channel->isVisibleForClient(this))
 			{
 				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
 				return false;
 			}
+			else if (channel->isLocalChannelVisibleForClient(this))
+				*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+			return false;
 		}
 		else
 			*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);

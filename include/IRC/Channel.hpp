@@ -153,6 +153,8 @@ namespace irc
 		bool	isNetworkSafeChannel(void) const;
 		bool	isNetworkUnmoderatedChannel(void) const;
 
+		bool	isLocalChannelVisibleForClient(Client const *client) const;
+
 	// Message
 
 

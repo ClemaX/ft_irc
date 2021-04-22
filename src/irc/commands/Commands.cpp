@@ -123,7 +123,7 @@ namespace irc
 			}
 
 			if (!channel ||
-				(channel->isLocalChannel() && channel->serversMap.size() && channel->serversMap.begin()->first != user->server))	// if channel not present in serverChannels map
+				!channel->isLocalChannelVisibleForClient(user))	// if channel not present in serverChannels map
 			{
 				try
 				{

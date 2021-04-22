@@ -148,7 +148,7 @@ namespace irc
 	{
 		return (isInChannel(client) ||
 				(!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s) &&
-				((serversMap.size() && serversMap.begin()->first == client->server) || !isLocalChannel())));
+				isLocalChannelVisibleForClient(client)));
 	}
 
 	bool	Channel::isOperator(Client *client) const
@@ -189,6 +189,9 @@ namespace irc
 	{return channelType == '!';}
 	bool	Channel::isNetworkUnmoderatedChannel(void) const
 	{return channelType == '+';}
+
+	bool	Channel::isLocalChannelVisibleForClient(Client const *client) const
+	{return (!isLocalChannel() || (serversMap.size() && serversMap.begin()->first == client->server));}
 
 
 // Message
