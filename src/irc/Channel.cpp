@@ -145,7 +145,11 @@ namespace irc
 	}
 
 	bool	Channel::isVisibleForClient(Client *client) const
-	{return (isInChannel(client) || (!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s)));}
+	{
+		return (isInChannel(client) ||
+				(!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s) &&
+				((serversMap.size() && serversMap.begin()->first == client->server) || !isLocalChannel())));
+	}
 
 	bool	Channel::isOperator(Client *client) const
 	{
