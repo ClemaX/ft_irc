@@ -39,11 +39,6 @@ namespace irc
 
 		int	binMode;
 
-		// bool	i;
-		// bool	s;
-		// bool	w;
-		// bool	o;
-
 		// i - marks a users as invisible;
         // s - marks a user for receipt of server notices;
         // w - user receives wallops;
@@ -59,7 +54,6 @@ namespace irc
 	private:
 		typedef ::std::map<std::string, Channel*>	clientChannelMap;
 		typedef ::std::pair<std::string, Channel*>	clientChannelPair;
-
 
 	public:
 		std::string	readBuffer;

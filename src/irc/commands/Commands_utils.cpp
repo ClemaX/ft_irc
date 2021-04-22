@@ -24,28 +24,34 @@ namespace irc
 			it = fieldLast;
 		}
 	}
-
-	int	matchPattern(std::string const &str, std::string const &pattern)
+	
+	bool	matchPattern_multiple(std::string const &str, std::string const &pattern)
 	{
 		size_t index = pattern.find('*', 0);
 		if (index == std::string::npos)
-			return (str.compare(pattern) != 0);
+			return !str.compare(pattern);
 
 		if (str.compare(0, index, pattern, 0, index))
-			return 1;
+			return false;
+
+		if (!str.length())
+			return matchPattern_global(str, pattern.substr(index + 1));
 
 		size_t	strLength = str.length();
 		size_t i = index;
 
-		size_t	index_next = pattern.find("*", index + 1);
+		size_t	index_next = pattern.find('*', index + 1);
+		size_t	index_next_unique = pattern.find('?', index + 1);
+		if (index_next > index_next_unique)
+			index_next = index_next_unique;
 		if (index_next == std::string::npos)
 			index_next = pattern.length();
 
 		size_t	lengthToCheck = 0;
-		if (index_next >= index + 1)
+		if (index_next > index)
 			lengthToCheck = index_next - index - 1;
 		if (!lengthToCheck)
-			return 0;
+			return true;
 		if (strLength < lengthToCheck)
 			lengthToCheck = strLength;
 
@@ -56,14 +62,40 @@ namespace irc
 				if (index_next == pattern.length())
 				{
 					if (i + lengthToCheck == strLength)
-						return 0;
-					return 1;
+						return true;
+					return false;
 				}
-				return matchPattern(str.substr(i + lengthToCheck), pattern.substr(index_next));
+				return matchPattern_global(str.substr(i + lengthToCheck), pattern.substr(index_next));
 			}
 			i++;
 		}
-		return 1;
+		return false;
+	}
+
+	bool	matchPattern_unique(std::string const &str, std::string const &pattern)
+	{
+
+		size_t index = pattern.find('?', 0);
+		if (index == std::string::npos)
+			return !str.compare(pattern);
+
+		if (str.length() <= index)
+			return false;
+
+		if (str.compare(0, index, pattern, 0, index))
+			return false;
+
+		return matchPattern_global(str.substr(index + 1), pattern.substr(index + 1));
+	}
+
+	bool	matchPattern_global(std::string const &str, std::string const &pattern)	// one case not managed : when ? is right after *
+	{
+		size_t index_unique = pattern.find('?', 0);
+		size_t index_multiple = pattern.find('*', 0);
+	
+		if (index_unique >= index_multiple)
+			return matchPattern_multiple(str, pattern);
+		return matchPattern_unique(str, pattern);
 	}
 
 }

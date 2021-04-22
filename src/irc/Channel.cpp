@@ -6,17 +6,14 @@ namespace irc
 // ======== ChannelClient ========
 	ChannelClient::ChannelClient()
 		:	client(NULL)
-		// :	client(NULL), isChannelOperator(false)
 	{ }
 
 	ChannelClient::ChannelClient(Client* client, bool isOp)
 		:	client(client)
-		// :	client(client), isChannelOperator(isOp)
 	{ (void)isOp;}
 
 	ChannelClient::ChannelClient(Client* client)
 		:	client(client)
-		// :	client(client), isChannelOperator(false)
 	{ }
 
 	ChannelClient::ChannelClient(const ChannelClient & src)
@@ -27,23 +24,13 @@ namespace irc
 	ChannelClient & ChannelClient::operator=(const ChannelClient & src)
 	{
 		client = src.client;
-		// isChannelOperator = src.isChannelOperator;
 		return *this;
 	}
 
 
 
 
-
-
-
-
 // ======== ChannelModes ========
-	// ChannelModes::ChannelModes()
-	// 	:	O(), o(), v(), a(false), i(false), m(false), n(false), q(false),
-	// 		p(false), s(false), r(false), t(false), l(0), k(""), b(), e(), I()
-	// { }
-
 	ChannelModes::ChannelModes()
 		:	O(), o(), v(), binMode(0), l(0), k(""), b(), e(), I()
 	{ }
@@ -58,10 +45,6 @@ namespace irc
 
 
 // ======== Channel ========
-	// Channel::Channel()
-	// 	:	clientsMap(), serversMap(), topic(""), channelModes(), name("")
-	// { }
-
 	Channel::Channel(std::string const& channelName) throw(InvalidChannelNameException)
 		:	clientsMap(), serversMap(), topic(""), channelModes(), name(ft::strToLower(channelName))
 	{
@@ -86,10 +69,6 @@ namespace irc
 	}
 
 // Get functions
-
-	// ChannelModes	Channel::getModes() const
-	// {return channelModes;}
-
 	std::string	Channel::getTopic() const
 	{return topic;}
 
@@ -106,14 +85,9 @@ namespace irc
 
 
 
-
-
 // Set functions
 	void	Channel::setTopic(const std::string & str)
 	{topic = str;}
-
-
-
 
 
 
@@ -146,8 +120,6 @@ namespace irc
 
 	bool	Channel::isVisibleForClient(Client *client) const
 	{return (isInChannel(client) || (!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s)));}
-	// {return (isInChannel(client) || (channelModes.p == false && channelModes.s == false));}
-
 
 	bool	Channel::isOperator(Client *client) const
 	{

@@ -18,7 +18,6 @@ namespace irc
 	struct	ChannelClient
 	{
 		Client*	client;
-		// bool	isChannelOperator;	// not used, the operators are stored in the channelNicknameMap channel->channelModes.o
 
 		ChannelClient();
 		ChannelClient(Client* client);
@@ -33,7 +32,6 @@ namespace irc
 	struct	ChannelModes
 	{
 	private:
-			// typedef std::map<Client*, ChannelClient> channelClientMap;
 			typedef std::map<Server*, Server*> channelServerMap;
 			typedef std::map<std::string, std::string> channelNicknameMap;
 
@@ -95,8 +93,6 @@ namespace irc
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
 		typedef std::map<std::string, std::string> channelNicknameMap;
-		// typedef std::pair<Client*, ChannelClient> channelClientPair;
-		// typedef std::pair<Server*, Server*> channelServerPair;
 		
 		class	ChannelException		:	public std::exception { };
 
@@ -124,7 +120,6 @@ namespace irc
 		Channel const&	operator<<(PrivateMessage const& reply);
 
 	// Get functions
-		// ChannelModes	getModes() const;
 		std::string	getTopic() const;
 		Client *getUser(std::string const & clientNickname) const;
 

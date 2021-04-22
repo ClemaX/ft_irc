@@ -210,11 +210,12 @@ namespace irc
 		{
 			Client *client = it->second;
 			if (!(client->clientModes.binMode & Mu_i) &&
-				(!matchPattern(client->nickname, mask) ||
-					!matchPattern(client->username, mask) ||
-					!matchPattern(client->hostname, mask)))
+					(matchPattern_global(client->nickname, mask) ||
+					matchPattern_global(client->username, mask) ||
+					matchPattern_global(client->hostname, mask)))
 				*this << WhoReply(SERVER_NAME, "", client, -1);
 		}
 		return true;
 	}
+
 }
