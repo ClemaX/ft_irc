@@ -45,6 +45,9 @@ namespace irc
 		writeBuffer.clear();
 	}
 
+
+
+
 	void	Client::joinChannel(Channel * channel)
 	{
 		clientChannels.insert(clientChannelPair(channel->name, channel));
@@ -118,11 +121,11 @@ namespace irc
 		if (channel)
 			return channel;
 
-		IRCDatabase::databaseChannelsMap channelMap = server->database->dataChannelsMap;
-		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(ft::strToLower(channelName));
-		if (it == channelMap.end())
+		channel = server->getChannel(channelName);
+		if (!channel)
 			return NULL;
-		channel = it->second;
+		if (channel->isLocalChannel() && channel->serversMap.size() && channel->serversMap.begin()->first != server)
+			return NULL;
 		return channel;
 	}
 

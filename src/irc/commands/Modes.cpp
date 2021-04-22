@@ -475,16 +475,25 @@ namespace irc
 	bool	Server::parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments)
 	{
+		Channel *channel = user->getChannelGlobal(channelName);
+		if (!channel)
+		{
+			*user << NoSuchChannelError(SERVER_NAME, channelName);
+			return false;
+		}
+
+		if (channel->isNetworkUnmoderatedChannel())
+		{
+			*user << NoChanModesError(SERVER_NAME, channelName);
+			return false;
+		}
+
 		char sign = flags[0];
 		if (sign != '+' && sign != '-')
 		{
 			*user << UModeUnkownFlagError(SERVER_NAME);
 			return false;
 		}
-
-		Channel *channel = user->getChannelGlobal(channelName);
-		if (!channel)
-			return false;
 
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)

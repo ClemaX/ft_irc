@@ -46,10 +46,15 @@ namespace irc
 
 // ======== Channel ========
 	Channel::Channel(std::string const& channelName) throw(InvalidChannelNameException)
-		:	clientsMap(), serversMap(), topic(""), channelModes(), name(ft::strToLower(channelName))
+		:	clientsMap(), serversMap(), topic(""), channelModes(), name(setChannelName(channelName))
 	{
 		if (checkChannelName(name) == false)
 			throw InvalidChannelNameException();
+		if (isNetworkUnmoderatedChannel())
+		{
+			channelModes.binMode |= M_n;
+			channelModes.binMode |= M_t;
+		}
 	}
 
 	Channel::~Channel() {}
@@ -66,6 +71,27 @@ namespace irc
 		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 			*(it->first) << reply;
 		return *this;
+	}
+
+	std::string	Channel::setChannelName(std::string channelName)
+	{
+		std::string str = ft::strToLower(channelName);
+		channelType = str[0];
+
+		if (!isNetworkSafeChannel())
+			return str;
+
+		std::string prefix = "";
+		srand (time(NULL));
+		char c;
+		char alphanum[37] = "abcdefghijklmnopqrstuvwxyz0123456789";
+		for (int i = 0 ; i < 5 ; i++)
+		{
+			c = alphanum[rand() % 37];
+			prefix.push_back(c);
+		}
+		str.insert(1, prefix);
+		return str;
 	}
 
 // Get functions
@@ -151,6 +177,14 @@ namespace irc
 	bool	Channel::isStatusInvite(Client *user) const
 	{return (channelModes.I.find(user->nickname) != channelModes.I.end());}
 
+	bool	Channel::isLocalChannel(void) const
+	{return channelType == '&';}
+	bool	Channel::isNetworkChannel(void) const
+	{return channelType == '#';}
+	bool	Channel::isNetworkSafeChannel(void) const
+	{return channelType == '!';}
+	bool	Channel::isNetworkUnmoderatedChannel(void) const
+	{return channelType == '+';}
 
 
 // Message
@@ -197,7 +231,9 @@ namespace irc
 			return false;
 		}
 		clientsMap[client] = ChannelClient(client, isChannelOperator);
-		if (isChannelOperator)
+		if (isNetworkSafeChannel() && !clientsMap.size())
+			addCreator(client->nickname);
+		else if (isChannelOperator)
 			addOperator(client->nickname);
 		client->joinChannel(this);
 		*this << JoinChannelMessage(client->nickname, name);
@@ -406,7 +442,6 @@ std::cout << "channel " << name << " has been closed\n";
 		*this << InviteListReply(SERVER_NAME, name, "-", nickname);
 		return true;
 	}
-
 
 
 }

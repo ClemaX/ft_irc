@@ -122,13 +122,16 @@ namespace irc
 				return false;
 			}
 
-			if (!channel)	// if channel not present in serverChannels map
+			if (!channel ||
+				(channel->isLocalChannel() && channel->serversMap.size() && channel->serversMap.begin()->first != user->server))	// if channel not present in serverChannels map
 			{
 				try
 				{
 					channel = new Channel(channelName);
-					server.database->dataChannelsMap[channelName] = channel;	// Create the channel if it doesn't exist
+					server.database->dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
+					if (channel->isNetworkUnmoderatedChannel())
+						isOp = false;
 					channel->addServer(&server);		// add server to the channel servers list
 					channel->addClient(user, password, isOp);
 				}
@@ -235,7 +238,6 @@ namespace irc
 
 		// Errors/replies not used yet - channel
 			// ERR_KEYSET
-			// ERR_NOCHANMODES
 
 			// RPL_UNIQOPIS
 
@@ -380,7 +382,7 @@ namespace irc
 
 // --- command INVITE --- //
 	Server::InviteCommand::InviteCommand()
-		:	ChannelCommand("INVITE", true)
+		:	ChannelCommand("/invite", true)
 	{ }
 
 	bool	Server::InviteCommand::execute(Server& server, Client* user,

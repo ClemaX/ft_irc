@@ -104,6 +104,7 @@ namespace irc
 
 	private:
 		Channel();
+		std::string	setChannelName(std::string channelName);
 
 	public:
 		channelClientMap	clientsMap;
@@ -112,6 +113,8 @@ namespace irc
 
 		ChannelModes		channelModes;
 		std::string const			name;
+
+		char				channelType;
 
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
@@ -144,6 +147,11 @@ namespace irc
 		bool	isStatusBanned(Client *user) const;
 		bool	isStatusException(Client *user) const;
 		bool	isStatusInvite(Client *user) const;
+
+		bool	isLocalChannel(void) const;
+		bool	isNetworkChannel(void) const;
+		bool	isNetworkSafeChannel(void) const;
+		bool	isNetworkUnmoderatedChannel(void) const;
 
 	// Message
 
@@ -181,4 +189,5 @@ namespace irc
 		bool	removeInviteList(std::string nickname);
 
 	};
+
 }

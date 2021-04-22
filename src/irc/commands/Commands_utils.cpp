@@ -4,6 +4,8 @@
 namespace irc
 {
 
+	
+
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue)
 	{
 		std::string::const_iterator	it;
