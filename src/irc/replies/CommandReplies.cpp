@@ -8,14 +8,36 @@ namespace irc
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
+	WelcomeReply::WelcomeReply(const std::string& serverName, const std::string& nickname,
+	const std::string& username, const std::string& hostname)
+	: NumericReply(serverName, IRC_RPL_WELCOME) // Change by define
+	{ std::cout << "Welcome to the Internet Relay Network " << nickname << "!" << username << "@"
+	<< hostname << std::endl; }
+
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"
+	YourHostReply::YourHostReply(const std::string& serverName, const std::string& versionName)
+	: NumericReply(serverName, IRC_RPL_YOURHOST)
+	{ std::cout << "Your host is" << serverName << ", running version " << versionName << std::endl; }
+
 // 003     IRC_RPL_CREATED
 //             "This server was created <date>"
+	CreatedReply::CreatedReply(const std::string& serverName, const std::string& date)
+	: NumericReply(serverName, IRC_RPL_CREATED)
+	{ std::cout << "This server was created " << date << std::endl; }
+
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"
+	MyInfoReply::MyInfoReply(const std::string& serverName, const std::string& version,
+	const std::string& umodes, const std::string& chmodes)
+	: NumericReply(serverName, IRC_RPL_MYINFO)
+	{ std::cout << serverName << " " << version << " " << umodes << " " << chmodes << std::endl; }
+
 // 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"
+	BounceReply::BounceReply(const std::string& serverName, const std::string& portNB)
+	: NumericReply(serverName, IRC_RPL_BOUNCE)
+	{ std::cout << "Try server " << serverName << ", port " << portNB << std::endl; }
 
 // 302     IRC_RPL_USERHOST
 //             ":[<reply>{<space><reply>}]"
@@ -177,7 +199,7 @@ namespace irc
 		else if (!op)
 			message << " +";
 		message << " " << client->username;
-		
+
 
 	}
 // 315     IRC_RPL_ENDOFWHO

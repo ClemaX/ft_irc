@@ -274,6 +274,12 @@
 
 #define IRC_RPL_TRYAGAIN 263
 
+#define IRC_RPL_WELCOME 1
+#define IRC_RPL_YOURHOST 2
+#define IRC_RPL_CREATED 3
+#define IRC_RPL_MYINFO 4
+#define IRC_RPL_BOUNCE 5
+
 
 
 // TODO: Trace messages

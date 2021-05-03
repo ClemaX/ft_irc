@@ -13,14 +13,37 @@ namespace irc
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
+	struct WelcomeReply
+	: NumericReply
+	{
+		WelcomeReply(const std::string& serverName, const std::string& nickname,
+		const std::string& username, const std::string& hostname);
+	};
+
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"
+	struct YourHostReply
+	: NumericReply
+	{ YourHostReply(const std::string& serverName, const std::string& versionName); };
+
 // 003     IRC_RPL_CREATED
 //             "This server was created <date>"
+	struct CreatedReply
+	: NumericReply
+	{ CreatedReply(const std::string& serverName, const std::string& date); };
+
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"
+	struct MyInfoReply
+	: NumericReply
+	{ MyInfoReply(const std::string& serverName, const std::string& version,
+	const std::string& umodes, const std::string& chmodes); };
+
 // 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"
+	struct BounceReply
+	: NumericReply
+	{ BounceReply(const std::string& serverName, const std::string& portNB); };
 
 // 302     IRC_RPL_USERHOST
 //             ":[<reply>{<space><reply>}]"
@@ -178,7 +201,7 @@ namespace irc
 		MotdReply(std::string const& serverName, std::string const& nickName,
 			std::string const& motd)
 			throw(AMessage::InvalidMessageException);
-	};	
+	};
 // 376     IRC_RPL_ENDOFMOTD
 //             ":End of /MOTD command"
 	struct EndOfMotdReply	:	NumericReply
