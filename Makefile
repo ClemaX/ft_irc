@@ -55,7 +55,7 @@ DEPS = $(OBJS:.o=.d)
 # Flags
 CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
-LDFLAGS = $(LIBDIRS:%=-L%)
+LDFLAGS = $(LIBDIRS:%=-L%) -g3
 LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
 # Compiling commands
@@ -63,7 +63,6 @@ COMPILE.cpp = $(CXX) $(DFLAGS) $(CXXFLAGS) -c
 COMPILE.o = $(LD) $(LDFLAGS)
 
 all: $(BINDIR)/$(NAME)
-	./ircserv
 
 # Directories
 $(OBJDIR) $(BINDIR):

@@ -4,7 +4,7 @@
 
 #include <cstring> // using strerror
 
-class	SocketException	:	public ::std::exception
+class	SocketException	:	public std::exception
 {
 protected:
 	const int	err;
@@ -13,6 +13,10 @@ protected:
 public:
 	SocketException(int err)
 		:	err(err), errMeaning(strerror(err))
+	{ }
+
+	SocketException(int err, char const* errMeaning)
+		:	err(err), errMeaning(errMeaning)
 	{ }
 
 	char const*	why() const throw()

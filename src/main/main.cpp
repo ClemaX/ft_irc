@@ -18,7 +18,12 @@ int			main(int ac, char const *av[])
 	try
 	{ config = irc::ServerConfig(ac, av); }
 	catch (std::invalid_argument const& e)
-	{ std::cerr << "Invalid argument: " << e.what() << std::endl; printUsage(av[0]); return 1; };
+	{ std::cerr << "Invalid argument: " << e.what() << std::endl; printUsage(av[0]); return 1; }
+	catch (std::out_of_range const& e)
+	{ std::cerr << "Invalid config key: " << e.what() << std::endl; return 2; }
+	catch (...)
+	{ std::cerr << "Unexpected exception!"; return 3; };
+
 
 	irc::Server			server(config);
 	int					err = 0;

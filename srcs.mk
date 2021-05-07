@@ -11,16 +11,16 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		Message.cpp\
 		Server.cpp\
 		ServerConfig.cpp\
-		$(addprefix replies/,\
-			NumericReplies.cpp\
-			CommandReplies.cpp\
-			ErrorReplies.cpp\
-		)\
 		$(addprefix commands/,\
 			Command.cpp\
 			Commands_utils.cpp\
 			Commands.cpp\
 			Modes.cpp\
+		)\
+		$(addprefix replies/,\
+			CommandReplies.cpp\
+			ErrorReplies.cpp\
+			NumericReplies.cpp\
 		)\
 	)\
 	$(addprefix main/,\
@@ -32,6 +32,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	)\
 	$(addprefix utils/,\
 		atoi.cpp\
+		bindAddress.cpp\
 		crypto.cpp\
 		itoa.cpp\
 		parseField.cpp\

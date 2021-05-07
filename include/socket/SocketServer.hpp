@@ -19,13 +19,14 @@ protected:
 	typedef	std::map<int, connection*>		connectionMap;
 	typedef	std::queue<int>					connectionQueue;
 
-	unsigned			portNumber;
+	std::string			hostname;
+	std::string			port;
+
 	unsigned			maxClients;
 	fd_set				connectionSet;
 	connectionMap		fdConnectionMap;
 	connectionQueue		disconnectedFds;
 
-	connection::address	serverAddr;
 	int					listenFd;
 	int					highestFd;
 	char				buffer[SOCKET_BUFFER_SIZE + 1];
@@ -50,7 +51,8 @@ public:
 	class	ServerException	:	public std::exception
 	{ };
 
-	SocketServer(unsigned portNumber, unsigned maxClients);
+	SocketServer(std::string const& hostname, std::string const& port,
+		unsigned maxClients);
 
 	SocketServer();
 

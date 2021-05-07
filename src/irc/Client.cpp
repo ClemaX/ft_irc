@@ -12,7 +12,7 @@ namespace irc
 
 
 // --- Client ---
-	Client::Client(int fd, struct sockaddr_in const& address)
+	Client::Client(int fd, address const& address)
 		:	SocketConnection(fd, address)
 	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
 
@@ -109,9 +109,9 @@ namespace irc
 
 	/**
 	 * 	@brief Return a pointer to the channel which name is channelName.
-	 * 
+	 *
 	 * 	@param channelName The name of the channel.
-	 * 
+	 *
 	 * 	NOTE: The search is done among all the channels in the database
 	*/
 
@@ -140,7 +140,7 @@ namespace irc
 	{
 		if (!channel)
 			return false;
-		
+
 		std::string const &channelName = channel->name;
 
 		if (!isInChannel(channelName))

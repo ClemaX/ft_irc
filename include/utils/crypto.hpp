@@ -1,8 +1,7 @@
+#pragma once
 
-# pragma once
-
-# include <openssl/sha.h>
-# include <string>
+#include <openssl/sha.h>
+#include <string>
 
 struct crypto_exeption
 : public std::exception

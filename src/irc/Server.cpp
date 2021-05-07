@@ -14,7 +14,7 @@ namespace irc
 	}
 
 	Server::Server(ServerConfig const& config)
-		:	SocketServer(ft::atoi(config[IRC_CONF_PORT]), 10),
+		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
 			config(config),
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
 				SHA256_DIGEST_LENGTH * 2)
@@ -75,8 +75,8 @@ namespace irc
 
 		std::cout << "New connection: "
 			<< "\n\tfd: " << connectionFd
-			<< "\n\tip: " << address.sin_addr.s_addr
-			<< "\n\tport: " << address.sin_port
+			<< "\n\tip: " << address.sin6_addr
+			<< "\n\tport: " << address.sin6_port
 			<< std::endl;
 
 		database->addClient(newClient);

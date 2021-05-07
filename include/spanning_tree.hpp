@@ -1,10 +1,10 @@
+#pragma once
 
-# include <limits>
-# include <string>
-# include <deque>
-# include <algorithm>
+#include <limits>
+#include <string>
+#include <deque>
+#include <algorithm>
 
-# pragma once
 
 /* TO DO :
 - A .cpp
@@ -81,13 +81,13 @@ namespace ft
 	/**
 	 * 	@brief Generates a std::deque<std::string> that contains all
 	 * 	the possible paths following the format: server->identifier + ":".
-	 * 
+	 *
 	 * 	@tparam T A server type
 	 * 	@param root A pointer the "root" node of the spanning tree.
 	 * 	@param dest A pointer the destination node of the spanning tree.
 	 * 	@param prev A string containing a formated version of the previous
 	 * 	paths starting from the @p root.
-	 * 
+	 *
 	 * 	@return A deque containg all the formated paths as specified.
 	 * 	NOTE: Never attempt to inline this function (recursive architecture).
 	*/
@@ -108,7 +108,7 @@ namespace ft
 		/* Init or update a path */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
 			paths.push_back(prev += dynamic_cast<Node_Ptr>(root->childs[i]->child)->value.id + std::string(":"));
-		
+
 		/* Iterate */
 		for (size_type i = 0 ; i < root->amount_childs ; i++)
 			gen_path_list(root->childs[i].child, dest, prev);
@@ -119,11 +119,11 @@ namespace ft
 
 	/**
 	 * 	@brief Return a formated string of the shortest path.
-	 * 
+	 *
 	 * 	@tparam T A server type.
 	 * 	@param root A pointer to the "root" node of the spanning tree.
 	 * 	@param dest A pointer to the destination node.
-	 * 
+	 *
 	 * 	NOTE: The formated syntax is: <server->name> + ":"
 	*/
 	template <typename T>
@@ -158,4 +158,3 @@ namespace ft
 	}
 
 }
-

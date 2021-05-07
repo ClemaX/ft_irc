@@ -1,6 +1,8 @@
 #include <socket/SocketServer.hpp>
 #include <fcntl.h>
 
+#include <utils/bindAddress.hpp>
+
 void	SocketServer::addConnection(int connectionFd,
 	SocketConnection* connection)
 {
@@ -36,14 +38,14 @@ void	SocketServer::clearConnections()
 }
 
 SocketConnection*	SocketServer::onConnection(int connectionFd,
-	struct sockaddr_in const& address)
+	socketAddress const& address)
 {
 	SocketConnection*	connection = new SocketConnection(connectionFd, address);
 
 	std::cout << "New connection: "
 		<< "\n\tfd: " << connectionFd
-		<< "\n\tip: " << address.sin_addr.s_addr
-		<< "\n\tport: " << address.sin_port
+		<< "\n\tip: " << address.sin6_addr
+		<< "\n\tport: " << address.sin6_port
 		<< std::endl;
 
 	return (connection);
@@ -91,30 +93,26 @@ void	SocketServer::checkActivity(int connectionFd)
 	}
 }
 
-SocketServer::SocketServer(unsigned portNumber, unsigned maxClients)
-	:	portNumber(portNumber), maxClients(maxClients),
+SocketServer::SocketServer(std::string const& hostname, std::string const &port, unsigned maxClients)
+	:	hostname(hostname), port(port), maxClients(maxClients),
 		listenFd(0), highestFd(0)
 {
-	if (this->portNumber == 0)
-		this->portNumber = 6666;
+	if (this->hostname == "")
+		this->hostname = "::";
 	if (this->maxClients == 0)
 		this->maxClients = 10;
+
 	FD_ZERO(&connectionSet);
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = INADDR_ANY;
-	serverAddr.sin_port = htons(this->portNumber);
 }
 
 SocketServer::SocketServer()
-	:	portNumber(2525),
+	:	hostname("::"),
+		port("2525"),
 		maxClients(10),
 		listenFd(0),
 		highestFd(0)
 {
 	FD_ZERO(&connectionSet);
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = INADDR_ANY;
-	serverAddr.sin_port = htons(portNumber);
 }
 
 SocketServer::~SocketServer()
@@ -131,31 +129,26 @@ void	SocketServer::start() throw(ServerException, SocketException)
 	if (listenFd > 0)
 		throw ServerException();
 
-	// Open a new socket
-	listenFd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	// Bind address
+	listenFd = bindAddress(hostname, port, SOCK_STREAM, SOCK_NONBLOCK, IPPROTO_IP);
+
+	if (listenFd < 0)
+		throw SocketOpenException(errno);
 
 	#if SOCK_NONBLOCK == 0
 		fcntl(listenFd, F_SETFL, O_NONBLOCK);
 	#endif
-
-	if (listenFd < 0)
-		throw SocketOpenException(errno);
 
 	// Allow multiple concurrent connections
 	if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR,
 		reinterpret_cast<char*>(&opt), sizeof(opt)) < 0 )
 	{ int err = errno; stop(); throw SocketOptionException(err); }
 
-	// Bind the socket to the server address
-	if (bind(listenFd,
-		reinterpret_cast<struct sockaddr*>(&serverAddr),sizeof(serverAddr)) < 0)
-	{ int err = errno; stop(); throw SocketBindException(err); }
-
 	// Listen for new connections
 	if (listen(listenFd, 10) < 0)
 	{ int err = errno; stop(); throw SocketListenException(err); }
 
-	std::cout << "Listening on port " << portNumber << "..." << std::endl;
+	std::cout << "Listening on " << hostname << ':' << port << "..." << std::endl;
 
 	// Add listening socket to connections
 	FD_SET(listenFd, &connectionSet);
@@ -163,7 +156,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 
 	// Check for incoming connections
 	int					activity;
-	struct sockaddr_in	clientAddr;
+	struct sockaddr_in6	clientAddr;
 	socklen_t			addrLen = sizeof(clientAddr);
 
 	while (true)
@@ -189,8 +182,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		{
 			int	incomingFd;
 
-			incomingFd = accept(listenFd,
-				reinterpret_cast<struct sockaddr*>(&clientAddr), &addrLen);
+			incomingFd = accept(listenFd, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
 
 			if (incomingFd < 0)
 			{
