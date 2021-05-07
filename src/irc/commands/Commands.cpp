@@ -140,14 +140,14 @@ namespace irc
 					*user << NoSuchChannelError(SERVER_NAME, name);
 					// return false;										//do we leave or check the next arguments ?
 				}
-				
+
 			}
 			else
 				channel->addClient(user, password, isOp);
 		}
 		return true;
 
-	// Errors not used yet 
+	// Errors not used yet
         //    ERR_BADCHANMASK
         //    ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE
 
@@ -228,7 +228,7 @@ namespace irc
 			flagArgument = arguments[2];
 
 		if (!server.database->getClient(nameArgument))
-			return server.parseChannelMode(user, nameArgument, flags, flagArgument);		
+			return server.parseChannelMode(user, nameArgument, flags, flagArgument);
 		if (!user->nickname.compare(nameArgument))
 			return server.parseUserMode(user, flags, flagArgument);
 		*user << UsersDontMatchError(SERVER_NAME);
@@ -470,7 +470,7 @@ namespace irc
 				channelsQueue.pop();
 			const std::string clientNickname = usersQueue.front();
 			usersQueue.pop();
-		
+
 			Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
 			if (!channel || !channel->isVisibleForClient(user))
 			{
@@ -505,11 +505,11 @@ namespace irc
 				}
 			}
 		}
-		
+
 		return true;
 
 		// Errors not used yet
-			// ERR_BADCHANMASK                 
+			// ERR_BADCHANMASK
 	}
 
 
@@ -534,7 +534,7 @@ namespace irc
 		if (!arguments.size() || !arguments[0].compare("0") || !arguments[0].compare("*"))
 			user->listAllVisibleUsersWhoQueryInfo();
 		else
-		{	
+		{
 			mask = arguments[0];
 			int	opFlag = 0;
 			if (arguments.size() > 1 && !arguments[1].compare("o"))
@@ -545,7 +545,7 @@ namespace irc
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else
 				user->matchMaskWhoQueryInfo(mask); // function to complete with match with users' server
-		}	
+		}
 		*user << EndOfWhoReply(SERVER_NAME, mask);
 
 		return true;
@@ -553,6 +553,43 @@ namespace irc
 		// Errors/replies not used yet
 			// ERR_NOSUCHSERVER
 
+	}
+
+// --- NICK --- //
+
+	Server::NickCommand::NickCommand()
+	: Command("/nick")
+	{ }
+
+	bool
+	Server::NamesCommand::execute(Server& server, Client* user,
+		argumentList const& arguments) const
+	{
+		// TO DO: Did i handle the errors well ?
+		// TO DO: DO i have to delete something in some database ?
+		// TO DO: What happens if an user alreaddy has a nick and uses the NICK cmd
+		//		with only one argument ? Should i handle that too ?
+		// TO DO: Did i handle well the collisions ?
+		// TO DO: Does this function need to write in some stream ?
+		// TO DO: What do when arguments.at(0) == arguments.at(1) ?
+
+		// 0 < arguments.size() < 2
+		if (arguments.empty() || arguments.size() > 2
+		// nickname to change is not user's nick
+		|| (arguments.size() - 2UL == 0UL && user->nickname != arguments.at(0)))
+			return (false);
+
+		// <NICK> <nickname> [ <new_nickname> ]
+		const std::string& nick = arguments.size() - 1UL == 0UL
+		? arguments.at(0) : arguments.at(1);
+
+		// Check for collisions
+		if (server.database->getClient(nick) == 0)
+			return (false);
+
+		// Edit nickname
+		user->nickname = nick;
+		return (true);
 	}
 
 

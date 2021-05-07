@@ -180,8 +180,13 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-
-
+		struct NickCommand
+		: public Command
+		{
+			NickCommand();
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
 
 
 		bool	parseChannelMode(Client *user, std::string const & channelName,
