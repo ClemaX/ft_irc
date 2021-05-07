@@ -38,7 +38,7 @@ namespace IRC
 // --- Display functions --- //
 
 	inline void
-    IRCDatabase::displayAllChannelsInfo(void) const
+    IRCDatabase::displayAllChannelListsInfo(void) const
 	{
 		for (databaseChannelsMap::const_iterator it = dataChannelsMap.begin() ; it != dataChannelsMap.end() ; it++)
 			it->second->displayInfo();

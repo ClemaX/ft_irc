@@ -5,7 +5,7 @@ namespace irc
 
 // --- ClientModes ---
 	ClientModes::ClientModes()
-		:	i(false), s(false), w(false), o(false)
+		:	binMode(0)
 	{ }
 
 	ClientModes::~ClientModes() {}
@@ -33,37 +33,40 @@ namespace irc
 		return *this;
 	}
 
+	Client const&	Client::operator<<(PrivateMessage const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
 	void	Client::flush() throw(SocketWriteException)
 	{
 		SocketConnection::operator<<(writeBuffer);
 		writeBuffer.clear();
 	}
 
+
+
+
 	void	Client::joinChannel(Channel * channel)
 	{
 		clientChannels.insert(clientChannelPair(channel->name, channel));
-std::cout << "client " << username << " has joined channel " << channel->name << "\n";
 	}
 
 	void	Client::leaveChannel(Channel * channel)
 	{
 		if (clientChannels.find(channel->name) == clientChannels.end())
 			return ;
-		clientChannels.erase(channel->name);
-std::cout << "client " << username << " has left channel " << channel->name << "\n";
+		clientChannels.erase(ft::strToLower(channel->name));
 	}
 
 	void	Client::leaveChannel(std::string const & channelName)
 	{
 		clientChannelMap::iterator it = clientChannels.find(ft::strToLower(channelName));
-		Channel *channel;
 
 		if (it == clientChannels.end())
 			return ;
-		channel = it->second;
 		clientChannels.erase(ft::strToLower(channelName));
-std::cout << "client " << username << " has left channel " << channel->name << "\n";
-		channel->removeClient(this);
 	}
 
 	void	Client::leaveAllChannels()
@@ -73,7 +76,7 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		while (!clientChannels.empty())
 		{
 			it = clientChannels.begin();
-			(*it).second->removeClient(this);
+			it->second->removeClient(this, "");
 		}
 	}
 
@@ -82,6 +85,19 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 
 	bool	Client::isInChannel(std::string const & channelName) const
 	{return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end());}
+
+	bool	Client::isInSameChannel(Client *client) const
+	{
+		clientChannelMap::const_iterator itb = clientChannels.begin();
+		clientChannelMap::const_iterator ite = clientChannels.end();
+		while (itb != ite)
+		{
+			if (client->isInChannel(itb->first))
+				return true;
+			itb++;
+		}
+		return false;
+	}
 
 	Channel	*Client::getChannel(std::string const & channelName) const
 	{
@@ -105,13 +121,20 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 		if (channel)
 			return channel;
 
-		IRCDatabase::databaseChannelsMap channelMap = server->database->dataChannelsMap;
-		IRCDatabase::databaseChannelsMap::const_iterator it = channelMap.find(ft::strToLower(channelName));
-		if (it == channelMap.end())
+		channel = server->getChannel(channelName);
+		if (!channel)
 			return NULL;
-		channel = it->second;
+		if (!channel->isLocalChannelVisibleForClient(this))
+			return NULL;
 		return channel;
 	}
+
+
+	void	Client::receiveMessage(Client *client, std::string const &message)	// check if invisible ?
+	{
+		*this << PrivateMessage(client->nickname, message);
+	}
+
 
 	bool	Client::listChannelInfo(Channel *channel)
 	{
@@ -122,21 +145,83 @@ std::cout << "client " << username << " has left channel " << channel->name << "
 
 		if (!isInChannel(channelName))
 		{
-			if (channel->channelModes.s == true)
+			if (channel->channelModes.binMode & M_s)
 				return false;
-			if (channel->channelModes.p == true)
+			else if ((channel->channelModes.binMode & M_p) && channel->isVisibleForClient(this))
 			{
 				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
 				return false;
 			}
+			else if (channel->isLocalChannelVisibleForClient(this))
+				*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+			return false;
 		}
-		*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+		else
+			*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
 		return true;
 	}
 
-	bool	Client::listAllChannelsInfo(void)
+	bool	Client::listAllChannelsListInfo(void)
 	{
-		server->database->displayAllChannelsInfo(this);
+		for (IRCDatabase::databaseChannelsMap::const_iterator it = server->database->dataChannelsMap.begin();
+			it != server->database->dataChannelsMap.end(); it++)
+			this->listChannelInfo(it->second);
 		return true;
 	}
+
+
+		bool	Client::listChannelWhoQueryInfo(Channel *channel, int opFlag)
+	{
+		if (!channel)
+			return false;
+		
+		std::string const &channelName = channel->name;
+
+		if (!isInChannel(channelName) &&
+			((channel->channelModes.binMode & M_s) || (channel->channelModes.binMode & M_p)))
+				return false;
+		else
+		{
+			Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
+			Channel::channelClientMap::iterator ite = channel->clientsMap.end();
+			while (itb != ite)
+			{
+				if (!opFlag || channel->isOperator(itb->first))
+					*this << WhoReply(SERVER_NAME, channelName, itb->first, channel->isOperator(itb->first));
+				itb++;
+			}
+		}
+		return true;
+	}
+
+	bool	Client::listAllVisibleUsersWhoQueryInfo(void)
+	{
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
+			it != server->database->dataClientsMap.end(); it++)
+		{
+			Client *client = it->second;
+			if (!(client->clientModes.binMode & Mu_i) && !this->isInSameChannel(client))
+				*this << WhoReply(SERVER_NAME, "", client, -1);
+		}
+		return true;
+	}
+
+	bool	Client::matchMaskWhoQueryInfo(std::string const &mask)
+	{
+		// currently match with users' host, real name and nickname
+		// to do :
+		//		match with users' server
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
+			it != server->database->dataClientsMap.end(); it++)
+		{
+			Client *client = it->second;
+			if (!(client->clientModes.binMode & Mu_i) &&
+					(matchPattern_global(client->nickname, mask) ||
+					matchPattern_global(client->username, mask) ||
+					matchPattern_global(client->hostname, mask)))
+				*this << WhoReply(SERVER_NAME, "", client, -1);
+		}
+		return true;
+	}
+
 }

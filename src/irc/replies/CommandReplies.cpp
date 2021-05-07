@@ -8,14 +8,36 @@ namespace irc
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
+	WelcomeReply::WelcomeReply(const std::string& serverName, const std::string& nickname,
+	const std::string& username, const std::string& hostname)
+	: NumericReply(serverName, IRC_RPL_WELCOME) // Change by define
+	{ std::cout << "Welcome to the Internet Relay Network " << nickname << "!" << username << "@"
+	<< hostname << std::endl; }
+
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"
+	YourHostReply::YourHostReply(const std::string& serverName, const std::string& versionName)
+	: NumericReply(serverName, IRC_RPL_YOURHOST)
+	{ std::cout << "Your host is" << serverName << ", running version " << versionName << std::endl; }
+
 // 003     IRC_RPL_CREATED
 //             "This server was created <date>"
+	CreatedReply::CreatedReply(const std::string& serverName, const std::string& date)
+	: NumericReply(serverName, IRC_RPL_CREATED)
+	{ std::cout << "This server was created " << date << std::endl; }
+
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"
+	MyInfoReply::MyInfoReply(const std::string& serverName, const std::string& version,
+	const std::string& umodes, const std::string& chmodes)
+	: NumericReply(serverName, IRC_RPL_MYINFO)
+	{ std::cout << serverName << " " << version << " " << umodes << " " << chmodes << std::endl; }
+
 // 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"
+	BounceReply::BounceReply(const std::string& serverName, const std::string& portNB)
+	: NumericReply(serverName, IRC_RPL_BOUNCE)
+	{ std::cout << "Try server " << serverName << ", port " << portNB << std::endl; }
 
 // 302     IRC_RPL_USERHOST
 //             ":[<reply>{<space><reply>}]"
@@ -127,7 +149,7 @@ namespace irc
 							std::string const &nickname)
 		: NumericReply(serverName, IRC_RPL_INVITING)
 	{
-		message << channelName << " " << nickname;
+		message << nickname << " has been invited to join " << channelName;
 	}
 
 // 342     IRC_RPL_SUMMONING
@@ -136,10 +158,10 @@ namespace irc
 // 346 IRC_RPL_INVITELIST
 //             "<channel> <invitemask>"
 	InviteListReply::InviteListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &inviteMask)
+							std::string const &sign, std::string const &inviteMask)
 		: NumericReply(serverName, IRC_RPL_INVITELIST)
 	{
-		message << channelName << " " << inviteMask;
+		message << channelName << " " << sign << "I " << inviteMask;
 	}
 // 347 IRC_RPL_ENDOFINVITELIST
 //             "<channel> :End of channel invite list"
@@ -151,10 +173,10 @@ namespace irc
 // 348 IRC_RPL_EXCEPTLIST
 //             "<channel> <exceptionmask>"
 	ExceptionListReply::ExceptionListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &exceptionMask)
+							std::string const &sign, std::string const &exceptionMask)
 		: NumericReply(serverName, IRC_RPL_EXCEPTLIST)
 	{
-		message << channelName << " " << exceptionMask;
+		message << channelName << " " << sign << "e " << exceptionMask;
 	}
 // 349 IRC_RPL_ENDOFEXCEPTLIST
 //             "<channel> :End of channel exception list"
@@ -168,8 +190,25 @@ namespace irc
 
 // 352     IRC_RPL_WHOREPLY
 //             "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>"
+	WhoReply::WhoReply(std::string const& serverName, std::string const &mask, Client *client, int op)	// need to add host, server, hopcount
+		: NumericReply(serverName, IRC_RPL_WHOREPLY)
+	{
+		message << mask << " " << serverName << " " << client->nickname;
+		if (op == 1)
+			message << " @";
+		else if (!op)
+			message << " +";
+		message << " " << client->username;
+
+
+	}
 // 315     IRC_RPL_ENDOFWHO
 //             "<name> :End of /WHO list"
+	EndOfWhoReply::EndOfWhoReply(std::string const& serverName, std::string const &mask)
+		: NumericReply(serverName, IRC_RPL_ENDOFWHO)
+	{
+		message << mask << " :End of /WHO list";
+	}
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
@@ -201,10 +240,10 @@ namespace irc
 // 367     IRC_RPL_BANLIST
 //             "<channel> <banid>"
 	BanListReply::BanListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &banid)
+							std::string const &sign, std::string const &banid)
 		: NumericReply(serverName, IRC_RPL_BANLIST)
 	{
-		message << channelName << " " << banid;
+		message << channelName << " " << sign << "b " << banid;
 	}
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"

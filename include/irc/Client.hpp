@@ -7,6 +7,7 @@
 #include <socket/SocketConnection.hpp>
 
 #include <irc/replies/IReply.hpp>
+#include <irc/PrivateMessage.hpp>
 #include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
@@ -30,10 +31,13 @@ namespace irc
 	private:
 
 	public:
-		bool	i;
-		bool	s;
-		bool	w;
-		bool	o;
+
+		#define	Mu_i 1
+		#define	Mu_s 2
+		#define	Mu_w 4
+		#define	Mu_o 8
+
+		int	binMode;
 
 		// i - marks a users as invisible;
         // s - marks a user for receipt of server notices;
@@ -50,7 +54,6 @@ namespace irc
 	private:
 		typedef ::std::map<std::string, Channel*>	clientChannelMap;
 		typedef ::std::pair<std::string, Channel*>	clientChannelPair;
-
 
 	public:
 		std::string	readBuffer;
@@ -69,6 +72,7 @@ namespace irc
 
 		Client const&	operator<<(std::string const& str);
 		Client const&	operator<<(NumericReply const& reply);
+		Client const&	operator<<(PrivateMessage const& reply);
 
 		void	flush() throw(SocketWriteException);
 
@@ -82,11 +86,19 @@ namespace irc
 		bool	isInChannel(Channel *channel) const;
 		bool	isInChannel(std::string const & channelName) const;
 
+		bool	isInSameChannel(Client *client) const;
+
 		Channel	*getChannel(std::string const & channelName) const;
 		Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
+
+		void	receiveMessage(Client *client, std::string const &message);
 		
 		bool	listChannelInfo(Channel *channel);
-		bool	listAllChannelsInfo(void);
+		bool	listAllChannelsListInfo(void);
+
+		bool	listChannelWhoQueryInfo(Channel *channel, int opFlag);
+		bool	listAllVisibleUsersWhoQueryInfo(void);
+		bool	matchMaskWhoQueryInfo(std::string const &mask);
 	};
 }

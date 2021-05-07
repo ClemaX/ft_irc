@@ -13,14 +13,37 @@ namespace irc
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
+	struct WelcomeReply
+	: NumericReply
+	{
+		WelcomeReply(const std::string& serverName, const std::string& nickname,
+		const std::string& username, const std::string& hostname);
+	};
+
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"
+	struct YourHostReply
+	: NumericReply
+	{ YourHostReply(const std::string& serverName, const std::string& versionName); };
+
 // 003     IRC_RPL_CREATED
 //             "This server was created <date>"
+	struct CreatedReply
+	: NumericReply
+	{ CreatedReply(const std::string& serverName, const std::string& date); };
+
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"
+	struct MyInfoReply
+	: NumericReply
+	{ MyInfoReply(const std::string& serverName, const std::string& version,
+	const std::string& umodes, const std::string& chmodes); };
+
 // 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"
+	struct BounceReply
+	: NumericReply
+	{ BounceReply(const std::string& serverName, const std::string& portNB); };
 
 // 302     IRC_RPL_USERHOST
 //             ":[<reply>{<space><reply>}]"
@@ -107,7 +130,7 @@ namespace irc
 //             "<channel> <invitemask>"
 	struct InviteListReply	:	NumericReply
 	{ InviteListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &inviteMask); };
+							std::string const &sign, std::string const &inviteMask); };
 // 347 IRC_RPL_ENDOFINVITELIST
 //             "<channel> :End of channel invite list"
 	struct EndOfInviteListReply	:	NumericReply
@@ -116,7 +139,7 @@ namespace irc
 //             "<channel> <exceptionmask>"
 	struct ExceptionListReply	:	NumericReply
 	{ ExceptionListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &exceptionMask); };
+							std::string const &sign, std::string const &exceptionMask); };
 // 349 IRC_RPL_ENDOFEXCEPTLIST
 //             "<channel> :End of channel exception list"
 	struct EndOfExceptionListReply	:	NumericReply
@@ -127,8 +150,12 @@ namespace irc
 
 // 352     IRC_RPL_WHOREPLY
 //             "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>"
+	struct WhoReply	:	NumericReply
+	{ WhoReply(std::string const& serverName, std::string const &mask, Client *client, int op); };
 // 315     IRC_RPL_ENDOFWHO
 //             "<name> :End of /WHO list"
+	struct EndOfWhoReply	:	NumericReply
+	{ EndOfWhoReply(std::string const& serverName, std::string const &mask); };
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
@@ -148,7 +175,7 @@ namespace irc
 //             "<channel> <banid>"
 	struct BanListReply	:	NumericReply
 	{ BanListReply(std::string const& serverName, std::string const &channelName,
-							std::string const &banid); };
+							std::string const &sign, std::string const &banid); };
 // 368     IRC_RPL_ENDOFBANLIST
 //             "<channel> :End of channel ban list"
 	struct EndOfBanListReply	:	NumericReply
@@ -174,7 +201,7 @@ namespace irc
 		MotdReply(std::string const& serverName, std::string const& nickName,
 			std::string const& motd)
 			throw(AMessage::InvalidMessageException);
-	};	
+	};
 // 376     IRC_RPL_ENDOFMOTD
 //             ":End of /MOTD command"
 	struct EndOfMotdReply	:	NumericReply

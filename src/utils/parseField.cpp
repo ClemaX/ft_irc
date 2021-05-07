@@ -28,7 +28,6 @@ namespace irc
 		return fieldLast;
 	}
 
-
 	std::string	mergeArguments(std::vector<std::string> arguments, size_t	begin_index)
 	{
 		std::string mergedArgument;
@@ -42,4 +41,5 @@ namespace irc
 		}
 		return mergedArgument;
 	}
+
 }

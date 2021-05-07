@@ -43,7 +43,7 @@ namespace irc
 		void	addChannel(Channel* const channel);
 		void	addClient(Client* const client);
 
-		void	displayAllChannelsInfo(void) const;
+		void	displayAllChannelListsInfo(void) const;
 
 	// --- Mode pointer functions --- //
 		void	createModeFunctionsMap();

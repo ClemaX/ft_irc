@@ -42,8 +42,7 @@ namespace irc
 		void	addClient(Client *client);
 
 		Client	*getClient(std::string const &nickname) const;
-
-		void	displayAllChannelsInfo(Client *client) const;
+		Channel	*getChannel(std::string const &channelName) const;
 
 	// --- Mode pointer functions --- //
 		void	createModeFunctionsMap();

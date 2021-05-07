@@ -18,7 +18,6 @@ namespace irc
 	struct	ChannelClient
 	{
 		Client*	client;
-		// bool	isChannelOperator;	// not used, the operators are stored in the channelNicknameMap channel->channelModes.o
 
 		ChannelClient();
 		ChannelClient(Client* client);
@@ -33,24 +32,26 @@ namespace irc
 	struct	ChannelModes
 	{
 	private:
-			// typedef std::map<Client*, ChannelClient> channelClientMap;
 			typedef std::map<Server*, Server*> channelServerMap;
 			typedef std::map<std::string, std::string> channelNicknameMap;
 
 	public:
+
+		#define	M_a 1
+		#define	M_i 2
+		#define	M_m 4
+		#define	M_n 8
+		#define	M_q 16
+		#define	M_p 32
+		#define	M_s 64
+		#define	M_r 128
+		#define	M_t 256
+
 		channelNicknameMap	O;
 		channelNicknameMap	o;
 		channelNicknameMap	v;
 
-		bool	a;
-		bool	i;
-		bool	m;
-		bool	n;
-		bool	q;
-		bool	p;
-		bool	s;
-		bool	r;
-		bool	t;
+		unsigned int	binMode;
 
 		size_t	l;
 		std::string	k;
@@ -88,13 +89,10 @@ namespace irc
 	class	Channel
 	{
 
-
 	public:
 		typedef std::map<Client*, ChannelClient> channelClientMap;
 		typedef std::map<Server*, Server*> channelServerMap;
 		typedef std::map<std::string, std::string> channelNicknameMap;
-		// typedef std::pair<Client*, ChannelClient> channelClientPair;
-		// typedef std::pair<Server*, Server*> channelServerPair;
 		
 		class	ChannelException		:	public std::exception { };
 
@@ -106,6 +104,7 @@ namespace irc
 
 	private:
 		Channel();
+		std::string	setChannelName(std::string channelName);
 
 	public:
 		channelClientMap	clientsMap;
@@ -115,13 +114,15 @@ namespace irc
 		ChannelModes		channelModes;
 		std::string const			name;
 
+		char				channelType;
+
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
 
 		Channel const&	operator<<(NumericReply const& reply);
+		Channel const&	operator<<(PrivateMessage const& reply);
 
 	// Get functions
-		// ChannelModes	getModes() const;
 		std::string	getTopic() const;
 		Client *getUser(std::string const & clientNickname) const;
 
@@ -134,7 +135,7 @@ namespace irc
 		bool	isInChannel(Client *client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
 
-		bool	isVisible(Client *client) const;
+		bool	isVisibleForClient(Client *client) const;
 
 		bool	isOperator(Client *client) const;						// also check for Creators
 		bool	isOperator(std::string const & clientNickname) const;	// also check for Creators
@@ -142,16 +143,29 @@ namespace irc
 		bool	isCreator(Client *client) const;
 		bool	isCreator(std::string const & clientNickname) const;
 
+		bool	isStatusVoice(Client *user) const;
 		bool	isStatusBanned(Client *user) const;
 		bool	isStatusException(Client *user) const;
 		bool	isStatusInvite(Client *user) const;
 
+		bool	isLocalChannel(void) const;
+		bool	isNetworkChannel(void) const;
+		bool	isNetworkSafeChannel(void) const;
+		bool	isNetworkUnmoderatedChannel(void) const;
+
+		bool	isLocalChannelVisibleForClient(Client const *client) const;
+
+	// Message
+
+
+	// Message
+		void	receiveMessage(Client *client, std::string const &message);
 
 	// Add/Remove functions
 		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
 		bool	addServer(Server* server);
 
-		bool	removeClient(Client* client);
+		bool	removeClient(Client* client, std::string const &leaveMessage);
 
 		bool	close();
 
@@ -177,4 +191,5 @@ namespace irc
 		bool	removeInviteList(std::string nickname);
 
 	};
+
 }

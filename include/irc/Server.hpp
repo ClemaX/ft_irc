@@ -12,6 +12,7 @@
 
 #include <socket/SocketServer.hpp>
 #include <irc/Channel.hpp>
+#include <irc/PrivateMessage.hpp>
 #include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
@@ -73,13 +74,6 @@ namespace irc
 				argumentList const& arguments) const = 0;
 		};
 
-		struct	ChannelCommand	:	public Command
-		{
-			bool const	isOperatorCommand;
-
-			ChannelCommand(std::string const& name, bool isOperatorCommand);
-		};
-
 		struct	PassCommand		:	public Command
 		{
 			PassCommand();
@@ -88,9 +82,34 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	KickCommand		:	public ChannelCommand
+		struct	PRIVMSGCommand		:	public Command
 		{
-			KickCommand();
+			PRIVMSGCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+// ============================================== //
+// ============================================== //
+		struct	ChannelCommand	:	public Command
+		{
+			bool const	isOperatorCommand;
+
+			ChannelCommand(std::string const& name, bool isOperatorCommand);
+		};
+// ============================================== //
+		struct	JoinCommand		:	public ChannelCommand
+		{
+			JoinCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	PartCommand		:	public ChannelCommand
+		{
+			PartCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -104,41 +123,9 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	InviteCommand	:	public ChannelCommand
-		{
-			InviteCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
 		struct	TopicCommand	:	public ChannelCommand
 		{
 			TopicCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	JoinCommand		:	public ChannelCommand
-		{
-			JoinCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	MotdCommand		:	public Command
-		{
-			MotdCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	PartCommand		:	public ChannelCommand
-		{
-			PartCommand();
 
 			virtual bool	execute(Server& server, Client* user,
 				argumentList const& arguments) const;
@@ -160,6 +147,43 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
+		struct	InviteCommand	:	public ChannelCommand
+		{
+			InviteCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	KickCommand		:	public ChannelCommand
+		{
+			KickCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+// ============================================== //
+// ============================================== //
+		struct	MotdCommand		:	public Command
+		{
+			MotdCommand();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	WhoQuery		:	public Command
+		{
+			WhoQuery();
+
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+
+
+
+
 		bool	parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
 		bool	parseUserMode(Client *user,	std::string & flags, std::string & flagArguments);
@@ -170,29 +194,38 @@ namespace irc
 		std::string::const_iterator last);
 
 	static const Server::PassCommand	passCommand;
+	static const Server::PRIVMSGCommand	privmsgCommand;
 	static const Server::JoinCommand	joinCommand;
-	static const Server::KickCommand	kickCommand;
-	static const Server::ModeCommand	modeCommand;
-	static const Server::ModeCommand	inviteCommand;
-	static const Server::TopicCommand	topicCommand;
-	static const Server::MotdCommand	motdCommand;
 	static const Server::PartCommand	partCommand;
+	static const Server::ModeCommand	modeCommand;
+	static const Server::TopicCommand	topicCommand;
 	static const Server::NamesCommand	namesCommand;
 	static const Server::ListCommand	listCommand;
+	static const Server::InviteCommand	inviteCommand;
+	static const Server::KickCommand	kickCommand;
+	static const Server::MotdCommand	motdCommand;
+	static const Server::WhoQuery		whoQuery;
 
 	static Server::Command const*const	commands[] =
 	{
 		&passCommand,
+		&privmsgCommand,
 	  	&joinCommand,
-		&kickCommand,
-		&modeCommand,
-		&inviteCommand,
-		&topicCommand,
-		&motdCommand,
 		&partCommand,
+		&modeCommand,
+		&topicCommand,
 		&namesCommand,
-		&listCommand
+		&listCommand,
+		&inviteCommand,
+		&kickCommand,
+		&motdCommand,
+		&whoQuery
 	};
+
+	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue);
+	bool	matchPattern_multiple(std::string const &str, std::string const &pattern);
+	bool	matchPattern_unique(std::string const &str, std::string const &pattern);
+	bool	matchPattern_global(std::string const &str, std::string const &pattern);
 
 	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
 }
