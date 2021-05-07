@@ -1,11 +1,26 @@
-#include <socket/SocketServer.hpp>
+#include <socket/SocketConnection.hpp>
+
+#include <iomanip>
+
+#include <unistd.h>
+#include <arpa/inet.h>
+
+
+std::ostream &operator<<(std::ostream &os, internetAddress const& addr)
+{
+	char	presentation[256];
+
+	inet_ntop(AF_INET6, &addr, presentation, sizeof(presentation));
+	os << presentation;
+	return os;
+}
 
 SocketConnection::SocketConnection() throw()
 	:	fd(0), socketAddress()
 { }
 
 
-SocketConnection::SocketConnection(int fd, struct sockaddr_in const& socketAddress)
+SocketConnection::SocketConnection(int fd, address const& socketAddress)
 	:	fd(fd), socketAddress(socketAddress)
 { }
 

@@ -10,22 +10,24 @@ namespace irc
 	unsigned char const	ServerConfig::argReqEnd = 5;
 
 	char const* ServerConfig::keys[] = {
-		IRC_CONF_HOST,
+		IRC_CONF_NETHOST,
 		IRC_CONF_NETPORT,
 		IRC_CONF_NETPASS,
 		IRC_CONF_PORT,
 		IRC_CONF_PASS,
 		IRC_CONF_MOTD,
+		IRC_CONF_HOSTNAME,
 		NULL
 	};
 
 	ServerConfig::ServerConfig()
 	{ }
 
-	ServerConfig::ServerConfig(std::istream &is)
+	ServerConfig::ServerConfig(std::istream &is) throw(std::out_of_range)
 	{ operator>>(is); }
 
 	ServerConfig::ServerConfig(std::string const& filepath)
+		throw(std::out_of_range)
 	{
 		// std::ifstream	file(filepath);
 		std::ifstream	file(filepath.c_str());
@@ -60,7 +62,7 @@ namespace irc
 	}
 
 	ServerConfig::ServerConfig(int ac, char const *av[])
-		throw(std::invalid_argument)
+		throw(std::invalid_argument, std::out_of_range)
 	{
 		int	i = 1;
 

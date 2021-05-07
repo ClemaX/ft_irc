@@ -6,6 +6,8 @@
 
 #include <socket/SocketExceptions.hpp>
 
+std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
+
 class	SocketConnection
 {
 public:
@@ -18,7 +20,7 @@ private:
 public:
 	SocketConnection() throw();
 
-	SocketConnection(int fd, struct sockaddr_in const& socketAddress);
+	SocketConnection(int fd, address const& socketAddress);
 
 	virtual	~SocketConnection() throw();
 
@@ -33,8 +35,8 @@ public:
 		throw(SocketWriteException);
 
 	inline internetAddress	getAddr() const throw()
-	{ return socketAddress.sin_addr.s_addr; }
+	{ return socketAddress.sin6_addr; }
 
 	inline internetPort		getPort() const throw()
-	{ return socketAddress.sin_port; }
+	{ return socketAddress.sin6_port; }
 };

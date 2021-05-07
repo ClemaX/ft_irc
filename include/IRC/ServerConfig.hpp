@@ -6,16 +6,17 @@
 #include <fstream> // using std::ifstream
 #include <algorithm> // using std::find
 
-#define IRC_CONF_NAME	"ircserv.conf"
-#define IRC_CONF_DELIM	'='
-#define IRC_CONF_SEP	';'
-#define IRC_CONF_NL		'\n'
-#define IRC_CONF_HOST	"HOST"
-#define IRC_CONF_NETPASS "NETPASS"
-#define IRC_CONF_NETPORT "NETPORT"
-#define IRC_CONF_PORT "PORT"
-#define IRC_CONF_PASS "PASS"
-#define IRC_CONF_MOTD "MOTD"
+#define IRC_CONF_NAME		"ircserv.conf"
+#define IRC_CONF_DELIM		'='
+#define IRC_CONF_SEP		';'
+#define IRC_CONF_NL			'\n'
+#define IRC_CONF_NETHOST	"NETHOST"
+#define IRC_CONF_NETPASS 	"NETPASS"
+#define IRC_CONF_NETPORT 	"NETPORT"
+#define IRC_CONF_HOSTNAME 	"HOSTNAME"
+#define IRC_CONF_PORT 		"PORT"
+#define IRC_CONF_PASS 		"PASS"
+#define IRC_CONF_MOTD 		"MOTD"
 
 namespace irc
 {
@@ -40,9 +41,9 @@ namespace irc
 		ServerConfig();
 		virtual ~ServerConfig();
 
-		ServerConfig(std::istream &is);
-		ServerConfig(std::string const& filepath);
-		ServerConfig(int ac, char const* av[]) throw(std::invalid_argument);
+		ServerConfig(std::istream &is) throw(std::out_of_range);
+		ServerConfig(std::string const& filepath) throw(std::out_of_range);
+		ServerConfig(int ac, char const* av[]) throw(std::invalid_argument, std::out_of_range);
 
 		bool	loadNetworkString(std::string const& network)
 			throw(std::invalid_argument);
