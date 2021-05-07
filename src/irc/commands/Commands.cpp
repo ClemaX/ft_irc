@@ -557,6 +557,25 @@ namespace irc
 
 // --- NICK --- //
 
+	namespace // If u don't understand, browse anonymous namespace
+	{
+		/**
+		 * 	@brief Return an avalaible (not collisioned) client nickname,
+		 * 	append a '_' for each collision found.
+		 *
+		 * 	@tparam db A template representing a database that has the
+		 * 	member: bool_conversible_type get_client(const std::string&)
+		 * 	@param nickname Reseach key.
+		 * 	@param database The database where the search will be performed.
+		 *
+		 * 	@return A valid nickname.
+		*/
+		template <typename db>
+		const std::string&
+		set_nickname(const std::string& nickname, const db& database)
+		{ return (database.getClient(nickname) ? set_nickname(nickname + "_", database) : nickname); }
+	}
+
 	Server::NickCommand::NickCommand()
 	: Command("/nick")
 	{ }
@@ -569,7 +588,6 @@ namespace irc
 		// TO DO: DO i have to delete something in some database ?
 		// TO DO: What happens if an user alreaddy has a nick and uses the NICK cmd
 		//		with only one argument ? Should i handle that too ?
-		// TO DO: Did i handle well the collisions ?
 		// TO DO: Does this function need to write in some stream ?
 		// TO DO: What do when arguments.at(0) == arguments.at(1) ?
 
@@ -580,15 +598,9 @@ namespace irc
 			return (false);
 
 		// <NICK> <nickname> [ <new_nickname> ]
-		const std::string& nick = arguments.size() - 1UL == 0UL
-		? arguments.at(0) : arguments.at(1);
+		user->nickname = set_nickname(arguments.size() - 1UL == 0UL
+		? arguments.at(0) : arguments.at(1), server.database);
 
-		// Check for collisions
-		if (server.database->getClient(nick) == 0)
-			return (false);
-
-		// Edit nickname
-		user->nickname = nick;
 		return (true);
 	}
 
