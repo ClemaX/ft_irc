@@ -62,6 +62,7 @@ namespace irc
 		~Server();
 
 		Channel *getChannel(const std::string & channelName) const;
+		const std::string& get_hostname() const;
 
 		struct	Command
 		{
@@ -188,6 +189,13 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
+		struct UserCommand
+		: public Command
+		{
+			UserCommand();
+			virtual bool	execute(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
 
 		bool	parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
@@ -197,35 +205,41 @@ namespace irc
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);
-
-	static const Server::PassCommand	passCommand;
-	static const Server::PRIVMSGCommand	privmsgCommand;
-	static const Server::JoinCommand	joinCommand;
-	static const Server::PartCommand	partCommand;
-	static const Server::ModeCommand	modeCommand;
-	static const Server::TopicCommand	topicCommand;
-	static const Server::NamesCommand	namesCommand;
-	static const Server::ListCommand	listCommand;
-	static const Server::InviteCommand	inviteCommand;
-	static const Server::KickCommand	kickCommand;
-	static const Server::MotdCommand	motdCommand;
-	static const Server::WhoQuery		whoQuery;
-
-	static Server::Command const*const	commands[] =
+	namespace
 	{
-		&passCommand,
-		&privmsgCommand,
-	  	&joinCommand,
-		&partCommand,
-		&modeCommand,
-		&topicCommand,
-		&namesCommand,
-		&listCommand,
-		&inviteCommand,
-		&kickCommand,
-		&motdCommand,
-		&whoQuery
-	};
+		const Server::PassCommand		passCommand;
+		const Server::PRIVMSGCommand	privmsgCommand;
+		const Server::JoinCommand		joinCommand;
+		const Server::PartCommand		partCommand;
+		const Server::ModeCommand		modeCommand;
+		const Server::TopicCommand		topicCommand;
+		const Server::NamesCommand		namesCommand;
+		const Server::ListCommand		listCommand;
+		const Server::InviteCommand		inviteCommand;
+		const Server::KickCommand		kickCommand;
+		const Server::MotdCommand		motdCommand;
+		const Server::WhoQuery			whoQuery;
+		const Server::NickCommand		nickCommand;
+		const Server::UserCommand		userCommand;
+
+		Server::Command const*const	commands[] =
+		{
+			&passCommand,
+			&privmsgCommand,
+			&joinCommand,
+			&partCommand,
+			&modeCommand,
+			&topicCommand,
+			&namesCommand,
+			&listCommand,
+			&inviteCommand,
+			&kickCommand,
+			&motdCommand,
+			&whoQuery,
+			&nickCommand,
+			&userCommand
+		};
+	}
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue);
 	bool	matchPattern_multiple(std::string const &str, std::string const &pattern);

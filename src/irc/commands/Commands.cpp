@@ -581,8 +581,8 @@ namespace irc
 	{ }
 
 	bool
-	Server::NamesCommand::execute(Server& server, Client* user,
-		argumentList const& arguments) const
+	Server::NamesCommand::
+	execute(Server& server, Client* user, argumentList const& arguments) const
 	{
 		// TO DO: Did i handle the errors well ?
 		// TO DO: DO i have to delete something in some database ?
@@ -602,6 +602,103 @@ namespace irc
 		? arguments.at(0) : arguments.at(1), server.database);
 
 		return (true);
+	}
+
+	// --- USER --- //
+
+	Server::UserCommand::UserCommand()
+	: Command("/user")
+	{ }
+
+	namespace
+	{
+		/**
+		 * 	@brief Comparative for each, that stop if @a condition
+		 * 	return true.
+		 *
+		 * 	@tparam Map A map type.
+		 * 	@tparam f Type of comparision function.
+		 * 	@param niddle Used by @a condition as second argument.
+		 * 	@param map Where the search is performed.
+		 * 	@param condition Function that will be called as
+		 * 	"condition(it->second, niddle)" for each node.
+		 *
+		 * 	@return A @c Map::const_iterator pointing to the pair where
+		 * 	@a condition returned true.
+		 *
+		 * 	NOTE: The search can be evalueated to false if the returned
+		 * 	@c Map::const_iterator is @c == to @c Map::end() .
+		*/
+		template <typename Map, typename f>
+		const typename Map::const_iterator&
+		is_in_map(const std::string& niddle, const Map& map, const f& condition)
+		throw()
+		{
+			for (const typename Map::const_iterator& it = map.begin() ;
+			it != map.end() ; it++)
+				if (condition(it->second, niddle))
+					return (it);
+			return (map.end());
+		}
+
+		inline bool
+		is_client_username(Client* const client, const std::string& username)
+		{ return (client->username == username); }
+
+		template <typename db>
+		inline bool
+		is_username_in_clientmap(const std::string& username, const db& database)
+		{ return (is_in_map(username, database.dataClientsMap, is_client_username)) != database.end() }
+
+		inline bool
+		is_server_hostname(Server* const server, const std::string& hostname)
+		{ return (server->get_hostname() == hostname); }
+
+		template <typename db>
+		inline Server*const
+		is_server_in_servermap(const std::string& server_id, const db& database)
+		{
+			const typename db::databaseServersMap::const_iterator& it =
+			is_in_map(server_id, database.dataServersMap, is_server_hostname);
+			return (it != database.end() ? it->second : 0);
+		}
+	}
+
+	bool
+	Server::UserCommand::
+	execute(Server& server, Client* user,argumentList const& arguments) const
+	{
+		// has 2 ways to be used:
+		// 1) Register (using: "USER")
+		// 2) Send msg between server (using: "<nick> USER")
+
+		// TO DO: Second way of use
+		// TO DO: Connect/use hostname
+		// TO DO: Connect the client to the server
+		// TO DO: DO something with real name (arguments.at(3))
+		// TO DO: ASK/Document about my conditions (do i need check more ?)
+		// TO DO: Need global var issue #17 for hostname (arguments.at(1)) ?
+
+		// 1) Register:
+
+		// USER <username> <hostname> <servername> <real name>
+
+		Server* s;
+
+		// Sanitize the amount of given arguments
+		if (arguments.size() - 4UL
+		// Not alreaddy connected ?
+		&& !is_username_in_clientmap(arguments.at(0), server.database)
+		// TO DO: Hostname exisists
+		// Server exists
+		&& (s = is_server_in_servermap(arguments.at(2), server.database)))
+		{
+			user->username = arguments.at(0);
+			user->hostname = arguments.at(1);
+			user->server = s;
+			return (true);
+		}
+		return (false);
 	}
 
 

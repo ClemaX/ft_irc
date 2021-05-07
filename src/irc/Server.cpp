@@ -25,10 +25,13 @@ namespace irc
 	Server::~Server()
 	{ }
 
-	Channel *Server::getChannel(const std::string & channelName) const
-	{
-		return database->getChannel(channelName);
-	}
+	inline Channel*
+	Server::getChannel(const std::string & channelName) const
+	{ return database->getChannel(channelName); }
+
+	inline const std::string&
+	Server::get_hostname() const
+	{ return (hostname); }
 
 	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
