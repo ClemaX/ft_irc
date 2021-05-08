@@ -1,15 +1,15 @@
 #pragma once
 
-// #include <irc/replies/NumericReplies.hpp>
+#include <irc/replies/NumericReplies.hpp>
 
 namespace irc
-{
+{/*
 	struct	NumericReply;
 	class	Client;
 	class	Channel;
-	struct	AMessage;
+	struct	AMessage; */
 
-	typedef	std::vector<Client const*> clientList;
+	//typedef	std::vector<Client const*> clientList;
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"

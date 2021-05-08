@@ -1,10 +1,9 @@
 #pragma once
 
-	#include <string>
+#include <irc/replies/NumericReplies.hpp>
 
 namespace irc
 {
-	struct	NumericReply;
 	class	Client;
 	class	Channel;
 

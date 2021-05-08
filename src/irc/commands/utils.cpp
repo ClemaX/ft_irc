@@ -3,8 +3,13 @@
 
 namespace irc
 {
+	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
+	{
+		client << message.serialize();
 
-	
+		return client;
+	}
+
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue)
 	{
@@ -12,7 +17,7 @@ namespace irc
 		std::string::const_iterator	end;
 		std::string::const_iterator	fieldLast;
 		std::string	temp;
-		
+
 		it = argument.begin();
 		end = argument.end();
 		while (it != end)
@@ -26,7 +31,7 @@ namespace irc
 			it = fieldLast;
 		}
 	}
-	
+
 	bool	matchPattern_multiple(std::string const &str, std::string const &pattern)
 	{
 		size_t index = pattern.find('*', 0);
@@ -94,7 +99,7 @@ namespace irc
 	{
 		size_t index_unique = pattern.find('?', 0);
 		size_t index_multiple = pattern.find('*', 0);
-	
+
 		if (index_unique >= index_multiple)
 			return matchPattern_multiple(str, pattern);
 		return matchPattern_unique(str, pattern);
