@@ -300,7 +300,7 @@ namespace irc
 //             "<command> :Please wait a while and try again."
 
 
-// NICK Replies 
+// NICK Replies
 	struct NickReplyNoNickGiven
 	: public NumericReply
 	{ NickReplyNoNickGiven::NickReplyNoNickGiven(const std::string& servername); };
@@ -317,5 +317,4 @@ namespace irc
 	: public NumericReply
 	{ NickReplyRegisterCollision::NickReplyRegisterCollision(const std::string& servername, const std::string& given_nick,
 	const std::string& username, const std::string& hostname); };
-
 }

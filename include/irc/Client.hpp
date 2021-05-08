@@ -63,6 +63,8 @@ namespace irc
 		std::string old_nickname;
 		std::string	hostname;
 		std::string	username;
+		std::string servername; // 3rd arg USER
+		std::string realname; // 4th arg USER
 		Server	*server;
 		ClientModes		clientModes;
 
