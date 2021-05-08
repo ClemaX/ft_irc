@@ -10,28 +10,28 @@ namespace irc
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
 	WelcomeReply::WelcomeReply(const std::string& serverName, const std::string& nickname,
 	const std::string& username, const std::string& hostname)
-	: NumericReply(serverName, IRC_RPL_WELCOME) // Change by define
-	{ std::cout << "Welcome to the Internet Relay Network " << nickname << "!" << username << "@"
-	<< hostname << std::endl; }
+	: NumericReply(serverName, IRC_RPL_WELCOME)
+	{ message << "Welcome to the Internet Relay Network " << nickname << "!" << username << "@"
+	<< hostname; }
 
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"
 	YourHostReply::YourHostReply(const std::string& serverName, const std::string& versionName)
 	: NumericReply(serverName, IRC_RPL_YOURHOST)
-	{ std::cout << "Your host is" << serverName << ", running version " << versionName << std::endl; }
+	{ message << "Your host is" << serverName << ", running version " << versionName; }
 
 // 003     IRC_RPL_CREATED
 //             "This server was created <date>"
 	CreatedReply::CreatedReply(const std::string& serverName, const std::string& date)
 	: NumericReply(serverName, IRC_RPL_CREATED)
-	{ std::cout << "This server was created " << date << std::endl; }
+	{ message << "This server was created " << date; }
 
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"
 	MyInfoReply::MyInfoReply(const std::string& serverName, const std::string& version,
 	const std::string& umodes, const std::string& chmodes)
 	: NumericReply(serverName, IRC_RPL_MYINFO)
-	{ std::cout << serverName << " " << version << " " << umodes << " " << chmodes << std::endl; }
+	{ message << serverName << " " << version << " " << umodes << " " << chmodes; }
 
 // 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"
@@ -390,4 +390,23 @@ MotdStartReply::MotdStartReply(std::string const& serverName, std::string const&
 // 263    IRC_RPL_TRYAGAIN
 //             "<command> :Please wait a while and try again."
 
+	NickReplyNoNickGiven::NickReplyNoNickGiven(const std::string& servername)
+	: NumericReply(servername, ERR_NONICKNAMEGIVEN, ":No nickname given")
+	{ }
+
+	NickReplyInvFormat::NickReplyInvFormat(const std::string& servername,
+	const std::string& given_nick)
+	: NumericReply(servername, ERR_ERRONEUSNICKNAME, given_nick + " :Erroneous nickname")
+	{ }
+
+	NickReplyAlreadyInUse::NickReplyAlreadyInUse(const std::string& servername,
+	const std::string& given_nick)
+	: NumericReply(servername, ERR_NICKNAMEINUSE, given_nick + " :Nickname is already in use")
+	{ }
+
+	NickReplyRegisterCollision::NickReplyRegisterCollision(const std::string& servername,
+	const std::string& given_nick, const std::string& username, const std::string& hostname)
+	: NumericReply(servername, ERR_NICKCOLLISION, given_nick + " :Nickname collision KILL from "
+	+ username + "@" + hostname)
+	{ }
 }

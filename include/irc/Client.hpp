@@ -60,12 +60,14 @@ namespace irc
 		std::string	writeBuffer; // TODO: Should we use a Message container instead?
 
 		std::string	nickname;
+		std::string old_nickname;
 		std::string	hostname;
 		std::string	username;
 		Server	*server;
 		ClientModes		clientModes;
 
 		clientChannelMap	clientChannels;
+
 
 
 		Client(int fd, address const& address);
@@ -93,7 +95,7 @@ namespace irc
 				// getChannel() + channel in the database if it's neither private nor secret
 
 		void	receiveMessage(Client *client, std::string const &message);
-		
+
 		bool	listChannelInfo(Channel *channel);
 		bool	listAllChannelsListInfo(void);
 

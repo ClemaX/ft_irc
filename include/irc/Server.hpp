@@ -205,6 +205,7 @@ namespace irc
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);
+
 	namespace
 	{
 		const Server::PassCommand		passCommand;

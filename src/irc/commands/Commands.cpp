@@ -556,10 +556,8 @@ namespace irc
 	}
 
 // --- NICK --- //
-	/* --- s
-	namespace // If u don't understand, browse anonymous namespace
+	namespace
 	{
-	--- e */
 		/**
 		 * 	@brief Return an avalaible (not collisioned) client nickname,
 		 * 	append a '_' for each collision found.
@@ -571,12 +569,11 @@ namespace irc
 		 *
 		 * 	@return A valid nickname.
 		*/
-	/* --- s
-	}
 		template <typename db>
 		const std::string&
 		set_nickname(const std::string& nickname, const db& database)
 		{ return (database.getClient(nickname) ? set_nickname(nickname + "_", database) : nickname); }
+		// NOTE: Prev func can be used in the client
 	}
 
 	Server::NickCommand::NickCommand()
@@ -587,24 +584,39 @@ namespace irc
 	Server::NickCommand::
 	execute(Server& server, Client* user, argumentList const& arguments) const
 	{
-		// TO DO: Did i handle the errors well ?
-		// TO DO: DO i have to delete something in some database ?
-		// TO DO: What happens if an user alreaddy has a nick and uses the NICK cmd
-		//		with only one argument ? Should i handle that too ?
-		// TO DO: Does this function need to write in some stream ?
-		// TO DO: What do when arguments.at(0) == arguments.at(1) ?
+		// ERR_NONICKNAMEGIVEN No nickname present as args
+		if (arguments.empty())
+		{
+			*user << NickReplyNoNickGiven(server.hostname);
+			goto error;
+		}
 
-		// 0 < arguments.size() < 2
-		if (arguments.empty() || arguments.size() > 2
-		// nickname to change is not user's nick
-		|| (arguments.size() - 2UL == 0UL && user->nickname != arguments.at(0)))
-			return (false);
+		// ERR_ERRONEUSNICKNAME If nickname doesn't follow the format in 2.3.1
+		if (0 /* TO DO: Valid format rfc 2.3.1*/)
+		{
+			*user << NickReplyInvFormat(server.hostname, arguments.at(0));
+			goto error;
+		}
 
-		// <NICK> <nickname> [ <new_nickname> ]
-		user->nickname = set_nickname(arguments.size() - 1UL == 0UL
-		? arguments.at(0) : arguments.at(1), server.database);
+		// ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
+		if (server.database->getClient(arguments.at(0)))
+		{
+			// ERR_NICKCOLLISION If registered nick is found in another server
+			if (user->nickname.empty())
+				*user << NickReplyRegisterCollision(server.hostname, arguments.at(0),
+				user->username, user->hostname);
+			// ERR_NICKNAMEINUSE If attemps to change a nickname that is alreaddy in use
+			else
+				*user << NickReplyAlreadyInUse(server.hostname, arguments.at(0));
+			goto error;
+		}
 
+		user->old_nickname = user->nickname;
+		user->nickname = arguments.at(0);
 		return (true);
+
+		error:
+		return (false);
 	}
 
 	// --- USER --- //
@@ -615,7 +627,6 @@ namespace irc
 
 	namespace
 	{
-	--- e */
 		/**
 		 * 	@brief Comparative for each, that stop if @a condition
 		 * 	return true.
@@ -633,7 +644,6 @@ namespace irc
 		 * 	NOTE: The search can be evalueated to false if the returned
 		 * 	@c Map::const_iterator is @c == to @c Map::end() .
 		*/
-	/*
 		template <typename Map, typename f>
 		const typename Map::const_iterator&
 		is_in_map(const std::string& niddle, const Map& map, const f& condition)
@@ -705,8 +715,6 @@ namespace irc
 		}
 		return (false);
 	}
-	--- e */
-
 
 // ============================================== //
 // ============================================== //
