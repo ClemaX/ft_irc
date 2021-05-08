@@ -556,9 +556,10 @@ namespace irc
 	}
 
 // --- NICK --- //
-
+	/* --- s
 	namespace // If u don't understand, browse anonymous namespace
 	{
+	--- e */
 		/**
 		 * 	@brief Return an avalaible (not collisioned) client nickname,
 		 * 	append a '_' for each collision found.
@@ -570,6 +571,8 @@ namespace irc
 		 *
 		 * 	@return A valid nickname.
 		*/
+	/* --- s
+	}
 		template <typename db>
 		const std::string&
 		set_nickname(const std::string& nickname, const db& database)
@@ -581,7 +584,7 @@ namespace irc
 	{ }
 
 	bool
-	Server::NamesCommand::
+	Server::NickCommand::
 	execute(Server& server, Client* user, argumentList const& arguments) const
 	{
 		// TO DO: Did i handle the errors well ?
@@ -612,6 +615,7 @@ namespace irc
 
 	namespace
 	{
+	--- e */
 		/**
 		 * 	@brief Comparative for each, that stop if @a condition
 		 * 	return true.
@@ -629,6 +633,7 @@ namespace irc
 		 * 	NOTE: The search can be evalueated to false if the returned
 		 * 	@c Map::const_iterator is @c == to @c Map::end() .
 		*/
+	/*
 		template <typename Map, typename f>
 		const typename Map::const_iterator&
 		is_in_map(const std::string& niddle, const Map& map, const f& condition)
@@ -648,7 +653,7 @@ namespace irc
 		template <typename db>
 		inline bool
 		is_username_in_clientmap(const std::string& username, const db& database)
-		{ return (is_in_map(username, database.dataClientsMap, is_client_username)) != database.end() }
+		{ return (is_in_map(username, database.dataClientsMap, is_client_username) != database.end()); }
 
 		inline bool
 		is_server_hostname(Server* const server, const std::string& hostname)
@@ -700,6 +705,7 @@ namespace irc
 		}
 		return (false);
 	}
+	--- e */
 
 
 // ============================================== //
