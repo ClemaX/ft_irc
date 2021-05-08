@@ -25,6 +25,9 @@ namespace irc
 
 		str.assign(first, fieldLast);
 
+		std::transform(str.begin(), str.end(), data.begin(), 
+			[](unsigned char c){ return std::tolower(c); });
+
 		return fieldLast;
 	}
 

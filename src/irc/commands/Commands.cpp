@@ -12,7 +12,7 @@ namespace irc
 
 // --- command PASS --- //
 	Server::PassCommand::PassCommand()
-		:	Command("/pass")
+		:	Command("pass")
 	{ }
 
 	bool	Server::PassCommand::execute(Server& server, Client* user,
@@ -37,7 +37,7 @@ namespace irc
 // ============================================== //
 
 	Server::PRIVMSGCommand::PRIVMSGCommand()
-		:	Command("/msg")
+		:	Command("msg")
 	{ }
 
 	bool	Server::PRIVMSGCommand::execute(Server& server, Client* user,
@@ -77,7 +77,7 @@ namespace irc
 
 // --- command JOIN --- //
 	Server::JoinCommand::JoinCommand()
-		:	ChannelCommand("/join", false)
+		:	ChannelCommand("join", false)
 	{ }
 
 	bool	Server::JoinCommand::execute(Server& server, Client* user,
@@ -156,7 +156,7 @@ namespace irc
 
 // --- command PART --- //
 	Server::PartCommand::PartCommand()
-		:	ChannelCommand("/part", true)
+		:	ChannelCommand("part", true)
 	{ }
 
 	bool	Server::PartCommand::execute(Server& server, Client* user,
@@ -205,7 +205,7 @@ namespace irc
 
 // --- command MODE --- //
 	Server::ModeCommand::ModeCommand()
-		:	ChannelCommand("/mode", true)
+		:	ChannelCommand("mode", true)
 	{ }
 
 	bool	Server::ModeCommand::execute(Server& server, Client* user,
@@ -246,7 +246,7 @@ namespace irc
 
 // --- command TOPIC --- //
 	Server::TopicCommand::TopicCommand()
-		:	ChannelCommand("/topic", true)
+		:	ChannelCommand("topic", true)
 	{ }
 
 	bool	Server::TopicCommand::execute(Server& server, Client* user,
@@ -296,7 +296,7 @@ namespace irc
 
 // --- command NAMES --- //
 	Server::NamesCommand::NamesCommand()
-		:	ChannelCommand("/names", true)
+		:	ChannelCommand("names", true)
 	{ }
 
 	bool	Server::NamesCommand::execute(Server& server, Client* user,
@@ -346,7 +346,7 @@ namespace irc
 
 // --- command LIST --- //
 	Server::ListCommand::ListCommand()
-		:	ChannelCommand("/list", true)
+		:	ChannelCommand("list", true)
 	{ }
 
 	bool	Server::ListCommand::execute(Server& server, Client* user,
@@ -382,7 +382,7 @@ namespace irc
 
 // --- command INVITE --- //
 	Server::InviteCommand::InviteCommand()
-		:	ChannelCommand("/invite", true)
+		:	ChannelCommand("invite", true)
 	{ }
 
 	bool	Server::InviteCommand::execute(Server& server, Client* user,
@@ -438,7 +438,7 @@ namespace irc
 
 // --- command KICK --- //
 	Server::KickCommand::KickCommand()
-		:	ChannelCommand("/kick", true)
+		:	ChannelCommand("kick", true)
 	{ }
 
 	bool	Server::KickCommand::execute(Server& server, Client* user,
@@ -524,7 +524,7 @@ namespace irc
 // --- WHO query --- //
 
 	Server::WhoQuery::WhoQuery()
-		:	Command("/who")
+		:	Command("who")
 	{ }
 
 	bool	Server::WhoQuery::execute(Server& server, Client* user,
@@ -577,7 +577,7 @@ namespace irc
 	}
 
 	Server::NickCommand::NickCommand()
-	: Command("/nick")
+	: Command("nick")
 	{ }
 
 	bool
@@ -607,7 +607,7 @@ namespace irc
 	// --- USER --- //
 
 	Server::UserCommand::UserCommand()
-	: Command("/user")
+	: Command("user")
 	{ }
 
 	namespace
@@ -708,7 +708,7 @@ namespace irc
 
 // --- command MOTD --- //
 	Server::MotdCommand::MotdCommand()
-		:	Command("/motd")
+		:	Command("motd")
 	{ }
 
 	bool	Server::MotdCommand::execute(Server& server, Client* user,
