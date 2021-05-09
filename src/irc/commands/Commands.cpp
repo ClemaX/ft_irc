@@ -1,4 +1,5 @@
 #include <irc/Server.hpp>
+#include <utils/nickname.hpp>
 
 namespace irc
 {
@@ -575,61 +576,6 @@ namespace irc
 		{ return (database.getClient(nickname) ? set_nickname(nickname + "_", database) : nickname); }
 		// NOTE: Prev func can be used in the client
 
-			bool    isspecial(int c)
-		{
-			char const*    set = IRC_CHARSET_SPECIAL;
-
-			while (*set != '\0' && *set != (char)c)
-				set++;
-			return *set != '\0';
-		}
-
-		bool    nicknameValidator(std::string const& nickname)
-		{
-			std::string::const_iterator            it = nickname.begin();
-			std::string::const_iterator const    end = nickname.end();
-
-			if (nickname.length() > IRC_NICKNAME_MAXLEN || !isalpha(*it))
-				return false;
-
-			while (isalnum(*it) || isspecial(*it))
-				it++;
-
-			return it == end;
-		}
-
-		char    lower(char c)
-		{
-			char    low;
-
-			if (isupper(c))
-				low = tolower(c);
-			else if (c == '[')
-				low = '{';
-			else if (c == ']')
-				low = '}';
-			else if (c == '\\')
-				low = '|';
-			else
-				low = c;
-
-			return low;
-		}
-
-		bool    nicknameCmp(std::string const& a, std::string const& b)
-		{
-			std::string::const_iterator const    endA = a.end();
-			std::string::const_iterator            itA = a.begin();
-			std::string::const_iterator            itB = b.begin();
-
-			while (itA != endA && lower(*itA) == lower(*itB))
-
-			{
-				itA++;
-				itB++;
-			}
-			return lower(*itA) - lower(*itB);
-		}
 	}
 
 	Server::NickCommand::NickCommand()

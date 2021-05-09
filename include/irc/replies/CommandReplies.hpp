@@ -303,18 +303,18 @@ namespace irc
 // NICK Replies
 	struct NickReplyNoNickGiven
 	: public NumericReply
-	{ NickReplyNoNickGiven::NickReplyNoNickGiven(const std::string& servername); };
+	{ NickReplyNoNickGiven(const std::string& servername); };
 
 	struct NickReplyInvFormat
 	: public NumericReply
-	{ NickReplyInvFormat::NickReplyInvFormat(const std::string& servername, const std::string& given_nick); };
+	{ NickReplyInvFormat(const std::string& servername, const std::string& given_nick); };
 
 	struct NickReplyAlreadyInUse
 	: public NumericReply
-	{ NickReplyAlreadyInUse::NickReplyAlreadyInUse(const std::string& servername, const std::string& given_nick); };
+	{ NickReplyAlreadyInUse(const std::string& servername, const std::string& given_nick); };
 
 	struct NickReplyRegisterCollision
 	: public NumericReply
-	{ NickReplyRegisterCollision::NickReplyRegisterCollision(const std::string& servername, const std::string& given_nick,
+	{ NickReplyRegisterCollision(const std::string& servername, const std::string& given_nick,
 	const std::string& username, const std::string& hostname); };
 }

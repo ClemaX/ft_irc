@@ -174,7 +174,7 @@ namespace irc
 	{
 		if (!channel)
 			return false;
-		
+
 		std::string const &channelName = channel->name;
 
 		if (!isInChannel(channelName) &&
