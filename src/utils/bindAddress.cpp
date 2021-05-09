@@ -4,6 +4,8 @@
 
 #include <fcntl.h>
 
+#include <cerrno>
+
 #include <algorithm>
 #include <iostream>
 

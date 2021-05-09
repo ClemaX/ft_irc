@@ -1,5 +1,10 @@
 #pragma once
 
+#define SERVER_VERSION "1.0.0"
+
+/// Special IRC characters allowed outside of the alphanumerical set.
+#define IRC_CHARSET_SPECIAL    "-[]\\`^{}"
+
 /// IRC default TLS/SSL TCP-port (as defined in RFC7194).
 #define IRC_PORT_SSL 6697U
 /// Maximal length of IRC client nicknames (as defined in RFC1459 1.2).
@@ -279,6 +284,17 @@
 #define IRC_RPL_CREATED 3
 #define IRC_RPL_MYINFO 4
 #define IRC_RPL_BOUNCE 5
+
+// NICK
+#define ERR_NONICKNAMEGIVEN 431
+#define ERR_ERRONEUSNICKNAME 432
+#define ERR_NICKNAMEINUSE 433
+#define ERR_NICKCOLLISION 436
+
+// USER
+#define ERR_NEEDMOREPARAMS 461
+#define ERR_ALREADYREGISTRED 462
+
 
 
 

@@ -299,4 +299,22 @@ namespace irc
 // 263    IRC_RPL_TRYAGAIN
 //             "<command> :Please wait a while and try again."
 
+
+// NICK Replies
+	struct NickReplyNoNickGiven
+	: public NumericReply
+	{ NickReplyNoNickGiven(const std::string& servername); };
+
+	struct NickReplyInvFormat
+	: public NumericReply
+	{ NickReplyInvFormat(const std::string& servername, const std::string& given_nick); };
+
+	struct NickReplyAlreadyInUse
+	: public NumericReply
+	{ NickReplyAlreadyInUse(const std::string& servername, const std::string& given_nick); };
+
+	struct NickReplyRegisterCollision
+	: public NumericReply
+	{ NickReplyRegisterCollision(const std::string& servername, const std::string& given_nick,
+	const std::string& username, const std::string& hostname); };
 }

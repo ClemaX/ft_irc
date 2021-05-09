@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
-
+#include <irc/ircdef.hpp>
+#include <utils/nickname.hpp>
 #include <irc/Server.hpp>
 #include <irc/Client.hpp>
 #include <irc/Channel.hpp>
@@ -19,7 +19,7 @@ namespace irc
 	public:
 		typedef ::std::map<Server*, Server*>		databaseServersMap;
 		typedef ::std::map<std::string, Channel*>	databaseChannelsMap;
-		typedef ::std::map<std::string, Client*>	databaseClientsMap;
+		typedef ::std::map<std::string, Client*, nickcmp>	databaseClientsMap;
 
 		typedef bool	(*ptr_function)(Client *user, Channel *channel, std::string & flagArguments);
 		typedef	std::map<char, ptr_function>	signedFunctionPointerMap;
