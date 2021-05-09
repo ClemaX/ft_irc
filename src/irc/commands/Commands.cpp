@@ -574,6 +574,62 @@ namespace irc
 		set_nickname(const std::string& nickname, const db& database)
 		{ return (database.getClient(nickname) ? set_nickname(nickname + "_", database) : nickname); }
 		// NOTE: Prev func can be used in the client
+
+			bool    isspecial(int c)
+		{
+			char const*    set = IRC_CHARSET_SPECIAL;
+
+			while (*set != '\0' && *set != (char)c)
+				set++;
+			return *set != '\0';
+		}
+
+		bool    nicknameValidator(std::string const& nickname)
+		{
+			std::string::const_iterator            it = nickname.begin();
+			std::string::const_iterator const    end = nickname.end();
+
+			if (nickname.length() > IRC_NICKNAME_MAXLEN || !isalpha(*it))
+				return false;
+
+			while (isalnum(*it) || isspecial(*it))
+				it++;
+
+			return it == end;
+		}
+
+		char    lower(char c)
+		{
+			char    low;
+
+			if (isupper(c))
+				low = tolower(c);
+			else if (c == '[')
+				low = '{';
+			else if (c == ']')
+				low = '}';
+			else if (c == '\\')
+				low = '|';
+			else
+				low = c;
+
+			return low;
+		}
+
+		bool    nicknameCmp(std::string const& a, std::string const& b)
+		{
+			std::string::const_iterator const    endA = a.end();
+			std::string::const_iterator            itA = a.begin();
+			std::string::const_iterator            itB = b.begin();
+
+			while (itA != endA && lower(*itA) == lower(*itB))
+
+			{
+				itA++;
+				itB++;
+			}
+			return lower(*itA) - lower(*itB);
+		}
 	}
 
 	Server::NickCommand::NickCommand()
@@ -592,7 +648,7 @@ namespace irc
 		}
 
 		// ERR_ERRONEUSNICKNAME If nickname doesn't follow the format in 2.3.1
-		if (0 /* TO DO: Valid format rfc 2.3.1*/)
+		if (nicknameValidator(arguments.at(0)) == 0)
 		{
 			*user << NickReplyInvFormat(server.hostname, arguments.at(0));
 			goto error;
@@ -630,14 +686,14 @@ namespace irc
 	execute(Server& server, Client* user,argumentList const& arguments) const
 	{
 		// ERR_NEEDMOREPARAMS Bad amount of params
-		if (arguments.size() >= 4)
+		if (arguments.size() < 4)
 		{
 			*user << NumericReply(server.hostname, ERR_NEEDMOREPARAMS);
 			goto error;
 		}
 
 		// ERR_ALREADYREGISTRED User already exists
-		if (0)
+		if (user->username.empty())
 		{
 			*user << NumericReply(server.hostname, ERR_ALREADYREGISTRED);
 			goto error;
@@ -650,9 +706,9 @@ namespace irc
 
 		*user
 		<< WelcomeReply(server.hostname, user->nickname, user->username, user->hostname)
-		<< YourHostReply(server.hostname, "") // TO DO: Verion name
+		<< YourHostReply(server.hostname, SERVER_VERSION)
 		<< CreatedReply(server.hostname, "") // TO DO: Add time (has a time format i guess)
-		<< MyInfoReply(server.hostname, "", "", ""); // TO DO: <servername> <version> <available user modes> <available channel modes>
+		<< MyInfoReply(server.hostname, SERVER_VERSION, "", ""); // TO DO: <servername> <version> <available user modes> <available channel modes>
 
 		return (true);
 

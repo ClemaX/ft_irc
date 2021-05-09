@@ -17,7 +17,7 @@ namespace irc
 		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
 			config(config),
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
-				SHA256_DIGEST_LENGTH * 2)
+				SHA256_DIGEST_LENGTH * 2),
 	{
 		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
