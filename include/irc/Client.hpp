@@ -6,9 +6,7 @@
 
 #include <socket/SocketConnection.hpp>
 
-#include <irc/replies/IReply.hpp>
 #include <irc/PrivateMessage.hpp>
-#include <irc/replies/NumericReplies.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
 
@@ -74,9 +72,9 @@ namespace irc
 
 		Client(int fd, address const& address);
 
-		Client const&	operator<<(std::string const& str);
-		Client const&	operator<<(NumericReply const& reply);
-		Client const&	operator<<(PrivateMessage const& reply);
+		Client&	operator<<(std::string const& str);
+		Client&	operator<<(NumericReply const& reply);
+		Client&	operator<<(PrivateMessage const& reply);
 
 		void	flush() throw(SocketWriteException);
 

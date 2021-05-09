@@ -13,7 +13,7 @@
 #include <socket/SocketServer.hpp>
 #include <irc/Channel.hpp>
 #include <irc/PrivateMessage.hpp>
-#include <irc/replies/NumericReplies.hpp>
+#include <irc/replies/NumericReply.hpp>
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/replies/ErrorReplies.hpp>
 #include <irc/Client.hpp>

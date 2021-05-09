@@ -21,19 +21,19 @@ namespace irc
 		leaveAllChannels();
 	}
 
-	Client const&	Client::operator<<(std::string const& message)
+	Client&	Client::operator<<(std::string const& message)
 	{
 		writeBuffer.append(message);
 		return *this;
 	}
 
-	Client const&	Client::operator<<(NumericReply const& reply)
+	Client&	Client::operator<<(NumericReply const& reply)
 	{
 		*this << reply.serialize();
 		return *this;
 	}
 
-	Client const&	Client::operator<<(PrivateMessage const& reply)
+	Client&	Client::operator<<(PrivateMessage const& reply)
 	{
 		*this << reply.serialize();
 		return *this;

@@ -1,6 +1,7 @@
 #include <irc/Server.hpp>
 #include <irc/Message.hpp>
 #include <utils/atoi.hpp>
+#include <utils/strings.hpp>
 
 namespace irc
 {
@@ -44,7 +45,8 @@ namespace irc
 		if (name.length() == 0)
 			return NULL;
 
-		while (i < commandCount && name != commands[i]->name)
+		while (i < commandCount
+			&& ft::strcmpi(name.c_str(), commands[i]->name.c_str()))
 			i++;
 		if (i == commandCount)
 			return NULL;

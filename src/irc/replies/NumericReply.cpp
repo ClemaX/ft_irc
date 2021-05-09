@@ -1,4 +1,4 @@
-#include <irc/replies/NumericReplies.hpp>
+#include <irc/replies/NumericReply.hpp>
 #include <irc/Client.hpp>
 
 namespace irc

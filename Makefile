@@ -81,7 +81,7 @@ $(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)/%.d | $(OBJDIR)
 
 # Dependencies
 $(DEPS): $(OBJDIR)%.d:
-include $(wildcard $(DEPS))
+-include $(wildcard $(DEPS))
 
 # Binaries
 $(BINDIR)/$(NAME): $(OBJS) $(LIBS) | $(BINDIR)

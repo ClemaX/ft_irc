@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
+#include <irc/replies/NumericReply.hpp>
 
 namespace irc
 {
-	struct	NumericReply;
 	class	Client;
 	class	Channel;
 
@@ -243,5 +242,22 @@ namespace irc
 		UsersDontMatchError(std::string const& serverName);
 	};
 
+// NICK Replies
+	struct NoNicknameGivenReply
+	: public NumericReply
+	{ NoNicknameGivenReply(const std::string& servername); };
+
+	struct ErroneusNicknameReply
+	: public NumericReply
+	{ ErroneusNicknameReply(const std::string& servername, const std::string& given_nick); };
+
+	struct NicknameInUseReply
+	: public NumericReply
+	{ NicknameInUseReply(const std::string& servername, const std::string& given_nick); };
+
+	struct NickCollisionReply
+	: public NumericReply
+	{ NickCollisionReply(const std::string& servername, const std::string& given_nick,
+	const std::string& username, const std::string& hostname); };
 
 }
