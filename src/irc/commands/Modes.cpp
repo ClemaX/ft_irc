@@ -498,9 +498,9 @@ namespace irc
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{
-			if (database->modeChannelFunctionsMap[sign].find(*it) == database->modeChannelFunctionsMap[sign].end())
+			if (database.modeChannelFunctionsMap[sign].find(*it) == database.modeChannelFunctionsMap[sign].end())
 				return false;
-			database->modeChannelFunctionsMap[sign][*it](user, channel, flagArguments);
+			database.modeChannelFunctionsMap[sign][*it](user, channel, flagArguments);
 		}
 		return true;
 	}
@@ -609,11 +609,11 @@ namespace irc
 		flags.erase(0, 1);
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{
-			if (database->modeUserFunctionsMap[sign].find(*it) == database->modeUserFunctionsMap[sign].end())
+			if (database.modeUserFunctionsMap[sign].find(*it) == database.modeUserFunctionsMap[sign].end())
 				*user << UModeUnkownFlagError(SERVER_NAME);
 			else
 			{
-				database->modeUserFunctionsMap[sign][*it](user, NULL, flagArguments);	// is it an error if there is a flagArgument ?
+				database.modeUserFunctionsMap[sign][*it](user, NULL, flagArguments);	// is it an error if there is a flagArgument ?
 				userMode.replace(1, 1, 1, *it);
 				*user << UModeIsReply(SERVER_NAME, userMode);	// what do we do if flag = 'o' or 's' ?
 			}

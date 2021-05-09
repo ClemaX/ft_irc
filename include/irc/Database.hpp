@@ -1,10 +1,8 @@
 #pragma once
 
+#include <map>
 #include <irc/ircdef.hpp>
 #include <utils/nickname.hpp>
-#include <irc/Server.hpp>
-#include <irc/Client.hpp>
-#include <irc/Channel.hpp>
 
 namespace irc
 {

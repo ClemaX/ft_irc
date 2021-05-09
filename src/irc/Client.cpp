@@ -163,8 +163,8 @@ namespace irc
 
 	bool	Client::listAllChannelsListInfo(void)
 	{
-		for (IRCDatabase::databaseChannelsMap::const_iterator it = server->database->dataChannelsMap.begin();
-			it != server->database->dataChannelsMap.end(); it++)
+		for (IRCDatabase::databaseChannelsMap::const_iterator it = server->database.dataChannelsMap.begin();
+			it != server->database.dataChannelsMap.end(); it++)
 			this->listChannelInfo(it->second);
 		return true;
 	}
@@ -196,8 +196,8 @@ namespace irc
 
 	bool	Client::listAllVisibleUsersWhoQueryInfo(void)
 	{
-		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
-			it != server->database->dataClientsMap.end(); it++)
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database.dataClientsMap.begin();
+			it != server->database.dataClientsMap.end(); it++)
 		{
 			Client *client = it->second;
 			if (!(client->clientModes.binMode & Mu_i) && !this->isInSameChannel(client))
@@ -211,8 +211,8 @@ namespace irc
 		// currently match with users' host, real name and nickname
 		// to do :
 		//		match with users' server
-		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database->dataClientsMap.begin();
-			it != server->database->dataClientsMap.end(); it++)
+		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database.dataClientsMap.begin();
+			it != server->database.dataClientsMap.end(); it++)
 		{
 			Client *client = it->second;
 			if (!(client->clientModes.binMode & Mu_i) &&

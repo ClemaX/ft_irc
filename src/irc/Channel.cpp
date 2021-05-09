@@ -214,7 +214,7 @@ namespace irc
 	{
 		if (clientsMap.find(client) != clientsMap.end())
 		{
-			// *client << 
+			// *client <<
 			return false;	// is there an error when joining a channel you're already in ?
 		}
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
@@ -276,7 +276,7 @@ std::cout << name << ": new server added - number of servers linked to channel =
 	bool	Channel::close()
 	{
 		if (!serversMap.empty())
-			serversMap.begin()->second->database->dataChannelsMap.erase(name);
+			serversMap.begin()->second->database.dataChannelsMap.erase(name);
 		delete this;
 
 std::cout << "channel " << name << " has been closed\n";

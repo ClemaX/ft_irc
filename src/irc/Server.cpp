@@ -10,7 +10,7 @@ namespace irc
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
 				SHA256_DIGEST_LENGTH * 2)
 	{
-		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
+		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 
 	Server::Server(ServerConfig const& config)
@@ -19,7 +19,7 @@ namespace irc
 			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
 				SHA256_DIGEST_LENGTH * 2)
 	{
-		database = new IRCDatabase(this);	// check to do if the server is directly connected to other servers
+		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 
 	Server::~Server()
@@ -27,7 +27,7 @@ namespace irc
 
 	Channel*
 	Server::getChannel(const std::string & channelName) const
-	{ return database->getChannel(channelName); }
+	{ return database.getChannel(channelName); }
 
 	const std::string&
 	Server::get_hostname() const
@@ -82,7 +82,7 @@ namespace irc
 			<< "\n\tport: " << address.sin6_port
 			<< std::endl;
 
-		database->addClient(newClient);
+		database.addClient(newClient);
 
 		return newClient;
 	}

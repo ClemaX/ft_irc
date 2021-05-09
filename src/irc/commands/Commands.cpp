@@ -55,7 +55,7 @@ namespace irc
 		if (arguments.size() > 1)
 			message = arguments[1];
 
-		Client *receiver = server.database->getClient(nameArgument);
+		Client *receiver = server.database.getClient(nameArgument);
 		if (receiver)
 			receiver->receiveMessage(user, message);	// check to add ? invisible ?
 		else
@@ -129,7 +129,7 @@ namespace irc
 				try
 				{
 					channel = new Channel(channelName);
-					server.database->dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
+					server.database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
 						isOp = false;
@@ -228,7 +228,7 @@ namespace irc
 		if (arguments.size() > 2)
 			flagArgument = arguments[2];
 
-		if (!server.database->getClient(nameArgument))
+		if (!server.database.getClient(nameArgument))
 			return server.parseChannelMode(user, nameArgument, flags, flagArgument);
 		if (!user->nickname.compare(nameArgument))
 			return server.parseUserMode(user, flags, flagArgument);
@@ -305,8 +305,8 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			IRCDatabase::databaseChannelsMap::iterator itb = server.database->dataChannelsMap.begin();
-			IRCDatabase::databaseChannelsMap::iterator ite = server.database->dataChannelsMap.end();
+			IRCDatabase::databaseChannelsMap::iterator itb = server.database.dataChannelsMap.begin();
+			IRCDatabase::databaseChannelsMap::iterator ite = server.database.dataChannelsMap.end();
 			while (itb != ite)
 			{
 				if (itb->second->isVisibleForClient(user))
@@ -397,13 +397,13 @@ namespace irc
 		std::string const nickname = arguments[0];
 		std::string const channelName = arguments[1];
 
-		Client *client = server.database->getClient(nickname);
+		Client *client = server.database.getClient(nickname);
 		if (!client)
 		{
 			*user << NoSuchNicknameError(SERVER_NAME, nickname);
 			return false;
 		}
-		Channel *channel = server.database->getChannel(channelName);
+		Channel *channel = server.database.getChannel(channelName);
 		if (!channel)
 		{
 			*user << InvitingReply(SERVER_NAME, channelName, nickname);
@@ -541,7 +541,7 @@ namespace irc
 			if (arguments.size() > 1 && !arguments[1].compare("o"))
 				opFlag = 1;
 
-			Channel *channel = server.database->getChannel(mask);
+			Channel *channel = server.database.getChannel(mask);
 			if (channel)
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else
@@ -601,7 +601,7 @@ namespace irc
 		}
 
 		// ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
-		if (server.database->getClient(arguments.at(0)))
+		if (server.database.getClient(arguments.at(0)))
 		{
 			// ERR_NICKCOLLISION If registered nick is found in another server
 			if (user->nickname.empty())

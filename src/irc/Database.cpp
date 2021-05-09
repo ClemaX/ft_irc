@@ -1,4 +1,5 @@
 #include <irc/Database.hpp>
+#include <irc/Client.hpp>
 
 namespace irc
 {

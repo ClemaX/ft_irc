@@ -30,7 +30,6 @@
 namespace irc
 {
 	class Channel;
-	class IRCDatabase;
 
 	class	Server	:	public SocketServer
 	{
@@ -52,7 +51,7 @@ namespace irc
 		virtual void		onFlush() const throw(SocketWriteException);
 
 	public:
-		IRCDatabase			*database;
+		IRCDatabase			database;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
 
