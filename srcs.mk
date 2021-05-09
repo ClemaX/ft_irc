@@ -4,24 +4,24 @@ SRCDIR = src
 SRCS = $(addprefix $(SRCDIR)/,\
 	$(addprefix irc/,\
 		AMessage.cpp\
-		PrivateMessage.cpp\
 		Channel.cpp\
 		Client.cpp\
-		Database.cpp\
-		Message.cpp\
-		Server.cpp\
-		ServerConfig.cpp\
 		$(addprefix commands/,\
 			Command.cpp\
-			Commands_utils.cpp\
 			Commands.cpp\
+			Commands_utils.cpp\
 			Modes.cpp\
 		)\
+		Database.cpp\
+		Message.cpp\
+		PrivateMessage.cpp\
 		$(addprefix replies/,\
 			CommandReplies.cpp\
 			ErrorReplies.cpp\
 			NumericReplies.cpp\
 		)\
+		ServerConfig.cpp\
+		Server.cpp\
 	)\
 	$(addprefix main/,\
 		main.cpp\
@@ -35,6 +35,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		bindAddress.cpp\
 		crypto.cpp\
 		itoa.cpp\
+		nickcmp.cpp\
 		parseField.cpp\
 	)\
 )
