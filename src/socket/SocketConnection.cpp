@@ -1,8 +1,12 @@
 #include <socket/SocketConnection.hpp>
 
+#include <iostream>
 #include <iomanip>
 
 #include <unistd.h>
+
+#include <cerrno>
+
 #include <arpa/inet.h>
 
 
