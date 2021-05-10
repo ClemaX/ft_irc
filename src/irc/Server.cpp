@@ -7,18 +7,14 @@ namespace irc
 {
 	Server::Server()
 		:	SocketServer(),
-			config(),
-			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
-				SHA256_DIGEST_LENGTH * 2)
+			config()
 	{
 		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 
 	Server::Server(ServerConfig const& config)
 		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
-			config(config),
-			passwords("passwords.db", IRC_NICKNAME_MAXLEN,
-				SHA256_DIGEST_LENGTH * 2)
+			config(config)
 	{
 		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}

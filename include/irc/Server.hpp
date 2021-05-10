@@ -8,7 +8,6 @@
 #include <utils/itoa.hpp>
 #include <utils/atoi.hpp>
 #include <utils/parseField.hpp>
-#include <HashedFileDatabase.hpp>
 
 #include <socket/SocketServer.hpp>
 #include <irc/Channel.hpp>
@@ -35,7 +34,6 @@ namespace irc
 	{
 	private:
 		const ServerConfig	config;
-		HashedFileDatabase	passwords;
 
 	protected:
 		typedef ::std::map<Server*, Server*>	serversMap;
