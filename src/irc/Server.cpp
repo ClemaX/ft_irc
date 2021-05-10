@@ -65,7 +65,7 @@ namespace irc
 		newClient->server = this;
 
 		newClient->username = "";
-		newClient->nickname = "*";
+		newClient->nickname = IRC_NICKNAME_DEFAULT;
 
 		std::cout << "New connection: "
 			<< "\n\tfd: " << connectionFd
@@ -73,7 +73,7 @@ namespace irc
 			<< "\n\tport: " << address.sin6_port
 			<< std::endl;
 
-		database.addClient(newClient);
+		// I moved this to the NICK command: database.addClient(newClient);
 
 		return newClient;
 	}

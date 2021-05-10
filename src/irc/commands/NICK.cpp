@@ -61,6 +61,9 @@ namespace irc
 
 		user->old_nickname = user->nickname;
 		user->nickname = arguments.at(0);
+
+		if (user->old_nickname == IRC_NICKNAME_DEFAULT)
+		server.database.addClient(user);
 		return (true);
 
 		error:

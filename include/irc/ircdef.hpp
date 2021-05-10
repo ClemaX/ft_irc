@@ -9,6 +9,8 @@
 #define IRC_PORT_SSL 6697U
 /// Maximal length of IRC client nicknames (as defined in RFC1459 1.2).
 #define IRC_NICKNAME_MAXLEN 9U
+/// Default IRC client nickname to be assigned on connection.
+#define IRC_NICKNAME_DEFAULT "*"
 /// Maximal length of IRC channel names (as defined in RFC1459 1.3).
 #define IRC_CHANNEL_NAME_MAXLEN 200U
 /// Allowed prefix characters for IRC channel names (as defined in RFC1459 1.3).

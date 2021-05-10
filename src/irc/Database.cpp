@@ -33,6 +33,7 @@ namespace irc
 	Client	*IRCDatabase::getClient(std::string const &nickname) const
 	{
 		databaseClientsMap::const_iterator it;
+
 		it = dataClientsMap.find(nickname);
 		if (it == dataClientsMap.end())
 			return NULL;
