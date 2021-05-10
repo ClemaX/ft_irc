@@ -59,13 +59,13 @@ namespace irc
 			goto error;
 		}
 
+		user->old_nickname = user->nickname;
+		user->nickname = arguments.at(0);
+
 		if (user->old_nickname == IRC_NICKNAME_DEFAULT)
 			server.database.addClient(user);
 		else
-			server.database.set_ClientNick(user->old_nickname, arguments.at(0));
-
-		user->old_nickname = user->nickname;
-		user->nickname = arguments.at(0);
+			server.database.set_ClientNick(user->old_nickname, user->nickname);
 
 		server.anounce_register_sequence(user);
 
