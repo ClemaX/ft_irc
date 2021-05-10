@@ -27,17 +27,12 @@ namespace irc
 
 		bool    nicknameCmp(std::string const& a, std::string const& b)
 		{
-			std::string::const_iterator const    endA = a.end();
+			std::string::const_iterator const    	endA = a.end();
 			std::string::const_iterator            itA = a.begin();
 			std::string::const_iterator            itB = b.begin();
 
-			while (itA != endA && lower(*itA) == lower(*itB))
-
-			{
-				itA++;
-				itB++;
-			}
-			return lower(*itA) - lower(*itB);
+			while (itA != endA && lower(*(itA++)) == lower(*(itB++)));
+			return (lower(*itA) - lower(*itB));
 		}
 	}
 
