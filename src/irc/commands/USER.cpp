@@ -15,12 +15,12 @@ namespace irc
 		// ERR_NEEDMOREPARAMS Bad amount of params
 		if (arguments.size() < 4)
 		{
-			*user << UserNeedMoreParams(server.hostname);
+			*user << NeedMoreParamsError(server.hostname, name);
 			goto error;
 		}
 
 		// ERR_ALREADYREGISTRED User already exists
-		if (!user->username.empty())
+		if (user->first_connection == false)
 		{
 			*user << UserAlreadyRegistred(server.hostname, user->nickname);
 			goto error;
