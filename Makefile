@@ -11,7 +11,6 @@ INCDIR = include
 LIBDIR = ..
 
 OBJDIR = obj
-BINDIR = .
 
 # Library dependencies
 LIBS = $(addprefix $(LIBDIR)/, )
@@ -60,11 +59,9 @@ LDLIBS = $(LIBARS:lib%.a=-l%) -lcrypto
 
 # Compiling commands
 COMPILE.cpp = $(CXX) $(DFLAGS) $(CXXFLAGS) -c
-COMPILE.o = $(LD) $(LDFLAGS)
+COMPILE.o = $(LD) $(DFLAGS) $(LDFLAGS)
 
-all: $(BINDIR)/$(NAME)
-
-$(NAME): $(BINDIR)/$(NAME)
+all: $(NAME)
 
 # Directories
 $(OBJDIR) $(BINDIR):
@@ -86,24 +83,21 @@ $(DEPS): $(OBJDIR)%.d:
 -include $(wildcard $(DEPS))
 
 # Binaries
-$(BINDIR)/$(NAME): $(OBJS) $(LIBS) | $(BINDIR)
+$(NAME): $(OBJS) $(LIBS) | $(BINDIR)
 	@echo "LD $@ $(LIBARS:lib%.a=-l%)"
 	$(COMPILE.o) $(OBJS) -o $@ $(LDLIBS)
 
 # Remove temporary objects
 clean:
-	# $(foreach libdir, $(LIBDIRS),\
-		echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
+	# $(foreach libdir, $(LIBDIRS), echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
 	@echo "RM $(OBJDIR)"
 	rm -rf "$(OBJDIR)"
 
 # Remove all binaries
 fclean: clean
-	# $(foreach libdir, $(LIBDIRS),\
-	# 	echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
-	@echo "RM $(BINDIR)/$(NAME)"
-	rm -f "$(BINDIR)/$(NAME)"
-	@rmdir "$(BINDIR)" 2>/dev/null && echo "RM $(BINDIR)" || :
+	# $(foreach libdir, $(LIBDIRS),\ echo "MK -C $(libdir) $@" && make -C $(libdir) $@ && ):
+	@echo "RM $(NAME)"
+	rm -f "$(NAME)"
 
 # Remove and rebuild all binaries
 re: fclean all
