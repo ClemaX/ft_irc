@@ -260,4 +260,15 @@ namespace irc
 	{ NickCollisionReply(const std::string& servername, const std::string& given_nick,
 	const std::string& username, const std::string& hostname); };
 
+	 // Not enough parameters
+	struct UserNeedMoreParams
+	: public NumericReply
+	{ UserNeedMoreParams(const std::string& servername); };
+
+	 // <nickname> :You may not reregister
+	struct UserAlreadyRegistred
+	: public NumericReply
+	{ UserAlreadyRegistred(const std::string& servername, const std::string& given_nick); };
+
+
 }

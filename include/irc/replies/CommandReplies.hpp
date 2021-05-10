@@ -298,5 +298,4 @@ namespace irc
 
 // 263    IRC_RPL_TRYAGAIN
 //             "<command> :Please wait a while and try again."
-
 }
