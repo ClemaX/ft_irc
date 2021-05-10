@@ -59,14 +59,23 @@ namespace irc
 			goto error;
 		}
 
+		if (user->old_nickname == IRC_NICKNAME_DEFAULT)
+			server.database.addClient(user);
+		else
+			server.database.set_ClientNick(user->old_nickname, arguments.at(0));
+
 		user->old_nickname = user->nickname;
 		user->nickname = arguments.at(0);
 
-		if (user->old_nickname == IRC_NICKNAME_DEFAULT)
-		server.database.addClient(user);
+		server.anounce_register_sequence(user);
+
 		return (true);
 
 		error:
 		return (false);
 	}
 }
+
+// NICK + USER == Welcome repply NOT only USER
+
+

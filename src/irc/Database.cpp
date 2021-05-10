@@ -40,6 +40,10 @@ namespace irc
 		return it->second;
 	}
 
+	void
+	IRCDatabase::set_ClientNick(const std::string& previous, const std::string& current)
+	{ const_cast<std::string&>(dataClientsMap.find(previous)->first) = current; }
+
 	Channel	*IRCDatabase::getChannel(std::string const &channelName) const
 	{
 		databaseChannelsMap::const_iterator it;

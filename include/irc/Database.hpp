@@ -30,7 +30,6 @@ namespace irc
 		functionPointerMap	modeChannelFunctionsMap;
 		functionPointerMap	modeUserFunctionsMap;
 
-
 		IRCDatabase();
 		IRCDatabase(Server* server);
 		virtual ~IRCDatabase() throw();
@@ -41,6 +40,8 @@ namespace irc
 
 		Client	*getClient(std::string const &nickname) const;
 		Channel	*getChannel(std::string const &channelName) const;
+
+		void	set_ClientNick(const std::string& previous, const std::string& current);
 
 	// --- Mode pointer functions --- //
 		void	createModeFunctionsMap();
