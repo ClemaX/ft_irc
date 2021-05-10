@@ -65,6 +65,7 @@ namespace irc
 		std::string realname; // 4th arg USER
 		Server	*server;
 		ClientModes		clientModes;
+		bool		first_connection;
 
 		clientChannelMap	clientChannels;
 

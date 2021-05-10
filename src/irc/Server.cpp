@@ -112,11 +112,16 @@ namespace irc
 	Server::
 	anounce_register_sequence(Client* user)
 	{
-		if (user->nickname != IRC_NICKNAME_DEFAULT && !user->username.empty())
+		if (user->first_connection && user->nickname != IRC_NICKNAME_DEFAULT
+		&& !user->username.empty())
+		{
 			*user
 			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
 			<< YourHostReply(hostname, SERVER_VERSION)
 			<< CreatedReply(hostname, SERVER_CREATION_DATE)
 			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
+			user->first_connection = false;
+		}
+
 	}
 }

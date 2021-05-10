@@ -15,14 +15,14 @@ namespace irc
 		// ERR_NEEDMOREPARAMS Bad amount of params
 		if (arguments.size() < 4)
 		{
-			*user << NumericReply(server.hostname, ERR_NEEDMOREPARAMS);
+			*user << NumericReply(server.hostname, ERR_NEEDMOREPARAMS); // Not enough parameters
 			goto error;
 		}
 
 		// ERR_ALREADYREGISTRED User already exists
 		if (!user->username.empty())
 		{
-			*user << NumericReply(server.hostname, ERR_ALREADYREGISTRED);
+			*user << NumericReply(server.hostname, ERR_ALREADYREGISTRED); // <name> :You may not reregister
 			goto error;
 		}
 

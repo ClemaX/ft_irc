@@ -1,7 +1,7 @@
 #pragma once
 
 #define SERVER_VERSION "1.0.0"
-#define SERVER_CREATION_DATE "20 april 2021"
+#define SERVER_CREATION_DATE "the 20 april of 2021"
 
 #define MODES_CLIENT "iswo"
 #define MODES_CHANNEL "OovaimnqpsrtklbeI"

@@ -13,7 +13,8 @@ namespace irc
 
 // --- Client ---
 	Client::Client(int fd, address const& address)
-		:	SocketConnection(fd, address)
+		:	SocketConnection(fd, address),
+			first_connection(true)
 	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
 
 	Client::~Client() throw()
