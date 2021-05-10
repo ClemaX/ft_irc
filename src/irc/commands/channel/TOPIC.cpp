@@ -12,7 +12,7 @@ namespace irc
 		(void)server;
 		if (!arguments.size())
 		{
-			*user <<  NeedMoreParamsError(SERVER_NAME, name);
+			*user <<  NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -20,22 +20,22 @@ namespace irc
 		Channel	*channel = user->getChannel(channelName);
 
 		if (!channel)
-			*user <<  NotOnChannelError(SERVER_NAME, channelName);
+			*user <<  NotOnChannelError(gHostname, channelName);
 		else if (arguments.size() == 1)
 		{
 			const std::string	topic = channel->getTopic();
 			if (!topic.compare(""))
-				*user << NoTopicReply(SERVER_NAME, channelName);
+				*user << NoTopicReply(gHostname, channelName);
 			else
-				*user << TopicReply(SERVER_NAME, channelName, topic);
+				*user << TopicReply(gHostname, channelName, topic);
 		}
 		else if (!channel->isOperator(user))
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channelName);
 		else
 		{
 			const std::string newTopic = arguments[1];
 			channel->setTopic(newTopic);
-			*user << TopicReply(SERVER_NAME, channelName, newTopic);
+			*user << TopicReply(gHostname, channelName, newTopic);
 		}
 		return true;
 	}

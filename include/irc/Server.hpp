@@ -28,6 +28,8 @@
 
 namespace irc
 {
+	extern std::string const&	gHostname;
+
 	class Channel;
 
 	class	Server	:	public SocketServer

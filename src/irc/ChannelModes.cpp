@@ -9,7 +9,7 @@ namespace irc
 	{
 		if (!channel->isCreator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addCreator(flagArguments);
@@ -19,7 +19,7 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addOperator(flagArguments);
@@ -29,7 +29,7 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->removeOperator(flagArguments);
@@ -39,7 +39,7 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addVoice(flagArguments);
@@ -49,7 +49,7 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->removeVoice(flagArguments);
@@ -61,11 +61,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_a;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+a", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+a", "");
 		return true;
 	}
 
@@ -74,11 +74,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_a;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-a", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-a", "");
 		return true;
 	}
 
@@ -88,11 +88,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_i;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+i", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+i", "");
 		return true;
 	}
 
@@ -101,11 +101,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_i;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-i", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-i", "");
 		return true;
 	}
 
@@ -114,11 +114,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_m;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+m", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+m", "");
 		return true;
 	}
 
@@ -127,11 +127,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_m;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-m", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-m", "");
 		return true;
 	}
 
@@ -140,11 +140,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_n;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+n", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+n", "");
 		return true;
 	}
 
@@ -153,11 +153,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_n;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-n", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-n", "");
 		return true;
 	}
 
@@ -166,11 +166,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_q;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+q", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+q", "");
 		return true;
 	}
 
@@ -179,11 +179,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_q;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-q", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-q", "");
 		return true;
 	}
 
@@ -192,11 +192,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_p;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+p", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+p", "");
 		return true;
 	}
 
@@ -205,11 +205,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_p;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-p", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-p", "");
 		return true;
 	}
 
@@ -218,11 +218,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_s;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+s", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+s", "");
 		return true;
 	}
 
@@ -231,11 +231,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_s;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-s", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-s", "");
 		return true;
 	}
 
@@ -244,11 +244,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isCreator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_r;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+r", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+r", "");
 		return true;
 	}
 
@@ -257,11 +257,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isCreator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_r;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-r", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-r", "");
 		return true;
 	}
 
@@ -270,11 +270,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode |= M_t;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+t", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+t", "");
 		return true;
 	}
 
@@ -283,11 +283,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.binMode &= ~M_t;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-t", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-t", "");
 		return true;
 	}
 
@@ -298,12 +298,12 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 
 		channel->channelModes.l = ft::atoi(flagArguments);
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+l", flagArguments);
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+l", flagArguments);
 		return true;
 	}
 
@@ -312,11 +312,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.l = 0;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-l", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-l", "");
 		return true;
 	}
 
@@ -324,11 +324,11 @@ namespace irc
 	{
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.k = flagArguments;
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "+k", flagArguments);
+		*channel << ChannelModeIsReply(gHostname, channel->name, "+k", flagArguments);
 		return true;
 	}
 
@@ -337,11 +337,11 @@ namespace irc
 		(void)flagArguments;
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		channel->channelModes.k = "";
-		*channel << ChannelModeIsReply(SERVER_NAME, channel->name, "-k", "");
+		*channel << ChannelModeIsReply(gHostname, channel->name, "-k", "");
 		return true;
 	}
 
@@ -353,13 +353,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.b.begin() ; it != channel->channelModes.b.end() ; it++)
-				*user << BanListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfBanListReply(SERVER_NAME, channel->name);
+				*user << BanListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfBanListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addBanned(flagArguments);
@@ -370,13 +370,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.b.begin() ; it != channel->channelModes.b.end() ; it++)
-				*user << BanListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfBanListReply(SERVER_NAME, channel->name);
+				*user << BanListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfBanListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->removeBanned(flagArguments);
@@ -387,13 +387,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.e.begin() ; it != channel->channelModes.e.end() ; it++)
-				*user << ExceptionListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfExceptionListReply(SERVER_NAME, channel->name);
+				*user << ExceptionListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfExceptionListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addException(flagArguments);
@@ -404,13 +404,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.e.begin() ; it != channel->channelModes.e.end() ; it++)
-				*user << ExceptionListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfExceptionListReply(SERVER_NAME, channel->name);
+				*user << ExceptionListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfExceptionListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->removeException(flagArguments);
@@ -421,13 +421,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.I.begin() ; it != channel->channelModes.I.end() ; it++)
-				*user << InviteListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfInviteListReply(SERVER_NAME, channel->name);
+				*user << InviteListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfInviteListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->addInviteList(flagArguments);
@@ -438,13 +438,13 @@ namespace irc
 		if (!flagArguments.size())
 		{
 			for (Channel::channelNicknameMap::iterator it = channel->channelModes.I.begin() ; it != channel->channelModes.I.end() ; it++)
-				*user << InviteListReply(SERVER_NAME, channel->name, "+", it->first);
-			*user << EndOfInviteListReply(SERVER_NAME, channel->name);
+				*user << InviteListReply(gHostname, channel->name, "+", it->first);
+			*user << EndOfInviteListReply(gHostname, channel->name);
 			return true;
 		}
 		if (!channel->isOperator(user))
 		{
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channel->name);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
 			return false;
 		}
 		return channel->removeInviteList(flagArguments);
@@ -458,20 +458,20 @@ namespace irc
 		Channel *channel = user->getChannelGlobal(channelName);
 		if (!channel)
 		{
-			*user << NoSuchChannelError(SERVER_NAME, channelName);
+			*user << NoSuchChannelError(gHostname, channelName);
 			return false;
 		}
 
 		if (channel->isNetworkUnmoderatedChannel())
 		{
-			*user << NoChanModesError(SERVER_NAME, channelName);
+			*user << NoChanModesError(gHostname, channelName);
 			return false;
 		}
 
 		char sign = flags[0];
 		if (sign != '+' && sign != '-')
 		{
-			*user << UModeUnkownFlagError(SERVER_NAME);
+			*user << UModeUnkownFlagError(gHostname);
 			return false;
 		}
 
@@ -493,7 +493,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode |= Mu_i;
-		*user << UModeIsReply(SERVER_NAME, "+i");
+		*user << UModeIsReply(gHostname, "+i");
 		return true;
 	}
 
@@ -502,7 +502,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode &= ~Mu_i;
-		*user << UModeIsReply(SERVER_NAME, "-i");
+		*user << UModeIsReply(gHostname, "-i");
 		return true;
 	}
 
@@ -511,7 +511,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode |= Mu_s;
-		*user << UModeIsReply(SERVER_NAME, "+s");
+		*user << UModeIsReply(gHostname, "+s");
 		return true;
 	}
 
@@ -520,7 +520,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode &= ~Mu_s;
-		*user << UModeIsReply(SERVER_NAME, "-s");
+		*user << UModeIsReply(gHostname, "-s");
 		return true;
 	}
 
@@ -529,7 +529,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode |= Mu_w;
-		*user << UModeIsReply(SERVER_NAME, "+w");
+		*user << UModeIsReply(gHostname, "+w");
 		return true;
 	}
 
@@ -538,7 +538,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode &= ~Mu_w;
-		*user << UModeIsReply(SERVER_NAME, "-w");
+		*user << UModeIsReply(gHostname, "-w");
 		return true;
 	}
 
@@ -547,7 +547,7 @@ namespace irc
 		(void)user;
 		(void)channel;
 		(void)flagArguments;
-		*user << UModeIsReply(SERVER_NAME, "+o");
+		*user << UModeIsReply(gHostname, "+o");
 		return true;
 	}
 
@@ -556,7 +556,7 @@ namespace irc
 		(void)channel;
 		(void)flagArguments;
 		user->clientModes.binMode &= ~Mu_o;
-		*user << UModeIsReply(SERVER_NAME, "-o");
+		*user << UModeIsReply(gHostname, "-o");
 		return true;
 	}
 
@@ -570,7 +570,7 @@ namespace irc
 		userMode.push_back(sign);
 		if (sign != '+' && sign != '-')
 		{
-			*user << UModeUnkownFlagError(SERVER_NAME);
+			*user << UModeUnkownFlagError(gHostname);
 			return false;
 		}
 
@@ -578,12 +578,12 @@ namespace irc
 		for (std::string::iterator it = flags.begin(); it != flags.end(); it++)
 		{
 			if (database.modeUserFunctionsMap[sign].find(*it) == database.modeUserFunctionsMap[sign].end())
-				*user << UModeUnkownFlagError(SERVER_NAME);
+				*user << UModeUnkownFlagError(gHostname);
 			else
 			{
 				database.modeUserFunctionsMap[sign][*it](user, NULL, flagArguments);
 				userMode.replace(1, 1, 1, *it);
-				*user << UModeIsReply(SERVER_NAME, userMode);
+				*user << UModeIsReply(gHostname, userMode);
 			}
 		}
 		return true;

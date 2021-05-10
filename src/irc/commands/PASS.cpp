@@ -14,7 +14,7 @@ namespace irc
 
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
+			*user << NeedMoreParamsError(gHostname, name); // << user->nickname << ft::itoa(_ERR_NEEDMOREPARAMS);
 			return false;
 		}
 		std::cout << "Setting password '" << arguments[0] << "'" << std::endl;

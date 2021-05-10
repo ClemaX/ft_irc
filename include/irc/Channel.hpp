@@ -11,7 +11,6 @@
 
 namespace irc
 {
-
 	class Server;
 	class Client;
 	// TODO: Reference to connection and add ChannelClient on JOIN command
