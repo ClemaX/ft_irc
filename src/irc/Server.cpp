@@ -117,6 +117,6 @@ namespace irc
 			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
 			<< YourHostReply(hostname, SERVER_VERSION)
 			<< CreatedReply(hostname, SERVER_CREATION_DATE)
-			<< MyInfoReply(hostname, SERVER_VERSION, "", ""); // TO DO: <servername> <version> <available user modes> <available channel modes>
+			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
 	}
 }

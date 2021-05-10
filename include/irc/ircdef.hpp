@@ -3,6 +3,9 @@
 #define SERVER_VERSION "1.0.0"
 #define SERVER_CREATION_DATE "20 april 2021"
 
+#define MODES_CLIENT "iswo"
+#define MODES_CHANNEL "OovaimnqpsrtklbeI"
+
 /// Special IRC characters allowed outside of the alphanumerical set.
 #define IRC_CHARSET_SPECIAL    "-[]\\`^{}"
 
