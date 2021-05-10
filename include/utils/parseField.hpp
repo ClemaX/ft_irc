@@ -9,6 +9,8 @@
 
 namespace irc
 {
+	int ft_tolower(int c);
+
 	std::string::const_iterator	parseField(std::string& str,
 			std::string::const_iterator first, std::string::const_iterator last);
 

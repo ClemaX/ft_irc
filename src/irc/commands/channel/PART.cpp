@@ -26,15 +26,9 @@ namespace irc
 			Channel *channel = server.getChannel(channelName);
 
 			if (!channel)
-			{
 				*user << NoSuchChannelError(SERVER_NAME, channelName);
-				// return false;
-			}
 			else if (!user->isInChannel(channelName))
-			{
 				*user << NotOnChannelError(SERVER_NAME, channelName);
-				// return false;
-			}
 			else
 			{
 				std::string leaveMessage = "";
@@ -43,9 +37,6 @@ namespace irc
 				channel->removeClient(user, leaveMessage);
 			}
 		}
-
 		return true;
-		// Errors/replies not used yet
-			// no reply ?
 	}
 }

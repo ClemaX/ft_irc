@@ -36,30 +36,18 @@ namespace irc
 			const std::string clientNickname = usersQueue.front();
 			usersQueue.pop();
 
-			Channel *channel = user->getChannelGlobal(channelName);			// need to check privacy ?
+			Channel *channel = user->getChannelGlobal(channelName);
 			if (!channel || !channel->isVisibleForClient(user))
-			{
 				*user << NoSuchChannelError(SERVER_NAME, channelName);
-				// return false;
-			}
 			else if (!user->isInChannel(channelName))
-			{
 				*user << NotOnChannelError(SERVER_NAME, channelName);
-				// return false;
-			}
 			else if (!channel->isOperator(user))
-			{
 				*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
-				// return false;
-			}
 			else
 			{
 				Client *victim = channel->getUser(clientNickname);
 				if (!victim)
-				{
 					*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
-					// return false;
-				}
 				else
 				{
 					std::string comment = "";
@@ -70,10 +58,6 @@ namespace irc
 				}
 			}
 		}
-
 		return true;
-
-		// Errors not used yet
-			// ERR_BADCHANMASK
 	}
 }

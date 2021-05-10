@@ -20,10 +20,7 @@ namespace irc
 		Channel	*channel = user->getChannel(channelName);
 
 		if (!channel)
-		{
 			*user <<  NotOnChannelError(SERVER_NAME, channelName);
-			return false;
-		}
 		else if (arguments.size() == 1)
 		{
 			const std::string	topic = channel->getTopic();
@@ -31,13 +28,9 @@ namespace irc
 				*user << NoTopicReply(SERVER_NAME, channelName);
 			else
 				*user << TopicReply(SERVER_NAME, channelName, topic);
-			return true;
 		}
 		else if (!channel->isOperator(user))
-		{
 			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
-			return false;
-		}
 		else
 		{
 			const std::string newTopic = arguments[1];
@@ -45,8 +38,5 @@ namespace irc
 			*user << TopicReply(SERVER_NAME, channelName, newTopic);
 		}
 		return true;
-
-		// Errors/replies not used yet
-			// ERR_NOCHANMODES
 	}
 }

@@ -2,6 +2,14 @@
 
 namespace irc
 {
+
+	int ft_toupper(int c)
+	{
+		if (c >= 'a' && c <= 'z')
+			return c +'A' - 'a';
+		return c;
+	}
+
 	std::string::const_iterator	parseField(std::string& str,
 			std::string::const_iterator first, std::string::const_iterator last)
 	{
@@ -25,8 +33,8 @@ namespace irc
 
 		str.assign(first, fieldLast);
 
-		//std::transform(str.begin(), str.end(), data.begin(),
-		//	[](unsigned char c){ return std::tolower(c); });
+		std::transform(str.begin(), str.end(), str.begin(),
+			ft_toupper);
 
 		// Lamba f is > c++98 [](unsigned char c){}
 

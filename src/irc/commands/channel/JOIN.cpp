@@ -40,7 +40,7 @@ namespace irc
 				passwordsQueue.pop();
 			}
 
-			Channel *channel = server.getChannel(channelName); // what happens if the server is private or secret ?
+			Channel *channel = server.getChannel(channelName);
 
 			if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
@@ -62,20 +62,11 @@ namespace irc
 					channel->addClient(user, password, isOp);
 				}
 				catch(Channel::InvalidChannelNameException const& e)
-				{
-					*user << NoSuchChannelError(SERVER_NAME, name);
-					// return false;										//do we leave or check the next arguments ?
-				}
-
+				{*user << NoSuchChannelError(SERVER_NAME, name);}
 			}
 			else
 				channel->addClient(user, password, isOp);
 		}
 		return true;
-
-	// Errors not used yet
-        //    ERR_BADCHANMASK
-        //    ERR_TOOMANYTARGETS              ERR_UNAVAILRESOURCE
-
 	}
 }

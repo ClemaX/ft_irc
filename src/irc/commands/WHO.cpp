@@ -23,14 +23,9 @@ namespace irc
 			if (channel)
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else
-				user->matchMaskWhoQueryInfo(mask); // function to complete with match with users' server
+				user->matchMaskWhoQueryInfo(mask);
 		}
 		*user << EndOfWhoReply(SERVER_NAME, mask);
-
 		return true;
-
-		// Errors/replies not used yet
-			// ERR_NOSUCHSERVER
-
 	}
 }

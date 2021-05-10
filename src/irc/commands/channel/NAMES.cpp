@@ -30,7 +30,7 @@ namespace irc
 
 		std::string target = "";
 		if (arguments.size() > 1)
-			target = arguments[1];				// need to use target
+			target = arguments[1];
 
 		while (channelsQueue.size())
 		{
@@ -45,8 +45,5 @@ namespace irc
 			}
 		}
 		return true;
-
-		// Errors/replies not used yet
-			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
 	}
 }

@@ -2,11 +2,6 @@
 
 namespace irc
 {
-
-// ============================================== //
-// ============   Private Messages   ============ //
-// ============================================== //
-
 	Server::PRIVMSGCommand::PRIVMSGCommand()
 		:	Command("MSG")
 	{ }
@@ -27,7 +22,7 @@ namespace irc
 
 		Client *receiver = server.database.getClient(nameArgument);
 		if (receiver)
-			receiver->receiveMessage(user, message);	// check to add ? invisible ?
+			receiver->receiveMessage(user, message);
 		else
 		{
 			Channel *channel = server.getChannel(nameArgument);
@@ -36,8 +31,4 @@ namespace irc
 		}
 		return true;
 	}
-
-// ============================================== //
-// ============================================== //
-
 }

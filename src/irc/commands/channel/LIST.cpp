@@ -19,20 +19,17 @@ namespace irc
 
 			std::string target = "";
 			if (arguments.size() > 1)
-				target = arguments[1];				// need to use target
+				target = arguments[1];
 
 			while (channelsQueue.size())
 			{
 				const std::string channelName = ft::strToLower(channelsQueue.front());
 				channelsQueue.pop();
 				Channel *channel = user->getChannelGlobal(channelName);
-				user->listChannelInfo(channel);						// need to be adjusted ?
+				user->listChannelInfo(channel);
 			}
 		}
 		*user << EndOfListReply(SERVER_NAME);
 		return true;
-
-		// Errors/replies not used yet
-			// ERR_TOOMANYMATCHES              ERR_NOSUCHSERVER
 	}
 }

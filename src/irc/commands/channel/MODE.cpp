@@ -31,13 +31,5 @@ namespace irc
 			return server.parseUserMode(user, flags, flagArgument);
 		*user << UsersDontMatchError(SERVER_NAME);
 		return false;
-
-		// Errors/replies not used yet - user
-
-		// Errors/replies not used yet - channel
-			// ERR_KEYSET
-
-			// RPL_UNIQOPIS
-
 	}
 }
