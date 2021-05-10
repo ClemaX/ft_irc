@@ -9,6 +9,12 @@ namespace irc
 	bool	Server::MotdCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		if (user->first_connection)
+		{
+			*user << ClientNotResgisteredYet(server.hostname);
+			return (false);
+		}
+
 		std::cout << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(

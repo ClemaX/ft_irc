@@ -50,7 +50,7 @@ namespace irc
 		if (server.database.getClient(arguments.at(0)))
 		{
 			// ERR_NICKCOLLISION If registered nick is found in another server
-			if (user->nickname.empty())
+			if (user->nickname == IRC_NICKNAME_DEFAULT)
 				*user << NickCollisionReply(server.hostname, arguments.at(0),
 				user->username, user->hostname);
 			// ERR_NICKNAMEINUSE If attemps to change a nickname that is alreaddy in use

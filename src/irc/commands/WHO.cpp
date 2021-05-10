@@ -9,6 +9,12 @@ namespace irc
 	bool	Server::WhoQuery::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
+		if (user->first_connection)
+		{
+			*user << ClientNotResgisteredYet(server.hostname);
+			return (false);
+		}
+
 		std::string mask = "";
 		if (!arguments.size() || !arguments[0].compare("0") || !arguments[0].compare("*"))
 			user->listAllVisibleUsersWhoQueryInfo();

@@ -270,5 +270,9 @@ namespace irc
 	: public NumericReply
 	{ UserAlreadyRegistred(const std::string& servername, const std::string& given_nick); };
 
+	struct ClientNotResgisteredYet
+	: public NumericReply
+	{ ClientNotResgisteredYet(const std::string& servername); };
+
 
 }
