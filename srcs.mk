@@ -60,6 +60,9 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				372-Motd.cpp\
 				375-MotdStart.cpp\
 				376-EndOfMotd.cpp\
+				451-ClientNotRegistered.cpp\
+				461-UserParams.cpp\
+				462-UserAlreadyRegistred.cpp\
 				TODO.cpp\
 			)\
 			$(addprefix error/,\
