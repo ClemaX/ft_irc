@@ -28,20 +28,12 @@ namespace irc
 	}
 
 
-
-
 // ======== ChannelModes ========
 	ChannelModes::ChannelModes()
 		:	O(), o(), v(), binMode(0), l(0), k(""), b(), e(), I()
 	{ }
 
 	ChannelModes::~ChannelModes() {}
-
-
-
-
-
-
 
 
 // ======== Channel ========
@@ -109,18 +101,13 @@ namespace irc
 	}
 
 
-
-
 // Set functions
 	void	Channel::setTopic(const std::string & str)
 	{topic = str;}
 
 
-
-
-
 // Check functions
-	bool	Channel::checkChannelName(const std::string &str) const	// still need to add the channel mask part (with ':')
+	bool	Channel::checkChannelName(const std::string &str) const
 	{
 		if (str.length() < 2 || str.length() > 50)
 			return false;
@@ -206,17 +193,11 @@ namespace irc
 	}
 
 
-
-
-
 // Add/Remove functions
 	bool	Channel::addClient(Client* client, std::string & password, bool	isChannelOperator)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
-		{
-			// *client <<
-			return false;	// is there an error when joining a channel you're already in ?
-		}
+			return false;
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
 		{
 			*client << ChannelIsFullError(SERVER_NAME, name);
@@ -256,7 +237,7 @@ namespace irc
 			return false;
 		serversMap[server] = server;
 
-std::cout << name << ": new server added - number of servers linked to channel = " << serversMap.size() << "\n";
+// std::cout << name << ": new server added\n";
 
 		return true;
 	}
@@ -265,11 +246,11 @@ std::cout << name << ": new server added - number of servers linked to channel =
 	{
 		if (clientsMap.find(client) == clientsMap.end())
 			return false;
+		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
 		client->leaveChannel(this);
 		clientsMap.erase(client);
 		if (clientsMap.empty())
 			return close();
-		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
 		return true;
 	}
 
@@ -279,15 +260,10 @@ std::cout << name << ": new server added - number of servers linked to channel =
 			serversMap.begin()->second->database.dataChannelsMap.erase(name);
 		delete this;
 
-std::cout << "channel " << name << " has been closed\n";
+// std::cout << "channel " << name << " has been closed\n";
 
 		return true;
 	}
-
-
-
-
-
 
 
 // Modes functions
