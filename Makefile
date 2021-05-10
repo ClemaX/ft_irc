@@ -64,6 +64,8 @@ COMPILE.o = $(LD) $(LDFLAGS)
 
 all: $(BINDIR)/$(NAME)
 
+$(NAME): $(BINDIR)/$(NAME)
+
 # Directories
 $(OBJDIR) $(BINDIR):
 	@echo "MK $@"
