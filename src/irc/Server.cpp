@@ -45,9 +45,6 @@ namespace irc
 		if (name.length() == 0)
 			return NULL;
 
-		std::transform(name.begin(), name.end(), name.begin(),
-			irc::ft_toupper);
-
 		while (i < commandCount
 			&& ft::strcmpi(name.c_str(), commands[i]->name.c_str()))
 			i++;

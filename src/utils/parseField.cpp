@@ -3,13 +3,6 @@
 namespace irc
 {
 
-	int ft_toupper(int c)
-	{
-		if (c >= 'a' && c <= 'z')
-			return c +'A' - 'a';
-		return c;
-	}
-
 	std::string::const_iterator	parseField(std::string& str,
 			std::string::const_iterator first, std::string::const_iterator last)
 	{
