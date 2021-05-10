@@ -31,7 +31,7 @@ namespace irc
 			else
 				user->matchMaskWhoQueryInfo(mask);
 		}
-		*user << EndOfWhoReply(SERVER_NAME, mask);
+		*user << EndOfWhoReply(gHostname, mask);
 		return true;
 	}
 }

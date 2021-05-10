@@ -12,7 +12,7 @@ namespace irc
 		(void)server;
 		if (arguments.size() < 2)
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -24,7 +24,7 @@ namespace irc
 
 		if (channelsQueue.size() != usersQueue.size() && channelsQueue.size() != 1)
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -38,16 +38,16 @@ namespace irc
 
 			Channel *channel = user->getChannelGlobal(channelName);
 			if (!channel || !channel->isVisibleForClient(user))
-				*user << NoSuchChannelError(SERVER_NAME, channelName);
+				*user << NoSuchChannelError(gHostname, channelName);
 			else if (!user->isInChannel(channelName))
-				*user << NotOnChannelError(SERVER_NAME, channelName);
+				*user << NotOnChannelError(gHostname, channelName);
 			else if (!channel->isOperator(user))
-				*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+				*user << ChannelOperatorPrivilegiesError(gHostname, channelName);
 			else
 			{
 				Client *victim = channel->getUser(clientNickname);
 				if (!victim)
-					*user << UserNotInChannelError(SERVER_NAME, clientNickname, channelName);
+					*user << UserNotInChannelError(gHostname, clientNickname, channelName);
 				else
 				{
 					std::string comment = "";

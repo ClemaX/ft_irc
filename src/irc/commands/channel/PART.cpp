@@ -11,7 +11,7 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -26,9 +26,9 @@ namespace irc
 			Channel *channel = server.getChannel(channelName);
 
 			if (!channel)
-				*user << NoSuchChannelError(SERVER_NAME, channelName);
+				*user << NoSuchChannelError(gHostname, channelName);
 			else if (!user->isInChannel(channelName))
-				*user << NotOnChannelError(SERVER_NAME, channelName);
+				*user << NotOnChannelError(gHostname, channelName);
 			else
 			{
 				std::string leaveMessage = "";

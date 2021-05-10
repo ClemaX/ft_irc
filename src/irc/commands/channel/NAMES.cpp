@@ -17,8 +17,8 @@ namespace irc
 			{
 				if (itb->second->isVisibleForClient(user))
 				{
-					*user << ChannelNamesReply(SERVER_NAME, itb->second);
-					*user << EndOfNamesReply(SERVER_NAME, itb->first);
+					*user << ChannelNamesReply(gHostname, itb->second);
+					*user << EndOfNamesReply(gHostname, itb->first);
 				}
 				itb++;
 			}
@@ -40,8 +40,8 @@ namespace irc
 
 			if (channel && channel->isVisibleForClient(user))
 			{
-				*user << ChannelNamesReply(SERVER_NAME, channel);
-				*user << EndOfNamesReply(SERVER_NAME, channelName);
+				*user << ChannelNamesReply(gHostname, channel);
+				*user << EndOfNamesReply(gHostname, channelName);
 			}
 		}
 		return true;

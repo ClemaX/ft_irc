@@ -11,7 +11,7 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 		std::string nameArgument = arguments[0];

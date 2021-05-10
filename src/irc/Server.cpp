@@ -5,10 +5,13 @@
 
 namespace irc
 {
+	std::string const& gHostname = "";
+
 	Server::Server()
 		:	SocketServer(),
 			config()
 	{
+		hostname = config[IRC_CONF_HOSTNAME];
 		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 
@@ -16,6 +19,7 @@ namespace irc
 		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
 			config(config)
 	{
+		hostname = config[IRC_CONF_HOSTNAME];
 		database = IRCDatabase(this);	// check to do if the server is directly connected to other servers
 	}
 

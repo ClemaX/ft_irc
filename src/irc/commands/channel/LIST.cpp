@@ -29,7 +29,7 @@ namespace irc
 				user->listChannelInfo(channel);
 			}
 		}
-		*user << EndOfListReply(SERVER_NAME);
+		*user << EndOfListReply(gHostname);
 		return true;
 	}
 }

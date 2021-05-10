@@ -11,7 +11,7 @@ namespace irc
 	{
 		if (!arguments.size())
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -44,7 +44,7 @@ namespace irc
 
 			if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
-				*user << TooManyChannelsError(SERVER_NAME, channelName);
+				*user << TooManyChannelsError(gHostname, channelName);
 				return false;
 			}
 
@@ -62,7 +62,7 @@ namespace irc
 					channel->addClient(user, password, isOp);
 				}
 				catch(Channel::InvalidChannelNameException const& e)
-				{*user << NoSuchChannelError(SERVER_NAME, name);}
+				{*user << NoSuchChannelError(gHostname, name);}
 			}
 			else
 				channel->addClient(user, password, isOp);

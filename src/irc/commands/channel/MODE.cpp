@@ -12,7 +12,7 @@ namespace irc
 		(void)server;
 		if (arguments.size() < 2)
 		{
-			*user << NeedMoreParamsError(SERVER_NAME, name);
+			*user << NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 
@@ -29,7 +29,7 @@ namespace irc
 			return server.parseChannelMode(user, nameArgument, flags, flagArgument);
 		if (!user->nickname.compare(nameArgument))
 			return server.parseUserMode(user, flags, flagArgument);
-		*user << UsersDontMatchError(SERVER_NAME);
+		*user << UsersDontMatchError(gHostname);
 		return false;
 	}
 }

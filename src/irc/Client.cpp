@@ -150,15 +150,15 @@ namespace irc
 				return false;
 			else if ((channel->channelModes.binMode & M_p) && channel->isVisibleForClient(this))
 			{
-				*this << ListReply(SERVER_NAME, channelName, 0, "Prv");
+				*this << ListReply(gHostname, channelName, 0, "Prv");
 				return false;
 			}
 			else if (channel->isLocalChannelVisibleForClient(this))
-				*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+				*this << ListReply(gHostname, channelName, channel->clientsMap.size(), channel->topic);
 			return false;
 		}
 		else
-			*this << ListReply(SERVER_NAME, channelName, channel->clientsMap.size(), channel->topic);
+			*this << ListReply(gHostname, channelName, channel->clientsMap.size(), channel->topic);
 		return true;
 	}
 
@@ -188,7 +188,7 @@ namespace irc
 			while (itb != ite)
 			{
 				if (!opFlag || channel->isOperator(itb->first))
-					*this << WhoReply(SERVER_NAME, channelName, itb->first, channel->isOperator(itb->first));
+					*this << WhoReply(gHostname, channelName, itb->first, channel->isOperator(itb->first));
 				itb++;
 			}
 		}
@@ -202,7 +202,7 @@ namespace irc
 		{
 			Client *client = it->second;
 			if (!(client->clientModes.binMode & Mu_i) && !this->isInSameChannel(client))
-				*this << WhoReply(SERVER_NAME, "", client, -1);
+				*this << WhoReply(gHostname, "", client, -1);
 		}
 		return true;
 	}
@@ -220,7 +220,7 @@ namespace irc
 					(matchPattern_global(client->nickname, mask) ||
 					matchPattern_global(client->username, mask) ||
 					matchPattern_global(client->hostname, mask)))
-				*this << WhoReply(SERVER_NAME, "", client, -1);
+				*this << WhoReply(gHostname, "", client, -1);
 		}
 		return true;
 	}

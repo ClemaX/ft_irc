@@ -11,7 +11,7 @@ namespace irc
 	{
 		if (arguments.size() < 2)
 		{
-			*user <<  NeedMoreParamsError(SERVER_NAME, name);
+			*user <<  NeedMoreParamsError(gHostname, name);
 			return false;
 		}
 		std::string const nickname = arguments[0];
@@ -20,27 +20,27 @@ namespace irc
 		Client *client = server.database.getClient(nickname);
 		if (!client)
 		{
-			*user << NoSuchNicknameError(SERVER_NAME, nickname);
+			*user << NoSuchNicknameError(gHostname, nickname);
 			return false;
 		}
 		Channel *channel = server.database.getChannel(channelName);
 		if (!channel)
 		{
-			*user << InvitingReply(SERVER_NAME, channelName, nickname);
+			*user << InvitingReply(gHostname, channelName, nickname);
 			*client << InviteChannelMessage(user->nickname, channelName);
 		}
 		else if (!user->isInChannel(channelName))
-			*user << NotOnChannelError(SERVER_NAME, channelName);
+			*user << NotOnChannelError(gHostname, channelName);
 		else if ((channel->channelModes.binMode & M_i) && !channel->isOperator(user))
-			*user << ChannelOperatorPrivilegiesError(SERVER_NAME, channelName);
+			*user << ChannelOperatorPrivilegiesError(gHostname, channelName);
 		else if (client->isInChannel(channelName))
-			*user << UserOnChannelError(SERVER_NAME, nickname, channelName);
+			*user << UserOnChannelError(gHostname, nickname, channelName);
 		else
 		{
 			if (channel->channelModes.binMode & M_i)
 				channel->addInviteList(nickname);
 			*client << InviteChannelMessage(user->nickname, channelName);
-			*user << InvitingReply(SERVER_NAME, channelName, nickname);
+			*user << InvitingReply(gHostname, channelName, nickname);
 		}
 		return true;
 	}

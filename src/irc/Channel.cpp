@@ -1,4 +1,5 @@
 #include <irc/Channel.hpp>
+#include <irc/Server.hpp>
 
 namespace irc
 {
@@ -200,22 +201,22 @@ namespace irc
 			return false;
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
 		{
-			*client << ChannelIsFullError(SERVER_NAME, name);
+			*client << ChannelIsFullError(gHostname, name);
 			return false;
 		}
 		if (isStatusBanned(client) && !isStatusException(client))
 		{
-			*client << BannedFromChanError(SERVER_NAME, name);
+			*client << BannedFromChanError(gHostname, name);
 			return false;
 		}
 		if ((channelModes.binMode & M_i) && !isStatusInvite(client))
 		{
-			*client << InviteOnlyChanError(SERVER_NAME, name);
+			*client << InviteOnlyChanError(gHostname, name);
 			return false;
 		}
 		if (channelModes.k.compare("") && channelModes.k.compare(password))
 		{
-			*client << BadChannelKeyError(SERVER_NAME, name);
+			*client << BadChannelKeyError(gHostname, name);
 			return false;
 		}
 		clientsMap[client] = ChannelClient(client, isChannelOperator);
@@ -225,8 +226,8 @@ namespace irc
 			addOperator(client->nickname);
 		client->joinChannel(this);
 		*this << JoinChannelMessage(client->nickname, name);
-		*client << TopicReply(SERVER_NAME, name, topic);
-		*client << ChannelNamesReply(SERVER_NAME, this);
+		*client << TopicReply(gHostname, name, topic);
+		*client << ChannelNamesReply(gHostname, this);
 
 		return true;
 	}
@@ -272,26 +273,26 @@ namespace irc
 	{
 		if (!isInChannel(nickname))
 		{
-			UserNotInChannelError(SERVER_NAME, nickname, name);
+			UserNotInChannelError(gHostname, nickname, name);
 			return false;
 		}
 		if (channelModes.O.find(nickname) != channelModes.O.end())
 			return false;
 		channelModes.O[nickname] = nickname;
-		*this << ChannelModeIsReply(SERVER_NAME, name, "+O", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "+O", nickname);
 		return true;
 	}
 	bool	Channel::removeCreator(std::string nickname)
 	{
 		if (!isInChannel(nickname))
 		{
-			UserNotInChannelError(SERVER_NAME, nickname, name);
+			UserNotInChannelError(gHostname, nickname, name);
 			return false;
 		}
 		if (channelModes.O.find(nickname) == channelModes.O.end())
 			return false;
 		channelModes.O.erase(nickname);
-		*this << ChannelModeIsReply(SERVER_NAME, name, "-O", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "-O", nickname);
 		return true;
 	}
 
@@ -299,13 +300,13 @@ namespace irc
 	{
 		if (!isInChannel(nickname))
 		{
-			UserNotInChannelError(SERVER_NAME, nickname, name);
+			UserNotInChannelError(gHostname, nickname, name);
 			return false;
 		}
 		if (channelModes.o.find(nickname) != channelModes.o.end())
 			return false;
 		channelModes.o[nickname] = nickname;
-		*this << ChannelModeIsReply(SERVER_NAME, name, "+o", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "+o", nickname);
 		return true;
 	}
 	bool	Channel::removeOperator(std::string nickname)
@@ -315,7 +316,7 @@ namespace irc
 		if (channelModes.o.find(nickname) == channelModes.o.end())
 			return false;
 		channelModes.o.erase(nickname);
-		*this << ChannelModeIsReply(SERVER_NAME, name, "-o", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "-o", nickname);
 		return true;
 	}
 
@@ -323,13 +324,13 @@ namespace irc
 	{
 		if (!isInChannel(nickname))
 		{
-			UserNotInChannelError(SERVER_NAME, nickname, name);
+			UserNotInChannelError(gHostname, nickname, name);
 			return false;
 		}
 		if (channelModes.v.find(nickname) != channelModes.v.end())
 			return false;
 		channelModes.v[nickname] = nickname;
-		*this << ChannelModeIsReply(SERVER_NAME, name, "+v", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "+v", nickname);
 		return true;
 	}
 	bool	Channel::removeVoice(std::string nickname)
@@ -339,7 +340,7 @@ namespace irc
 		if (channelModes.v.find(nickname) == channelModes.v.end())
 			return false;
 		channelModes.v.erase(nickname);
-		*this << ChannelModeIsReply(SERVER_NAME, name, "-v", nickname);
+		*this << ChannelModeIsReply(gHostname, name, "-v", nickname);
 		return true;
 	}
 
@@ -349,26 +350,26 @@ namespace irc
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.b.find(nickname) != channelModes.b.end())
 			return false;
 		channelModes.b[nickname] = nickname;
-		*this << BanListReply(SERVER_NAME, name, "+", nickname);
+		*this << BanListReply(gHostname, name, "+", nickname);
 		return true;
 	}
 	bool	Channel::removeBanned(std::string nickname)
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.b.find(nickname) == channelModes.b.end())
 			return false;
 		channelModes.b.erase(nickname);
-		*this << BanListReply(SERVER_NAME, name, "-", nickname);
+		*this << BanListReply(gHostname, name, "-", nickname);
 		return true;
 	}
 
@@ -376,26 +377,26 @@ namespace irc
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.e.find(nickname) != channelModes.e.end())
 			return false;
 		channelModes.e[nickname] = nickname;
-		*this << ExceptionListReply(SERVER_NAME, name, "+", nickname);
+		*this << ExceptionListReply(gHostname, name, "+", nickname);
 		return true;
 	}
 	bool	Channel::removeException(std::string nickname)
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.e.find(nickname) == channelModes.e.end())
 			return false;
 		channelModes.e.erase(nickname);
-		*this << ExceptionListReply(SERVER_NAME, name, "-", nickname);
+		*this << ExceptionListReply(gHostname, name, "-", nickname);
 		return true;
 	}
 
@@ -403,26 +404,26 @@ namespace irc
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.I.find(nickname) != channelModes.I.end())
 			return false;
 		channelModes.I[nickname] = nickname;
-		*this << InviteListReply(SERVER_NAME, name, "+", nickname);
+		*this << InviteListReply(gHostname, name, "+", nickname);
 		return true;
 	}
 	bool	Channel::removeInviteList(std::string nickname)
 	{
 		// if (!isInChannel(nickname))
 		// {
-		// 	UserNotInChannelError(SERVER_NAME, nickname, name);
+		// 	UserNotInChannelError(gHostname, nickname, name);
 		// 	return false;
 		// }
 		if (channelModes.I.find(nickname) == channelModes.I.end())
 			return false;
 		channelModes.I.erase(nickname);
-		*this << InviteListReply(SERVER_NAME, name, "-", nickname);
+		*this << InviteListReply(gHostname, name, "-", nickname);
 		return true;
 	}
 
