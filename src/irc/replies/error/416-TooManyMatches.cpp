@@ -6,6 +6,6 @@ namespace irc
 	TooManyMatchesError::TooManyMatchesError(std::string const& serverName)
 		:	NumericReply(serverName, IRC_ERR_TOOMANYMATCHES)
 	{
-		message << "Too many matches";
+		message << ":Too many matches";
 	}
 }
