@@ -20,7 +20,7 @@ namespace irc
 		}
 
 		// ERR_ALREADYREGISTRED User already exists
-		if (user->username.empty())
+		if (!user->username.empty())
 		{
 			*user << NumericReply(server.hostname, ERR_ALREADYREGISTRED);
 			goto error;
