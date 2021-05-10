@@ -5,7 +5,7 @@ namespace irc
 	// --- USER --- //
 
 	Server::UserCommand::UserCommand()
-	: Command("user")
+	: Command("USER")
 	{ }
 
 	bool

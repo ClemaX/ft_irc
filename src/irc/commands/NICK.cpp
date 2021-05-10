@@ -25,7 +25,7 @@ namespace irc
 	}
 
 	Server::NickCommand::NickCommand()
-	: Command("nick")
+	: Command("NICK")
 	{ }
 
 	bool

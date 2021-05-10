@@ -3,7 +3,7 @@
 namespace irc
 {
 	Server::PartCommand::PartCommand()
-		:	ChannelCommand("/part", true)
+		:	ChannelCommand("PART", true)
 	{ }
 
 	bool	Server::PartCommand::execute(Server& server, Client* user,

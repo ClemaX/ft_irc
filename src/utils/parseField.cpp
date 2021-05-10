@@ -33,11 +33,6 @@ namespace irc
 
 		str.assign(first, fieldLast);
 
-		std::transform(str.begin(), str.end(), str.begin(),
-			ft_toupper);
-
-		// Lamba f is > c++98 [](unsigned char c){}
-
 		return fieldLast;
 	}
 

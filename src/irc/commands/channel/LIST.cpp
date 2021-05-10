@@ -3,7 +3,7 @@
 namespace irc
 {
 	Server::ListCommand::ListCommand()
-		:	ChannelCommand("/list", true)
+		:	ChannelCommand("LIST", true)
 	{ }
 
 	bool	Server::ListCommand::execute(Server& server, Client* user,

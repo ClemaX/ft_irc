@@ -3,7 +3,7 @@
 namespace irc
 {
 	Server::ModeCommand::ModeCommand()
-		:	ChannelCommand("/mode", true)
+		:	ChannelCommand("MODE", true)
 	{ }
 
 	bool	Server::ModeCommand::execute(Server& server, Client* user,
