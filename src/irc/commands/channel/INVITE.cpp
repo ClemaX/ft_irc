@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("INVITE", true)
 	{ }
 
-	bool	Server::InviteCommand::execute(Server& server, Client* user,
+	bool	Server::InviteCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (arguments.size() < 2)

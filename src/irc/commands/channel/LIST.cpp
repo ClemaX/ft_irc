@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("LIST", true)
 	{ }
 
-	bool	Server::ListCommand::execute(Server& server, Client* user,
+	bool	Server::ListCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;

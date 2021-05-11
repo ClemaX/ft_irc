@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("PART", true)
 	{ }
 
-	bool	Server::PartCommand::execute(Server& server, Client* user,
+	bool	Server::PartCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (!arguments.size())

@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("JOIN", false)
 	{ }
 
-	bool	Server::JoinCommand::execute(Server& server, Client* user,
+	bool	Server::JoinCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (!arguments.size())

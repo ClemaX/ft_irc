@@ -6,7 +6,7 @@ namespace irc
 		:	Command("MOTD")
 	{ }
 
-	bool	Server::MotdCommand::execute(Server& server, Client* user,
+	bool	Server::MotdCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (!user->registered)

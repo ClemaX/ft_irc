@@ -72,27 +72,10 @@ namespace irc
 
 			Command(std::string const& name);
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
 
-		struct	PassCommand		:	public Command
-		{
-			PassCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	PRIVMSGCommand		:	public Command
-		{
-			PRIVMSGCommand();
-
-			virtual bool	execute(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-// ============================================== //
 // ============================================== //
 		struct	ChannelCommand	:	public Command
 		{
@@ -101,11 +84,29 @@ namespace irc
 			ChannelCommand(std::string const& name, bool isOperatorCommand);
 		};
 // ============================================== //
+
+		struct	PassCommand		:	public Command
+		{
+			PassCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct	PRIVMSGCommand		:	public Command
+		{
+			PRIVMSGCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+// ============================================== //
 		struct	JoinCommand		:	public ChannelCommand
 		{
 			JoinCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -113,7 +114,7 @@ namespace irc
 		{
 			PartCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -121,7 +122,7 @@ namespace irc
 		{
 			ModeCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -129,7 +130,7 @@ namespace irc
 		{
 			TopicCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -137,7 +138,7 @@ namespace irc
 		{
 			NamesCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -145,7 +146,7 @@ namespace irc
 		{
 			ListCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -153,7 +154,7 @@ namespace irc
 		{
 			InviteCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -161,7 +162,7 @@ namespace irc
 		{
 			KickCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 // ============================================== //
@@ -170,7 +171,7 @@ namespace irc
 		{
 			MotdCommand();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -178,7 +179,7 @@ namespace irc
 		{
 			WhoQuery();
 
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -186,7 +187,7 @@ namespace irc
 		: public Command
 		{
 			NickCommand();
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -194,7 +195,7 @@ namespace irc
 		: public Command
 		{
 			UserCommand();
-			virtual bool	execute(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 

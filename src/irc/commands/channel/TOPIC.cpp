@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("TOPIC", true)
 	{ }
 
-	bool	Server::TopicCommand::execute(Server& server, Client* user,
+	bool	Server::TopicCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;

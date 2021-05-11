@@ -10,7 +10,7 @@ namespace irc
 
 	bool
 	Server::UserCommand::
-	execute(Server& server, Client* user,argumentList const& arguments) const
+	payload(Server& server, Client* user,argumentList const& arguments) const
 	{
 		// ERR_NEEDMOREPARAMS Bad amount of params
 		if (arguments.size() < 4)

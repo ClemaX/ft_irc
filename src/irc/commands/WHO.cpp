@@ -6,7 +6,7 @@ namespace irc
 		:	Command("WHO")
 	{ }
 
-	bool	Server::WhoQuery::execute(Server& server, Client* user,
+	bool	Server::WhoQuery::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (!user->registered)

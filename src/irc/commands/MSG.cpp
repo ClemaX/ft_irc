@@ -6,7 +6,7 @@ namespace irc
 		:	Command("MSG")
 	{ }
 
-	bool	Server::PRIVMSGCommand::execute(Server& server, Client* user,
+	bool	Server::PRIVMSGCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (!arguments.size())

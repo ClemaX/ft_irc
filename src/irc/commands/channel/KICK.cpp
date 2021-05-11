@@ -6,7 +6,7 @@ namespace irc
 		:	ChannelCommand("KICK", true)
 	{ }
 
-	bool	Server::KickCommand::execute(Server& server, Client* user,
+	bool	Server::KickCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		(void)server;

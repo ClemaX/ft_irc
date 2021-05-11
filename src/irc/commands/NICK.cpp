@@ -30,7 +30,7 @@ namespace irc
 
 	bool
 	Server::NickCommand::
-	execute(Server& server, Client* user, argumentList const& arguments) const
+	payload(Server& server, Client* user, argumentList const& arguments) const
 	{
 		// ERR_NONICKNAMEGIVEN No nickname present as args
 		if (arguments.empty())

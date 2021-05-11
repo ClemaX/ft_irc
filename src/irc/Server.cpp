@@ -101,7 +101,7 @@ namespace irc
 		}
 
 		if (ircMessage.command)
-			ircMessage.command->execute(*this, client, ircMessage.arguments);
+			ircMessage.command->payload(*this, client, ircMessage.arguments);
 	}
 
 	void	Server::onFlush() const throw(SocketWriteException)

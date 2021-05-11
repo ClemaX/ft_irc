@@ -6,7 +6,7 @@ namespace irc
 		:	Command("PASS")
 	{ }
 
-	bool	Server::PassCommand::execute(Server& server, Client* user,
+	bool	Server::PassCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
 		if (arguments.empty())
