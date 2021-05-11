@@ -31,7 +31,7 @@ namespace irc
 		user->servername = arguments.at(2);
 		user->realname = arguments.at(3);
 
-		server.anounce_register_sequence(user);
+		server.announceWelcomeSequence(user);
 
 		return (true);
 

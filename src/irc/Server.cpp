@@ -114,7 +114,7 @@ namespace irc
 
 	void
 	Server::
-	anounce_register_sequence(Client* user)
+	announceWelcomeSequence(Client* user)
 	{
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
 		&& !user->username.empty())

@@ -63,7 +63,7 @@ namespace irc
 		Channel *getChannel(const std::string & channelName) const;
 		const std::string& get_hostname() const;
 
-		void anounce_register_sequence(Client* user);
+		void announceWelcomeSequence(Client* user);
 
 		struct	Command
 		{

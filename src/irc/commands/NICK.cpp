@@ -67,7 +67,7 @@ namespace irc
 		else
 			server.database.set_ClientNick(user->old_nickname, user->nickname);
 
-		server.anounce_register_sequence(user);
+		server.announceWelcomeSequence(user);
 
 		return (true);
 
@@ -77,5 +77,3 @@ namespace irc
 }
 
 // NICK + USER == Welcome repply NOT only USER
-
-
