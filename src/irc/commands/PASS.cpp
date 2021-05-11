@@ -15,7 +15,7 @@ namespace irc
 			goto error;
 		}
 
-		if (user->first_connection == false)
+		if (user->registered == false)
 		{
 			*user << UserAlreadyRegistred(server.hostname, user->nickname);
 			goto error;
