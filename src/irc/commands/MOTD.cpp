@@ -9,7 +9,7 @@ namespace irc
 	bool	Server::MotdCommand::execute(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		if (user->registered)
+		if (!user->registered)
 		{
 			*user << ClientNotResgisteredYet(server.hostname);
 			return (false);

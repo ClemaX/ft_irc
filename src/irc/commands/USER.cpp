@@ -20,7 +20,7 @@ namespace irc
 		}
 
 		// ERR_ALREADYREGISTRED User already exists
-		if (user->registered == false)
+		if (user->registered)
 		{
 			*user << UserAlreadyRegistred(server.hostname, user->nickname);
 			goto error;
