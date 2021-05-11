@@ -10,22 +10,16 @@ namespace irc
 		argumentList const& arguments) const
 	{
 		if (arguments.empty())
-		{
 			*user << NeedMoreParamsError(server.hostname, name);
-			goto error;
-		}
-
-		if (user->registered)
-		{
+		else if (user->registered)
 			*user << UserAlreadyRegistred(server.hostname, user->nickname);
-			goto error;
+		else if (arguments.at(0) == server.config[IRC_CONF_PASS])
+		{
+			user->authenticated = true;
+			return (true);
 		}
-
-		// Just set the password here.
-
-		return (true);
-
-		error:
+		else
+			user->authenticated = false;
 		return (false);
 	}
 }

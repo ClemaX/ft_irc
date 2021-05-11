@@ -64,17 +64,18 @@ namespace irc
 		std::string servername; // 3rd arg USER
 		std::string realname; // 4th arg USER
 
+		/// Authentication status set by the PASS command.
+		bool		authenticated;
+
+		/// Registered status set by the USER and NICK commands.
 		bool		registered;
 
 		Server			*server;
 		ClientModes		clientModes;
 
-
 		clientChannelMap	clientChannels;
 
-
-
-		Client(int fd, address const& address);
+		Client(int fd, address const& address, bool authenticationRequired = false);
 
 		Client&	operator<<(std::string const& str);
 		Client&	operator<<(NumericReply const& reply);

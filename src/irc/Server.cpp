@@ -59,7 +59,7 @@ namespace irc
 	{
 		Client*	newClient;
 
-		try { newClient = new Client(connectionFd, address); }
+		try { newClient = new Client(connectionFd, address, !config[IRC_CONF_PASS].empty()); }
 		catch (std::exception const&)
 		{
 			stop();
@@ -117,7 +117,7 @@ namespace irc
 	announceWelcomeSequence(Client* user)
 	{
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
-		&& !user->username.empty())
+		&& !user->username.empty() && user->authenticated)
 		{
 			*user
 			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
@@ -126,6 +126,5 @@ namespace irc
 			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
 			user->registered = true;
 		}
-
 	}
 }

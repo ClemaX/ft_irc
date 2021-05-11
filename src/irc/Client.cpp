@@ -12,8 +12,10 @@ namespace irc
 
 
 // --- Client ---
-	Client::Client(int fd, address const& address)
+	Client::Client(int fd, address const& address,
+		bool authenticationRequired)
 		:	SocketConnection(fd, address),
+			authenticated(!authenticationRequired),
 			registered(false)
 	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
 
@@ -45,9 +47,6 @@ namespace irc
 		SocketConnection::operator<<(writeBuffer);
 		writeBuffer.clear();
 	}
-
-
-
 
 	void	Client::joinChannel(Channel * channel)
 	{
