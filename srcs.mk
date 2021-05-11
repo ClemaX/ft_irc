@@ -8,7 +8,18 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		ChannelModes.cpp\
 		Client.cpp\
 		Command.cpp\
+		Database.cpp\
+		Message.cpp\
+		PrivateMessage.cpp\
+		Server.cpp\
+		ServerConfig.cpp\
 		$(addprefix commands/,\
+			MOTD.cpp\
+			MSG.cpp\
+			NICK.cpp\
+			PASS.cpp\
+			USER.cpp\
+			WHO.cpp\
 			$(addprefix channel/,\
 				INVITE.cpp\
 				JOIN.cpp\
@@ -19,18 +30,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				PART.cpp\
 				TOPIC.cpp\
 			)\
-			MOTD.cpp\
-			MSG.cpp\
-			NICK.cpp\
-			PASS.cpp\
-			USER.cpp\
 			utils.cpp\
-			WHO.cpp\
 		)\
-		Database.cpp\
-		Message.cpp\
-		PrivateMessage.cpp\
 		$(addprefix replies/,\
+			NumericReply.cpp\
 			$(addprefix command/,\
 				001-Welcome.cpp\
 				002-YourHost.cpp\
@@ -60,9 +63,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				372-Motd.cpp\
 				375-MotdStart.cpp\
 				376-EndOfMotd.cpp\
-				451-ClientNotRegistered.cpp\
-				461-UserParams.cpp\
-				462-UserAlreadyRegistred.cpp\
 				TODO.cpp\
 			)\
 			$(addprefix error/,\
@@ -80,7 +80,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				441-UserNotInChannel.cpp\
 				442-NotOnChannel.cpp\
 				443-UserOnChannel.cpp\
+				451-ClientNotRegistered.cpp\
 				461-NeedMoreParams.cpp\
+				461-UserParams.cpp\
+				462-UserAlreadyRegistred.cpp\
 				471-ChannelIsFull.cpp\
 				472-UnknownMode.cpp\
 				473-InviteOnlyChannel.cpp\
@@ -93,10 +96,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				502-UsersDontMatch.cpp\
 				TODO.cpp\
 			)\
-			NumericReply.cpp\
 		)\
-		ServerConfig.cpp\
-		Server.cpp\
 	)\
 	$(addprefix main/,\
 		main.cpp\
