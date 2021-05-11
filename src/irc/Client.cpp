@@ -147,7 +147,7 @@ namespace irc
 		{
 			if (channel->channelModes.binMode & M_s)
 				return false;
-			else if ((channel->channelModes.binMode & M_p) && channel->isVisibleForClient(this))
+			else if (channel->channelModes.binMode & M_p)
 			{
 				*this << ListReply(gHostname, channelName, 0, "Prv");
 				return false;
