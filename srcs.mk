@@ -108,7 +108,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	$(addprefix utils/,\
 		atoi.cpp\
 		bindAddress.cpp\
-		crypto.cpp\
 		itoa.cpp\
 		nickcmp.cpp\
 		parseField.cpp\
