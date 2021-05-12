@@ -122,7 +122,6 @@ namespace irc
 	bool	setChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments);
 	bool	unsetChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments);
 
-
 	bool	setChannelLimit(Client *user, Channel *channel, std::string & flagArguments);
 	bool	unsetChannelLimit(Client *user, Channel *channel, std::string & flagArguments);
 

@@ -3,22 +3,6 @@
 
 namespace irc
 {
-	IRCDatabase::IRCDatabase()
-		:	dataServersMap(), dataChannelsMap(), dataClientsMap(),
-			modeChannelFunctionsMap(), modeUserFunctionsMap()
-	{}
-
-	IRCDatabase::IRCDatabase(Server* server)
-		:	dataServersMap(), dataChannelsMap(), dataClientsMap(),
-			modeChannelFunctionsMap(), modeUserFunctionsMap()
-	{
-		dataServersMap[server] = server;
-		createModeFunctionsMap();
-	}	// Do we have to add the clients and channels of server ?
-
-	IRCDatabase::IRCDatabase(const IRCDatabase& other)
-	{ *this = other; }
-
 	IRCDatabase&
 	IRCDatabase::operator=(const IRCDatabase& other)
 	{
@@ -33,47 +17,20 @@ namespace irc
 		return (*this);
 	}
 
-	IRCDatabase::~IRCDatabase() throw()
-	{ }	// erase all three maps ?
-
-// --- Add functions --- //
-
-	void	IRCDatabase::addServer(Server *server)
-	{dataServersMap[server] = server;}
-
-	void	IRCDatabase::addChannel(Channel *channel)
-	{dataChannelsMap[channel->name] = channel;}
-
-	void	IRCDatabase::addClient(Client *client)
-	{dataClientsMap[client->nickname] = client;}
-
-	Client	*IRCDatabase::getClient(std::string const &nickname) const
-	{
-		databaseClientsMap::const_iterator it;
-
-		it = dataClientsMap.find(nickname);
-		if (it == dataClientsMap.end())
-			return NULL;
-		return it->second;
-	}
+	// TO DO: Those 2 are better inlined ...
+	// TO DO: Make IRCDatabase template class and fix this !
+	void
+	IRCDatabase::addChannel(Channel* const channel)
+	{ insert_at_value(dataChannelsMap, channel->name, channel); }
 
 	void
-	IRCDatabase::set_ClientNick(const std::string& previous, const std::string& current)
-	{ const_cast<std::string&>(dataClientsMap.find(previous)->first) = current; }
+	IRCDatabase::addClient(Client* const client)
+	{ insert_at_value(dataClientsMap, client->nickname, client); }
 
-	Channel	*IRCDatabase::getChannel(std::string const &channelName) const
-	{
-		databaseChannelsMap::const_iterator it;
-		it = dataChannelsMap.find(ft::strToLower(channelName));
-		if (it == dataChannelsMap.end())
-			return NULL;
-		return it->second;
-	}
+	// --- Channel Mode pointer functions --- //
 
-
-// --- Channel Mode pointer functions --- //
-
-	void	IRCDatabase::createModeFunctionsMap()
+	void
+	IRCDatabase::createModeFunctionsMap()
 	{
 		modeChannelFunctionsMap['+'] = getPlusChannelMap();
 		modeChannelFunctionsMap['-'] = getMinusChannelMap();
@@ -81,85 +38,110 @@ namespace irc
 		modeUserFunctionsMap['-'] = getMinusUserMap();
 	}
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getPlusChannelMap()
+	// TO DO: Need to be inline ! Is only a return
+	// TO DO: Make IRCDatabase template class and fix this !
+	IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getPlusChannelMap()
 	{
-		signedFunctionPointerMap	signedMap;
+		static const unsigned char indexes[] = {
+			'O', 'o', 'v', 'a', 'i', 'm', 'n', 'q', 'p', 's',
+			'r', 't', 'l', 'k', 'b', 'e', 'I'
+		};
 
-		signedMap['O'] = &addChannelCreator;
-		signedMap['o'] = &addChannelOperator;
-		signedMap['v'] = &addChannelVoice;
+		static const ptr_function f[] = {
+			&addChannelCreator,
+			&addChannelOperator,
+			&addChannelVoice,
+			&setChannelAnonymous,
+			&setChannelInviteOnly,
+			&setChannelModerated,
+			&setChannelNoExternalMessage,
+			&setChannelQuiet,
+			&setChannelPrivate,
+			&setChannelSecret,
+			&setChannelReop,
+			&setChannelRestrictTopic,
+			&setChannelLimit,
+			&addChannelKey,
+			&addChannelBanned,
+			&addChannelException,
+			&addChannelInviteList
+		};
 
-		signedMap['a'] = &setChannelAnonymous;
-		signedMap['i'] = &setChannelInviteOnly;
-		signedMap['m'] = &setChannelModerated;
-		signedMap['n'] = &setChannelNoExternalMessage;
-		signedMap['q'] = &setChannelQuiet;
-		signedMap['p'] = &setChannelPrivate;
-		signedMap['s'] = &setChannelSecret;
-		signedMap['r'] = &setChannelReop;
-		signedMap['t'] = &setChannelRestrictTopic;
-
-		signedMap['l'] = &setChannelLimit;
-		signedMap['k'] = &addChannelKey;
-
-		signedMap['b'] = &addChannelBanned;
-		signedMap['e'] = &addChannelException;
-		signedMap['I'] = &addChannelInviteList;
-
-		return signedMap;
+		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusChannelMap()
+	// TO DO: Need to be inline ! Is only a return
+	// TO DO: Make IRCDatabase template class and fix this !
+	IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getMinusChannelMap()
 	{
-		signedFunctionPointerMap	signedMap;
+		static const unsigned char indexes[] = {
+			'o', 'v', 'a', 'i', 'm', 'n', 'q', 'p', 's',
+			'r', 't', 'l', 'k', 'b', 'e', 'I'
+		};
 
-		signedMap['o'] = &removeChannelOperator;
-		signedMap['v'] = &removeChannelVoice;
+		static const ptr_function f[] = {
+			&removeChannelOperator,
+			&removeChannelVoice,
+			&unsetChannelAnonymous,
+			&unsetChannelInviteOnly,
+			&unsetChannelModerated,
+			&unsetChannelNoExternalMessage,
+			&unsetChannelQuiet,
+			&unsetChannelPrivate,
+			&unsetChannelSecret,
+			&unsetChannelReop,
+			&unsetChannelRestrictTopic,
+			&unsetChannelLimit,
+			&removeChannelKey,
+			&removeChannelBanned,
+			&removeChannelException,
+			&removeChannelInviteList,
 
-		signedMap['a'] = &unsetChannelAnonymous;
-		signedMap['i'] = &unsetChannelInviteOnly;
-		signedMap['m'] = &unsetChannelModerated;
-		signedMap['n'] = &unsetChannelNoExternalMessage;
-		signedMap['q'] = &unsetChannelQuiet;
-		signedMap['p'] = &unsetChannelPrivate;
-		signedMap['s'] = &unsetChannelSecret;
-		signedMap['r'] = &unsetChannelReop;
-		signedMap['t'] = &unsetChannelRestrictTopic;
+		};
 
-		signedMap['l'] = &unsetChannelLimit;
-		signedMap['k'] = &removeChannelKey;
-
-		signedMap['b'] = &removeChannelBanned;
-		signedMap['e'] = &removeChannelException;
-		signedMap['I'] = &removeChannelInviteList;
-
-		return signedMap;
+		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
 
-// --- User Mode pointer functions --- //
+	// --- User Mode pointer functions --- //
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getPlusUserMap()
+	// TO DO: Need to be inline ! Is only a return
+	// TO DO: Make IRCDatabase template class and fix this !
+	IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getPlusUserMap()
 	{
-		signedFunctionPointerMap	signedMap;
+		static const unsigned char indexes[] = {
+			'i', 's', 'w', 'o'
+		};
 
-		signedMap['i'] = &setUserInvisible;
-		signedMap['s'] = &setUserServerNotice;
-		signedMap['w'] = &setUserWallops;
-		signedMap['o'] = &setUserOperator;	// can a server use this function to set an operator ?
+		static const ptr_function f[] = {
+			&setUserInvisible,
+			&setUserServerNotice,
+			&setUserWallops,
+			&setUserOperator	// can a server use this function to set an operator ?
+		};
 
-		return signedMap;
+		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
-	IRCDatabase::signedFunctionPointerMap	IRCDatabase::getMinusUserMap()
+	// TO DO: Need to be inline ! Is only a return
+	// TO DO: Make IRCDatabase template class and fix this !
+	IRCDatabase::signedFunctionPointerMap
+	IRCDatabase::getMinusUserMap()
 	{
-		signedFunctionPointerMap	signedMap;
+		static const unsigned char indexes[] = {
+			'i', 's', 'w', 'o'
+		};
 
-		signedMap['i'] = &unsetUserInvisible;
-		signedMap['s'] = &unsetUserServerNotice;
-		signedMap['w'] = &unsetUserWallops;
-		signedMap['o'] = &unsetUserOperator;
+		static const ptr_function f[] = {
+			&unsetUserInvisible,
+			&unsetUserServerNotice,
+			&unsetUserWallops,
+			&unsetUserOperator
+		};
 
-		return signedMap;
+		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 }

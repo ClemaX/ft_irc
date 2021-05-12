@@ -3,6 +3,8 @@
 #define SERVER_VERSION "1.0.0"
 #define SERVER_CREATION_DATE "the 20 april of 2021"
 
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*x))
+
 #define MODES_CLIENT "iswo"
 #define MODES_CHANNEL "OovaimnqpsrtklbeI"
 
