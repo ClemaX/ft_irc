@@ -203,7 +203,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 			checkActivity(it->first);
 
 		// Remove disconnected sockets
-		for (size_t i = 0; i < disconnectedFds.size(); ++i)
+		while (!disconnectedFds.empty())
 		{
 			removeConnection(disconnectedFds.front());
 			disconnectedFds.pop();
@@ -225,7 +225,7 @@ void	SocketServer::stop() throw()
 		clearConnections();
 		close(listenFd);
 		listenFd = 0;
-		for (size_t i = 0; i < disconnectedFds.size(); ++i)
+		while (!disconnectedFds.empty())
 			disconnectedFds.pop();
 	}
 }
