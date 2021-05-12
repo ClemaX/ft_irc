@@ -18,6 +18,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			PRIVMSG.cpp\
 			NOTICE.cpp\
 			NICK.cpp\
+			MODE.cpp\
 			PASS.cpp\
 			USER.cpp\
 			WHO.cpp\
@@ -26,7 +27,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				JOIN.cpp\
 				KICK.cpp\
 				LIST.cpp\
-				MODE.cpp\
 				NAMES.cpp\
 				PART.cpp\
 				TOPIC.cpp\
