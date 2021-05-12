@@ -40,6 +40,7 @@ namespace irc
 	protected:
 		typedef ::std::map<Server*, Server*>	serversMap;
 		typedef ::std::map<std::string, Channel*>	channelsMap;
+		typedef IRCDatabase<Server, Client, Channel> IRCDatabase;
 		// typedef ::std::pair<std::string, Channel*>	channelPair;
 
 		virtual connection*	onConnection(int connectionFd,
@@ -51,7 +52,7 @@ namespace irc
 		virtual void		onFlush() const throw(SocketWriteException);
 
 	public:
-		IRCDatabase			database;
+		IRCDatabase		database;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
 
@@ -100,7 +101,7 @@ namespace irc
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
-		
+
 		struct	NoticeCommand		:	public Command
 		{
 			NoticeCommand();
