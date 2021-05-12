@@ -1,13 +1,18 @@
 #pragma once
 
-#define SERVER_VERSION "1.0.0"
+/// Current version of the irc server
+#define SERVER_VERSION "2.0.0" // corrected 1 time
+
+/// Creation date of the irc server
 #define SERVER_CREATION_DATE "the 20 april of 2021"
 
+/// Get the array @p x size
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*x))
 
+/// Avalaible user modes
 #define MODES_CLIENT "iswo"
+/// Avalaibe channel modes
 #define MODES_CHANNEL "OovaimnqpsrtklbeI"
-
 /// Special IRC characters allowed outside of the alphanumerical set.
 #define IRC_CHARSET_SPECIAL    "-[]\\`^{}"
 

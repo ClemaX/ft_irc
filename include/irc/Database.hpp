@@ -65,6 +65,7 @@ namespace irc
 
 	/////////////////////////////////////////////////
 	// Inline IRCDatabase basic members definition //
+	/////////////////////////////////////////////////
 
 	template <class Server, class Client, class Channel>
 	inline
@@ -124,27 +125,27 @@ namespace irc
 		*/
 		template <typename Map, typename Key ,typename Value>
 		inline void
-		insert_at_value(Map& m, const Key& k, const Value& v)
+		insert_value_at_key(Map& m, const Key& k, const Value& v)
 		{ m[k] = v; }
 	}
 
 	template <class Server, class Client, class Channel>
 	inline void
 	IRCDatabase<Server, Client, Channel>::
-	addServer(Server *server)
-	{ insert_at_value(dataServersMap, server, server); }
+	addServer(Server* const server)
+	{ insert_value_at_key(dataServersMap, server, server); }
 
 	template <class Server, class Client, class Channel>
 	inline void
 	IRCDatabase<Server, Client, Channel>::
 	addChannel(Channel* const channel)
-	{ insert_at_value(dataChannelsMap, channel->name, channel); }
+	{ insert_value_at_key(dataChannelsMap, channel->name, channel); }
 
 	template <class Server, class Client, class Channel>
 	inline void
 	IRCDatabase<Server, Client, Channel>::
 	addClient(Client* const client)
-	{ insert_at_value(dataClientsMap, client->nickname, client); }
+	{ insert_value_at_key(dataClientsMap, client->nickname, client); }
 
 	template <class Server, class Client, class Channel>
 	inline void
@@ -156,23 +157,28 @@ namespace irc
 	// Inline IRCDatabase getters members definition //
 	///////////////////////////////////////////////////
 
+	namespace
+	{
+		template <typename Value, typename Map, typename Key>
+		inline Value
+		get_from_map(const Map& m, const Key& k)
+		{
+			const typename Map::const_iterator& it = m.find(k);
+			return (it == m.end() ? NULL : it->second);
+		}
+	}
+
 	template <class Server, class Client, class Channel>
 	inline Client*
 	IRCDatabase<Server, Client, Channel>::
-	getClient(const std::string &nickname) const
-	{
-		const typename databaseClientsMap::const_iterator& it = dataClientsMap.find(nickname);
-		return (it == dataClientsMap.end() ? NULL : it->second);
-	}
+	getClient(const std::string& nickname) const
+	{ return (get_from_map<Client*>(dataClientsMap, nickname)); }
 
 	template <class Server, class Client, class Channel>
 	inline Channel*
 	IRCDatabase<Server, Client, Channel>::
 	getChannel(const std::string& channelName) const
-	{
-		const typename databaseChannelsMap::const_iterator& it = dataChannelsMap.find(ft::strToLower(channelName));
-		return (it == dataChannelsMap.end() ? NULL : it->second);
-	}
+	{ return (get_from_map<Channel*>(dataChannelsMap, ft::strToLower(channelName))); }
 
 	////////////////////////////
 	// Mode function pointers //
@@ -187,7 +193,6 @@ namespace irc
 			Map m;
 			for (size_t it = 0 ; it < amount ; it++)
 				m[i[it]] = f[it];
-
 			return (m);
 		}
 	}

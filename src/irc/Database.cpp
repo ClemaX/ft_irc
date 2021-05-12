@@ -4,6 +4,6 @@
 namespace irc
 {
 
-// NOT NEEDED for template class database
+    
 
 }
