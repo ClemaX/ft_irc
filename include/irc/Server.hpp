@@ -100,6 +100,14 @@ namespace irc
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
+		
+		struct	NoticeCommand		:	public Command
+		{
+			NoticeCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
 
 // ============================================== //
 		struct	JoinCommand		:	public ChannelCommand
@@ -212,6 +220,7 @@ namespace irc
 	{
 		const Server::PassCommand		passCommand;
 		const Server::PRIVMSGCommand	privmsgCommand;
+		const Server::NoticeCommand		noticeCommand;
 		const Server::JoinCommand		joinCommand;
 		const Server::PartCommand		partCommand;
 		const Server::ModeCommand		modeCommand;
@@ -229,6 +238,7 @@ namespace irc
 		{
 			&passCommand,
 			&privmsgCommand,
+			&noticeCommand,
 			&joinCommand,
 			&partCommand,
 			&modeCommand,

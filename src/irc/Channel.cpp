@@ -186,11 +186,26 @@ namespace irc
 
 	void	Channel::receiveMessage(Client *client, std::string const &message)
 	{
-		if (!isInChannel(client) && !(channelModes.binMode & M_n))
+		if (!isInChannel(client) && (channelModes.binMode & M_n))
+			*client << CannotSendToChanError(gHostname, name);
+		else if ((channelModes.binMode & M_m) && (!isStatusVoice(client) && !isOperator(client)))
+			*client << CannotSendToChanError(gHostname, name);
+		else if (isStatusBanned(client))
+			*client << CannotSendToChanError(gHostname, name);
+		else
+			*this << PrivateMessage(client->nickname, message);
+	}
+
+	void	Channel::receiveNotice(Client *client, std::string const &message)
+	{
+		if (!isInChannel(client) && (channelModes.binMode & M_n))
 			return ;
-		if ((channelModes.binMode & M_q) && !isStatusVoice(client))
+		else if ((channelModes.binMode & M_m) && (!isStatusVoice(client) && !isOperator(client)))
 			return ;
-		*this << PrivateMessage(client->nickname, message);
+		else if (isStatusBanned(client))
+			return ;
+		else
+			*this << PrivateMessage(client->nickname, message);
 	}
 
 

@@ -15,7 +15,8 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		ServerConfig.cpp\
 		$(addprefix commands/,\
 			MOTD.cpp\
-			MSG.cpp\
+			PRIVMSG.cpp\
+			NOTICE.cpp\
 			NICK.cpp\
 			PASS.cpp\
 			USER.cpp\
@@ -69,8 +70,11 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				401-NoSuchNick.cpp\
 				402-NoSuchServer.cpp\
 				403-NoSuchChannel.cpp\
+				404-CannotSendToChan.cpp\
 				405-TooManyChannels.cpp\
 				407-TooManyTargets.cpp\
+				411-NoRecipient.cpp\
+				412-NoTextToSend.cpp\
 				416-TooManyMatches.cpp\
 				431-NoNicknameGiven.cpp\
 				432-ErroneusNickname.cpp\

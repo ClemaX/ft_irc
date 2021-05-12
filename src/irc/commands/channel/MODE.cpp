@@ -9,7 +9,6 @@ namespace irc
 	bool	Server::ModeCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		(void)server;
 		if (arguments.size() < 2)
 		{
 			*user << NeedMoreParamsError(gHostname, name);

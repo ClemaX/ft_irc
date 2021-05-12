@@ -1,6 +1,5 @@
 
-// 404     IRC_ERR_CANNOTSENDTOCHAN
-//             "<channel name> :Cannot send to channel"
+
 
 // 406     IRC_ERR_WASNOSUCHNICK
 //             "<nickname> :There was no such nickname"
@@ -8,11 +7,9 @@
 // 409     IRC_ERR_NOORIGIN
 //             ":No origin specified"
 
-// 411     IRC_ERR_NORECIPIENT
-//             ":No recipient given (<command>)"
 
-// 412     IRC_ERR_NOTEXTTOSEND
-//             ":No text to send"
+
+
 
 // 413     IRC_ERR_NOTOPLEVEL
 //             "<mask> :No toplevel domain specified"

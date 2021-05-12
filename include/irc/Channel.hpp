@@ -211,8 +211,9 @@ namespace irc
 	// Message
 
 
-	// Message
+	// Message / Notice
 		void	receiveMessage(Client *client, std::string const &message);
+		void	receiveNotice(Client *client, std::string const &message);
 
 	// Add/Remove functions
 		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);

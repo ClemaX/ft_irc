@@ -30,6 +30,11 @@ namespace irc
 	};
 // 404     IRC_ERR_CANNOTSENDTOCHAN
 //             "<channel name> :Cannot send to channel"
+	struct CannotSendToChanError	:	NumericReply
+	{
+		CannotSendToChanError(std::string const& serverName,
+			std::string const& channelName);
+	};
 
 // 405     IRC_ERR_TOOMANYCHANNELS
 //             "<channel name> :You have joined too many channels"
@@ -53,9 +58,18 @@ namespace irc
 
 // 411     IRC_ERR_NORECIPIENT
 //             ":No recipient given (<command>)"
+struct NoRecipientError	:	NumericReply
+	{
+		NoRecipientError(std::string const& serverName,
+			std::string const& commandName);
+	};
 
 // 412     IRC_ERR_NOTEXTTOSEND
 //             ":No text to send"
+struct NoTextToSendError	:	NumericReply
+	{
+		NoTextToSendError(std::string const& serverName);
+	};
 
 // 413     IRC_ERR_NOTOPLEVEL
 //             "<mask> :No toplevel domain specified"
