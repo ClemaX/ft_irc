@@ -32,7 +32,10 @@ namespace irc
 
 		IRCDatabase();
 		IRCDatabase(Server* server);
+		IRCDatabase(const IRCDatabase& other);
 		virtual ~IRCDatabase() throw();
+
+		IRCDatabase& operator=(const IRCDatabase& other);
 
 		void	addServer(Server *server);
 		void	addChannel(Channel *channel);

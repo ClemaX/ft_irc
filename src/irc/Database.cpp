@@ -16,6 +16,23 @@ namespace irc
 		createModeFunctionsMap();
 	}	// Do we have to add the clients and channels of server ?
 
+	IRCDatabase::IRCDatabase(const IRCDatabase& other)
+	{ *this = other; }
+
+	IRCDatabase&
+	IRCDatabase::operator=(const IRCDatabase& other)
+	{
+		if (this != &other)
+		{
+			dataServersMap = other.dataServersMap;
+			dataChannelsMap = other.dataChannelsMap;
+			dataClientsMap = other.dataClientsMap;
+			modeChannelFunctionsMap = other.modeChannelFunctionsMap;
+			modeUserFunctionsMap = other.modeUserFunctionsMap;
+		}
+		return (*this);
+	}
+
 	IRCDatabase::~IRCDatabase() throw()
 	{ }	// erase all three maps ?
 
