@@ -16,13 +16,15 @@ namespace irc
 	class Server;
 	class Client;
 	// TODO: Reference to connection and add ChannelClient on JOIN command
-	struct	ChannelClient
+
+
+	struct	ChannelClient // IN WHICH WAY THIS CLASS CAN HAVE AN USE ?
 	{
 		Client*	client;
 
 		ChannelClient();
-		ChannelClient(Client* client);
-		ChannelClient(Client* client, bool isOp);
+		ChannelClient(Client* const client);
+		ChannelClient(Client* const client, bool isOp);
 		ChannelClient(const ChannelClient & src);
 
 		~ChannelClient();
@@ -56,9 +58,6 @@ namespace irc
 	*/
 	struct	ChannelModes
 	{
-
-		typedef std::map<std::string, std::string> channelNicknameMap; // old
-
 		typedef std::map<std::string, uint32_t> ModesMap;
 
 		# define	M_a (1 << 0)
@@ -70,7 +69,6 @@ namespace irc
 		# define	M_s (1 << 6)
 		# define	M_r (1 << 7)
 		# define	M_t (1 << 8)
-
 		# define	M_O (1 << 9)
 		# define	M_o (1 << 10)
 		# define	M_v (1 << 11)
@@ -79,48 +77,49 @@ namespace irc
 		# define	M_I (1 << 14)
 
 		ModesMap		modesMap;
-
-
-		uint32_t	binMode;
-
-		size_t	l;
-		std::string	k;
-
-
-		ChannelModes();
-		~ChannelModes();
-
+		uint32_t		binMode; // Why not only use modesMap;
+		size_t			l;
+		std::string		k;
 	};
 
-	class	Channel
+	class Channel
 	{
+		/* Member types */
 
-	public:
-		typedef std::map<Client*, ChannelClient> channelClientMap;
-		typedef std::map<Server*, Server*> channelServerMap;
-		typedef std::map<std::string, std::string> channelNicknameMap;
+		public:
 
-		class	ChannelException		:	public std::exception { };
+		typedef std::map<Client*, ChannelClient>	channelClientMap;
+		typedef std::map<Server*, Server*>			channelServerMap;
 
-		class	InvalidChannelNameException	:	public ChannelException
-		{
-			public: char const*	what() const throw()
-			{ return "Invalid channel name"; };
-		};
+		struct ChannelException
+		: public std::exception
+		{ };
 
-	private:
+		/* Member exeptions */
+
+		struct InvalidChannelNameException
+		: public ChannelException
+		{ char const* what() const throw() { return ("Invalid channel name"); }; };
+
+		/* Member private */
+
+		private:
+
 		Channel();
-		std::string	setChannelName(std::string channelName);
+		std::string	setChannelName(const std::string& channelName);
 
-	public:
+		/* Member variables */
+
+		public:
+
 		channelClientMap	clientsMap;
 		channelServerMap	serversMap;
 		std::string			topic;
-
 		ChannelModes		channelModes;
-		std::string const			name;
-
+		const std::string	name;
 		char				channelType;
+
+		/* Member functions */
 
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
@@ -128,26 +127,29 @@ namespace irc
 		Channel const&	operator<<(NumericReply const& reply);
 		Channel const&	operator<<(PrivateMessage const& reply);
 
-	// Get functions
-		std::string	getTopic() const;
-		Client *getUser(std::string const & clientNickname) const;
+		/* Getters */
 
-	// Set functions
+		const std::string&	getTopic() const;
+		Client*				getUser(const std::string& clientNickname) const;
+
+		/* Setters  */
+
 		void	setTopic(const std::string & str);
 
-	// Check functions
+		/* Booleans */
+
 		bool	checkChannelName(const std::string &str) const;
 
 		bool	isInChannel(Client* const client) const;
-		bool	isInChannel(std::string const & clientNickname) const;
+		bool	isInChannel(const std::string& clientNickname) const;
 
 		bool	isVisibleForClient(Client* const client) const;
 
 		bool	isOperator(Client* const client) const;						// also check for Creators
-		bool	isOperator(std::string const & clientNickname) const;	// also check for Creators
+		bool	isOperator(const std::string& clientNickname) const;	// also check for Creators
 
 		bool	isCreator(Client* const client) const;
-		bool	isCreator(std::string const & clientNickname) const;
+		bool	isCreator(const std::string& clientNickname) const;
 
 		bool	isStatusVoice(Client* const user) const;
 		bool	isStatusBanned(Client* const user) const;
@@ -161,18 +163,17 @@ namespace irc
 
 		bool	isLocalChannelVisibleForClient(Client const *client) const;
 
-	// Message
+		/* Message / Notice */
 
+		void	receiveMessage(Client* const client, std::string const &message);
+		void	receiveNotice(Client* const client, std::string const &message);
 
-	// Message / Notice
-		void	receiveMessage(Client *client, std::string const &message);
-		void	receiveNotice(Client *client, std::string const &message);
+		/* Modifiers */
 
-	// Add/Remove functions
-		bool	addClient(Client* client, std::string & password, bool	isChannelOperator = false);
-		bool	addServer(Server* server);
+		bool	addClient(Client* const client, std::string& password, bool isChannelOperator = false);
+		bool	addServer(Server* const server);
 
-		bool	removeClient(Client* client, std::string const &leaveMessage);
+		bool	removeClient(Client* const client, std::string const &leaveMessage);
 
 		bool	close();
 
@@ -196,7 +197,122 @@ namespace irc
 
 		bool	addInviteList(const std::string& nickname);
 		bool	removeInviteList(const std::string& nickname);
-
 	};
+
+	///////////////////////////
+	// ChannelClient members //
+	///////////////////////////
+
+	inline
+	ChannelClient::ChannelClient() { }
+
+	inline
+	ChannelClient::ChannelClient(Client* const client, bool isOp)
+	: client(client)
+	{ static_cast<void>(isOp); }
+
+	inline
+	ChannelClient::ChannelClient(Client* const client)
+	: client(client)
+	{ }
+
+	inline
+	ChannelClient::ChannelClient(const ChannelClient& src)
+	{ *this = src; }
+
+	inline
+	ChannelClient::~ChannelClient()
+	{ }
+
+	inline
+	ChannelClient&
+	ChannelClient::operator=(const ChannelClient& src)
+	{
+		client = src.client;
+		return (*this);
+	}
+
+	/////////////////////
+	// Channel members //
+	/////////////////////
+
+	inline
+	Channel::~Channel()
+	{ }
+
+	/////////////
+	// Getters //
+	/////////////
+
+	inline const std::string&
+	Channel::getTopic() const
+	{ return (topic); }
+
+	/////////////
+	// Setters //
+	/////////////
+
+	inline void
+	Channel::setTopic(const std::string& str)
+	{ topic = str; }
+
+	//////////////
+	// Booleans //
+	//////////////
+
+	inline bool
+	Channel::isInChannel(Client* const client) const
+	{ return (clientsMap.find(client) != clientsMap.end()); }
+
+	inline bool
+	Channel::isVisibleForClient(Client* const client) const
+	{ return (isInChannel(client) || (!(channelModes.binMode & (M_p | M_s))
+	&& isLocalChannelVisibleForClient(client))); }
+
+	namespace
+	{
+		template <class Map>
+		inline bool
+		check_user_mod(const Map& m, const std::string& key, size_t mode_mask)
+		{
+			const typename Map::const_iterator& it = m.find(key);
+			return (it != m.end() && (it->second & mode_mask));
+		}
+	}
+
+	inline bool
+	Channel::isOperator(const std::string& clientNickname) const
+	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O | M_o)); }
+
+	inline bool
+	Channel::isCreator(const std::string& clientNickname) const
+	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O)); }
+
+	inline bool
+	Channel::isLocalChannel(void) const
+	{ return (channelType == '&'); }
+
+	inline bool
+	Channel::isNetworkChannel(void) const
+	{ return (channelType == '#'); }
+
+	inline bool
+	Channel::isNetworkSafeChannel(void) const
+	{ return (channelType == '!'); }
+
+	inline bool
+	Channel::isNetworkUnmoderatedChannel(void) const
+	{ return (channelType == '+'); }
+
+	/////////////////
+	// Handle mods //
+	/////////////////
+
+	
+
+
+
+
+
 
 }
