@@ -31,7 +31,6 @@ namespace irc
 
 // ======== ChannelModes ========
 	ChannelModes::ChannelModes()
-		:	O(), o(), v(), binMode(0), l(0), k(""), b(), e(), I()
 	{ }
 
 	ChannelModes::~ChannelModes() {}
@@ -116,7 +115,7 @@ namespace irc
 		return true;
 	}
 
-	bool	Channel::isInChannel(Client *client) const
+	bool	Channel::isInChannel(Client* const client) const
 	{return (clientsMap.find(client) != clientsMap.end());}
 
 	bool	Channel::isInChannel(std::string const & clientNickname) const
@@ -129,7 +128,7 @@ namespace irc
 		return false;
 	}
 
-	bool	Channel::isVisibleForClient(Client *client) const
+	bool	Channel::isVisibleForClient(Client* const client) const
 	{
 		return (isInChannel(client) ||
 				(!(channelModes.binMode & M_p)  && !(channelModes.binMode & M_s) &&
@@ -148,7 +147,7 @@ namespace irc
 	}
 
 	bool
-	Channel::isOperator(Client *client) const
+	Channel::isOperator(Client* const client) const
 	{ return (check_user_mod(channelModes.modesMap, client->nickname, M_O | M_o)); }
 
 	bool
@@ -156,7 +155,7 @@ namespace irc
 	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O | M_o)); }
 
 	bool
-	Channel::isCreator(Client *client) const
+	Channel::isCreator(Client* const client) const
 	{ return (check_user_mod(channelModes.modesMap, client->nickname, M_O)); }
 
 	bool
@@ -164,19 +163,19 @@ namespace irc
 	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O)); }
 
 	bool
-	Channel::isStatusVoice(Client *user) const
+	Channel::isStatusVoice(Client* const user) const
 	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_v)); }
 
 	bool
-	Channel::isStatusBanned(Client *user) const
+	Channel::isStatusBanned(Client* const user) const
 	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_b)); }
 
 	bool
-	Channel::isStatusException(Client *user) const
+	Channel::isStatusException(Client* const user) const
 	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_e)); }
 
 	bool
-	Channel::isStatusInvite(Client *user) const
+	Channel::isStatusInvite(Client* const user) const
 	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_i)); }
 
 	bool

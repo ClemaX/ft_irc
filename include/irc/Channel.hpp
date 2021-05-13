@@ -80,21 +80,12 @@ namespace irc
 
 		ModesMap		modesMap;
 
-		// TO DO: Change this to a unique map<std::string, uint32_t>
-		// Use flags (1 << {9 to 14}) {OovbeI} for uint32_t.
-		channelNicknameMap	O;
-		channelNicknameMap	o;
-		channelNicknameMap	v;
 
 		uint32_t	binMode;
 
 		size_t	l;
 		std::string	k;
 
-		// TO DO: (same as prev todo) Change this to a unique map<std::string, uint32_t>
-		channelNicknameMap	b;
-		channelNicknameMap	e;
-		channelNicknameMap	I;
 
 		ChannelModes();
 		~ChannelModes();
@@ -147,21 +138,21 @@ namespace irc
 	// Check functions
 		bool	checkChannelName(const std::string &str) const;
 
-		bool	isInChannel(Client *client) const;
+		bool	isInChannel(Client* const client) const;
 		bool	isInChannel(std::string const & clientNickname) const;
 
-		bool	isVisibleForClient(Client *client) const;
+		bool	isVisibleForClient(Client* const client) const;
 
-		bool	isOperator(Client *client) const;						// also check for Creators
+		bool	isOperator(Client* const client) const;						// also check for Creators
 		bool	isOperator(std::string const & clientNickname) const;	// also check for Creators
 
-		bool	isCreator(Client *client) const;
+		bool	isCreator(Client* const client) const;
 		bool	isCreator(std::string const & clientNickname) const;
 
-		bool	isStatusVoice(Client *user) const;
-		bool	isStatusBanned(Client *user) const;
-		bool	isStatusException(Client *user) const;
-		bool	isStatusInvite(Client *user) const;
+		bool	isStatusVoice(Client* const user) const;
+		bool	isStatusBanned(Client* const user) const;
+		bool	isStatusException(Client* const user) const;
+		bool	isStatusInvite(Client* const user) const;
 
 		bool	isLocalChannel(void) const;
 		bool	isNetworkChannel(void) const;
