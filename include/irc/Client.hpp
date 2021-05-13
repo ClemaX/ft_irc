@@ -12,11 +12,13 @@
 
 #include <irc/Channel.hpp>
 #include <irc/Server.hpp>
+#include <irc/Database.hpp>
 
 namespace irc
 {
 	class	Server;
 	class	Channel;
+
 	/**
 	* In addition to the nickname, all servers must have the
 	* following information about all clients: the real name of the host
@@ -50,8 +52,10 @@ namespace irc
 	class	Client	:	public SocketConnection
 	{
 	private:
-		typedef ::std::map<std::string, Channel*>	clientChannelMap;
-		typedef ::std::pair<std::string, Channel*>	clientChannelPair;
+		typedef ::std::map<std::string, Channel*>		clientChannelMap;
+		typedef ::std::pair<std::string, Channel*>		clientChannelPair;
+		typedef IRCDatabase<Server, Client, Channel>	IRCDatabase;
+
 
 	public:
 		std::string	readBuffer;
