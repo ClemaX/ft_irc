@@ -8,20 +8,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		ChannelModes.cpp\
 		Client.cpp\
 		Command.cpp\
-		Database.cpp\
-		Message.cpp\
-		PrivateMessage.cpp\
-		Server.cpp\
-		ServerConfig.cpp\
 		$(addprefix commands/,\
-			MOTD.cpp\
-			PRIVMSG.cpp\
-			NOTICE.cpp\
-			NICK.cpp\
-			MODE.cpp\
-			PASS.cpp\
-			USER.cpp\
-			WHO.cpp\
 			$(addprefix channel/,\
 				INVITE.cpp\
 				JOIN.cpp\
@@ -31,10 +18,20 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				PART.cpp\
 				TOPIC.cpp\
 			)\
+			MODE.cpp\
+			MOTD.cpp\
+			NICK.cpp\
+			NOTICE.cpp\
+			PASS.cpp\
+			PRIVMSG.cpp\
+			USER.cpp\
 			utils.cpp\
+			WHO.cpp\
 		)\
+		Database.cpp\
+		Message.cpp\
+		PrivateMessage.cpp\
 		$(addprefix replies/,\
-			NumericReply.cpp\
 			$(addprefix command/,\
 				001-Welcome.cpp\
 				002-YourHost.cpp\
@@ -100,7 +97,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				502-UsersDontMatch.cpp\
 				TODO.cpp\
 			)\
+			NumericReply.cpp\
 		)\
+		ServerConfig.cpp\
+		Server.cpp\
 	)\
 	$(addprefix main/,\
 		main.cpp\

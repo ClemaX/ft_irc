@@ -26,7 +26,7 @@ namespace irc
 		~ChannelClient();
 
 		ChannelClient & operator=(const ChannelClient & src);
-	};
+	};Better solve this issue after 
 
 	struct	ChannelModes
 	{
