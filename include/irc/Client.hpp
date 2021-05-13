@@ -32,10 +32,10 @@ namespace irc
 
 	public:
 
-		#define	Mu_i 1
-		#define	Mu_s 2
-		#define	Mu_w 4
-		#define	Mu_o 8
+		#define	Mu_i (1 << 0)
+		#define	Mu_s (1 << 1)
+		#define	Mu_w (1 << 2)
+		#define	Mu_o (1 << 3)
 
 		int	binMode;
 

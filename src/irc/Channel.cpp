@@ -44,10 +44,7 @@ namespace irc
 		if (checkChannelName(name) == false)
 			throw InvalidChannelNameException();
 		if (isNetworkUnmoderatedChannel())
-		{
-			channelModes.binMode |= M_n;
-			channelModes.binMode |= M_t;
-		}
+			channelModes.binMode |= (M_n | M_t);
 	}
 
 	Channel::~Channel() {}

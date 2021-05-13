@@ -8,7 +8,8 @@ namespace irc
 
 	class Client;
 	class Channel;
-		////////////////
+
+	////////////////
 	// User modes //
 	////////////////
 
@@ -24,7 +25,10 @@ namespace irc
 	bool	setUserOperator(Client *user, Channel *channel, std::string & flagArguments);
 	bool	unsetUserOperator(Client *user, Channel *channel, std::string & flagArguments);
 
-	// Channel modes
+	///////////////////
+	// Channel modes //
+	///////////////////
+
 	bool	addChannelCreator(Client *user, Channel *channel, std::string & flagArguments);
 
 	bool	addChannelOperator(Client *user, Channel *channel, std::string & flagArguments);
