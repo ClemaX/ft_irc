@@ -327,7 +327,7 @@ namespace irc
 
 	namespace
 	{
-		template <class __Ban, class __EndBan, class __Client, class __Channel, class Map>
+		template <class __Reply, class __EndReply, class __Client, class __Channel, class Map>
 		bool
 		handle_no_args(__Client* const user, __Channel* const channel,
 		const std::string& flagArguments, const Map& m)
@@ -336,8 +336,8 @@ namespace irc
 				return (false);
 
 			for (typename Map::const_iterator it = m.begin() ; it != m.end() ; it++)
-				*user << __Ban(gHostname, channel->name, "+", it->first);
-			*user << __EndBan(gHostname, channel->name);
+				*user << __Reply(gHostname, channel->name, "+", it->first);
+			*user << __EndReply(gHostname, channel->name);
 			return (true);
 		}
 	}
@@ -345,7 +345,7 @@ namespace irc
 	bool
 	addChannelBanned(Client *user, Channel *channel, std::string & flagArguments)
 	{
-		if  (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
+		if (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
 		flagArguments, channel->channelModes.b))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
