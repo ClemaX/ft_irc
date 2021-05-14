@@ -43,7 +43,7 @@ namespace irc
 			Prefix(std::string::const_iterator& it,
 				std::string::const_iterator last) throw(InvalidMessageException);
 
-			inline bool	isEmpty() const throw()
+			bool	isEmpty() const throw()
 			{ return !(name.length() || user.length() || host.length()); }
 
 			std::string	serialize() const throw();

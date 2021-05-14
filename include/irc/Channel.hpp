@@ -13,6 +13,9 @@
 
 namespace irc
 {
+	/// global Host Name
+	extern std::string const&	gHostname;
+
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 
 	template <class __Client>
@@ -31,7 +34,7 @@ namespace irc
 	};
 
 	/**
-	 * 	@brief Hodl all avalaible channel modes
+	 * 	@brief Hodl all avalaible channel modes:
 	 *
 	 *	O - give "channel creator" status;
      *	o - give/take channel operator privilege;
@@ -74,8 +77,8 @@ namespace irc
 		# define	M_e (1 << 13)
 		# define	M_I (1 << 14)
 
-		ModesMap		modesMap;
-		uint32_t		binMode; // Why not only use modesMap;
+		ModesMap		modesMap; // TO DO: remane to 'UsersInChannelModes'
+		uint32_t		binMode; // TO DO: rename to 'ChannelModes'
 		size_t			l;
 		std::string		k;
 	};
@@ -160,7 +163,7 @@ namespace irc
 		bool	isNetworkSafeChannel(void) const;
 		bool	isNetworkUnmoderatedChannel(void) const;
 
-		bool	isLocalChannelVisibleForClient(__Client const *client) const;
+		bool	isLocalChannelVisibleForClient(__Client* const client) const;
 
 		/* Message / Notice */
 
@@ -196,6 +199,7 @@ namespace irc
 
 		bool	addInviteList(const std::string& nickname);
 		bool	removeInviteList(const std::string& nickname);
+
 	};
 
 	///////////////////////////
@@ -271,7 +275,7 @@ namespace irc
 	Channel<__Server, __Client>::
 	operator<<(NumericReply const& reply)
 	{
-		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 			*it->first << reply;
 		return (*this);
 	}
@@ -281,7 +285,7 @@ namespace irc
 	Channel<__Server, __Client>::
 	operator<<(PrivateMessage const& reply)
 	{
-		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 			*it->first << reply;
 		return (*this);
 	}
@@ -301,7 +305,7 @@ namespace irc
 	Channel<__Server, __Client>::
 	getUser(std::string const& clientNickname) const
 	{
-		for (channelClientMap::const_iterator it = clientsMap.begin()
+		for (typename channelClientMap::const_iterator it = clientsMap.begin()
 		; it != clientsMap.end(); it++)
 			if (it->first->nickname == clientNickname)
 				return (it->first);
@@ -347,13 +351,9 @@ namespace irc
 	Channel<__Server, __Client>::
 	checkChannelName(const std::string& str) const
 	{
-		if (str.length() < 2UL || str.length() > 50UL)
-			return (false);
-		if (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
-			return (false);
-		if (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)
-			return (false);
-		return (true);
+		return (!((str.length() < 2UL || str.length() > 50UL)
+		|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
+		|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
 	}
 
 	template <class __Server, class __Client>
@@ -361,7 +361,7 @@ namespace irc
 	Channel<__Server, __Client>::
 	isInChannel(std::string const& clientNickname) const
 	{
-		for (channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
+		for (typename channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
 			if (it->first->nickname == clientNickname)
 				return (true);
 		return (false);
@@ -373,6 +373,16 @@ namespace irc
 	isInChannel(__Client* const client) const
 	{ return (clientsMap.find(client) != clientsMap.end()); }
 
+	namespace
+	{
+		template <class Map>
+		inline bool
+		check_user_mod(const Map& m, const std::string& key, size_t mode_mask)
+		{
+			const typename Map::const_iterator& it = m.find(key);
+			return (it != m.end() && (it->second & mode_mask));
+		}
+	}
 
 	template <class __Server, class __Client>
 	inline bool
@@ -414,7 +424,7 @@ namespace irc
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	isLocalChannelVisibleForClient(__Client const *client) const
+	isLocalChannelVisibleForClient(__Client* const client) const
 	{ return (!isLocalChannel() || (!serversMap.empty() && serversMap.begin()->first == client->server)); }
 
 	template <class __Server, class __Client>
@@ -423,17 +433,6 @@ namespace irc
 	isVisibleForClient(__Client* const client) const
 	{ return (isInChannel(client) || (!(channelModes.binMode & (M_p | M_s))
 	&& isLocalChannelVisibleForClient(client))); }
-
-	namespace
-	{
-		template <class Map>
-		inline bool
-		check_user_mod(const Map& m, const std::string& key, size_t mode_mask)
-		{
-			const typename Map::const_iterator& it = m.find(key);
-			return (it != m.end() && (it->second & mode_mask));
-		}
-	}
 
 	template <class __Server, class __Client>
 	inline bool
@@ -508,28 +507,28 @@ namespace irc
 	Channel<__Server, __Client>::addClient(__Client* const client, std::string& password, bool isChannelOperator)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
-			return false;
+			return (false);
 		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
 		{
 			*client << ChannelIsFullError(gHostname, name);
-			return false;
+			return (false);
 		}
 		if (isStatusBanned(client) && !isStatusException(client))
 		{
 			*client << BannedFromChanError(gHostname, name);
-			return false;
+			return (false);
 		}
 		if ((channelModes.binMode & M_i) && !isStatusInvite(client))
 		{
 			*client << InviteOnlyChanError(gHostname, name);
-			return false;
+			return (false);
 		}
 		if (channelModes.k.compare("") && channelModes.k == password)
 		{
 			*client << BadChannelKeyError(gHostname, name);
-			return false;
+			return (false);
 		}
-		clientsMap[client] = ChannelClient(client, isChannelOperator);
+		clientsMap[client] = ChannelClient<Client>(client, isChannelOperator);
 		if (isNetworkSafeChannel() && !clientsMap.size())
 			addCreator(client->nickname);
 		else if (isChannelOperator)
@@ -547,10 +546,10 @@ namespace irc
 	Channel<__Server, __Client>::
 	addServer(__Server* const server)
 	{
-		const Channel::channelServerMap::iterator& it = serversMap.find(server);
+		const typename Channel::channelServerMap::iterator& it = serversMap.find(server);
 		if (it != serversMap.end())
 			return (false);
-		it->second = server;
+		serversMap[server] = server;
 		return (true);
 	}
 
@@ -559,7 +558,7 @@ namespace irc
 	Channel<__Server, __Client>::
 	removeClient(__Client* const client, std::string const& leaveMessage)
 	{
-		const Channel::channelClientMap::iterator& it = clientsMap.find(client);
+		const typename Channel::channelClientMap::iterator& it = clientsMap.find(client);
 		if (it == clientsMap.end())
 			return (false);
 		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);

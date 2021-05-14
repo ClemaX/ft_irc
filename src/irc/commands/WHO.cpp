@@ -25,7 +25,7 @@ namespace irc
 			if (arguments.size() > 1 && !arguments[1].compare("o"))
 				opFlag = 1;
 
-			Channel *channel = server.database.getChannel(mask);
+			Server::__Channel *channel = server.database.getChannel(mask);
 			if (channel)
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else

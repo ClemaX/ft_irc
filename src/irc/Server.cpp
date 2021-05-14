@@ -22,7 +22,7 @@ namespace irc
 	Server::~Server()
 	{ }
 
-	Channel*
+	Server::__Channel*
 	Server::getChannel(const std::string & channelName) const
 	{ return database.getChannel(channelName); }
 

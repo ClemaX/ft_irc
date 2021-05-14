@@ -17,6 +17,7 @@
 namespace irc
 {
 	class	Server;
+	template <class __Server, class __Client>
 	class	Channel;
 
 	/**
@@ -52,9 +53,10 @@ namespace irc
 	class	Client	:	public SocketConnection
 	{
 	private:
-		typedef ::std::map<std::string, Channel*>		clientChannelMap;
-		typedef ::std::pair<std::string, Channel*>		clientChannelPair;
-		typedef IRCDatabase<Server, Client, Channel>	IRCDatabase;
+		typedef	Channel<Server, Client>					__Channel;
+		typedef ::std::map<std::string, __Channel*>		clientChannelMap;
+		typedef ::std::pair<std::string, __Channel*>	clientChannelPair;
+		typedef IRCDatabase<Server, Client, __Channel>	IRCDatabase;
 
 
 	public:
@@ -89,26 +91,26 @@ namespace irc
 
 		virtual ~Client() throw();
 
-		void	joinChannel(Channel * channel);
-		void	leaveChannel(Channel * channel);
+		void	joinChannel(__Channel * channel);
+		void	leaveChannel(__Channel * channel);
 		void	leaveChannel(std::string const & channelName);
 		void	leaveAllChannels();
 
-		bool	isInChannel(Channel *channel) const;
+		bool	isInChannel(__Channel *channel) const;
 		bool	isInChannel(std::string const & channelName) const;
 
 		bool	isInSameChannel(Client *client) const;
 
-		Channel	*getChannel(std::string const & channelName) const;
-		Channel	*getChannelGlobal(std::string const & channelName) const;
+		__Channel	*getChannel(std::string const & channelName) const;
+		__Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
 
 		void	receiveMessage(Client *client, std::string const &message);
 
-		bool	listChannelInfo(Channel *channel);
+		bool	listChannelInfo(__Channel *channel);
 		bool	listAllChannelsListInfo(void);
 
-		bool	listChannelWhoQueryInfo(Channel *channel, int opFlag);
+		bool	listChannelWhoQueryInfo(__Channel *channel, int opFlag);
 		bool	listAllVisibleUsersWhoQueryInfo(void);
 		bool	matchMaskWhoQueryInfo(std::string const &mask);
 	};

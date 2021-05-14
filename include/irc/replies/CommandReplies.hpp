@@ -159,8 +159,9 @@ namespace irc
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
+	class Server;
 	struct ChannelNamesReply	:	NumericReply
-	{ ChannelNamesReply(std::string const& serverName, Channel *channel); };
+	{ ChannelNamesReply(std::string const& serverName, Channel<Server, Client> *channel); };
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
 	struct EndOfNamesReply	:	NumericReply

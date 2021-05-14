@@ -25,7 +25,7 @@ namespace irc
 			{
 				const std::string channelName = ft::strToLower(channelsQueue.front());
 				channelsQueue.pop();
-				Channel *channel = user->getChannelGlobal(channelName);
+				Server::__Channel *channel = user->getChannelGlobal(channelName);
 				user->listChannelInfo(channel);
 			}
 		}

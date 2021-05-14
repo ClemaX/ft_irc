@@ -2,11 +2,14 @@
 
 namespace irc
 {
-	// TO DO: Mistake 3 are Creator not operator ...
+	template <class __Server, class __Client>
+	class Channel;
+
+	typedef Channel<Server, Client> __Channel;
 
 	namespace
 	{
-		// 10 chars per line starting at idex 1
+		// 10 chars* per line starting at {1, 1}
 		static const char* const __modes[] = {
 			0,
 			"a", "i", 0, "m", 0, 0, 0, "n", 0, 0,
@@ -98,57 +101,49 @@ namespace irc
 		}
 	}
 
-// ==========   CHANNEL MODES   ========== //
-
 	bool
-	addChannelCreator(Client *user, Channel *channel, std::string & flagArguments)
+	addChannelCreator(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addCreator(flagArguments));
 	}
 
 	bool
-	addChannelOperator(Client *user, Channel *channel, std::string & flagArguments)
+	addChannelOperator(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addOperator(flagArguments));
 	}
 
 	bool
-	removeChannelOperator(Client *user, Channel *channel, std::string & flagArguments)
+	removeChannelOperator(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->removeOperator(flagArguments));
 	}
 
-	bool	addChannelVoice(Client *user, Channel *channel, std::string & flagArguments)
+	bool	addChannelVoice(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addVoice(flagArguments));
 	}
 
 	bool
-	removeChannelVoice(Client *user, Channel *channel, std::string & flagArguments)
+	removeChannelVoice(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addVoice(flagArguments));
 	}
 
-	// -----------------------------------------
-
-
-
-
-
 	bool
-	setChannelAnonymous(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelAnonymous(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_a));
 	}
 
 	bool
-	unsetChannelAnonymous(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelAnonymous(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_a, 0));
@@ -156,91 +151,91 @@ namespace irc
 
 
 	bool
-	setChannelInviteOnly(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelInviteOnly(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_i));
 	}
 
 	bool
-	unsetChannelInviteOnly(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelInviteOnly(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_i, 0));
 	}
 
 	bool
-	setChannelModerated(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelModerated(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_m));
 	}
 
 	bool
-	unsetChannelModerated(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelModerated(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_m, 0));
 	}
 
 	bool
-	setChannelNoExternalMessage(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelNoExternalMessage(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_n));
 	}
 
 	bool
-	unsetChannelNoExternalMessage(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelNoExternalMessage(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_n, 0));
 	}
 
 	bool
-	setChannelQuiet(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelQuiet(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_q));
 	}
 
 	bool
-	unsetChannelQuiet(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelQuiet(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_q, 0));
 	}
 
 	bool
-	setChannelPrivate(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelPrivate(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_p));
 	}
 
 	bool
-	unsetChannelPrivate(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelPrivate(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_p, 0));
 	}
 
 	bool
-	setChannelSecret(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelSecret(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_s));
 	}
 
 	bool
-	unsetChannelSecret(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelSecret(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_s, 0));
 	}
 
 	bool
-	setChannelReop(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelReop(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
@@ -248,7 +243,7 @@ namespace irc
 	}
 
 	bool
-	unsetChannelReop(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelReop(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
@@ -256,74 +251,61 @@ namespace irc
 	}
 
 	bool
-	setChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments)
+	setChannelRestrictTopic(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_t));
 	}
 
 	bool
-	unsetChannelRestrictTopic(Client *user, Channel *channel, std::string & flagArguments)
+	unsetChannelRestrictTopic(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
 		return (handle_mode(user, channel, M_t, 0));
 	}
 
-	// ----------- l & k different pattern
-
-	bool	setChannelLimit(Client *user, Channel *channel, std::string & flagArguments)
+	bool
+	setChannelLimit(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
-		if (!channel->isOperator(user))
-		{
-			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
-			return false;
-		}
+		if (!check_privileges<ChannelOperatorPrivilegiesError>(user, channel))
+			return (false);
 
 		channel->channelModes.l = ft::atoi(flagArguments);
 		*channel << ChannelModeIsReply(gHostname, channel->name, "+l", flagArguments);
-		return true;
+		return (true);
 	}
 
-	bool	unsetChannelLimit(Client *user, Channel *channel, std::string & flagArguments)
+	bool
+	unsetChannelLimit(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
-		(void)flagArguments;
-		if (!channel->isOperator(user))
-		{
-			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
-			return false;
-		}
+		static_cast<void>(flagArguments);
+		if (!check_privileges<ChannelOperatorPrivilegiesError>(user, channel))
+			return (false);
 		channel->channelModes.l = 0;
 		*channel << ChannelModeIsReply(gHostname, channel->name, "-l", "");
-		return true;
+		return (true);
 	}
 
-	bool	addChannelKey(Client *user, Channel *channel, std::string & flagArguments)
+	bool
+	addChannelKey(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
-		if (!channel->isOperator(user))
-		{
-			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
-			return false;
-		}
+		if (!check_privileges<ChannelOperatorPrivilegiesError>(user, channel))
+			return (false);
 		channel->channelModes.k = flagArguments;
 		*channel << ChannelModeIsReply(gHostname, channel->name, "+k", flagArguments);
-		return true;
+		return (true);
 	}
 
-	bool	removeChannelKey(Client *user, Channel *channel, std::string & flagArguments)
+	bool
+	removeChannelKey(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
-		(void)flagArguments;
-		if (!channel->isOperator(user))
-		{
-			*user << ChannelOperatorPrivilegiesError(gHostname, channel->name);
-			return false;
-		}
-		channel->channelModes.k = "";
+		static_cast<void>(flagArguments);
+		if (!check_privileges<ChannelOperatorPrivilegiesError>(user, channel))
+			return (false);
+		channel->channelModes.k.clear();
 		*channel << ChannelModeIsReply(gHostname, channel->name, "-k", "");
-		return true;
+		return (true);
 	}
-
-
-	// TO DO: b, e, I are needed in this format ?
 
 	namespace
 	{
@@ -344,7 +326,7 @@ namespace irc
 	}
 
 	bool
-	addChannelBanned(Client *user, Channel *channel, std::string & flagArguments)
+	addChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_b))
@@ -354,7 +336,7 @@ namespace irc
 	}
 
 	bool
-	removeChannelBanned(Client *user, Channel *channel, std::string & flagArguments)
+	removeChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_b))
@@ -364,7 +346,7 @@ namespace irc
 	}
 
 	bool
-	addChannelException(Client *user, Channel *channel, std::string & flagArguments)
+	addChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<ExceptionListReply,EndOfExceptionListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_e))
@@ -374,7 +356,7 @@ namespace irc
 	}
 
 	bool
-	removeChannelException(Client *user, Channel *channel, std::string & flagArguments)
+	removeChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<ExceptionListReply,EndOfExceptionListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_e))
@@ -384,7 +366,7 @@ namespace irc
 	}
 
 	bool
-	addChannelInviteList(Client *user, Channel *channel, std::string & flagArguments)
+	addChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<InviteListReply,EndOfInviteListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_I))
@@ -394,7 +376,7 @@ namespace irc
 	}
 
 	bool
-	removeChannelInviteList(Client *user, Channel *channel, std::string & flagArguments)
+	removeChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<InviteListReply,EndOfInviteListReply>(user, channel,
 		flagArguments, channel->channelModes.modesMap, M_I))
@@ -403,21 +385,14 @@ namespace irc
 		&& channel->removeInviteList(flagArguments));
 	}
 
+	////////////////////////
+	// Parse channel mode //
+	////////////////////////
 
-
-
-
-
-
-
-
-
-
-// --- parseChannelMode ---//
 	bool	Server::parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments)
 	{
-		Channel *channel = user->getChannelGlobal(channelName);
+		__Channel *channel = user->getChannelGlobal(channelName);
 		if (!channel)
 		{
 			*user << NoSuchChannelError(gHostname, channelName);
@@ -447,12 +422,13 @@ namespace irc
 		return true;
 	}
 
-
-// ==========   USER MODES   ========== //
+	////////////////
+	// User Modes //
+	////////////////
 
 	bool
 	__attribute__ ((const))
-	setUserInvisible(Client *user, Channel *channel, std::string & flagArguments)
+	setUserInvisible(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -463,7 +439,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	unsetUserInvisible(Client *user, Channel *channel, std::string & flagArguments)
+	unsetUserInvisible(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -474,7 +450,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	setUserServerNotice(Client *user, Channel *channel, std::string & flagArguments)
+	setUserServerNotice(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -485,7 +461,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	unsetUserServerNotice(Client *user, Channel *channel, std::string & flagArguments)
+	unsetUserServerNotice(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -496,7 +472,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	setUserWallops(Client *user, Channel *channel, std::string & flagArguments)
+	setUserWallops(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -507,7 +483,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	unsetUserWallops(Client *user, Channel *channel, std::string & flagArguments)
+	unsetUserWallops(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -518,7 +494,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	setUserOperator(Client *user, Channel *channel, std::string & flagArguments)
+	setUserOperator(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -528,7 +504,7 @@ namespace irc
 
 	bool
 	__attribute__ ((const))
-	unsetUserOperator(Client *user, Channel *channel, std::string & flagArguments)
+	unsetUserOperator(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
@@ -537,8 +513,9 @@ namespace irc
 		return (true);
 	}
 
-
-// --- parseUserMode ---//
+	////////////////
+	// Parse Mode //
+	////////////////
 
 	bool	Server::parseUserMode(Client *user,	std::string & flags, std::string & flagArguments)
 	{

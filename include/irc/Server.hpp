@@ -28,8 +28,10 @@
 
 namespace irc
 {
+	
 	extern std::string const&	gHostname;
 
+	template <class __Server, class __Client>
 	class Channel;
 
 	class	Server	:	public SocketServer
@@ -38,9 +40,10 @@ namespace irc
 		const ServerConfig	config;
 
 	protected:
+		typedef Channel<Server, Client>			__Channel;
 		typedef ::std::map<Server*, Server*>	serversMap;
-		typedef ::std::map<std::string, Channel*>	channelsMap;
-		typedef IRCDatabase<Server, Client, Channel> IRCDatabase;
+		typedef ::std::map<std::string, __Channel*>	channelsMap;
+		typedef IRCDatabase<Server, Client, __Channel> IRCDatabase;
 		// typedef ::std::pair<std::string, Channel*>	channelPair;
 
 		virtual connection*	onConnection(int connectionFd,
@@ -61,7 +64,7 @@ namespace irc
 
 		~Server();
 
-		Channel *getChannel(const std::string & channelName) const;
+		__Channel *getChannel(const std::string & channelName) const;
 		const std::string& get_hostname() const;
 
 		void announceWelcomeSequence(Client* user);
