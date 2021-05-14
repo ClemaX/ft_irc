@@ -9,7 +9,7 @@ namespace irc
 	bool	Server::JoinCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
-		if (!arguments.size())
+		if (arguments.empty())
 		{
 			*user << NeedMoreParamsError(gHostname, name);
 			return false;

@@ -28,7 +28,7 @@
 
 namespace irc
 {
-	
+
 	extern std::string const&	gHostname;
 
 	template <class __Server, class __Client>

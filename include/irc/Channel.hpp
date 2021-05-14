@@ -528,8 +528,9 @@ namespace irc
 			*client << BadChannelKeyError(gHostname, name);
 			return (false);
 		}
-		clientsMap[client] = ChannelClient<Client>(client, isChannelOperator);
-		if (isNetworkSafeChannel() && !clientsMap.size())
+		clientsMap[client] = ChannelClient<Client>(client, isChannelOperator); // NEED THIS ?!?!
+		channelModes.modesMap.insert(std::pair<std::string, uint32_t>(client->nickname, 0));
+		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
 			addCreator(client->nickname);
 		else if (isChannelOperator)
 			addOperator(client->nickname);
