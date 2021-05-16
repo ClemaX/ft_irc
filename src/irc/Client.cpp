@@ -48,12 +48,12 @@ namespace irc
 		writeBuffer.clear();
 	}
 
-	void	Client::joinChannel(Channel * channel)
+	void	Client::joinChannel(__Channel * channel)
 	{
 		clientChannels.insert(clientChannelPair(channel->name, channel));
 	}
 
-	void	Client::leaveChannel(Channel * channel)
+	void	Client::leaveChannel(__Channel * channel)
 	{
 		if (clientChannels.find(channel->name) == clientChannels.end())
 			return ;
@@ -80,7 +80,7 @@ namespace irc
 		}
 	}
 
-	bool	Client::isInChannel(Channel *channel) const
+	bool	Client::isInChannel(__Channel *channel) const
 	{return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end());}
 
 	bool	Client::isInChannel(std::string const & channelName) const
@@ -99,7 +99,7 @@ namespace irc
 		return false;
 	}
 
-	Channel	*Client::getChannel(std::string const & channelName) const
+	Client::__Channel	*Client::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
 			return clientChannels.find(ft::strToLower(channelName))->second;
@@ -115,16 +115,16 @@ namespace irc
 	 * 	NOTE: The search is done among all the channels in the database
 	*/
 
-	Channel	*Client::getChannelGlobal(std::string const & channelName) const
+	Client::__Channel	*Client::getChannelGlobal(std::string const & channelName) const
 	{
-		Channel *channel = getChannel(channelName);
+		__Channel *channel = getChannel(channelName);
 		if (channel)
 			return channel;
 
 		channel = server->getChannel(channelName);
 		if (!channel)
 			return NULL;
-		if (!channel->isLocalChannelVisibleForClient(this))
+		if (!channel->isLocalChannelVisibleForClient(const_cast<Client*>(this)))
 			return NULL;
 		return channel;
 	}
@@ -136,7 +136,7 @@ namespace irc
 	}
 
 
-	bool	Client::listChannelInfo(Channel *channel)
+	bool	Client::listChannelInfo(__Channel *channel)
 	{
 		if (!channel)
 			return false;
@@ -170,7 +170,7 @@ namespace irc
 	}
 
 
-		bool	Client::listChannelWhoQueryInfo(Channel *channel, int opFlag)
+		bool	Client::listChannelWhoQueryInfo(__Channel *channel, int opFlag)
 	{
 		if (!channel)
 			return false;
@@ -182,8 +182,8 @@ namespace irc
 				return false;
 		else
 		{
-			Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
-			Channel::channelClientMap::iterator ite = channel->clientsMap.end();
+			__Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
+			__Channel::channelClientMap::iterator ite = channel->clientsMap.end();
 			while (itb != ite)
 			{
 				if (!opFlag || channel->isOperator(itb->first))

@@ -30,7 +30,7 @@ namespace irc
 			receiver->receiveMessage(user, message);
 		else
 		{
-			Channel *channel = server.getChannel(nameArgument);
+			Server::__Channel *channel = server.getChannel(nameArgument);
 			if (channel)
 				channel->receiveNotice(user, message);
 			// else

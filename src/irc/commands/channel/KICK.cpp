@@ -36,7 +36,7 @@ namespace irc
 			const std::string clientNickname = usersQueue.front();
 			usersQueue.pop();
 
-			Channel *channel = user->getChannelGlobal(channelName);
+			Server::__Channel *channel = user->getChannelGlobal(channelName);
 			if (!channel || !channel->isVisibleForClient(user))
 				*user << NoSuchChannelError(gHostname, channelName);
 			else if (!user->isInChannel(channelName))

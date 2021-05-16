@@ -13,13 +13,8 @@ namespace irc
 			*user << NeedMoreParamsError(server.hostname, name);
 		else if (user->registered)
 			*user << UserAlreadyRegistred(server.hostname, user->nickname);
-		else if (arguments.at(0) == server.config[IRC_CONF_PASS])
-		{
-			user->authenticated = true;
+		else if ((user->authenticated = arguments.at(0) == server.config[IRC_CONF_PASS]))
 			return (true);
-		}
-		else
-			user->authenticated = false;
 		return (false);
 	}
 }

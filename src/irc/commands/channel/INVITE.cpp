@@ -23,7 +23,7 @@ namespace irc
 			*user << NoSuchNicknameError(gHostname, nickname);
 			return false;
 		}
-		Channel *channel = server.database.getChannel(channelName);
+		Server::__Channel *channel = server.database.getChannel(channelName);
 		if (!channel)
 		{
 			*user << InvitingReply(gHostname, channelName, nickname);

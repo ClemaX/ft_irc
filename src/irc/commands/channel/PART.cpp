@@ -23,7 +23,7 @@ namespace irc
 			const std::string channelName = ft::strToLower(channelsQueue.front());
 			channelsQueue.pop();
 
-			Channel *channel = server.getChannel(channelName);
+			Server::__Channel *channel = server.getChannel(channelName);
 
 			if (!channel)
 				*user << NoSuchChannelError(gHostname, channelName);

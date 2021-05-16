@@ -21,7 +21,7 @@ namespace irc
 		typedef typename ::std::map<std::string, Channel*>			databaseChannelsMap;
 		typedef typename ::std::map<std::string, Client*, nickcmp>	databaseClientsMap;
 
-		typedef bool (*ptr_function)(Client *user, Channel *channel, std::string & flagArguments);
+		typedef bool (*ptr_function)(Client *const user, Channel *const channel, const std::string & flagArguments);
 		typedef	typename std::map<char, ptr_function>				signedFunctionPointerMap;
 		typedef	typename std::map<char, signedFunctionPointerMap>	functionPointerMap;
 

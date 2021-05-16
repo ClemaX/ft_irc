@@ -17,7 +17,7 @@ namespace irc
 		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
-		Channel	*channel = user->getChannel(channelName);
+		Server::__Channel	*channel = user->getChannel(channelName);
 
 		if (!channel)
 			*user <<  NotOnChannelError(gHostname, channelName);
