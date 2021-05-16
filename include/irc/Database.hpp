@@ -61,6 +61,10 @@ namespace irc
 		signedFunctionPointerMap	getMinusChannelMap();
 		signedFunctionPointerMap	getPlusUserMap();
 		signedFunctionPointerMap	getMinusUserMap();
+
+		/* Share/Receive content between servers */
+
+		void	init_new_server_conextion(Server* const target);
 	};
 
 	/////////////////////////////////////////////////
@@ -311,4 +315,97 @@ namespace irc
 
 		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
+
+	///////////////////////////////
+	// Init new server connexion //
+	///////////////////////////////
+
+	namespace
+	{
+		template <typename Exec, class Map, class __Server>
+		void
+		for_each_in_map(const Map& m, __Server* const target)
+		{
+			for (typename Map::const_iterator it = m.begin() ; it != m.end() ; it++)
+				Exec(*it, target);
+		}
+
+		template <class __Server>
+		void
+		handle_server(const __Server& src, __Server* const target)
+		{
+			// TO DO: RESEARCH ABOUT THE SERVER COMMAND
+
+			*target << (std::string("SERVER ") + src.hostname + IRC_MESSAGE_SUFFIX);
+		}
+
+		template <class __Server, class __Channel>
+		void
+		handle_client_channels(const __Channel& src, __Server* const target)
+		{
+			// TO DO: There is a lot of kind of channels, that can be that easy
+			// TO DO: RESEARCH ABOUT ALL POSSIBLE CASES
+
+			// TO DO: First of all i need to dont break the privileges
+			// TO DO: Second i need to check for collisions
+
+			*target << (std::string("JOIN ") + src.name + IRC_MESSAGE_SUFFIX);
+		}
+
+		template <class __Server, class __Client>
+		void
+		handle_client(const __Client& src, __Server* const target)
+		{
+			// TO DO: Add old_nickname member ?
+			// TO DO: Need to store the password to compile
+			// TO DO: Modes
+			// TO DO: Nickname collisions
+
+			*target << (std::string("NICK ") + src.nickname + IRC_MESSAGE_SUFFIX
+		/*	+ std::string("PASS ") + src.password + IRC_MESSAGE_SUFFIX */
+			+ std::string("USER") + src.username + " " + src.hostname + " "
+					+ src.servername + " " + src.realname + IRC_MESSAGE_SUFFIX);
+			for_each_in_map<handle_client_channels<__Server, __Client> >(src.clientChannels, target);
+		}
+
+		template <class __Server, class __Channel>
+		void
+		handle_channel(const __Channel& src, __Server* const target)
+		{
+			static_cast<void>(src);
+			static_cast<void>(target);
+			// MODE to handle the not - shared channels (i guess)
+		}
+
+		template <class Map, class __Server>
+		inline void
+		send_server_data(const Map& m, __Server* const target)
+		{ for_each_in_map<handle_server<Server> >(m, target); }
+
+		template <class Map, class __Server>
+		inline void
+		send_client_data(const Map& m, __Server* const target)
+		{ for_each_in_map<handle_client<Server, Client> >(m, target); }
+
+		template <class Map, class __Server>
+		inline void
+		send_channel_data(const Map& m, __Server* const target)
+		{ for_each_in_map<handle_channel<Server, Channel> >(m, target); }
+
+	}
+
+	template <class Server, class Client, class Channel>
+	void
+	IRCDatabase<Server, Client, Channel>::
+	init_new_server_conextion(Server* const target)
+	{
+		// Decompose the database into commands
+		// & send those commands to the target server
+		send_server_data(dataServersMap, target);
+		send_client_data(dataClientsMap, target);
+		send_channel_data(dataChannelsMap, target);
+	}
+
+
+
 }
