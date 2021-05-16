@@ -17,7 +17,7 @@ namespace irc
 
 		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
-		if (!flags.size())
+		if (flags.empty())
 			return false;
 
 		std::string	flagArgument = "";

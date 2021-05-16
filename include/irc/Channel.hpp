@@ -688,53 +688,35 @@ namespace irc
 	inline bool
 	Channel<__Server, __Client>::
 	addBanned(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (add_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "+"));
-	}
+	{ return (add_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeBanned(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (reset_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "-"));
-	}
+	{ return (reset_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "-")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	addException(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (add_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "+"));
-	}
+	{ return (add_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeException(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (reset_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "-"));
-	}
+	{ return (reset_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "-")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	addInviteList(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (add_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "+"));
-	}
+	{ return (add_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeInviteList(const std::string& nickname)
-	{
-		// NOTE: Does not check if is in channel
-		return (reset_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "-"));
-	}
+	{ return (reset_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "-")); }
 }
