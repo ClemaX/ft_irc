@@ -77,7 +77,7 @@ namespace irc
 		# define	M_e (1 << 13)
 		# define	M_I (1 << 14)
 
-		ModesMap		modesMap; // TO DO: remane to 'UsersInChannelModes'
+		ModesMap		channelModes; // TO DO: remane to 'UsersInChannelModes'
 		uint32_t		binMode; // TO DO: rename to 'ChannelModes'
 		size_t			l;
 		std::string		k;
@@ -388,37 +388,37 @@ namespace irc
 	inline bool
 	Channel<__Server, __Client>::
 	isOperator(__Client* const client) const
-	{ return (check_user_mod(channelModes.modesMap, client->nickname, M_O | M_o)); }
+	{ return (check_user_mod(channelModes.channelModes, client->nickname, M_O | M_o)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isCreator(__Client* const client) const
-	{ return (check_user_mod(channelModes.modesMap, client->nickname, M_O)); }
+	{ return (check_user_mod(channelModes.channelModes, client->nickname, M_O)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isStatusVoice(__Client* const user) const
-	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_v)); }
+	{ return (check_user_mod(channelModes.channelModes, user->nickname, M_v)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isStatusBanned(__Client* const user) const
-	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_b)); }
+	{ return (check_user_mod(channelModes.channelModes, user->nickname, M_b)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isStatusException(__Client* const user) const
-	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_e)); }
+	{ return (check_user_mod(channelModes.channelModes, user->nickname, M_e)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isStatusInvite(__Client* const user) const
-	{ return (check_user_mod(channelModes.modesMap, user->nickname, M_i)); }
+	{ return (check_user_mod(channelModes.channelModes, user->nickname, M_i)); }
 
 
 	template <class __Server, class __Client>
@@ -438,13 +438,13 @@ namespace irc
 	inline bool
 	Channel<__Server, __Client>::
 	isOperator(const std::string& clientNickname) const
-	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O | M_o)); }
+	{ return (check_user_mod(channelModes.channelModes, clientNickname, M_O | M_o)); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	isCreator(const std::string& clientNickname) const
-	{ return (check_user_mod(channelModes.modesMap, clientNickname, M_O)); }
+	{ return (check_user_mod(channelModes.channelModes, clientNickname, M_O)); }
 
 	template <class __Server, class __Client>
 	inline bool
@@ -529,7 +529,7 @@ namespace irc
 			return (false);
 		}
 		clientsMap[client] = ChannelClient<Client>(client, isChannelOperator); // NEED THIS ?!?!
-		channelModes.modesMap.insert(std::pair<std::string, uint32_t>(client->nickname, 0));
+		channelModes.channelModes.insert(std::pair<std::string, uint32_t>(client->nickname, 0));
 		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
 			addCreator(client->nickname);
 		else if (isChannelOperator)
@@ -636,7 +636,7 @@ namespace irc
 	addCreator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_O, "+O"));
+		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_O, "+O"));
 	}
 
 	template <class __Server, class __Client>
@@ -645,7 +645,7 @@ namespace irc
 	removeCreator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_O, "-O"));
+		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_O, "-O"));
 	}
 
 	template <class __Server, class __Client>
@@ -654,7 +654,7 @@ namespace irc
 	addOperator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_o, "+o"));
+		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_o, "+o"));
 	}
 
 	template <class __Server, class __Client>
@@ -663,7 +663,7 @@ namespace irc
 	removeOperator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_o, "-o"));
+		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_o, "-o"));
 	}
 
 	template <class __Server, class __Client>
@@ -672,7 +672,7 @@ namespace irc
 	addVoice(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_v, "+v"));
+		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_v, "+v"));
 	}
 
 	template <class __Server, class __Client>
@@ -681,42 +681,42 @@ namespace irc
 	removeVoice(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.modesMap, this, nickname, M_v, "-v"));
+		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, M_v, "-v"));
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	addBanned(const std::string& nickname)
-	{ return (add_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "+")); }
+	{ return (add_mode<BanListReply>(channelModes.channelModes, this, nickname, M_b, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeBanned(const std::string& nickname)
-	{ return (reset_mode<BanListReply>(channelModes.modesMap, this, nickname, M_b, "-")); }
+	{ return (reset_mode<BanListReply>(channelModes.channelModes, this, nickname, M_b, "-")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	addException(const std::string& nickname)
-	{ return (add_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "+")); }
+	{ return (add_mode<ExceptionListReply>(channelModes.channelModes, this, nickname, M_e, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeException(const std::string& nickname)
-	{ return (reset_mode<ExceptionListReply>(channelModes.modesMap, this, nickname, M_e, "-")); }
+	{ return (reset_mode<ExceptionListReply>(channelModes.channelModes, this, nickname, M_e, "-")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	addInviteList(const std::string& nickname)
-	{ return (add_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "+")); }
+	{ return (add_mode<InviteListReply>(channelModes.channelModes, this, nickname, M_I, "+")); }
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
 	removeInviteList(const std::string& nickname)
-	{ return (reset_mode<InviteListReply>(channelModes.modesMap, this, nickname, M_I, "-")); }
+	{ return (reset_mode<InviteListReply>(channelModes.channelModes, this, nickname, M_I, "-")); }
 }

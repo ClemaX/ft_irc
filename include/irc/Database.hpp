@@ -5,6 +5,7 @@
 #include <utils/nickname.hpp>
 #include <utils/strings.hpp>
 #include <irc/Modes_functions.hpp>
+#include <stdint.h>
 
 namespace irc
 {
@@ -342,14 +343,22 @@ namespace irc
 		template <class __Server, class __Channel>
 		void
 		handle_client_channels(const __Channel& src, __Server* const target)
+		{ *target << (std::string("JOIN ") + src.name + IRC_MESSAGE_SUFFIX); }
+
+		template <class __Server, class __Channel>
+		void
+		handle_client_modes(const __Channel& src, __Server* const target)
 		{
-			// TO DO: There is a lot of kind of channels, that can be that easy
-			// TO DO: RESEARCH ABOUT ALL POSSIBLE CASES
+			static const uint32_t		flags[] = { 1, 2, 4, 8 };
+			static const char* const	symbols[] = { "i", "s", "w", "o" };
 
-			// TO DO: First of all i need to dont break the privileges
-			// TO DO: Second i need to check for collisions
+			// Parameters: <nickname> {[+|-]|i|w|s|o}
 
-			*target << (std::string("JOIN ") + src.name + IRC_MESSAGE_SUFFIX);
+			// TO DO: Where must i add nickname ?
+
+			for (size_t i = 0 ; i < ARRAY_SIZE(flags) ; i++)
+				if (src.binMode & flags[i])
+					*target << (std::string("MODE ") + "+" + symbols[i] + IRC_MESSAGE_SUFFIX);
 		}
 
 		template <class __Server, class __Client>
@@ -357,24 +366,53 @@ namespace irc
 		handle_client(const __Client& src, __Server* const target)
 		{
 			// TO DO: Add old_nickname member ?
-			// TO DO: Need to store the password to compile
-			// TO DO: Modes
-			// TO DO: Nickname collisions
+			// TO DO: PASS ?
 
 			*target << (std::string("NICK ") + src.nickname + IRC_MESSAGE_SUFFIX
 		/*	+ std::string("PASS ") + src.password + IRC_MESSAGE_SUFFIX */
 			+ std::string("USER") + src.username + " " + src.hostname + " "
 					+ src.servername + " " + src.realname + IRC_MESSAGE_SUFFIX);
+			handle_client_modes(src, target);
 			for_each_in_map<handle_client_channels<__Server, __Client> >(src.clientChannels, target);
+		}
+
+		template <class __Server, class __Channel>
+		void
+		handle_channel_modes(const __Channel& src, __Server* const target)
+		{
+			static const uint32_t		flags[] = { 1, 2, 4, 8, 16, 32, 64, 128, 256 };
+			static const char* const 	symbols[] = { "a", "i", "m", "n", "q", "p", "s", "r", "t" };
+
+			for (size_t i = 0 ; i < ARRAY_SIZE(flags) ; i++)
+				if (src.binMode & flags[i])
+					*target << (std::string("MODE ") + src.name + " +" + symbols[i] + IRC_MESSAGE_SUFFIX);
 		}
 
 		template <class __Server, class __Channel>
 		void
 		handle_channel(const __Channel& src, __Server* const target)
 		{
-			static_cast<void>(src);
-			static_cast<void>(target);
-			// MODE to handle the not - shared channels (i guess)
+			static const uint32_t		flags[] = { /* 512,*/ 1024, 2048, 4096, 8192, 16384 };
+			static const char* const	symbols[] = { /*"O",*/ "o", "v", "b", "e", "I" };
+
+			// Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
+
+			typedef std::map<std::string, uint32_t>::const_iterator const_iterator;
+
+			// Channel modes
+			handle_channel_modes(src, target);
+
+			// User in channel modes
+			for (const_iterator it = src.channelModes.channelModes.begin()
+			; it != src.channelModes.channelModes.end() ; it++)
+			{
+				// TO DO: Check if i need to remove 'O' for each iteration too
+				*target << (std::string("MODE ") + src.name + " -o " + it->first + IRC_MESSAGE_SUFFIX);
+				for (size_t index = 0 ; index < ARRAY_SIZE(flags) ; index++)
+					if (it->second & flags[index])
+						*target << (std::string("MODE ") + src.name + " +"
+						+ symbols[index] + it->first + IRC_MESSAGE_SUFFIX);
+			}
 		}
 
 		template <class Map, class __Server>
@@ -394,6 +432,7 @@ namespace irc
 
 	}
 
+	// TO DO: Need to add prefixes to simulte different clients
 	template <class Server, class Client, class Channel>
 	void
 	IRCDatabase<Server, Client, Channel>::
@@ -405,7 +444,5 @@ namespace irc
 		send_client_data(dataClientsMap, target);
 		send_channel_data(dataChannelsMap, target);
 	}
-
-
 
 }

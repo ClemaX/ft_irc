@@ -329,7 +329,7 @@ namespace irc
 	addChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_b))
+		flagArguments, channel->channelModes.channelModes, M_b))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addBanned(flagArguments));
@@ -339,7 +339,7 @@ namespace irc
 	removeChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<BanListReply,EndOfBanListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_b))
+		flagArguments, channel->channelModes.channelModes, M_b))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->removeBanned(flagArguments));
@@ -349,7 +349,7 @@ namespace irc
 	addChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<ExceptionListReply,EndOfExceptionListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_e))
+		flagArguments, channel->channelModes.channelModes, M_e))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addException(flagArguments));
@@ -359,7 +359,7 @@ namespace irc
 	removeChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<ExceptionListReply,EndOfExceptionListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_e))
+		flagArguments, channel->channelModes.channelModes, M_e))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->removeException(flagArguments));
@@ -369,7 +369,7 @@ namespace irc
 	addChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<InviteListReply,EndOfInviteListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_I))
+		flagArguments, channel->channelModes.channelModes, M_I))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->addInviteList(flagArguments));
@@ -379,7 +379,7 @@ namespace irc
 	removeChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		if  (handle_no_args<InviteListReply,EndOfInviteListReply>(user, channel,
-		flagArguments, channel->channelModes.modesMap, M_I))
+		flagArguments, channel->channelModes.channelModes, M_I))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 		&& channel->removeInviteList(flagArguments));
