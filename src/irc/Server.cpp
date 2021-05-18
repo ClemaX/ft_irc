@@ -7,6 +7,16 @@ namespace NAMESPACE_IRC
 {
 	std::string const& gHostname = "";
 
+	bool
+	Server::Registered_Command::
+	execute(Server& server, Client* user, argumentList const& arguments)
+	{
+		if (user->authenticated == true)
+			return (payload(server, user, arguments));
+		*user << ClientNotResgisteredYet(server.hostname);
+		return (false);
+	}
+
 	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
 	{

@@ -105,6 +105,7 @@ namespace NAMESPACE_IRC
 			std::string const	name;
 
 			Command(std::string const& name);
+
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
@@ -113,6 +114,9 @@ namespace NAMESPACE_IRC
 		: public Command
 		{
 			Unregistered_Command(std::string const& name);
+
+			bool			execute(Server& server, Client* user,
+				argumentList const& arguments);
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
@@ -121,6 +125,9 @@ namespace NAMESPACE_IRC
 		: public Command
 		{
 			Registered_Command(std::string const& name);
+
+			bool			execute(Server& server, Client* user,
+				argumentList const& arguments);
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
@@ -329,6 +336,11 @@ namespace NAMESPACE_IRC
 	: Command(name)
 	{ }
 
+	inline bool
+	Server::Unregistered_Command::
+	execute(Server& server, Client* user, argumentList const& arguments)
+	{ return (payload(server, user, arguments)); }
+
 	inline
 	Server::ChannelCommand::
 	ChannelCommand(std::string const& name, bool isOperatorCommand)
@@ -483,5 +495,5 @@ namespace NAMESPACE_IRC
 	bool	matchPattern_unique(std::string const &str, std::string const &pattern);
 	bool	matchPattern_global(std::string const &str, std::string const &pattern);
 
-	static unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
+	unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
 }
