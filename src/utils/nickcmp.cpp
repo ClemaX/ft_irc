@@ -2,7 +2,7 @@
 #include <utils/nickname.hpp>
 #include <irc/ircdef.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	namespace
 	{

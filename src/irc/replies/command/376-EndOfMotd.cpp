@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 376     IRC_RPL_ENDOFMOTD
 //             ":End of /MOTD command"

@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 473     IRC_ERR_INVITEONLYCHAN
 //             "<channel> :Cannot join channel (+i)"

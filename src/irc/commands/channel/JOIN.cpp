@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::JoinCommand::JoinCommand()
-		:	ChannelCommand("JOIN", false)
-	{ }
-
 	bool	Server::JoinCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

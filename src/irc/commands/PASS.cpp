@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::PassCommand::PassCommand()
-		:	Command("PASS")
-	{ }
-
 	bool	Server::PassCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

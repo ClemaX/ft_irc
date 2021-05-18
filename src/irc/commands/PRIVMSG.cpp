@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::PRIVMSGCommand::PRIVMSGCommand()
-		:	Command("PRIVMSG")
-	{ }
-
 	bool	Server::PRIVMSGCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 411     IRC_ERR_NORECIPIENT
 //             ":No recipient given (<command>)"

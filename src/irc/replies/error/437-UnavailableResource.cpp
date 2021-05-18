@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 437     IRC_ERR_UNAVAILRESOURCE
 //             "<nick/channel> :Nick/channel is temporarily unavailable"

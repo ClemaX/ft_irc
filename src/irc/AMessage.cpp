@@ -1,6 +1,6 @@
 #include <irc/AMessage.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	std::string &	operator<<(std::string &src, std::string const& str)
 	{

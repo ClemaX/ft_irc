@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 404     IRC_ERR_CANNOTSENDTOCHAN
 //             "<channel name> :Cannot send to channel"

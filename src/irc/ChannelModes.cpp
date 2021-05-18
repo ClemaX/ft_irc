@@ -1,6 +1,6 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	template <class __Server, class __Client>
 	class Channel;

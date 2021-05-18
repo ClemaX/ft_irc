@@ -2,7 +2,7 @@
 
 #include <irc/replies/NumericReply.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	class	Client;
 	template <class __Server, class __Client>

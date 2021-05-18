@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 482     IRC_ERR_CHANOPRIVSNEEDED
 //             "<channel> :You're not channel operator"

@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::ModeCommand::ModeCommand()
-		:	ChannelCommand("MODE", true)
-	{ }
-
 	bool	Server::ModeCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

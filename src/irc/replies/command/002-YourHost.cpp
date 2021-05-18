@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 002     IRC_RPL_YOURHOST
 //             "Your host is <servername>, running version <ver>"

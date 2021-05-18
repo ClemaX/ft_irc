@@ -1,6 +1,6 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // --- NICK --- //
 	namespace
@@ -23,10 +23,6 @@ namespace irc
 		// NOTE: Prev func can be used in the client
 
 	}
-
-	Server::NickCommand::NickCommand()
-	: Command("NICK")
-	{ }
 
 	bool
 	Server::NickCommand::

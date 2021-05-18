@@ -1,7 +1,7 @@
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/Channel.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"

@@ -7,7 +7,7 @@
 #include <irc/Modes_functions.hpp>
 #include <stdint.h>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	/**
 	 * 	@brief Database used to map servers,

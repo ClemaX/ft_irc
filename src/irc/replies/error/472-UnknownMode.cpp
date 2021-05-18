@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 472     IRC_ERR_UNKNOWNMODE
 //             "<char> :is unknown mode char to me"

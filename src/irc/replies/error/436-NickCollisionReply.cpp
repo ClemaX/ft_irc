@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	NickCollisionReply::NickCollisionReply(const std::string& servername,
 	const std::string& given_nick, const std::string& username, const std::string& hostname)

@@ -1,12 +1,8 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	// --- USER --- //
-
-	Server::UserCommand::UserCommand()
-	: Command("USER")
-	{ }
 
 	bool
 	Server::UserCommand::

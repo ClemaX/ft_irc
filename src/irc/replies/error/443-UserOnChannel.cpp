@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 443     IRC_ERR_USERONCHANNEL
 //             "<user> <channel> :is already on channel"

@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"

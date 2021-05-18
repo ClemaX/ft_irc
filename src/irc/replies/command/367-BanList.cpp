@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 367     IRC_RPL_BANLIST
 //             "<channel> <banid>"

@@ -1,7 +1,7 @@
 #include <irc/Server.hpp>
 
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
 	{

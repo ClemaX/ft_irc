@@ -25,26 +25,46 @@
 // TODO: Handle message length including suffix
 // TODO: See section 7?
 
+# define CMD_INVITE_NAME "INVITE"
+# define CMD_JOIN_NAME "JOIN"
+# define CMD_KICK_NAME "KICK"
+# define CMD_LIST_NAME "LIST"
+# define CMD_NAMES_NAME "NAMES"
+# define CMD_PART_NAME "PART"
+# define CMD_TOPIC_NAME "TOPIC"
+# define CMD_MODE_NAME "MODE"
+# define CMD_MOTD_NAME "MOTD"
+# define CMD_NICK_NAME "NICK"
+# define CMD_NOTICE_NAME "NOTICE"
+# define CMD_PASS_NAME "PASS"
+# define CMD_PRIVMSG_NAME "PRIVMSG"
+# define CMD_USER_NAME "USER"
+# define CMD_WHO_NAME "WHO"
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-
-	extern std::string const&	gHostname;
-
 	template <class __Server, class __Client>
 	class Channel;
 
-	class	Server	:	public SocketServer
+	extern std::string const&	gHostname;
+
+	class	Server
+	: public SocketServer
 	{
-	private:
+		/* Server configration */
+
 		const ServerConfig	config;
 
-	protected:
+		protected:
+
+		/* Member types */
+
 		typedef Channel<Server, Client>			__Channel;
 		typedef ::std::map<Server*, Server*>	serversMap;
 		typedef ::std::map<std::string, __Channel*>	channelsMap;
 		typedef IRCDatabase<Server, Client, __Channel> IRCDatabase;
-		// typedef ::std::pair<std::string, Channel*>	channelPair;
+
+		/* Core members functions */
 
 		virtual connection*	onConnection(int connectionFd,
 			connection::address const& address);
@@ -54,67 +74,69 @@ namespace irc
 
 		virtual void		onFlush() const throw(SocketWriteException);
 
-	public:
+		/* Core database */
+
+		public:
+
 		IRCDatabase		database;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
 
+		/* Member functions */
+
 		Server();
 		Server(ServerConfig const& config);
-
 		~Server();
 
-		__Channel *getChannel(const std::string & channelName) const;
-		const std::string& get_hostname() const;
+		/* Getters */
 
-		void announceWelcomeSequence(Client* user);
+		__Channel*			getChannel(const std::string & channelName) const;
+		const std::string&	get_hostname() const;
 
-		struct	Command
+		/* Annouce welcome sequence */
+
+		void		announceWelcomeSequence(Client* user);
+
+		/* Command bases */
+
+		struct Command
 		{
 			typedef std::vector<std::string>	argumentList;
 			std::string const	name;
 
 			Command(std::string const& name);
-
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
 
-// ============================================== //
-		struct	ChannelCommand	:	public Command
+		struct Unregistered_Command
+		: public Command
+		{
+			Unregistered_Command(std::string const& name);
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const = 0;
+		};
+
+		struct Registered_Command
+		: public Command
+		{
+			Registered_Command(std::string const& name);
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const = 0;
+		};
+
+		struct ChannelCommand
+		: public Registered_Command
 		{
 			bool const	isOperatorCommand;
 
 			ChannelCommand(std::string const& name, bool isOperatorCommand);
 		};
-// ============================================== //
 
-		struct	PassCommand		:	public Command
-		{
-			PassCommand();
+		/* Group command derivated */
 
-			virtual bool	payload(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	PRIVMSGCommand		:	public Command
-		{
-			PRIVMSGCommand();
-
-			virtual bool	payload(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-		struct	NoticeCommand		:	public Command
-		{
-			NoticeCommand();
-
-			virtual bool	payload(Server& server, Client* user,
-				argumentList const& arguments) const;
-		};
-
-// ============================================== //
-		struct	JoinCommand		:	public ChannelCommand
+		struct JoinCommand
+		: public ChannelCommand
 		{
 			JoinCommand();
 
@@ -122,7 +144,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	PartCommand		:	public ChannelCommand
+		struct PartCommand
+		: public ChannelCommand
 		{
 			PartCommand();
 
@@ -130,7 +153,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	ModeCommand		:	public ChannelCommand
+		struct ModeCommand
+		: public ChannelCommand
 		{
 			ModeCommand();
 
@@ -138,7 +162,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	TopicCommand	:	public ChannelCommand
+		struct TopicCommand
+		: public ChannelCommand
 		{
 			TopicCommand();
 
@@ -146,7 +171,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	NamesCommand		:	public ChannelCommand
+		struct NamesCommand
+		: public ChannelCommand
 		{
 			NamesCommand();
 
@@ -154,7 +180,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	ListCommand		:	public ChannelCommand
+		struct ListCommand
+		: public ChannelCommand
 		{
 			ListCommand();
 
@@ -162,7 +189,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	InviteCommand	:	public ChannelCommand
+		struct InviteCommand
+		: public ChannelCommand
 		{
 			InviteCommand();
 
@@ -170,16 +198,47 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	KickCommand		:	public ChannelCommand
+		struct KickCommand
+		: public ChannelCommand
 		{
 			KickCommand();
 
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
-// ============================================== //
-// ============================================== //
-		struct	MotdCommand		:	public Command
+
+		/* Commands non-group derivated */
+
+		struct PassCommand
+		: public Unregistered_Command
+		{
+			PassCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct PRIVMSGCommand
+		: public Registered_Command
+		{
+			PRIVMSGCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct NoticeCommand
+		: public Registered_Command
+		{
+			NoticeCommand();
+
+			virtual bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+
+		struct MotdCommand
+		: public Registered_Command
 		{
 			MotdCommand();
 
@@ -187,7 +246,8 @@ namespace irc
 				argumentList const& arguments) const;
 		};
 
-		struct	WhoQuery		:	public Command
+		struct WhoQuery
+		: public Registered_Command
 		{
 			WhoQuery();
 
@@ -196,7 +256,7 @@ namespace irc
 		};
 
 		struct NickCommand
-		: public Command
+		: public Unregistered_Command
 		{
 			NickCommand();
 			virtual bool	payload(Server& server, Client* user,
@@ -204,18 +264,178 @@ namespace irc
 		};
 
 		struct UserCommand
-		: public Command
+		: public Unregistered_Command
 		{
 			UserCommand();
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
+		/* Mode parser */
+
 		bool	parseChannelMode(Client *user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
 		bool	parseUserMode(Client *user,	std::string & flags, std::string & flagArguments);
 
 	};
+
+	////////////////////////////
+	// Inlined server members //
+	////////////////////////////
+
+	inline
+	Server::Server()
+	: SocketServer(),
+	config(), database(this)
+	{ hostname = config[IRC_CONF_HOSTNAME]; }
+
+	inline
+	Server::Server(ServerConfig const& config)
+	: SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
+	config(config), database(this)
+	{ hostname = config[IRC_CONF_HOSTNAME]; }
+
+	inline
+	Server::~Server()
+	{ }
+
+	inline Server::__Channel*
+	Server::getChannel(const std::string & channelName) const
+	{ return (database.getChannel(channelName)); }
+
+	inline const std::string&
+	Server::get_hostname() const
+	{ return (hostname); }
+
+	///////////////////////////////////
+	// Inlined base commands members //
+	///////////////////////////////////
+
+	inline
+	Server::Command::
+	Command(std::string const& name)
+	: name(name)
+	{ }
+
+	inline
+	Server::Unregistered_Command::
+	Unregistered_Command(std::string const& name)
+	: Command(name)
+	{ }
+
+	inline
+	Server::Registered_Command::
+	Registered_Command(std::string const& name)
+	: Command(name)
+	{ }
+
+	inline
+	Server::ChannelCommand::
+	ChannelCommand(std::string const& name, bool isOperatorCommand)
+	: Registered_Command(name), isOperatorCommand(isOperatorCommand)
+	{ }
+
+	////////////////////////////////////////////////
+	// Inlined derivated channel commands members //
+	////////////////////////////////////////////////
+
+	inline
+	Server::InviteCommand::
+	InviteCommand()
+	: ChannelCommand(CMD_INVITE_NAME, true)
+	{ }
+
+	inline
+	Server::JoinCommand::
+	JoinCommand()
+	: ChannelCommand(CMD_JOIN_NAME, false)
+	{ }
+
+	inline
+	Server::KickCommand::
+	KickCommand()
+	: ChannelCommand(CMD_KICK_NAME, true)
+	{ }
+
+	inline
+	Server::ListCommand::
+	ListCommand()
+	: ChannelCommand(CMD_LIST_NAME, true)
+	{ }
+
+	inline
+	Server::NamesCommand::
+	NamesCommand()
+	: ChannelCommand(CMD_NAMES_NAME, true)
+	{ }
+
+	inline
+	Server::PartCommand::
+	PartCommand()
+	: ChannelCommand(CMD_PART_NAME, true)
+	{ }
+
+	inline
+	Server::TopicCommand::
+	TopicCommand()
+	: ChannelCommand(CMD_TOPIC_NAME, true)
+	{ }
+
+	////////////////////////////////////////////////
+	// Inlined derivated channel commands members //
+	////////////////////////////////////////////////
+
+	inline
+	Server::ModeCommand::
+	ModeCommand()
+	: ChannelCommand(CMD_MODE_NAME, true)
+	{ }
+
+	inline
+	Server::MotdCommand::
+	MotdCommand()
+	: Registered_Command(CMD_MOTD_NAME)
+	{ }
+
+	inline
+	Server::NickCommand::
+	NickCommand()
+	: Unregistered_Command(CMD_NICK_NAME)
+	{ }
+
+	inline
+	Server::NoticeCommand::
+	NoticeCommand()
+	: Registered_Command(CMD_NOTICE_NAME)
+	{ }
+
+	inline
+	Server::PassCommand::
+	PassCommand()
+	: Unregistered_Command(CMD_PASS_NAME)
+	{ }
+
+	inline
+	Server::PRIVMSGCommand::
+	PRIVMSGCommand()
+	: Registered_Command(CMD_PRIVMSG_NAME)
+	{ }
+
+	inline
+	Server::UserCommand::
+	UserCommand()
+	: Unregistered_Command(CMD_USER_NAME)
+	{ }
+
+	inline
+	Server::WhoQuery::
+	WhoQuery()
+	: Registered_Command(CMD_WHO_NAME)
+	{ }
+
+	///////////////////
+	// Command utils //
+	///////////////////
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
 		std::string::const_iterator last);

@@ -6,7 +6,7 @@
 
 #include <utils/parseField.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	std::string &	operator<<(std::string &src, std::string const& str);
 

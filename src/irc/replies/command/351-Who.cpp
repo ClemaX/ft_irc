@@ -1,7 +1,7 @@
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/Client.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 352     IRC_RPL_WHOREPLY
 //             "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>"

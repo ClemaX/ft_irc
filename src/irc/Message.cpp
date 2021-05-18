@@ -1,6 +1,6 @@
 #include <irc/Message.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	Message::Message()
 		:	command(NULL), arguments()

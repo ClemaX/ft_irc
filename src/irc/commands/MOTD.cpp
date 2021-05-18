@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::MotdCommand::MotdCommand()
-		:	Command("MOTD")
-	{ }
-
 	bool	Server::MotdCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

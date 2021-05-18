@@ -14,7 +14,7 @@
 #include <irc/Server.hpp>
 #include <irc/Database.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	class	Server;
 	template <class __Server, class __Client>

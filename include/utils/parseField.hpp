@@ -7,7 +7,7 @@
 
 #include <irc/ircdef.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	int ft_toupper(int c);
 

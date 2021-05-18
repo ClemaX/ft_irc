@@ -2,7 +2,7 @@
 
 #include <irc/AMessage.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	PrivateMessage: AMessage
 	{
@@ -19,7 +19,7 @@ namespace irc
 
 	struct JoinChannelMessage: PrivateMessage
 	{ JoinChannelMessage(std::string const& nickname, std::string const& channelName); };
-	
+
 	struct LeaveChannelMessage: PrivateMessage
 	{ LeaveChannelMessage(std::string const& nickname, std::string const& channelName,
 		std::string const &leaveMessage); };

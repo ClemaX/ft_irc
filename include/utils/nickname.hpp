@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	bool    nicknameValidator(std::string const& nickname);
 

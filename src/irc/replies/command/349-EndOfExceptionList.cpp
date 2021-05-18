@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 349 IRC_RPL_ENDOFEXCEPTLIST
 //             "<channel> :End of channel exception list"
