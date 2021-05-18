@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	NicknameInUseReply::NicknameInUseReply(const std::string& servername,
 	const std::string& given_nick)

@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 502     IRC_ERR_USERSDONTMATCH
 //             ":Cant change mode for other users"

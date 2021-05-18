@@ -1,7 +1,7 @@
 #include <irc/PrivateMessage.hpp>
 #include <irc/Client.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	PrivateMessage::PrivateMessage(std::string const& nickname,
 		std::string const& message)

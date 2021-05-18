@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 332     IRC_RPL_TOPIC
 //             "<channel> :<topic>"

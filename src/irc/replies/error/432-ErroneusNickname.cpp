@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	ErroneusNicknameReply::ErroneusNicknameReply(const std::string& servername,
 	const std::string& given_nick)

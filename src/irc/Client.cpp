@@ -1,6 +1,6 @@
 #include <irc/Client.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 
 // --- ClientModes ---

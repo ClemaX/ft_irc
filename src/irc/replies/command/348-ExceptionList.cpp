@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 348 IRC_RPL_EXCEPTLIST
 //             "<channel> <exceptionmask>"

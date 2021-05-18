@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 221     IRC_RPL_UMODEIS
 //             "<user mode string>"

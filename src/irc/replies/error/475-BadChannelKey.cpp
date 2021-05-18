@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 475     IRC_ERR_BADCHANNELKEY
 //             "<channel> :Cannot join channel (+k)"

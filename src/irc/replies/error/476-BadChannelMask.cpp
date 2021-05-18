@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 476		IRC_ERR_BADCHANMASK
 //             	"<channel> :Bad Channel Mask"

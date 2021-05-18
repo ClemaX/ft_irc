@@ -11,7 +11,7 @@
 
 #include <stdint.h> // fast, portable, secure types (C++11 cstdint)
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	/// global Host Name
 	extern std::string const&	gHostname;
@@ -419,7 +419,6 @@ namespace irc
 	Channel<__Server, __Client>::
 	isStatusInvite(__Client* const user) const
 	{ return (check_user_mod(channelModes.channelModes, user->nickname, M_i)); }
-
 
 	template <class __Server, class __Client>
 	inline bool

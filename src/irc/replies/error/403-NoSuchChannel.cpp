@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 403     IRC_ERR_NOSUCHCHANNEL
 //             "<channel name> :No such channel"

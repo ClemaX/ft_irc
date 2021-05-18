@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 004     IRC_RPL_MYINFO
 //             "<servername> <version> <available user modes> <available channel modes>"

@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 322     IRC_RPL_LIST
 //             "<channel> <# visible> :<topic>"

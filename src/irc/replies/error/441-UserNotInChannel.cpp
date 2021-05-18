@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 441     IRC_ERR_USERNOTINCHANNEL
 //             "<nick> <channel> :They aren't on that channel"

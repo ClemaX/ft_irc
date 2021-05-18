@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::WhoQuery::WhoQuery()
-		:	Command("WHO")
-	{ }
-
 	bool	Server::WhoQuery::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{

@@ -1,7 +1,7 @@
 #include <irc/replies/NumericReply.hpp>
 #include <irc/Client.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	NumericReply::NumericReply(std::string const& serverName,
 		int code, std::string const& message)

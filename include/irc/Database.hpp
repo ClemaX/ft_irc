@@ -7,7 +7,7 @@
 #include <irc/Modes_functions.hpp>
 #include <stdint.h>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	/**
 	 * 	@brief Database used to map servers,
@@ -332,7 +332,7 @@ namespace irc
 		}
 
 		template <class __Server>
-		void
+		inline void
 		handle_server(const __Server& src, __Server* const target)
 		{
 			// TO DO: RESEARCH ABOUT THE SERVER COMMAND
@@ -341,12 +341,35 @@ namespace irc
 		}
 
 		template <class __Server, class __Channel>
-		void
+		inline void
 		handle_client_channels(const __Channel& src, __Server* const target)
 		{ *target << (std::string("JOIN ") + src.name + IRC_MESSAGE_SUFFIX); }
 
-		template <class __Server, class __Channel>
+		template <typename AddMode, size_t amount, class __Server, class __Channel>
 		void
+		handle_mode(const uint32_t* const flags, const char*const symbols,
+		const __Channel& src, __Server* const target)
+		{
+			for (size_t i = 0 ; i < amount ; i++)
+				if (src.binMode & flags[i])
+					*target << AddMode(src, symbols[i]);
+		}
+
+		template <class __Channel>
+		inline const std::string
+		add_client_mode(const __Channel& src, const char*const symbol)
+		{
+			static_cast<void>(src);
+			return (std::string("MODE ") + "+" + symbol + IRC_MESSAGE_SUFFIX);
+		}
+
+		template <class __Channel>
+		inline const std::string
+		add_channel_mode(const __Channel& src, const char*const symbol)
+		{ return (std::string("MODE ") + src.name + " +" + symbol + IRC_MESSAGE_SUFFIX); }
+
+		template <class __Server, class __Channel>
+		inline void
 		handle_client_modes(const __Channel& src, __Server* const target)
 		{
 			static const uint32_t		flags[] = { 1, 2, 4, 8 };
@@ -356,9 +379,7 @@ namespace irc
 
 			// TO DO: Where must i add nickname ?
 
-			for (size_t i = 0 ; i < ARRAY_SIZE(flags) ; i++)
-				if (src.binMode & flags[i])
-					*target << (std::string("MODE ") + "+" + symbols[i] + IRC_MESSAGE_SUFFIX);
+			handle_mode<add_client_mode, ARRAY_SIZE(flags)>(flags, symbols,src, target);
 		}
 
 		template <class __Server, class __Client>
@@ -377,15 +398,13 @@ namespace irc
 		}
 
 		template <class __Server, class __Channel>
-		void
+		inline void
 		handle_channel_modes(const __Channel& src, __Server* const target)
 		{
 			static const uint32_t		flags[] = { 1, 2, 4, 8, 16, 32, 64, 128, 256 };
 			static const char* const 	symbols[] = { "a", "i", "m", "n", "q", "p", "s", "r", "t" };
 
-			for (size_t i = 0 ; i < ARRAY_SIZE(flags) ; i++)
-				if (src.binMode & flags[i])
-					*target << (std::string("MODE ") + src.name + " +" + symbols[i] + IRC_MESSAGE_SUFFIX);
+			handle_mode<add_channel_mode, ARRAY_SIZE(flags)>(flags, symbols, src, target);
 		}
 
 		template <class __Server, class __Channel>

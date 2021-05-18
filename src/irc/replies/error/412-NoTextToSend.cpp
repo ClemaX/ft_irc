@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 412     IRC_ERR_NOTEXTTOSEND
 //             ":No text to send"

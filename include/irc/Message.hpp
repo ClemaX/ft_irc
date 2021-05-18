@@ -8,7 +8,7 @@
 #include <irc/AMessage.hpp>
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	Message	:	AMessage
 	{

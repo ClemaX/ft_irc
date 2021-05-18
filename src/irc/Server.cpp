@@ -3,32 +3,19 @@
 #include <utils/atoi.hpp>
 #include <utils/strings.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	std::string const& gHostname = "";
 
-	Server::Server()
-		:	SocketServer(),
-			config(),
-			database(this)
-	{ hostname = config[IRC_CONF_HOSTNAME]; }
-
-	Server::Server(ServerConfig const& config)
-		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
-			config(config),
-			database(this)
-	{ hostname = config[IRC_CONF_HOSTNAME]; }
-
-	Server::~Server()
-	{ }
-
-	Server::__Channel*
-	Server::getChannel(const std::string & channelName) const
-	{ return database.getChannel(channelName); }
-
-	const std::string&
-	Server::get_hostname() const
-	{ return (hostname); }
+	bool
+	Server::Registered_Command::
+	execute(Server& server, Client* user, argumentList const& arguments)
+	{
+		if (user->authenticated == true)
+			return (payload(server, user, arguments));
+		*user << ClientNotResgisteredYet(server.hostname);
+		return (false);
+	}
 
 	Server::Command const*	parseCommand(
 		std::string::const_iterator& it, std::string::const_iterator last)
@@ -68,9 +55,9 @@ namespace irc
 		newClient->nickname = IRC_NICKNAME_DEFAULT;
 
 		std::cout << "New connection: "
-			<< "\n\tfd: " << connectionFd
-			<< "\n\tip: " << address.sin6_addr
-			<< "\n\tport: " << address.sin6_port
+			<< std::endl << "\tfd: " << connectionFd
+			<< std::endl << "\tip: " << address.sin6_addr
+			<< std::endl << "\tport: " << address.sin6_port
 			<< std::endl;
 
 		// I moved this to the NICK command: database.addClient(newClient);

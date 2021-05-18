@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 347 IRC_RPL_ENDOFINVITELIST
 //             "<channel> :End of channel invite list"

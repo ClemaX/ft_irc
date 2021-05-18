@@ -6,6 +6,8 @@
 #include <fstream> // using std::ifstream
 #include <algorithm> // using std::find
 
+# include <irc/ircdef.hpp>
+
 #define IRC_CONF_NAME		"ircserv.conf"
 #define IRC_CONF_DELIM		'='
 #define IRC_CONF_SEP		';'
@@ -18,7 +20,7 @@
 #define IRC_CONF_PASS 		"PASS"
 #define IRC_CONF_MOTD 		"MOTD"
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	ServerConfig
 	{

@@ -2,8 +2,9 @@
 # pragma once
 
 //# include <irc/Channel.hpp>
+# include <irc/ircdef.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 
 	class Server;

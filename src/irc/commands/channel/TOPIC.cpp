@@ -1,11 +1,7 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::TopicCommand::TopicCommand()
-		:	ChannelCommand("TOPIC", true)
-	{ }
-
 	bool	Server::TopicCommand::payload(Server& server, Client* user,
 		argumentList const& arguments) const
 	{
