@@ -26,7 +26,7 @@ namespace NAMESPACE_IRC
 
 	bool
 	Server::NickCommand::
-	payload(Server& server, Client* user, argumentList const& arguments) const
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		// ERR_NONICKNAMEGIVEN No nickname present as args
 		if (arguments.empty())

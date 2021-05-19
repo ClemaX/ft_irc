@@ -2,8 +2,9 @@
 
 namespace NAMESPACE_IRC
 {
-	bool	Server::ListCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::ListCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		(void)server;
 		if (!arguments.size())

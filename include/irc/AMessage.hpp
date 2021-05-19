@@ -52,4 +52,19 @@ namespace NAMESPACE_IRC
 
 		Prefix	prefix;
 	};
+
+	inline std::string&
+	operator<<(std::string& src, std::string const& str)
+	{ return (src += str); }
+
+	inline
+	AMessage::Prefix::
+	Prefix()
+	{ }
+
+	inline
+	AMessage::Prefix::
+	Prefix(std::string const& name, std::string const& user, std::string const host)
+	: name(name), user(user), host(host)
+	{ }
 }

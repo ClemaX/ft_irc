@@ -9,31 +9,6 @@ namespace NAMESPACE_IRC
 			message(message)
 	{ }
 
-	PrivateMessage::~PrivateMessage()
-	{ }
-
-	std::string	PrivateMessage::serialize() const throw()
-	{
-		std::string	serialized;
-
-		serialized.append(prefix.serialize());
-		serialized.push_back(IRC_MESSAGE_DELIM);
-		serialized.append(message);
-		serialized.append(IRC_MESSAGE_SUFFIX);
-
-		return serialized;
-	}
-
-
-
-
-	JoinChannelMessage::JoinChannelMessage(std::string const& nickname,
-		std::string const& channelName)
-		: PrivateMessage(nickname)
-	{
-		message << "has joined " << channelName;
-	}
-
 	LeaveChannelMessage::LeaveChannelMessage(std::string const& nickname,
 		std::string const& channelName, std::string const &leaveMessage)
 		: PrivateMessage(nickname)
@@ -43,12 +18,4 @@ namespace NAMESPACE_IRC
 		else
 			message << "has left " << channelName;
 	}
-
-	InviteChannelMessage::InviteChannelMessage(std::string const& nickname,
-		std::string const& channelName)
-		: PrivateMessage(nickname)
-	{
-		message << nickname << " invites you to " << channelName;
-	}
-
 }

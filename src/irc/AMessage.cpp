@@ -2,22 +2,6 @@
 
 namespace NAMESPACE_IRC
 {
-	std::string &	operator<<(std::string &src, std::string const& str)
-	{
-		src.append(str);
-		return src;
-	}
-
-	AMessage::Prefix::Prefix()
-	{ }
-
-	AMessage::Prefix::Prefix(std::string const& name,
-		std::string const& user, std::string const host)
-		:	name(name),
-			user(user),
-			host(host)
-	{ }
-
 	AMessage::Prefix::Prefix(std::string::const_iterator& it,
 		std::string::const_iterator last) throw(InvalidMessageException)
 	{

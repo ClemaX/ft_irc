@@ -20,4 +20,12 @@ namespace NAMESPACE_IRC
 
 		Message(std::string& buffer) throw(MessageException);
 	};
+
+	inline
+	Message::Message()
+	{ }
+
+	inline
+	Message::~Message()
+	{ }
 }

@@ -14,6 +14,8 @@
 #include <irc/Server.hpp>
 #include <irc/Database.hpp>
 
+#include <stdint.h>
+
 namespace NAMESPACE_IRC
 {
 	class	Server;
@@ -27,6 +29,13 @@ namespace NAMESPACE_IRC
 	* host, and the server to which the client is connected.
 	*/
 
+	/**
+	 * 	@brief Contain the client modes flags:
+	 *  i - marks a users as invisible;
+     *	s - marks a user for receipt of server notices;
+     *	w - user receives wallops;
+     * 	o - operator flag.
+	*/
 	struct	ClientModes
 	{
 	private:
@@ -38,15 +47,7 @@ namespace NAMESPACE_IRC
 		#define	Mu_w (1 << 2)
 		#define	Mu_o (1 << 3)
 
-		int	binMode;
-
-		// i - marks a users as invisible;
-        // s - marks a user for receipt of server notices;
-        // w - user receives wallops;
-        // o - operator flag.
-
-		ClientModes();
-		~ClientModes();
+		uint32_t	binMode;
 
 	};
 
@@ -91,27 +92,72 @@ namespace NAMESPACE_IRC
 
 		virtual ~Client() throw();
 
-		void	joinChannel(__Channel * channel);
-		void	leaveChannel(__Channel * channel);
+		void	joinChannel(__Channel* const channel);
+		void	leaveChannel(__Channel* const channel);
 		void	leaveChannel(std::string const & channelName);
 		void	leaveAllChannels();
 
-		bool	isInChannel(__Channel *channel) const;
+		bool	isInChannel(__Channel* const channel) const;
 		bool	isInChannel(std::string const & channelName) const;
 
-		bool	isInSameChannel(Client *client) const;
+		bool	isInSameChannel(Client* const client) const;
 
 		__Channel	*getChannel(std::string const & channelName) const;
 		__Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
 
-		void	receiveMessage(Client *client, std::string const &message);
+		void	receiveMessage(Client* const client, std::string const &message);
 
-		bool	listChannelInfo(__Channel *channel);
+		bool	listChannelInfo(__Channel* const channel);
 		bool	listAllChannelsListInfo(void);
 
-		bool	listChannelWhoQueryInfo(__Channel *channel, int opFlag);
+		bool	listChannelWhoQueryInfo(__Channel* const channel, int opFlag);
 		bool	listAllVisibleUsersWhoQueryInfo(void);
 		bool	matchMaskWhoQueryInfo(std::string const &mask);
 	};
+
+	////////////////////////////
+	// Inlined client members //
+	////////////////////////////
+
+	inline
+	Client::~Client()
+	throw()
+	{ leaveAllChannels(); }
+
+	inline Client&
+	Client::operator<<(std::string const& message)
+	{
+		writeBuffer.append(message);
+		return *this;
+	}
+
+	inline Client&
+	Client::operator<<(NumericReply const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
+	inline Client&
+	Client::operator<<(PrivateMessage const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
+	inline void
+	Client::flush() throw(SocketWriteException)
+	{
+		SocketConnection::operator<<(writeBuffer);
+		writeBuffer.clear();
+	}
+
+	inline bool
+	Client::isInChannel(std::string const & channelName) const
+	{ return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end()); }
+
+	inline void
+	Client::receiveMessage(Client* const client, std::string const &message)	// check if invisible ?
+	{ *this << PrivateMessage(client->nickname, message); }
 }

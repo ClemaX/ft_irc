@@ -77,7 +77,7 @@ namespace NAMESPACE_IRC
 		virtual connection*	onConnection(int connectionFd,
 			connection::address const& address);
 
-		virtual void		onMessage(connection* connection,
+		virtual void		onMessage(connection* const connection,
 			std::string const& message);
 
 		virtual void		onFlush() const throw(SocketWriteException);
@@ -103,7 +103,7 @@ namespace NAMESPACE_IRC
 
 		/* Annouce welcome sequence */
 
-		void		announceWelcomeSequence(Client* user);
+		void		announceWelcomeSequence(Client* const user);
 
 		/* Command bases */
 
@@ -121,9 +121,9 @@ namespace NAMESPACE_IRC
 
 			virtual ~Command();
 
-			virtual bool			execute(Server& server, Client* user,
+			virtual bool			execute(Server& server, Client* const user,
 				argumentList const& arguments) = 0;
-			virtual bool	payload(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
 
@@ -132,9 +132,9 @@ namespace NAMESPACE_IRC
 		{
 			Unregistered_Command(std::string const& name);
 
-			bool			execute(Server& server, Client* user,
+			bool			execute(Server& server, Client* const user,
 				argumentList const& arguments);
-			virtual bool	payload(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
 
@@ -143,9 +143,9 @@ namespace NAMESPACE_IRC
 		{
 			Registered_Command(std::string const& name);
 
-			bool			execute(Server& server, Client* user,
+			bool			execute(Server& server, Client* const user,
 				argumentList const& arguments);
-			virtual bool	payload(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
 
@@ -164,7 +164,7 @@ namespace NAMESPACE_IRC
 		{
 			JoinCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -173,7 +173,7 @@ namespace NAMESPACE_IRC
 		{
 			PartCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -182,7 +182,7 @@ namespace NAMESPACE_IRC
 		{
 			ModeCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -191,7 +191,7 @@ namespace NAMESPACE_IRC
 		{
 			TopicCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -200,7 +200,7 @@ namespace NAMESPACE_IRC
 		{
 			NamesCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -209,7 +209,7 @@ namespace NAMESPACE_IRC
 		{
 			ListCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -218,7 +218,7 @@ namespace NAMESPACE_IRC
 		{
 			InviteCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -227,7 +227,7 @@ namespace NAMESPACE_IRC
 		{
 			KickCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -238,7 +238,7 @@ namespace NAMESPACE_IRC
 		{
 			PassCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -247,7 +247,7 @@ namespace NAMESPACE_IRC
 		{
 			PRIVMSGCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -256,7 +256,7 @@ namespace NAMESPACE_IRC
 		{
 			NoticeCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -266,7 +266,7 @@ namespace NAMESPACE_IRC
 		{
 			MotdCommand();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -275,7 +275,7 @@ namespace NAMESPACE_IRC
 		{
 			WhoQuery();
 
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -283,7 +283,7 @@ namespace NAMESPACE_IRC
 		: public Unregistered_Command
 		{
 			NickCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -291,7 +291,7 @@ namespace NAMESPACE_IRC
 		: public Unregistered_Command
 		{
 			UserCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -303,7 +303,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			VersionCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -311,7 +311,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			UsersCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -320,7 +320,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			TimeCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -328,7 +328,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			StatsCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -336,7 +336,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			SquitCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -344,7 +344,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			ServerCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -352,7 +352,7 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			RestartCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
@@ -360,15 +360,15 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			RehashCommand();
-			bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
 		/* Mode parser */
 
-		bool	parseChannelMode(Client *user, std::string const & channelName,
+		bool	parseChannelMode(Client* const user, std::string const & channelName,
 			std::string & flags, std::string & flagArguments);
-		bool	parseUserMode(Client *user,	std::string & flags, std::string & flagArguments);
+		bool	parseUserMode(Client *const user,	std::string & flags, std::string & flagArguments);
 
 	};
 
@@ -429,7 +429,7 @@ namespace NAMESPACE_IRC
 
 	inline bool
 	Server::Unregistered_Command::
-	execute(Server& server, Client* user, argumentList const& arguments)
+	execute(Server& server, Client* const user, argumentList const& arguments)
 	{ return (payload(server, user, arguments)); }
 
 	inline
@@ -593,7 +593,7 @@ namespace NAMESPACE_IRC
 	///////////////////
 
 	Server::Command const*	parseCommand(std::string::const_iterator& it,
-		std::string::const_iterator last);
+		std::string::const_iterator& last);
 
 	namespace
 	{
@@ -612,24 +612,25 @@ namespace NAMESPACE_IRC
 		const Server::WhoQuery			whoQuery;
 		const Server::NickCommand		nickCommand;
 		const Server::UserCommand		userCommand;
+		const Server::VersionCommand	versionCommand;
+		const Server::UsersCommand		usersCommand;
+		const Server::TimeCommand		timeCommand;
+		const Server::StatsCommand		statsCommand;
+		const Server::SquitCommand		squitCommand;
+		const Server::ServerCommand		serverCommand;
+		const Server::RestartCommand	restartCommand;
+		const Server::RestartCommand	rehashCommand;
 
 		Server::Command const*const	commands[] =
 		{
-			&passCommand,
-			&privmsgCommand,
-			&noticeCommand,
-			&joinCommand,
-			&partCommand,
-			&modeCommand,
-			&topicCommand,
-			&namesCommand,
-			&listCommand,
-			&inviteCommand,
-			&kickCommand,
-			&motdCommand,
-			&whoQuery,
-			&nickCommand,
-			&userCommand
+			&passCommand,	 &privmsgCommand, &noticeCommand,
+			&joinCommand,	 &partCommand,	  &modeCommand,
+			&topicCommand,	 &namesCommand,	  &listCommand,
+			&inviteCommand,	 &kickCommand,	  &motdCommand,
+			&whoQuery,		 &nickCommand,	  &userCommand,
+			&versionCommand, &usersCommand,	  &timeCommand,
+			&statsCommand,	 &squitCommand,	  &serverCommand,
+			&restartCommand, &restartCommand
 		};
 	}
 
@@ -638,5 +639,5 @@ namespace NAMESPACE_IRC
 	bool	matchPattern_unique(std::string const &str, std::string const &pattern);
 	bool	matchPattern_global(std::string const &str, std::string const &pattern);
 
-	unsigned const	commandCount = sizeof(commands) / sizeof(*commands);
+	unsigned const	commandCount = ARRAY_SIZE(commands);
 }

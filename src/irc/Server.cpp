@@ -9,7 +9,7 @@ namespace NAMESPACE_IRC
 
 	bool
 	Server::Registered_Command::
-	execute(Server& server, Client* user, argumentList const& arguments)
+	execute(Server& server, Client* const user, argumentList const& arguments)
 	{
 		if (user->authenticated == true)
 			return (payload(server, user, arguments));
@@ -18,7 +18,7 @@ namespace NAMESPACE_IRC
 	}
 
 	Server::Command const*	parseCommand(
-		std::string::const_iterator& it, std::string::const_iterator last)
+		std::string::const_iterator& it, std::string::const_iterator& last)
 	{
 		std::string	name;
 		unsigned	i = 0;
@@ -65,7 +65,7 @@ namespace NAMESPACE_IRC
 		return newClient;
 	}
 
-	void	Server::onMessage(connection* connection, std::string const& message)
+	void	Server::onMessage(connection* const connection, std::string const& message)
 	{
 		Client*	client = static_cast<Client*>(connection);
 		Message	ircMessage;
@@ -97,7 +97,7 @@ namespace NAMESPACE_IRC
 
 	void
 	Server::
-	announceWelcomeSequence(Client* user)
+	announceWelcomeSequence(Client* const user)
 	{
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
 		&& !user->username.empty() && user->authenticated)

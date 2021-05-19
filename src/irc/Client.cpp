@@ -3,15 +3,19 @@
 namespace NAMESPACE_IRC
 {
 
-// --- ClientModes ---
-	ClientModes::ClientModes()
-		:	binMode(0)
-	{ }
-
-	ClientModes::~ClientModes() {}
-
-
 // --- Client ---
+
+	// It is worth to redo Client class with templates to avoid
+	// forward refereneces and define those 2 in hpp ??
+
+	/* inline */ void
+	Client::joinChannel(__Channel* const channel)
+	{ clientChannels.insert(clientChannelPair(channel->name, channel)); }
+
+	/* inline */ bool
+	Client::isInChannel(__Channel* const channel) const
+	{ return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end()); }
+
 	Client::Client(int fd, address const& address,
 		bool authenticationRequired)
 		:	SocketConnection(fd, address),
@@ -19,41 +23,8 @@ namespace NAMESPACE_IRC
 			registered(false)
 	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
 
-	Client::~Client() throw()
-	{
-		leaveAllChannels();
-	}
 
-	Client&	Client::operator<<(std::string const& message)
-	{
-		writeBuffer.append(message);
-		return *this;
-	}
-
-	Client&	Client::operator<<(NumericReply const& reply)
-	{
-		*this << reply.serialize();
-		return *this;
-	}
-
-	Client&	Client::operator<<(PrivateMessage const& reply)
-	{
-		*this << reply.serialize();
-		return *this;
-	}
-
-	void	Client::flush() throw(SocketWriteException)
-	{
-		SocketConnection::operator<<(writeBuffer);
-		writeBuffer.clear();
-	}
-
-	void	Client::joinChannel(__Channel * channel)
-	{
-		clientChannels.insert(clientChannelPair(channel->name, channel));
-	}
-
-	void	Client::leaveChannel(__Channel * channel)
+	void	Client::leaveChannel(__Channel* const channel)
 	{
 		if (clientChannels.find(channel->name) == clientChannels.end())
 			return ;
@@ -80,13 +51,7 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	bool	Client::isInChannel(__Channel *channel) const
-	{return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end());}
-
-	bool	Client::isInChannel(std::string const & channelName) const
-	{return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end());}
-
-	bool	Client::isInSameChannel(Client *client) const
+	bool	Client::isInSameChannel(Client* const client) const
 	{
 		clientChannelMap::const_iterator itb = clientChannels.begin();
 		clientChannelMap::const_iterator ite = clientChannels.end();
@@ -105,7 +70,6 @@ namespace NAMESPACE_IRC
 			return clientChannels.find(ft::strToLower(channelName))->second;
 		return NULL;
 	}
-
 
 	/**
 	 * 	@brief Return a pointer to the channel which name is channelName.
@@ -129,14 +93,7 @@ namespace NAMESPACE_IRC
 		return channel;
 	}
 
-
-	void	Client::receiveMessage(Client *client, std::string const &message)	// check if invisible ?
-	{
-		*this << PrivateMessage(client->nickname, message);
-	}
-
-
-	bool	Client::listChannelInfo(__Channel *channel)
+	bool	Client::listChannelInfo(__Channel* const channel)
 	{
 		if (!channel)
 			return false;
@@ -170,7 +127,7 @@ namespace NAMESPACE_IRC
 	}
 
 
-		bool	Client::listChannelWhoQueryInfo(__Channel *channel, int opFlag)
+		bool	Client::listChannelWhoQueryInfo(__Channel* const channel, int opFlag)
 	{
 		if (!channel)
 			return false;
