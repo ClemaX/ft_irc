@@ -99,13 +99,22 @@ namespace NAMESPACE_IRC
 
 		/* Command bases */
 
-		struct Command
+		class Command
 		{
+			Command();
+
+			public:
+
 			typedef std::vector<std::string>	argumentList;
+
 			std::string const	name;
 
-			Command(std::string const& name);
+			Command(const std::string& __name);
 
+			virtual ~Command();
+
+			virtual bool			execute(Server& server, Client* user,
+				argumentList const& arguments) = 0;
 			virtual bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const = 0;
 		};
@@ -147,7 +156,7 @@ namespace NAMESPACE_IRC
 		{
 			JoinCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -165,7 +174,7 @@ namespace NAMESPACE_IRC
 		{
 			ModeCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -174,7 +183,7 @@ namespace NAMESPACE_IRC
 		{
 			TopicCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -183,7 +192,7 @@ namespace NAMESPACE_IRC
 		{
 			NamesCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -192,7 +201,7 @@ namespace NAMESPACE_IRC
 		{
 			ListCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -201,7 +210,7 @@ namespace NAMESPACE_IRC
 		{
 			InviteCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -210,7 +219,7 @@ namespace NAMESPACE_IRC
 		{
 			KickCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -221,7 +230,7 @@ namespace NAMESPACE_IRC
 		{
 			PassCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -230,7 +239,7 @@ namespace NAMESPACE_IRC
 		{
 			PRIVMSGCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -239,7 +248,7 @@ namespace NAMESPACE_IRC
 		{
 			NoticeCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -249,7 +258,7 @@ namespace NAMESPACE_IRC
 		{
 			MotdCommand();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -258,7 +267,7 @@ namespace NAMESPACE_IRC
 		{
 			WhoQuery();
 
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -266,7 +275,7 @@ namespace NAMESPACE_IRC
 		: public Unregistered_Command
 		{
 			NickCommand();
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -274,7 +283,7 @@ namespace NAMESPACE_IRC
 		: public Unregistered_Command
 		{
 			UserCommand();
-			virtual bool	payload(Server& server, Client* user,
+			bool	payload(Server& server, Client* user,
 				argumentList const& arguments) const;
 		};
 
@@ -322,6 +331,11 @@ namespace NAMESPACE_IRC
 	Server::Command::
 	Command(std::string const& name)
 	: name(name)
+	{ }
+
+	inline
+	Server::Command::
+	~Command()
 	{ }
 
 	inline
