@@ -40,6 +40,14 @@
 # define CMD_PRIVMSG_NAME "PRIVMSG"
 # define CMD_USER_NAME "USER"
 # define CMD_WHO_NAME "WHO"
+# define CMD_VERSION_NAME "VERSION"
+# define CMD_USERS_NAME "USERS"
+# define CMD_TIME_NAME "TIME"
+# define CMD_STATS_NAME "STATS"
+# define CMD_SQUIT_NAME "SQUIT"
+# define CMD_SERVER_NAME "SERVER"
+# define CMD_RESTART_NAME "RESTART"
+# define CMD_REHASH_NAME "REHASH"
 
 namespace NAMESPACE_IRC
 {
@@ -287,6 +295,75 @@ namespace NAMESPACE_IRC
 				argumentList const& arguments) const;
 		};
 
+		/* Server commands */
+
+		// TO DO: All Registered_Commads by default but need to test to be sure (but is the most logical)
+
+		struct VersionCommand
+		: Registered_Command
+		{
+			VersionCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct UsersCommand
+		: Registered_Command
+		{
+			UsersCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+
+		struct TimeCommand
+		: Registered_Command
+		{
+			TimeCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct StatsCommand
+		: Registered_Command
+		{
+			StatsCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct SquitCommand
+		: Registered_Command
+		{
+			SquitCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct ServerCommand
+		: Registered_Command
+		{
+			ServerCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct RestartCommand
+		: Registered_Command
+		{
+			RestartCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
+		struct RehashCommand
+		: Registered_Command
+		{
+			RehashCommand();
+			bool	payload(Server& server, Client* user,
+				argumentList const& arguments) const;
+		};
+
 		/* Mode parser */
 
 		bool	parseChannelMode(Client *user, std::string const & channelName,
@@ -457,6 +534,58 @@ namespace NAMESPACE_IRC
 	Server::WhoQuery::
 	WhoQuery()
 	: Registered_Command(CMD_WHO_NAME)
+	{ }
+
+	///////////////////////////////////////////////
+	// Inlined derivated serevr commands members //
+	///////////////////////////////////////////////
+
+	inline
+	Server::VersionCommand::
+	VersionCommand()
+	: Registered_Command(CMD_VERSION_NAME)
+	{ }
+
+	inline
+	Server::UsersCommand::
+	UsersCommand()
+	: Registered_Command(CMD_USERS_NAME)
+	{ }
+
+	inline
+	Server::TimeCommand::
+	TimeCommand()
+	: Registered_Command(CMD_TIME_NAME)
+	{ }
+
+	inline
+	Server::StatsCommand::
+	StatsCommand()
+	: Registered_Command(CMD_STATS_NAME)
+	{ }
+
+	inline
+	Server::SquitCommand::
+	SquitCommand()
+	: Registered_Command(CMD_SQUIT_NAME)
+	{ }
+
+	inline
+	Server::ServerCommand::
+	ServerCommand()
+	: Registered_Command(CMD_SERVER_NAME)
+	{ }
+
+	inline
+	Server::RestartCommand::
+	RestartCommand()
+	: Registered_Command(CMD_RESTART_NAME)
+	{ }
+
+	inline
+	Server::RehashCommand::
+	RehashCommand()
+	: Registered_Command(CMD_REHASH_NAME)
 	{ }
 
 	///////////////////

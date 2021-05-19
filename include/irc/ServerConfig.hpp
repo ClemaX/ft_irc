@@ -52,7 +52,7 @@ namespace NAMESPACE_IRC
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
-		inline std::string&	operator[](std::string const& key)
+		std::string&	operator[](std::string const& key)
 			throw(std::out_of_range)
 		{
 			unsigned char	i;
@@ -65,7 +65,7 @@ namespace NAMESPACE_IRC
 			return data[key];
 		}
 
-		inline std::string	operator[](std::string const& key) const
+		std::string	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
 			std::map<std::string, std::string>::const_iterator	it;

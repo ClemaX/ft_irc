@@ -22,10 +22,6 @@ namespace NAMESPACE_IRC
 		std::string const& nickName, std::string const& list, char delim = '\n',
 		size_t maxLength = 80)
 	{
-		(void)static_cast<IReply*>((Cstart*)NULL);
-		(void)static_cast<IReply*>((Ccontent*)NULL);
-		(void)static_cast<IReply*>((Cend*)NULL);
-
 		std::string	message;
 
 		std::string::size_type	pos = 0;
@@ -54,7 +50,8 @@ namespace NAMESPACE_IRC
 		return (message);
 	}
 
-	struct	NumericReply	:	IReply
+	struct	NumericReply
+	: IReply
 	{
 		typedef	std::vector<Client const*> clientList;
 
@@ -63,10 +60,33 @@ namespace NAMESPACE_IRC
 		std::string	message;
 
 		NumericReply(std::string const& serverName, int code,
-			std::string const& message = "");
+			std::string const& message = std::string());
 
 		virtual ~NumericReply();
 
 		std::string	serialize() const throw();
 	};
+
+	///////////////////////////////////
+	// Numeric Reply inlined members //
+	///////////////////////////////////
+
+	inline std::string
+	NumericReply::
+	serialize() const
+	throw()
+	{
+		return (prefix.serialize() + IRC_MESSAGE_DELIM + ft::itoa(code)
+		+ IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX);
+	}
+
+	inline
+	NumericReply::
+	NumericReply(std::string const& serverName, int code, std::string const& message)
+	: prefix(serverName), code(code), message(message)
+	{ }
+
+	inline
+	NumericReply::~NumericReply()
+	{ }
 }

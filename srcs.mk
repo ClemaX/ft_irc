@@ -18,15 +18,27 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				PART.cpp\
 				TOPIC.cpp\
 			)\
-			MODE.cpp\
-			MOTD.cpp\
-			NICK.cpp\
-			NOTICE.cpp\
-			PASS.cpp\
-			PRIVMSG.cpp\
-			USER.cpp\
+			$(addprefix client/,\
+				MODE.cpp\
+				MOTD.cpp\
+				NICK.cpp\
+				NOTICE.cpp\
+				PASS.cpp\
+				PRIVMSG.cpp\
+				USER.cpp\
+				WHO.cpp\
+			)\
+			$(addprefix server/,\
+				REHASH.cpp\
+				RESTART.cpp\
+				SERVER.cpp\
+				SQUIT.cpp\
+				STATS.cpp\
+				TIME.cpp\
+				USERS.cpp\
+				VERSION.cpp\
+			)\
 			utils.cpp\
-			WHO.cpp\
 		)\
 		Database.cpp\
 		Message.cpp\
