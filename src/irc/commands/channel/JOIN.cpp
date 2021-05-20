@@ -39,7 +39,7 @@ namespace NAMESPACE_IRC
 
 			Server::__Channel *channel = server.getChannel(channelName);
 
-			if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
+			if (user->channels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
 				*user << TooManyChannelsError(gHostname, channelName);
 				return false;
