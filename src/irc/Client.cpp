@@ -2,16 +2,21 @@
 
 #include <utils/Logger.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 
-// --- ClientModes ---
-	ClientModes::ClientModes()
-		:	binMode(0)
-	{ }
+// --- Client ---
 
-	ClientModes::~ClientModes() {}
+	// It is worth to redo Client class with templates to avoid
+	// forward refereneces and define those 2 in hpp ??
 
+	/* inline */ void
+	Client::joinChannel(__Channel* const channel)
+	{ clientChannels.insert(clientChannelPair(channel->name, channel)); }
+
+	/* inline */ bool
+	Client::isInChannel(__Channel* const channel) const
+	{ return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end()); }
 
 // --- Client ---
 	Client::Client(int fd, socketAddress const& address, bool authRequired)
@@ -23,41 +28,8 @@ namespace irc
 		readBuffer.reserve(IRC_MESSAGE_MAXLEN);
 	} // TODO: Maybe reserve writeBuffer
 
-	Client::~Client() throw()
-	{
-		leaveAllChannels();
-	}
 
-	Client&	Client::operator<<(std::string const& message)
-	{
-		writeBuffer.append(message);
-		return *this;
-	}
-
-	Client&	Client::operator<<(IReply const& reply)
-	{
-		*this << reply.serialize();
-		return *this;
-	}
-
-	Client&	Client::operator<<(PrivateMessage const& reply)
-	{
-		*this << reply.serialize();
-		return *this;
-	}
-
-	void	Client::flush() throw(SocketWriteException)
-	{
-		SocketConnection::operator<<(writeBuffer);
-		writeBuffer.clear();
-	}
-
-	void	Client::joinChannel(Channel * channel)
-	{
-		clientChannels.insert(clientChannelPair(channel->name, channel));
-	}
-
-	void	Client::leaveChannel(Channel * channel)
+	void	Client::leaveChannel(__Channel* const channel)
 	{
 		if (clientChannels.find(channel->name) == clientChannels.end())
 			return ;
@@ -84,13 +56,7 @@ namespace irc
 		}
 	}
 
-	bool	Client::isInChannel(Channel *channel) const
-	{return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end());}
-
-	bool	Client::isInChannel(std::string const & channelName) const
-	{return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end());}
-
-	bool	Client::isInSameChannel(Client *client) const
+	bool	Client::isInSameChannel(Client* const client) const
 	{
 		clientChannelMap::const_iterator itb = clientChannels.begin();
 		clientChannelMap::const_iterator ite = clientChannels.end();
@@ -103,13 +69,12 @@ namespace irc
 		return false;
 	}
 
-	Channel	*Client::getChannel(std::string const & channelName) const
+	Client::__Channel	*Client::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
 			return clientChannels.find(ft::strToLower(channelName))->second;
 		return NULL;
 	}
-
 
 	/**
 	 * 	@brief Return a pointer to the channel which name is channelName.
@@ -119,28 +84,21 @@ namespace irc
 	 * 	NOTE: The search is done among all the channels in the database
 	*/
 
-	Channel	*Client::getChannelGlobal(std::string const & channelName) const
+	Client::__Channel	*Client::getChannelGlobal(std::string const & channelName) const
 	{
-		Channel *channel = getChannel(channelName);
+		__Channel *channel = getChannel(channelName);
 		if (channel)
 			return channel;
 
 		channel = server->getChannel(channelName);
 		if (!channel)
 			return NULL;
-		if (!channel->isLocalChannelVisibleForClient(this))
+		if (!channel->isLocalChannelVisibleForClient(const_cast<Client*>(this)))
 			return NULL;
 		return channel;
 	}
 
-
-	void	Client::receiveMessage(Client *client, std::string const &message)	// check if invisible ?
-	{
-		*this << PrivateMessage(client->nickname, message);
-	}
-
-
-	bool	Client::listChannelInfo(Channel *channel)
+	bool	Client::listChannelInfo(__Channel* const channel)
 	{
 		if (!channel)
 			return false;
@@ -174,7 +132,7 @@ namespace irc
 	}
 
 
-		bool	Client::listChannelWhoQueryInfo(Channel *channel, int opFlag)
+		bool	Client::listChannelWhoQueryInfo(__Channel* const channel, int opFlag)
 	{
 		if (!channel)
 			return false;
@@ -186,8 +144,8 @@ namespace irc
 				return false;
 		else
 		{
-			Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
-			Channel::channelClientMap::iterator ite = channel->clientsMap.end();
+			__Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
+			__Channel::channelClientMap::iterator ite = channel->clientsMap.end();
 			while (itb != ite)
 			{
 				if (!opFlag || channel->isOperator(itb->first))

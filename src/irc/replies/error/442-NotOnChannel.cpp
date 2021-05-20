@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 442     IRC_ERR_NOTONCHANNEL
 //             "<channel> :You're not on that channel"

@@ -2,7 +2,7 @@
 
 #include <irc/AMessage.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	IReply	:	AMessage
 	{

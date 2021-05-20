@@ -1,13 +1,10 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::ModeCommand::ModeCommand()
-		:	ChannelCommand("MODE", true)
-	{ }
-
-	bool	Server::ModeCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::ModeCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		if (arguments.size() < 2)
 		{
@@ -17,7 +14,7 @@ namespace irc
 
 		std::string nameArgument = arguments[0];
 		std::string flags = arguments[1];
-		if (!flags.size())
+		if (flags.empty())
 			return false;
 
 		std::string	flagArgument = "";

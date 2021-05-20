@@ -1,13 +1,10 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::InviteCommand::InviteCommand()
-		:	ChannelCommand("INVITE", true)
-	{ }
-
-	bool	Server::InviteCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::InviteCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		if (arguments.size() < 2)
 		{
@@ -23,7 +20,7 @@ namespace irc
 			*user << NoSuchNicknameError(gHostname, nickname);
 			return false;
 		}
-		Channel *channel = server.database.getChannel(channelName);
+		Server::__Channel *channel = server.database.getChannel(channelName);
 		if (!channel)
 		{
 			*user << InvitingReply(gHostname, channelName, nickname);

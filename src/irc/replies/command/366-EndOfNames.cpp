@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"

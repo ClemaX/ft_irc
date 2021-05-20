@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 501     IRC_ERR_UMODEUNKNOWNFLAG
 //             ":Unknown MODE flag"

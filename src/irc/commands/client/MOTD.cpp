@@ -2,14 +2,11 @@
 
 #include <utils/Logger.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::MotdCommand::MotdCommand()
-		:	Command("MOTD")
-	{ }
-
-	bool	Server::MotdCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::MotdCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		if (!user->registered)
 		{

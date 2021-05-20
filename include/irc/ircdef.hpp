@@ -1,5 +1,8 @@
 #pragma once
 
+/// irc namespace
+#define NAMESPACE_IRC irc
+
 /// Current version of the irc server
 #define SERVER_VERSION "2.0.0" // corrected 1 time
 

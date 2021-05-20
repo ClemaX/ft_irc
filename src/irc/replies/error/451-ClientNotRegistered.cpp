@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	ClientNotResgisteredYet::ClientNotResgisteredYet(const std::string& servername)
 	: NumericReply(servername, ERR_NOTREGISTRED)

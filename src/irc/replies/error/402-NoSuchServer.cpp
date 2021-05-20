@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 402     IRC_ERR_NOSUCHSERVER
 //             "<server name> :No such server"

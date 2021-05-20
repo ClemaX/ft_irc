@@ -1,13 +1,10 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::WhoQuery::WhoQuery()
-		:	Command("WHO")
-	{ }
-
-	bool	Server::WhoQuery::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::WhoQuery::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		if (!user->registered)
 		{
@@ -25,7 +22,7 @@ namespace irc
 			if (arguments.size() > 1 && !arguments[1].compare("o"))
 				opFlag = 1;
 
-			Channel *channel = server.database.getChannel(mask);
+			Server::__Channel *channel = server.database.getChannel(mask);
 			if (channel)
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else

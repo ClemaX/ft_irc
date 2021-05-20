@@ -1,15 +1,15 @@
 #include <irc/replies/CommandReplies.hpp>
 #include <irc/Channel.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
-	ChannelNamesReply::ChannelNamesReply(std::string const& serverName, Channel *channel)
+	ChannelNamesReply::ChannelNamesReply(std::string const& serverName, Channel<Server, Client> *channel)
 		: NumericReply(serverName, IRC_RPL_NAMREPLY)
 	{
 		message << channel->name << " :";
-		for (Channel::channelClientMap::const_iterator it = channel->clientsMap.begin(); it != channel->clientsMap.end(); it++)
+		for (Channel<Server, Client>::channelClientMap::const_iterator it = channel->clientsMap.begin(); it != channel->clientsMap.end(); it++)
 		{
 			if (channel->isOperator(it->first))
 				message << "@";

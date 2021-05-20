@@ -1,16 +1,12 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	// --- USER --- //
 
-	Server::UserCommand::UserCommand()
-	: Command("USER")
-	{ }
-
 	bool
 	Server::UserCommand::
-	payload(Server& server, Client* user,argumentList const& arguments) const
+	payload(Server& server, Client* const user,argumentList const& arguments) const
 	{
 		// ERR_NEEDMOREPARAMS Bad amount of params
 		if (arguments.size() < 4)

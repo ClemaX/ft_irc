@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 375     IRC_RPL_MOTDSTART
 //             ":- <server> Message of the day - "

@@ -6,7 +6,7 @@
 
 #include <utils/parseField.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	std::string &	operator<<(std::string &src, std::string const& str);
 
@@ -43,7 +43,7 @@ namespace irc
 			Prefix(std::string::const_iterator& it,
 				std::string::const_iterator last) throw(InvalidMessageException);
 
-			inline bool	isEmpty() const throw()
+			bool	isEmpty() const throw()
 			{ return !(name.length() || user.length() || host.length()); }
 
 			std::string	serialize() const throw();
@@ -52,4 +52,19 @@ namespace irc
 
 		Prefix	prefix;
 	};
+
+	inline std::string&
+	operator<<(std::string& src, std::string const& str)
+	{ return (src += str); }
+
+	inline
+	AMessage::Prefix::
+	Prefix()
+	{ }
+
+	inline
+	AMessage::Prefix::
+	Prefix(std::string const& name, std::string const& user, std::string const host)
+	: name(name), user(user), host(host)
+	{ }
 }

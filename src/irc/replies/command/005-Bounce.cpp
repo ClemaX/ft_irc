@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 /// 005     IRC_RPL_BOUNCE
 //             "Try server <server name>, port <port number>"

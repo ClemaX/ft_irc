@@ -2,9 +2,10 @@
 
 #include <irc/replies/NumericReply.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	class	Client;
+	template <class __Server, class __Client>
 	class	Channel;
 
 // 401     IRC_ERR_NOSUCHNICK

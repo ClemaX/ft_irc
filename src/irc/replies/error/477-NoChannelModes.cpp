@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 477		IRC_ERR_NOCHANMODES
 //             	"<channel> :Channel doesn't support modes"

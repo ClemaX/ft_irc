@@ -15,9 +15,12 @@
 #include <irc/Server.hpp>
 #include <irc/Database.hpp>
 
-namespace irc
+#include <stdint.h>
+
+namespace NAMESPACE_IRC
 {
 	class	Server;
+	template <class __Server, class __Client>
 	class	Channel;
 
 	/**
@@ -27,35 +30,35 @@ namespace irc
 	* host, and the server to which the client is connected.
 	*/
 
+	/**
+	 * 	@brief Contain the client modes flags:
+	 *  i - marks a users as invisible;
+     *	s - marks a user for receipt of server notices;
+     *	w - user receives wallops;
+     * 	o - operator flag.
+	*/
 	struct	ClientModes
 	{
 	private:
 
 	public:
 
-		#define	Mu_i 1
-		#define	Mu_s 2
-		#define	Mu_w 4
-		#define	Mu_o 8
+		#define	Mu_i (1 << 0)
+		#define	Mu_s (1 << 1)
+		#define	Mu_w (1 << 2)
+		#define	Mu_o (1 << 3)
 
-		int	binMode;
-
-		// i - marks a users as invisible;
-        // s - marks a user for receipt of server notices;
-        // w - user receives wallops;
-        // o - operator flag.
-
-		ClientModes();
-		~ClientModes();
+		uint32_t	binMode;
 
 	};
 
 	class	Client	:	public virtual SocketConnection
 	{
 	private:
-		typedef ::std::map<std::string, Channel*>		clientChannelMap;
-		typedef ::std::pair<std::string, Channel*>		clientChannelPair;
-		typedef IRCDatabase<Server, Client, Channel>	IRCDatabase;
+		typedef	Channel<Server, Client>					__Channel;
+		typedef ::std::map<std::string, __Channel*>		clientChannelMap;
+		typedef ::std::pair<std::string, __Channel*>	clientChannelPair;
+		typedef IRCDatabase<Server, Client, __Channel>	IRCDatabase;
 
 	public:
 		std::string	readBuffer;
@@ -91,27 +94,72 @@ namespace irc
 
 		virtual ~Client() throw();
 
-		void	joinChannel(Channel * channel);
-		void	leaveChannel(Channel * channel);
+		void	joinChannel(__Channel* const channel);
+		void	leaveChannel(__Channel* const channel);
 		void	leaveChannel(std::string const & channelName);
 		void	leaveAllChannels();
 
-		bool	isInChannel(Channel *channel) const;
+		bool	isInChannel(__Channel* const channel) const;
 		bool	isInChannel(std::string const & channelName) const;
 
-		bool	isInSameChannel(Client *client) const;
+		bool	isInSameChannel(Client* const client) const;
 
-		Channel	*getChannel(std::string const & channelName) const;
-		Channel	*getChannelGlobal(std::string const & channelName) const;
+		__Channel	*getChannel(std::string const & channelName) const;
+		__Channel	*getChannelGlobal(std::string const & channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
 
-		void	receiveMessage(Client *client, std::string const &message);
+		void	receiveMessage(Client* const client, std::string const &message);
 
-		bool	listChannelInfo(Channel *channel);
+		bool	listChannelInfo(__Channel* const channel);
 		bool	listAllChannelsListInfo(void);
 
-		bool	listChannelWhoQueryInfo(Channel *channel, int opFlag);
+		bool	listChannelWhoQueryInfo(__Channel* const channel, int opFlag);
 		bool	listAllVisibleUsersWhoQueryInfo(void);
 		bool	matchMaskWhoQueryInfo(std::string const &mask);
 	};
+
+	////////////////////////////
+	// Inlined client members //
+	////////////////////////////
+
+	inline
+	Client::~Client()
+	throw()
+	{ leaveAllChannels(); }
+
+	inline Client&
+	Client::operator<<(std::string const& message)
+	{
+		writeBuffer.append(message);
+		return *this;
+	}
+
+	inline Client&
+	Client::operator<<(NumericReply const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
+	inline Client&
+	Client::operator<<(PrivateMessage const& reply)
+	{
+		*this << reply.serialize();
+		return *this;
+	}
+
+	inline void
+	Client::flush() throw(SocketWriteException)
+	{
+		SocketConnection::operator<<(writeBuffer);
+		writeBuffer.clear();
+	}
+
+	inline bool
+	Client::isInChannel(std::string const & channelName) const
+	{ return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end()); }
+
+	inline void
+	Client::receiveMessage(Client* const client, std::string const &message)	// check if invisible ?
+	{ *this << PrivateMessage(client->nickname, message); }
 }

@@ -1,15 +1,12 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::JoinCommand::JoinCommand()
-		:	ChannelCommand("JOIN", false)
-	{ }
-
-	bool	Server::JoinCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::JoinCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
-		if (!arguments.size())
+		if (arguments.empty())
 		{
 			*user << NeedMoreParamsError(gHostname, name);
 			return false;
@@ -40,7 +37,7 @@ namespace irc
 				passwordsQueue.pop();
 			}
 
-			Channel *channel = server.getChannel(channelName);
+			Server::__Channel *channel = server.getChannel(channelName);
 
 			if (user->clientChannels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
@@ -53,7 +50,7 @@ namespace irc
 			{
 				try
 				{
-					channel = new Channel(channelName);
+					channel = new Server::__Channel(channelName);
 					server.database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
@@ -61,7 +58,7 @@ namespace irc
 					channel->addServer(&server);		// add server to the channel servers list
 					channel->addClient(user, password, isOp);
 				}
-				catch(Channel::InvalidChannelNameException const& e)
+				catch(Server::__Channel::InvalidChannelNameException const& e)
 				{*user << NoSuchChannelError(gHostname, name);}
 			}
 			else

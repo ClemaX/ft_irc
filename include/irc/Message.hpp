@@ -8,7 +8,7 @@
 #include <irc/AMessage.hpp>
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	Message	:	AMessage
 	{
@@ -20,4 +20,12 @@ namespace irc
 
 		Message(std::string& buffer) throw(MessageException);
 	};
+
+	inline
+	Message::Message()
+	{ }
+
+	inline
+	Message::~Message()
+	{ }
 }

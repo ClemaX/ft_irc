@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	UserNeedMoreParams::UserNeedMoreParams(const std::string& servername)
 	: NumericReply(servername, ERR_NEEDMOREPARAMS)

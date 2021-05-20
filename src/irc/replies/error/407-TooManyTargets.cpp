@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 407     IRC_ERR_TOOMANYTARGETS
 //             "<target> :Duplicate recipients. No message"

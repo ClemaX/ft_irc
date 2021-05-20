@@ -1,6 +1,6 @@
 #include <irc/replies/CommandReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 324     IRC_RPL_CHANNELMODEIS
 //             "<channel> <mode> <mode params>"

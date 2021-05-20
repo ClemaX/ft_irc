@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 471     IRC_ERR_CHANNELISFULL
 //             "<channel> :Cannot join channel (+l)"

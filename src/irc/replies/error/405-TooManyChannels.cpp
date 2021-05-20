@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 405     IRC_ERR_TOOMANYCHANNELS
 //             "<channel name> :You have joined too many channels"

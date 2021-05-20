@@ -1,8 +1,8 @@
 #include <irc/ServerConfig.hpp>
-
 #include <iostream>
+#include <irc/ircdef.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	unsigned char const	ServerConfig::argOptStart = 0;
 	unsigned char const	ServerConfig::argOptEnd = 3;

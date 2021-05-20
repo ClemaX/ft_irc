@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 474     IRC_ERR_BANNEDFROMCHAN
 //             "<channel> :Cannot join channel (+b)"

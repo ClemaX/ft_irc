@@ -1,18 +1,11 @@
 #include <irc/replies/NumericReply.hpp>
 #include <irc/Client.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	NumericReply::NumericReply(std::string const& serverName,
-		int code, std::string const& message)
-		:	prefix(serverName),
-			code(code),
-			message(message)
-	{ }
 
-	NumericReply::~NumericReply()
-	{ }
 
+/*
 	std::string	NumericReply::serialize() const throw()
 	{
 		std::string	serialized;
@@ -26,4 +19,7 @@ namespace irc
 
 		return serialized;
 	}
+	*/
+
+
 }

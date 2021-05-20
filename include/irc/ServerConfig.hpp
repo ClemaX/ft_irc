@@ -6,6 +6,8 @@
 #include <fstream> // using std::ifstream
 #include <algorithm> // using std::find
 
+# include <irc/ircdef.hpp>
+
 #define IRC_CONF_NAME		"ircserv.conf"
 #define IRC_CONF_DELIM		'='
 #define IRC_CONF_SEP		';'
@@ -24,7 +26,7 @@
 #define IRC_CONF_LOGFILE	"LOGFILE"
 #define IRC_CONF_LOGLEVEL	"LOGLEVEL"
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 	struct	ServerConfig
 	{
@@ -65,7 +67,7 @@ namespace irc
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
-		inline std::string	operator[](std::string const& key) const
+		std::string	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
 			std::map<std::string, std::string>::const_iterator	it;

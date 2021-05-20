@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 401     IRC_ERR_NOSUCHNICK
 //             "<nickname> :No such nick/channel"

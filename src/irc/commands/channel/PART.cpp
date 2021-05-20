@@ -1,13 +1,10 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::PartCommand::PartCommand()
-		:	ChannelCommand("PART", true)
-	{ }
-
-	bool	Server::PartCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::PartCommand::
+	payload(Server& server, Client* const user,argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
@@ -23,7 +20,7 @@ namespace irc
 			const std::string channelName = ft::strToLower(channelsQueue.front());
 			channelsQueue.pop();
 
-			Channel *channel = server.getChannel(channelName);
+			Server::__Channel *channel = server.getChannel(channelName);
 
 			if (!channel)
 				*user << NoSuchChannelError(gHostname, channelName);

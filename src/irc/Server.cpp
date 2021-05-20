@@ -11,6 +11,16 @@ namespace irc
 {
 	std::string const& gHostname = "";
 
+	bool
+	Server::Registered_Command::
+	execute(Server& server, Client* const user, argumentList const& arguments)
+	{
+		if (user->authenticated == true)
+			return (payload(server, user, arguments));
+		*user << ClientNotResgisteredYet(server.hostname);
+		return (false);
+	}
+
 	Server::Server()
 		:	SocketServer(),
 			config(),
@@ -57,16 +67,8 @@ namespace irc
 		authRequired = !config[IRC_CONF_PASS].empty();
 	}
 
-	Channel*
-	Server::getChannel(const std::string & channelName) const
-	{ return database.getChannel(channelName); }
-
-	const std::string&
-	Server::get_hostname() const
-	{ return (hostname); }
-
 	Server::Command const*	parseCommand(
-		std::string::const_iterator& it, std::string::const_iterator last)
+		std::string::const_iterator& it, std::string::const_iterator& last)
 	{
 		std::string	name;
 		unsigned	i = 0;
@@ -115,7 +117,7 @@ namespace irc
 		return newClient;
 	}
 
-	void	Server::onMessage(connection* connection, std::string const& message)
+	void	Server::onMessage(connection* const connection, std::string const& message)
 	{
 		Client*	client = dynamic_cast<Client*>(connection);
 		Message	ircMessage;
@@ -147,7 +149,7 @@ namespace irc
 
 	void
 	Server::
-	announceWelcomeSequence(Client* user)
+	announceWelcomeSequence(Client* const user)
 	{
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
 		&& !user->username.empty() && user->authenticated)

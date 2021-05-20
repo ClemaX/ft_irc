@@ -1,6 +1,6 @@
 #include <utils/parseField.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 
 	std::string::const_iterator	parseField(std::string& str,

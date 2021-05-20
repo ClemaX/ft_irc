@@ -1,6 +1,6 @@
 #include <irc/replies/ErrorReplies.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // 461     IRC_ERR_NEEDMOREPARAMS
 //             "<command> :Not enough parameters"

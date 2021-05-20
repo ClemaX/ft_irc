@@ -1,13 +1,10 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
-	Server::NoticeCommand::NoticeCommand()
-		:	Command("NOTICE")
-	{ }
-
-	bool	Server::NoticeCommand::payload(Server& server, Client* user,
-		argumentList const& arguments) const
+	bool
+	Server::NoticeCommand::
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
@@ -30,7 +27,7 @@ namespace irc
 			receiver->receiveMessage(user, message);
 		else
 		{
-			Channel *channel = server.getChannel(nameArgument);
+			Server::__Channel *channel = server.getChannel(nameArgument);
 			if (channel)
 				channel->receiveNotice(user, message);
 			// else

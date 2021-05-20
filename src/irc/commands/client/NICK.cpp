@@ -1,6 +1,6 @@
 #include <irc/Server.hpp>
 
-namespace irc
+namespace NAMESPACE_IRC
 {
 // --- NICK --- //
 	namespace
@@ -24,13 +24,9 @@ namespace irc
 
 	}
 
-	Server::NickCommand::NickCommand()
-	: Command("NICK")
-	{ }
-
 	bool
 	Server::NickCommand::
-	payload(Server& server, Client* user, argumentList const& arguments) const
+	payload(Server& server, Client* const user, argumentList const& arguments) const
 	{
 		// ERR_NONICKNAMEGIVEN No nickname present as args
 		if (arguments.empty())
