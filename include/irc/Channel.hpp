@@ -81,6 +81,8 @@ namespace NAMESPACE_IRC
 		uint32_t		binMode; // TO DO: rename to 'ChannelModes'
 		size_t			l;
 		std::string		k;
+
+		ChannelModes();
 	};
 
 	template <class __Server, class __Client>
@@ -251,6 +253,11 @@ namespace NAMESPACE_IRC
 	/////////////////////
 	// Channel members //
 	/////////////////////
+
+	inline
+	ChannelModes::ChannelModes()
+	: binMode()
+	{ }
 
 	template <class __Server, class __Client>
 	Channel<__Server, __Client>::
