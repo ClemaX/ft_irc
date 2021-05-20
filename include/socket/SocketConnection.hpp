@@ -3,19 +3,18 @@
 #include <string> // using std::string
 
 #include <socket/socketdef.hpp> // using socketAddress
-
-#include <socket/SocketExceptions.hpp>
+#include <socket/Socket.hpp> // using Socket
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
 
-class	SocketConnection
+// TODO: Check if Socket should be virtual
+class	SocketConnection	:	public Socket
 {
 public:
 	typedef	socketAddress	address;
 
-private:
-	int		fd;
-	address	socketAddress;
+protected:
+	address	addr;
 
 public:
 	SocketConnection() throw();
@@ -24,19 +23,17 @@ public:
 
 	virtual	~SocketConnection() throw();
 
-	inline bool	isOpen() const throw()									// definition autorisée dans le header ?
-	{ return fd > 0; }
-
-	void	close() throw(SocketCloseException);
-
-	bool	read(char *buffer, size_t n) throw(SocketReadException);
+	/// returns false when socket closed
+	virtual bool	read(char* buffer, size_t n) throw(SocketCloseException, SocketReadException);
+	virtual bool	write(char const* buffer, size_t n) const
+		throw(SocketWriteException);
 
 	virtual SocketConnection const&	operator<<(std::string const& str) const
 		throw(SocketWriteException);
 
 	inline internetAddress	getAddr() const throw()
-	{ return socketAddress.sin6_addr; }
+	{ return addr.sin6_addr; }
 
 	inline internetPort		getPort() const throw()
-	{ return socketAddress.sin6_port; }
+	{ return addr.sin6_port; }
 };

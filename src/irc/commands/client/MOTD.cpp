@@ -1,5 +1,7 @@
 #include <irc/Server.hpp>
 
+#include <utils/Logger.hpp>
+
 namespace NAMESPACE_IRC
 {
 	bool
@@ -12,7 +14,7 @@ namespace NAMESPACE_IRC
 			return (false);
 		}
 
-		std::cout << user->username << " executes " << name << std::endl;
+		Logger::instance() << Logger::DEBUG << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
 			gHostname, user->nickname, server.config["MOTD"], '\n', 80);

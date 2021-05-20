@@ -4,10 +4,8 @@ SRCDIR = src
 SRCS = $(addprefix $(SRCDIR)/,\
 	$(addprefix irc/,\
 		AMessage.cpp\
-		Channel.cpp\
 		ChannelModes.cpp\
 		Client.cpp\
-		Command.cpp\
 		$(addprefix commands/,\
 			$(addprefix channel/,\
 				INVITE.cpp\
@@ -40,7 +38,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			utils.cpp\
 		)\
-		Database.cpp\
 		Message.cpp\
 		PrivateMessage.cpp\
 		$(addprefix replies/,\
@@ -111,6 +108,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			NumericReply.cpp\
 		)\
+		SecureClient.cpp\
 		ServerConfig.cpp\
 		Server.cpp\
 	)\
@@ -118,13 +116,19 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		main.cpp\
 	)\
 	$(addprefix socket/,\
+		bindAddress.cpp\
+		SecureSocketConnection.cpp\
 		SocketConnection.cpp\
+		Socket.cpp\
+		SocketListener.cpp\
 		SocketServer.cpp\
+		ssl.cpp\
 	)\
 	$(addprefix utils/,\
 		atoi.cpp\
-		bindAddress.cpp\
+		crypto.cpp\
 		itoa.cpp\
+		Logger.cpp\
 		nickcmp.cpp\
 		parseField.cpp\
 	)\

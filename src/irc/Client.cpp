@@ -1,5 +1,7 @@
 #include <irc/Client.hpp>
 
+#include <utils/Logger.hpp>
+
 namespace NAMESPACE_IRC
 {
 
@@ -16,12 +18,15 @@ namespace NAMESPACE_IRC
 	Client::isInChannel(__Channel* const channel) const
 	{ return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end()); }
 
-	Client::Client(int fd, address const& address,
-		bool authenticationRequired)
+// --- Client ---
+	Client::Client(int fd, socketAddress const& address, bool authRequired)
 		:	SocketConnection(fd, address),
-			authenticated(!authenticationRequired),
+			authenticated(!authRequired),
 			registered(false)
-	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
+	{
+		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
+		readBuffer.reserve(IRC_MESSAGE_MAXLEN);
+	} // TODO: Maybe reserve writeBuffer
 
 
 	void	Client::leaveChannel(__Channel* const channel)

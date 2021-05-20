@@ -5,7 +5,8 @@ obj/
 *.o
 
 # Runtime data
-*.db
+*.pem
+*.log
 
 # macOS
 .DS_Store
