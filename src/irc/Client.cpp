@@ -1,5 +1,7 @@
 #include <irc/Client.hpp>
 
+#include <utils/Logger.hpp>
+
 namespace NAMESPACE_IRC
 {
 
@@ -10,51 +12,54 @@ namespace NAMESPACE_IRC
 
 	/* inline */ void
 	Client::joinChannel(__Channel* const channel)
-	{ clientChannels.insert(clientChannelPair(channel->name, channel)); }
+	{ channels.insert(clientChannelPair(channel->name, channel)); }
 
 	/* inline */ bool
 	Client::isInChannel(__Channel* const channel) const
-	{ return (clientChannels.find(ft::strToLower(channel->name)) != clientChannels.end()); }
+	{ return (channels.find(ft::strToLower(channel->name)) != channels.end()); }
 
-	Client::Client(int fd, address const& address,
-		bool authenticationRequired)
+// --- Client ---
+	Client::Client(int fd, socketAddress const& address, bool authRequired)
 		:	SocketConnection(fd, address),
-			authenticated(!authenticationRequired),
+			authenticated(!authRequired),
 			registered(false)
-	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
+	{
+		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
+		readBuffer.reserve(IRC_MESSAGE_MAXLEN);
+	} // TODO: Maybe reserve writeBuffer
 
 
 	void	Client::leaveChannel(__Channel* const channel)
 	{
-		if (clientChannels.find(channel->name) == clientChannels.end())
+		if (channels.find(channel->name) == channels.end())
 			return ;
-		clientChannels.erase(ft::strToLower(channel->name));
+		channels.erase(ft::strToLower(channel->name));
 	}
 
 	void	Client::leaveChannel(std::string const & channelName)
 	{
-		clientChannelMap::iterator it = clientChannels.find(ft::strToLower(channelName));
+		clientChannelMap::iterator it = channels.find(ft::strToLower(channelName));
 
-		if (it == clientChannels.end())
+		if (it == channels.end())
 			return ;
-		clientChannels.erase(ft::strToLower(channelName));
+		channels.erase(ft::strToLower(channelName));
 	}
 
 	void	Client::leaveAllChannels()
 	{
 		clientChannelMap::iterator it;
 
-		while (!clientChannels.empty())
+		while (!channels.empty())
 		{
-			it = clientChannels.begin();
+			it = channels.begin();
 			it->second->removeClient(this, "");
 		}
 	}
 
 	bool	Client::isInSameChannel(Client* const client) const
 	{
-		clientChannelMap::const_iterator itb = clientChannels.begin();
-		clientChannelMap::const_iterator ite = clientChannels.end();
+		clientChannelMap::const_iterator itb = channels.begin();
+		clientChannelMap::const_iterator ite = channels.end();
 		while (itb != ite)
 		{
 			if (client->isInChannel(itb->first))
@@ -67,7 +72,7 @@ namespace NAMESPACE_IRC
 	Client::__Channel	*Client::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
-			return clientChannels.find(ft::strToLower(channelName))->second;
+			return channels.find(ft::strToLower(channelName))->second;
 		return NULL;
 	}
 
@@ -157,7 +162,7 @@ namespace NAMESPACE_IRC
 			it != server->database.dataClientsMap.end(); it++)
 		{
 			Client *client = it->second;
-			if (!(client->clientModes.binMode & Mu_i) && !this->isInSameChannel(client))
+			if (!(client->modes.binMode & Mu_i) && !this->isInSameChannel(client))
 				*this << WhoReply(gHostname, "", client, -1);
 		}
 		return true;
@@ -172,7 +177,7 @@ namespace NAMESPACE_IRC
 			it != server->database.dataClientsMap.end(); it++)
 		{
 			Client *client = it->second;
-			if (!(client->clientModes.binMode & Mu_i) &&
+			if (!(client->modes.binMode & Mu_i) &&
 					(matchPattern_global(client->nickname, mask) ||
 					matchPattern_global(client->username, mask) ||
 					matchPattern_global(client->hostname, mask)))

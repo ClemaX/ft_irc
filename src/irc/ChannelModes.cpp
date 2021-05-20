@@ -432,7 +432,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode |= Mu_i;
+		user->modes.binMode |= Mu_i;
 		*user << UModeIsReply(gHostname, "+i");
 		return (true);
 	}
@@ -443,7 +443,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode &= ~Mu_i;
+		user->modes.binMode &= ~Mu_i;
 		*user << UModeIsReply(gHostname, "-i");
 		return (true);
 	}
@@ -454,7 +454,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode |= Mu_s;
+		user->modes.binMode |= Mu_s;
 		*user << UModeIsReply(gHostname, "+s");
 		return (true);
 	}
@@ -465,7 +465,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode &= ~Mu_s;
+		user->modes.binMode &= ~Mu_s;
 		*user << UModeIsReply(gHostname, "-s");
 		return (true);
 	}
@@ -476,7 +476,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode |= Mu_w;
+		user->modes.binMode |= Mu_w;
 		*user << UModeIsReply(gHostname, "+w");
 		return (true);
 	}
@@ -487,7 +487,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode &= ~Mu_w;
+		user->modes.binMode &= ~Mu_w;
 		*user << UModeIsReply(gHostname, "-w");
 		return (true);
 	}
@@ -508,7 +508,7 @@ namespace NAMESPACE_IRC
 	{
 		static_cast<void>(channel);
 		static_cast<void>(flagArguments);
-		user->clientModes.binMode &= ~Mu_o;
+		user->modes.binMode &= ~Mu_o;
 		*user << UModeIsReply(gHostname, "-o");
 		return (true);
 	}

@@ -10,6 +10,7 @@
 #include <utils/parseField.hpp>
 
 #include <socket/SocketServer.hpp>
+
 #include <irc/Channel.hpp>
 #include <irc/PrivateMessage.hpp>
 #include <irc/replies/NumericReply.hpp>
@@ -59,11 +60,12 @@ namespace NAMESPACE_IRC
 	class	Server
 	: public SocketServer
 	{
+	private:
 		/* Server configration */
+		ServerConfig	config;
+		bool			authRequired;
 
-		const ServerConfig	config;
-
-		protected:
+	protected:
 
 		/* Member types */
 
@@ -75,7 +77,7 @@ namespace NAMESPACE_IRC
 		/* Core members functions */
 
 		virtual connection*	onConnection(int connectionFd,
-			connection::address const& address);
+			connection::address const& address, SSL* sslConnection = NULL);
 
 		virtual void		onMessage(connection* const connection,
 			std::string const& message);
@@ -93,14 +95,19 @@ namespace NAMESPACE_IRC
 		/* Member functions */
 
 		Server();
-		Server(ServerConfig const& config);
+		Server(ServerConfig const& config)
+			throw(SSLContextException, SocketException);
+
 		~Server();
 
-		/* Getters */
+		void	loadConfig(ServerConfig const& config)
+			throw(SSLContextException, SocketException);
 
+		/* Getters */
 		__Channel*			getChannel(const std::string & channelName) const;
 		const std::string&	get_hostname() const;
 
+		// Are these comments really helpful??
 		/* Annouce welcome sequence */
 
 		void		announceWelcomeSequence(Client* const user);
@@ -375,7 +382,8 @@ namespace NAMESPACE_IRC
 	////////////////////////////
 	// Inlined server members //
 	////////////////////////////
-
+	// TODO: Debate about using inline constructors
+/*
 	inline
 	Server::Server()
 	: SocketServer(),
@@ -388,9 +396,9 @@ namespace NAMESPACE_IRC
 	config(config), database(this)
 	{ hostname = config[IRC_CONF_HOSTNAME]; }
 
-	inline
 	Server::~Server()
 	{ }
+*/
 
 	inline Server::__Channel*
 	Server::getChannel(const std::string & channelName) const

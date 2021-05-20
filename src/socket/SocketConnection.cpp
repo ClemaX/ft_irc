@@ -9,6 +9,7 @@
 
 #include <arpa/inet.h>
 
+#include <utils/Logger.hpp>
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr)
 {
@@ -20,47 +21,30 @@ std::ostream &operator<<(std::ostream &os, internetAddress const& addr)
 }
 
 SocketConnection::SocketConnection() throw()
-	:	fd(0), socketAddress()
-{ }
-
-
-SocketConnection::SocketConnection(int fd, address const& socketAddress)
-	:	fd(fd), socketAddress(socketAddress)
-{ }
+	:	Socket(), addr()
+{ Logger::instance() << Logger::DEBUG << "Constructing empty SocketConnection..." << std::endl; }
 
 SocketConnection::~SocketConnection() throw()
-{
-	try { close(); }
-	catch (SocketCloseException const& e)
-	{
-		std::cerr << "SocketConnection::close: " << e.what() << ": "
-			<< e.why() << std::endl;
-	}
-}
+{ Logger::instance() << Logger::DEBUG << "Destroying SocketConnection..." << std::endl; }
 
-void	SocketConnection::close() throw(SocketCloseException)
-{
-	if (isOpen() && ::close(fd) == -1)
-	{
-		fd = 0;
-		throw SocketCloseException(errno);
-	}
-	fd = 0;
-}
+SocketConnection::SocketConnection(int fd, address const& socketAddress)
+	:	Socket(fd), addr(socketAddress)
+{ Logger::instance() << Logger::DEBUG << "Constructing SocketConnection on fd " << fd << "..." << std::endl; }
 
-bool	SocketConnection::read(char *buffer, size_t n) throw(SocketReadException)
+bool	SocketConnection::read(char *buffer, size_t n)
+	throw(SocketCloseException, SocketReadException)
 {
-	bool	success = isOpen();
+	bool	open = isOpen();
 	int		nRead;
 
-	if (success)
+	if (open)
 	{
 		nRead = recv(fd, buffer, n, 0);
 
 		if (nRead == 0) // Socket disconnected
 		{
 			close();
-			success = false;
+			open = false;
 		}
 		else if (nRead < 0) // Read error
 		{
@@ -70,13 +54,23 @@ bool	SocketConnection::read(char *buffer, size_t n) throw(SocketReadException)
 		else
 			buffer[nRead] = '\0';
 	}
-	return success;
+	return open;
+}
+
+bool	SocketConnection::write(char const* buffer, size_t n) const
+	throw(SocketWriteException)
+{
+	bool	open = isOpen();
+
+	if (open && send(fd, buffer, n, 0) == -1)
+		throw SocketWriteException(errno);
+
+	return open;
 }
 
 SocketConnection const&	SocketConnection::operator<<(std::string const& str) const
 	throw(SocketWriteException)
 {
-	if (isOpen() && send(fd, str.c_str(), str.length(), 0) == -1)
-		throw SocketWriteException(errno);
+	write(str.c_str(), str.length());
 	return *this;
 }

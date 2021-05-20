@@ -9,19 +9,28 @@ namespace NAMESPACE_IRC
 	unsigned char const	ServerConfig::argReqStart = 3;
 	unsigned char const	ServerConfig::argReqEnd = 5;
 
-	char const* ServerConfig::keys[] = {
-		IRC_CONF_NETHOST,
-		IRC_CONF_NETPORT,
-		IRC_CONF_NETPASS,
-		IRC_CONF_PORT,
-		IRC_CONF_PASS,
-		IRC_CONF_MOTD,
-		IRC_CONF_HOSTNAME,
-		NULL
+	ServerConfig::Field const	ServerConfig::fields[] = {
+		{IRC_CONF_NETHOST, ""},
+		{IRC_CONF_NETPORT, ""},
+		{IRC_CONF_NETPASS, ""},
+		{IRC_CONF_PORT, "6666"},
+		{IRC_CONF_PASS, ""},
+		{IRC_CONF_MOTD, "Hello world!"},
+		{IRC_CONF_HOSTNAME, "localhost"},
+		{IRC_CONF_SSLPORT, ""},
+		{IRC_CONF_SSLCERT, ""},
+		{IRC_CONF_SSLKEY, ""},
+		{IRC_CONF_LOGFILE, "/dev/stderr"},
+		{IRC_CONF_LOGLEVEL, "INFO"}
 	};
+
+	unsigned char const	ServerConfig::fieldCount =
+		sizeof(fields) / sizeof(*fields);
 
 	ServerConfig::ServerConfig()
 	{ }
+
+	// TODO: Maybe implement copy constructor and assignment operator
 
 	ServerConfig::ServerConfig(std::istream &is) throw(std::out_of_range)
 	{ operator>>(is); }
@@ -29,7 +38,6 @@ namespace NAMESPACE_IRC
 	ServerConfig::ServerConfig(std::string const& filepath)
 		throw(std::out_of_range)
 	{
-		// std::ifstream	file(filepath);
 		std::ifstream	file(filepath.c_str());
 
 		operator>>(file);
@@ -49,7 +57,7 @@ namespace NAMESPACE_IRC
 
 		for (; it != last && keyIndex != argOptEnd; keyIndex++)
 		{
-			operator[](keys[keyIndex]).assign(it, next);
+			operator[](fields[keyIndex].key).assign(it, next);
 			if (next != last)
 				it = next + 1;
 			else
@@ -57,7 +65,7 @@ namespace NAMESPACE_IRC
 			next = std::find(it, last, ':');
 		}
 		if (keyIndex != argOptEnd || it != last)
-			throw std::invalid_argument(keys[keyIndex]);
+			throw std::invalid_argument(fields[keyIndex].key);
 		return true;
 	}
 
@@ -83,13 +91,13 @@ namespace NAMESPACE_IRC
 
 			while (keyIndex < argReqEnd && i != ac)
 			{
-				operator[](keys[keyIndex]) = av[i];
+				operator[](fields[keyIndex].key) = av[i];
 				keyIndex++;
 				i++;
 			}
 
 			if (keyIndex != argReqEnd || i != ac)
-				throw std::invalid_argument(keys[keyIndex]);
+				throw std::invalid_argument(fields[keyIndex].key);
 		}
 	}
 
@@ -111,9 +119,9 @@ namespace NAMESPACE_IRC
 	{
 		unsigned char	i;
 
-		for (i = 0; keys[i] && keys[i] != key; i++);
+		for (i = 0; i != fieldCount && fields[i].key != key; i++);
 
-		if (!keys[i])
+		if (i == fieldCount)
 			throw std::out_of_range(key);
 
 		data[key] = value;
@@ -138,9 +146,9 @@ namespace NAMESPACE_IRC
 	{
 		unsigned char i;
 
-		for (i = 0; config.keys[i]; i++)
+		for (i = 0; i < config.fieldCount; i++)
 		{
-			os << config.keys[i] << IRC_CONF_DELIM << config[config.keys[i]]
+			os << config.fields[i].key << IRC_CONF_DELIM << config[config.fields[i].key]
 				<< IRC_CONF_SEP << IRC_CONF_NL;
 		}
 

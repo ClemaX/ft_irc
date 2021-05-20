@@ -108,6 +108,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			NumericReply.cpp\
 		)\
+		SecureClient.cpp\
 		ServerConfig.cpp\
 		Server.cpp\
 	)\
@@ -115,13 +116,19 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		main.cpp\
 	)\
 	$(addprefix socket/,\
+		bindAddress.cpp\
+		SecureSocketConnection.cpp\
 		SocketConnection.cpp\
+		Socket.cpp\
+		SocketListener.cpp\
 		SocketServer.cpp\
+		ssl.cpp\
 	)\
 	$(addprefix utils/,\
 		atoi.cpp\
-		bindAddress.cpp\
+		crypto.cpp\
 		itoa.cpp\
+		Logger.cpp\
 		nickcmp.cpp\
 		parseField.cpp\
 	)\

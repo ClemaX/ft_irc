@@ -23,6 +23,7 @@ namespace NAMESPACE_IRC
 
 	inline
 	Message::Message()
+		: command(NULL)
 	{ }
 
 	inline

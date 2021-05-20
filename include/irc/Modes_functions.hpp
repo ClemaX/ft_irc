@@ -6,7 +6,7 @@
 
 namespace NAMESPACE_IRC
 {
-
+	// What are the templates for if we still use the forward declarations?
 	class Server;
 	class Client;
 	template <class __Server, class __Client>

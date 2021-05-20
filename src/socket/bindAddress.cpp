@@ -1,4 +1,4 @@
-#include <utils/bindAddress.hpp>
+#include <socket/bindAddress.hpp>
 
 #include <socket/SocketExceptions.hpp>
 
@@ -39,7 +39,6 @@ int	bindAddress(std::string const &hostname, std::string const& port,
 
 	for (curr = info; curr != NULL; curr = curr->ai_next)
 	{
-
 		if (curr->ai_socktype & socketType)
 		{
 			fd = socket(curr->ai_family, curr->ai_socktype | socketOptions,

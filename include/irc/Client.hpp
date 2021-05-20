@@ -5,6 +5,7 @@
 #include <irc/ircdef.hpp>
 
 #include <socket/SocketConnection.hpp>
+#include <socket/SecureSocketConnection.hpp>
 
 #include <irc/PrivateMessage.hpp>
 #include <irc/replies/CommandReplies.hpp>
@@ -51,7 +52,7 @@ namespace NAMESPACE_IRC
 
 	};
 
-	class	Client	:	public SocketConnection
+	class	Client	:	public virtual SocketConnection
 	{
 	private:
 		typedef	Channel<Server, Client>					__Channel;
@@ -59,10 +60,9 @@ namespace NAMESPACE_IRC
 		typedef ::std::pair<std::string, __Channel*>	clientChannelPair;
 		typedef IRCDatabase<Server, Client, __Channel>	IRCDatabase;
 
-
 	public:
 		std::string	readBuffer;
-		std::string	writeBuffer; // TODO: Should we use a Message container instead?
+		std::string	writeBuffer;
 
 		std::string	nickname;
 		std::string old_nickname;
@@ -78,14 +78,16 @@ namespace NAMESPACE_IRC
 		bool		registered;
 
 		Server			*server;
-		ClientModes		clientModes;
+		ClientModes		modes;
 
-		clientChannelMap	clientChannels;
+		clientChannelMap	channels;
 
-		Client(int fd, address const& address, bool authenticationRequired = false);
+		/// SocketConnection
+		Client(int fd, socketAddress const& address,
+			bool authenticationRequired = false);
 
 		Client&	operator<<(std::string const& str);
-		Client&	operator<<(NumericReply const& reply);
+		Client&	operator<<(IReply const& reply);
 		Client&	operator<<(PrivateMessage const& reply);
 
 		void	flush() throw(SocketWriteException);
@@ -133,7 +135,7 @@ namespace NAMESPACE_IRC
 	}
 
 	inline Client&
-	Client::operator<<(NumericReply const& reply)
+	Client::operator<<(IReply const& reply)
 	{
 		*this << reply.serialize();
 		return *this;
@@ -155,7 +157,7 @@ namespace NAMESPACE_IRC
 
 	inline bool
 	Client::isInChannel(std::string const & channelName) const
-	{ return (clientChannels.find(ft::strToLower(channelName)) != clientChannels.end()); }
+	{ return (channels.find(ft::strToLower(channelName)) != channels.end()); }
 
 	inline void
 	Client::receiveMessage(Client* const client, std::string const &message)	// check if invisible ?
