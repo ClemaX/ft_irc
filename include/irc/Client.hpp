@@ -78,7 +78,7 @@ namespace NAMESPACE_IRC
 		bool		registered;
 
 		Server			*server;
-		ClientModes		clientModes;
+		ClientModes		modes;
 
 		clientChannelMap	clientChannels;
 
@@ -135,7 +135,7 @@ namespace NAMESPACE_IRC
 	}
 
 	inline Client&
-	Client::operator<<(NumericReply const& reply)
+	Client::operator<<(IReply const& reply)
 	{
 		*this << reply.serialize();
 		return *this;
