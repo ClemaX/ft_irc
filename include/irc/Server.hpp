@@ -65,8 +65,6 @@ namespace NAMESPACE_IRC
 		ServerConfig	config;
 		bool			authRequired;
 
-	protected:
-
 		/* Member types */
 
 		typedef Channel<Server, Client>			__Channel;
@@ -74,21 +72,25 @@ namespace NAMESPACE_IRC
 		typedef ::std::map<std::string, __Channel*>	channelsMap;
 		typedef IRCDatabase<Server, Client, __Channel> IRCDatabase;
 
+
+		protected:
+
 		/* Core members functions */
 
-		virtual connection*	onConnection(int connectionFd,
+		connection*	onConnection(int connectionFd,
 			connection::address const& address, SSL* sslConnection = NULL);
 
-		virtual void		onMessage(connection* const connection,
+		void		onMessage(connection* const connection,
 			std::string const& message);
 
-		virtual void		onFlush() const throw(SocketWriteException);
+		void		onFlush() const throw(SocketWriteException);
 
 		/* Core database */
 
 		public:
 
-		IRCDatabase		database;
+		IRCDatabase			database;
+		const std::string	version;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
 
@@ -112,11 +114,17 @@ namespace NAMESPACE_IRC
 
 		void		announceWelcomeSequence(Client* const user);
 
+		/* Get local time */
+
+		std::string	get_local_time() throw();
+
 		/* Command bases */
 
 		class Command
 		{
 			Command();
+			Command(const Command&);
+			Command& operator=(const Command&);
 
 			public:
 
@@ -128,7 +136,7 @@ namespace NAMESPACE_IRC
 
 			virtual ~Command();
 
-			virtual bool			execute(Server& server, Client* const user,
+			virtual bool	execute(Server& server, Client* const user,
 				argumentList const& arguments) = 0;
 			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
@@ -180,7 +188,7 @@ namespace NAMESPACE_IRC
 		{
 			PartCommand();
 
-			virtual bool	payload(Server& server, Client* const user,
+			bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const;
 		};
 
