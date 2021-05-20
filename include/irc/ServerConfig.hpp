@@ -10,6 +10,7 @@
 #define IRC_CONF_DELIM		'='
 #define IRC_CONF_SEP		';'
 #define IRC_CONF_NL			'\n'
+
 #define IRC_CONF_NETHOST	"NETHOST"
 #define IRC_CONF_NETPASS 	"NETPASS"
 #define IRC_CONF_NETPORT 	"NETPORT"
@@ -17,11 +18,17 @@
 #define IRC_CONF_PORT 		"PORT"
 #define IRC_CONF_PASS 		"PASS"
 #define IRC_CONF_MOTD 		"MOTD"
+#define IRC_CONF_SSLPORT	"SSLPORT"
+#define IRC_CONF_SSLCERT	"SSLCERT"
+#define IRC_CONF_SSLKEY		"SSLKEY"
+#define IRC_CONF_LOGFILE	"LOGFILE"
+#define IRC_CONF_LOGLEVEL	"LOGLEVEL"
 
 namespace irc
 {
 	struct	ServerConfig
 	{
+	private:
 		std::map<std::string, std::string>	data;
 
 		void	serializeEntry(std::string& buffer, const char* key,
@@ -30,13 +37,21 @@ namespace irc
 		void	loadEntry(std::string const& key, std::string const& value)
 			throw(std::out_of_range);
 
-	public:
 		static unsigned char const	argOptStart;
 		static unsigned char const	argOptEnd;
 		static unsigned char const	argReqStart;
 		static unsigned char const	argReqEnd;
 
-		static char const*			keys[];
+	public:
+		struct	Field
+		{
+			std::string const	key;
+			std::string const	defaultValue;
+		};
+
+		static Field const			fields[];
+
+		static unsigned char const	fieldCount;
 
 		ServerConfig();
 		virtual ~ServerConfig();
@@ -50,33 +65,20 @@ namespace irc
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 
-		inline std::string&	operator[](std::string const& key)
-			throw(std::out_of_range)
-		{
-			unsigned char	i;
-
-			for (i = 0; keys[i] && keys[i] != key; i++);
-
-			if (!keys[i])
-				throw std::out_of_range(key);
-
-			return data[key];
-		}
-
 		inline std::string	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
 			std::map<std::string, std::string>::const_iterator	it;
 			unsigned char										i;
 
-			for (i = 0; keys[i] && keys[i] != key; i++);
+			for (i = 0; i != fieldCount && fields[i].key != key; i++);
 
-			if (!keys[i])
+			if (i == fieldCount)
 				throw std::out_of_range(key);
 
 			it = data.find(key);
 			if (it == data.end())
-				return "";
+				return fields[i].defaultValue;
 			return it->second;
 		}
 	};

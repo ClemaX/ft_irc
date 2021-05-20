@@ -5,7 +5,6 @@
 
 namespace irc
 {
-
 	class Client;
 	class Channel;
 		////////////////

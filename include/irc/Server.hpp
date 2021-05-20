@@ -10,6 +10,7 @@
 #include <utils/parseField.hpp>
 
 #include <socket/SocketServer.hpp>
+
 #include <irc/Channel.hpp>
 #include <irc/PrivateMessage.hpp>
 #include <irc/replies/NumericReply.hpp>
@@ -35,16 +36,17 @@ namespace irc
 	class	Server	:	public SocketServer
 	{
 	private:
-		const ServerConfig	config;
+		ServerConfig	config;
+		bool			authRequired;
 
 	protected:
-		typedef ::std::map<Server*, Server*>	serversMap;
-		typedef ::std::map<std::string, Channel*>	channelsMap;
-		typedef IRCDatabase<Server, Client, Channel> IRCDatabase;
+		typedef ::std::map<Server*, Server*>			serversMap;
+		typedef ::std::map<std::string, Channel*>		channelsMap;
+		typedef IRCDatabase<Server, Client, Channel>	IRCDatabase;
 		// typedef ::std::pair<std::string, Channel*>	channelPair;
 
 		virtual connection*	onConnection(int connectionFd,
-			connection::address const& address);
+			connection::address const& address, SSL* sslConnection = NULL);
 
 		virtual void		onMessage(connection* connection,
 			std::string const& message);
@@ -57,9 +59,13 @@ namespace irc
 		// serversMap	neighbourServers;
 
 		Server();
-		Server(ServerConfig const& config);
+		Server(ServerConfig const& config)
+			throw(SSLContextException, SocketException);
 
 		~Server();
+
+		void	loadConfig(ServerConfig const& config)
+			throw(SSLContextException, SocketException);
 
 		Channel *getChannel(const std::string & channelName) const;
 		const std::string& get_hostname() const;

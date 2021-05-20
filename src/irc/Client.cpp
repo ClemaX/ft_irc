@@ -1,5 +1,7 @@
 #include <irc/Client.hpp>
 
+#include <utils/Logger.hpp>
+
 namespace irc
 {
 
@@ -12,12 +14,14 @@ namespace irc
 
 
 // --- Client ---
-	Client::Client(int fd, address const& address,
-		bool authenticationRequired)
+	Client::Client(int fd, socketAddress const& address, bool authRequired)
 		:	SocketConnection(fd, address),
-			authenticated(!authenticationRequired),
+			authenticated(!authRequired),
 			registered(false)
-	{ readBuffer.reserve(IRC_MESSAGE_MAXLEN); } // TODO: Maybe reserve writeBuffer
+	{
+		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
+		readBuffer.reserve(IRC_MESSAGE_MAXLEN);
+	} // TODO: Maybe reserve writeBuffer
 
 	Client::~Client() throw()
 	{
@@ -30,7 +34,7 @@ namespace irc
 		return *this;
 	}
 
-	Client&	Client::operator<<(NumericReply const& reply)
+	Client&	Client::operator<<(IReply const& reply)
 	{
 		*this << reply.serialize();
 		return *this;

@@ -1,28 +1,30 @@
 #include <socket/SocketServer.hpp>
+#include <socket/SecureSocketConnection.hpp>
+
 #include <fcntl.h>
 
-#include <utils/bindAddress.hpp>
+#include <utils/Logger.hpp>
 
-void	SocketServer::addConnection(int connectionFd,
+void	SocketServer::addConnection(int fd,
 	SocketConnection* connection)
 {
-	if (connectionFd != listenFd)
-		fdConnectionMap[connectionFd] = connection;
+	if (fd != listener.getFd() && fd)
+		fdConnectionMap[fd] = connection;
 
-	if (connectionFd > highestFd)
-		highestFd = connectionFd;
+	if (fd > highestFd)
+		highestFd = fd;
 }
 
-void	SocketServer::removeConnection(int connectionFd)
+void	SocketServer::removeConnection(int fd)
 {
-	if (connectionFd > 0)
+	if (fd > 0)
 	{
-		delete fdConnectionMap[connectionFd];
-		fdConnectionMap.erase(connectionFd);
-		if (connectionFd == highestFd)
+		delete fdConnectionMap[fd];
+		fdConnectionMap.erase(fd);
+		if (fd == highestFd)
 		{
 			if (fdConnectionMap.empty())
-				highestFd = listenFd;
+				highestFd = sslListener.getFd();
 			else
 				highestFd = fdConnectionMap.rbegin()->first;
 		}
@@ -38,14 +40,21 @@ void	SocketServer::clearConnections()
 }
 
 SocketConnection*	SocketServer::onConnection(int connectionFd,
-	socketAddress const& address)
+	socketAddress const& address, SSL* sslConnection)
 {
-	SocketConnection*	connection = new SocketConnection(connectionFd, address);
+	SocketConnection*	connection;
 
-	std::cout << "New connection: "
-		<< "\n\tfd: " << connectionFd
-		<< "\n\tip: " << address.sin6_addr
-		<< "\n\tport: " << address.sin6_port
+	if (sslConnection != NULL)
+		connection = new SecureSocketConnection(sslConnection, connectionFd, address);
+
+	else
+		connection = new SocketConnection(connectionFd, address);
+
+	Logger::instance() << Logger::INFO << "New connection: "
+		<< std::endl << "\tfd: " << connectionFd
+		<< std::endl << "\tip: " << address.sin6_addr
+		<< std::endl << "\tport: " << address.sin6_port
+		<< std::endl << "\tsecure: " << (sslConnection != NULL)
 		<< std::endl;
 
 	return (connection);
@@ -53,7 +62,7 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 
 void	SocketServer::onDisconnection(connection* connection)
 {
-	std::cout << "Socket disconnected: "
+	Logger::instance() << Logger::INFO << "Socket disconnected: "
 		<< "\n\tip: " << connection->getAddr()
 		<< "\n\tport: " << connection->getPort()
 		<< std::endl;
@@ -67,7 +76,7 @@ void	SocketServer::onMessage(connection* connection,
 	// 	<< ", port: " << connection->getPort()
 	// 	<< '\'' << message << '\'' << std::endl;
 
-	std::cout << "Received message: "
+	Logger::instance() << Logger::INFO << "Received message: "
 		<< "\n\tip: " << connection->getAddr()
 		<< "\n\tport: " << connection->getPort()
 		<< "\n\t\'" << message << "\'" << std::endl;
@@ -93,24 +102,25 @@ void	SocketServer::checkActivity(int connectionFd)
 	}
 }
 
-SocketServer::SocketServer(std::string const& hostname, std::string const &port, unsigned maxClients)
-	:	hostname(hostname), port(port), maxClients(maxClients),
-		listenFd(0), highestFd(0)
+SocketServer::SocketServer(
+	std::string const& hostname, std::string const& port,
+	std::string const& sslPort, std::string const& sslCert,
+	std::string const& sslKey, unsigned maxClients)
+		throw(SocketException)
+	:	context(sslCert, sslKey),
+		hostname(hostname),
+		port(port),
+		sslPort(sslPort),
+		maxClients(maxClients)
 {
-	if (this->hostname == "")
-		this->hostname = "::";
-	if (this->maxClients == 0)
-		this->maxClients = 10;
-
 	FD_ZERO(&connectionSet);
 }
 
 SocketServer::SocketServer()
-	:	hostname("::"),
+	:	context(),
+		hostname("::"),
 		port("2525"),
-		maxClients(10),
-		listenFd(0),
-		highestFd(0)
+		maxClients(10)
 {
 	FD_ZERO(&connectionSet);
 }
@@ -124,45 +134,41 @@ SocketServer::~SocketServer()
 
 void	SocketServer::start() throw(ServerException, SocketException)
 {
-	int	opt = 1;
+	socketAddress	clientAddr;
+	int				incomingFd;
 
-	if (listenFd > 0)
-		throw ServerException();
+	if (listener.isListening() || sslListener.isListening())
+		throw ServerRunningException();
 
-	// Bind address
-	listenFd = bindAddress(hostname, port, SOCK_STREAM, SOCK_NONBLOCK, IPPROTO_IP);
+	// Bind
+	listener.bind(hostname, port);
 
-	if (listenFd < 0)
-		throw SocketOpenException(errno);
+	if (!sslPort.empty())
+		sslListener.bind(hostname, sslPort);
 
-	#if SOCK_NONBLOCK == 0
-		fcntl(listenFd, F_SETFL, O_NONBLOCK);
-	#endif
+	// Listen
+	listener.listen();
+	Logger::instance() << Logger::INFO << "Listening on " << hostname << ":" << port << "..." << std::endl;
 
-	// Allow multiple concurrent connections
-	if(setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR,
-		reinterpret_cast<char*>(&opt), sizeof(opt)) < 0 )
-	{ int err = errno; stop(); throw SocketOptionException(err); }
+	if (sslListener.isOpen())
+	{
+		sslListener.listen();
+		Logger::instance() << Logger::INFO << "Listening on " << hostname << ":" << sslPort << "..." << std::endl;
 
-	// Listen for new connections
-	if (listen(listenFd, 10) < 0)
-	{ int err = errno; stop(); throw SocketListenException(err); }
-
-	std::cout << "Listening on " << hostname << ':' << port << "..." << std::endl;
-
-	// Add listening socket to connections
-	FD_SET(listenFd, &connectionSet);
-	highestFd = listenFd;
+		highestFd = sslListener.getFd();
+	}
+	else
+		highestFd = listener.getFd();
 
 	// Check for incoming connections
-	int					activity;
-	struct sockaddr_in6	clientAddr;
-	socklen_t			addrLen = sizeof(clientAddr);
+	int	activity;
 
 	while (true)
 	{
 		FD_ZERO(&connectionSet);
-		FD_SET(listenFd, &connectionSet);
+		FD_SET(listener.getFd(), &connectionSet);
+		FD_SET(sslListener.getFd(), &connectionSet);
+
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
 			FD_SET(it->first, &connectionSet);
@@ -170,7 +176,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		// Wait for incoming data
 		activity = select(highestFd + 1, &connectionSet, NULL, NULL, NULL);
 
-		if ((activity < 0))
+		if (activity < 0)
 		{
 			if (errno == EINTR)
 				break;
@@ -178,23 +184,25 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		}
 
 		// Accept incoming connections
-		if (FD_ISSET(listenFd, &connectionSet))
+		if (listener.isInSet(connectionSet))
 		{
-			int	incomingFd;
+			Logger::instance() << Logger::DEBUG << "Connection incoming..." << std::endl;
 
-			incomingFd = accept(listenFd, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
+			incomingFd = listener.accept(clientAddr);
 
-			if (incomingFd < 0)
-			{
-				int	err = errno;
-				if (err != EWOULDBLOCK) // TODO: Maybe check EAGAIN (man errno)
-				{
-					stop();
-					throw SocketAcceptException(err);
-				}
-			}
+			if (incomingFd >= 0)
+				addConnection(incomingFd, onConnection(incomingFd, clientAddr));
+		}
 
-			addConnection(incomingFd, onConnection(incomingFd, clientAddr));
+		// Accept incoming secure connections
+		if (sslListener.isInSet(connectionSet))
+		{
+			Logger::instance() << Logger::DEBUG << "Secure connection incoming..." << std::endl;
+
+			incomingFd = sslListener.accept(clientAddr);
+
+			if (incomingFd >= 0)
+				addConnection(incomingFd, onConnection(incomingFd, clientAddr, context.newConnection()));
 		}
 
 		// Read messages
@@ -218,13 +226,19 @@ void	SocketServer::start() throw(ServerException, SocketException)
 
 void	SocketServer::stop() throw()
 {
-	if (listenFd > 0)
+	if (listener.isOpen() || sslListener.isOpen())
 	{
-		std::cout << "Stopping server!" << std::endl;
+		Logger::instance() << Logger::INFO << "Stopping server!" << std::endl;
+
 		onFlush();
 		clearConnections();
-		close(listenFd);
-		listenFd = 0;
+		try {
+			listener.close();
+			sslListener.close();
+		} catch (SocketCloseException const& e) {
+			Logger::instance() << Logger::ERROR  << e.what() << ": " << e.why() << std::endl;
+		}
+
 		while (!disconnectedFds.empty())
 			disconnectedFds.pop();
 	}

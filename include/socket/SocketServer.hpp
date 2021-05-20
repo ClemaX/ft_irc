@@ -6,12 +6,18 @@
 #include <queue> // using std::queue
 
 #include <sys/select.h> // using select
-#include <unistd.h>
+#include <unistd.h> // using NULL
 
+#include <socket/ssl.hpp> // using ssl::Context
 #include <socket/SocketConnection.hpp>
+#include <socket/SocketListener.hpp>
+
 
 class	SocketServer
 {
+private:
+	void			acceptConnection(int fd, SSL* secure = NULL);
+
 protected:
 	typedef	SocketConnection				connection;
 
@@ -19,15 +25,20 @@ protected:
 	typedef	std::map<int, connection*>		connectionMap;
 	typedef	std::queue<int>					connectionQueue;
 
+	ssl::Context		context;
+
 	std::string			hostname;
 	std::string			port;
+	std::string			sslPort;
 
 	unsigned			maxClients;
 	fd_set				connectionSet;
 	connectionMap		fdConnectionMap;
 	connectionQueue		disconnectedFds;
 
-	int					listenFd;
+	SocketListener		listener;
+	SocketListener		sslListener;
+
 	int					highestFd;
 	char				buffer[SOCKET_BUFFER_SIZE + 1];
 
@@ -40,7 +51,7 @@ protected:
 	void	sendMessage(connection* connection, std::string const& message);
 
 	virtual SocketConnection*	onConnection(int connectionFd,
-		connection::address const& address);
+		connection::address const& address, SSL* sslConnection = NULL);
 	virtual void				onDisconnection(connection* connection);
 	virtual void				onMessage(connection* connection,
 		std::string const& message);
@@ -51,8 +62,17 @@ public:
 	class	ServerException	:	public std::exception
 	{ };
 
+	class	ServerRunningException	: public ServerException
+	{
+	public:
+		virtual char const* what() const throw()
+		{ return "Server already running"; };
+	};
+
 	SocketServer(std::string const& hostname, std::string const& port,
-		unsigned maxClients);
+		std::string const& sslPort, std::string const& certFile,
+		std::string const& keyFile, unsigned maxClients)
+			throw(SocketException);
 
 	SocketServer();
 

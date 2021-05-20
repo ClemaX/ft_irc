@@ -3,6 +3,10 @@
 #include <utils/atoi.hpp>
 #include <utils/strings.hpp>
 
+#include <irc/SecureClient.hpp>
+
+#include <utils/Logger.hpp>
+
 namespace irc
 {
 	std::string const& gHostname = "";
@@ -10,17 +14,48 @@ namespace irc
 	Server::Server()
 		:	SocketServer(),
 			config(),
+			authRequired(false),
 			database(this)
-	{ hostname = config[IRC_CONF_HOSTNAME]; }
+	{ Logger::instance() << Logger::DEBUG << "Creating empty server..." << std::endl; } // TODO: Maybe init hostname
 
 	Server::Server(ServerConfig const& config)
-		:	SocketServer(config[IRC_CONF_HOSTNAME], config[IRC_CONF_PORT], 10),
+		throw(SSLContextException, SocketException)
+		:	SocketServer(
+				config[IRC_CONF_HOSTNAME],
+				config[IRC_CONF_PORT],
+				config[IRC_CONF_SSLPORT],
+				config[IRC_CONF_SSLCERT],
+				config[IRC_CONF_SSLKEY],
+				10
+			),
 			config(config),
+			authRequired(!config[IRC_CONF_PASS].empty()),
 			database(this)
-	{ hostname = config[IRC_CONF_HOSTNAME]; }
+	{ }
 
 	Server::~Server()
 	{ }
+
+	/* void	Server::loadConfig(ServerConfig const& config)
+	{
+		hostname = config[IRC_CONF_HOSTNAME];
+		port = config[IRC_CONF_PORT];
+		sslPort = config[IRC_CONF_SSLPORT];
+		sslContext = ssl::Context()
+	} */
+
+	void Server::loadConfig(ServerConfig const& newConfig)
+		throw(SSLContextException, SocketException)
+	{
+		config = newConfig;
+		hostname = config[IRC_CONF_HOSTNAME];
+		port = config[IRC_CONF_PORT];
+		sslPort = config[IRC_CONF_SSLPORT];
+		if (!sslPort.empty())
+			context.loadCertificate(config[IRC_CONF_SSLCERT], config[IRC_CONF_SSLKEY]);
+		maxClients = 10; // TODO: Rename to maxQueuedClients and check in man which value to set
+		authRequired = !config[IRC_CONF_PASS].empty();
+	}
 
 	Channel*
 	Server::getChannel(const std::string & channelName) const
@@ -51,26 +86,28 @@ namespace irc
 	}
 
 	Server::connection*	Server::onConnection(int connectionFd,
-		connection::address const& address)
+		connection::address const& address, SSL* sslConnection)
 	{
-		Client*	newClient;
+		Client*	newClient = NULL;
 
-		try { newClient = new Client(connectionFd, address, !config[IRC_CONF_PASS].empty()); }
-		catch (std::exception const&)
-		{
-			stop();
-			throw;
+		try {
+			newClient = (sslConnection)
+				? new SecureClient(sslConnection, connectionFd, address, authRequired)
+				: new Client(connectionFd, address, authRequired);
 		}
+		catch (...)
+		{ stop(); throw; }
 
 		newClient->server = this;
 
 		newClient->username = "";
 		newClient->nickname = IRC_NICKNAME_DEFAULT;
 
-		std::cout << "New connection: "
+		Logger::instance() << Logger::INFO << "New connection: "
 			<< "\n\tfd: " << connectionFd
 			<< "\n\tip: " << address.sin6_addr
 			<< "\n\tport: " << address.sin6_port
+			<< "\n\tsecure: " << ((sslConnection != NULL) ? "true" : "false")
 			<< std::endl;
 
 		// I moved this to the NICK command: database.addClient(newClient);
@@ -80,19 +117,19 @@ namespace irc
 
 	void	Server::onMessage(connection* connection, std::string const& message)
 	{
-		Client*	client = static_cast<Client*>(connection);
+		Client*	client = dynamic_cast<Client*>(connection);
 		Message	ircMessage;
 
 		client->readBuffer.append(message);
 
-		std::cout << client->username << ": " << static_cast<Client*>(connection)->readBuffer;
+		Logger::instance() << Logger::INFO << client->username << ": " << client->readBuffer << std::flush;
 
 		try { ircMessage = Message(client->readBuffer); }
 		catch(Message::IncompleteMessageException const& e)
-		{ std::cerr << "Waiting for more input..." << std::endl; }
+		{ Logger::instance() << Logger::DEBUG << "Waiting for more input..." << std::endl; }
 		catch(Message::MessageException const& e)
 		{
-			std::cerr << e.what() << std::endl;
+			Logger::instance() << Logger::ERROR << e.what() << std::endl;
 			client->readBuffer.clear();
 		}
 
@@ -105,7 +142,7 @@ namespace irc
 		// Flush messages
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
-			static_cast<Client*>(it->second)->flush();
+			dynamic_cast<Client*>(it->second)->flush();
 	}
 
 	void

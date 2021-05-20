@@ -5,6 +5,7 @@
 #include <irc/ircdef.hpp>
 
 #include <socket/SocketConnection.hpp>
+#include <socket/SecureSocketConnection.hpp>
 
 #include <irc/PrivateMessage.hpp>
 #include <irc/replies/CommandReplies.hpp>
@@ -49,13 +50,12 @@ namespace irc
 
 	};
 
-	class	Client	:	public SocketConnection
+	class	Client	:	public virtual SocketConnection
 	{
 	private:
 		typedef ::std::map<std::string, Channel*>		clientChannelMap;
 		typedef ::std::pair<std::string, Channel*>		clientChannelPair;
 		typedef IRCDatabase<Server, Client, Channel>	IRCDatabase;
-
 
 	public:
 		std::string	readBuffer;
@@ -79,10 +79,12 @@ namespace irc
 
 		clientChannelMap	clientChannels;
 
-		Client(int fd, address const& address, bool authenticationRequired = false);
+		/// SocketConnection
+		Client(int fd, socketAddress const& address,
+			bool authenticationRequired = false);
 
 		Client&	operator<<(std::string const& str);
-		Client&	operator<<(NumericReply const& reply);
+		Client&	operator<<(IReply const& reply);
 		Client&	operator<<(PrivateMessage const& reply);
 
 		void	flush() throw(SocketWriteException);
