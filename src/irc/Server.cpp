@@ -177,9 +177,9 @@ namespace irc
 		time_t now = time(NULL);
 		tm* const curr_time = localtime(&now);
 		return (
-			ft::itoa(curr_time->tm_mon) + " "
-			+ ft::itoa(curr_time->tm_mday) + " "
-			+ ft::itoa(curr_time->tm_year) + " -- "
+			ft::itoa(curr_time->tm_mon + 1) + "/"
+			+ ft::itoa(curr_time->tm_mday) + "/"
+			+ ft::itoa(curr_time->tm_year + 1900) + " -- "
 			+ ft::itoa(curr_time->tm_hour) + ":"
 			+ ft::itoa(curr_time->tm_min) + ":"
 			+ ft::itoa(curr_time->tm_sec) + " "

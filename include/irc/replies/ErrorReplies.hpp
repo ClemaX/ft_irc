@@ -168,6 +168,9 @@ struct NoTextToSendError	:	NumericReply
 
 // 464     IRC_ERR_PASSWDMISMATCH
 //             ":Password incorrect"
+	struct PassMissMatchError
+	: NumericReply
+	{ PassMissMatchError(const std::string& serverName); };
 
 // 465     IRC_ERR_YOUREBANNEDCREEP
 //             ":You are banned from this server"

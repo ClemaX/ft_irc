@@ -49,6 +49,8 @@
 # define CMD_SERVER_NAME "SERVER"
 # define CMD_RESTART_NAME "RESTART"
 # define CMD_REHASH_NAME "REHASH"
+# define CMD_OPER_NAME "OPER"
+# define CMD_ADMIN_NAME "ADMIN"
 
 namespace NAMESPACE_IRC
 {
@@ -56,6 +58,25 @@ namespace NAMESPACE_IRC
 	class Channel;
 
 	extern std::string const&	gHostname;
+
+	struct ServerAdmin
+	{
+		typedef std::pair<std::string, std::string> pair_t;
+
+		// TO DO: Should be init in the config file
+
+		const pair_t		id;
+		const std::string	data1;
+		const std::string	data2;
+		const std::string	email;
+
+		ServerAdmin(const pair_t& __id = pair_t(IRC_DFT_ADMIN_NICK, IRC_DFT_ADMIN_PASS),
+			const std::string& __data1 = IRC_DFT_ADMIN_PASS,
+			const std::string& __data2 = IRC_DFT_ADMIN_DATA1,
+			const std::string& __email = IRC_DFT_ADMIN_DATA2)
+		: id(__id), data1(__data1), data2(__data2), email(__email)
+		{ }
+	};
 
 	class	Server
 	: public SocketServer
@@ -90,6 +111,7 @@ namespace NAMESPACE_IRC
 		public:
 
 		IRCDatabase			database;
+		ServerAdmin			admin;
 		const std::string	version;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;
@@ -310,6 +332,15 @@ namespace NAMESPACE_IRC
 				argumentList const& arguments) const;
 		};
 
+		struct OperCommand
+		: public Registered_Command
+		{
+			OperCommand();
+
+			bool	payload(Server& server, Client* const user,
+				argumentList const& arguments) const;
+		};
+
 		/* Server commands */
 
 		// TO DO: All Registered_Commads by default but need to test to be sure (but is the most logical)
@@ -379,6 +410,14 @@ namespace NAMESPACE_IRC
 				argumentList const& arguments) const;
 		};
 
+		struct AdminCommand
+		: Registered_Command
+		{
+			AdminCommand();
+			bool	payload(Server& server, Client* const user,
+				argumentList const& arguments) const;
+		};
+
 		/* Mode parser */
 
 		bool	parseChannelMode(Client* const user, std::string const & channelName,
@@ -391,6 +430,7 @@ namespace NAMESPACE_IRC
 	// Inlined server members //
 	////////////////////////////
 	// TODO: Debate about using inline constructors
+
 /*
 	inline
 	Server::Server()
@@ -552,6 +592,12 @@ namespace NAMESPACE_IRC
 	: Registered_Command(CMD_WHO_NAME)
 	{ }
 
+	inline
+	Server::OperCommand::
+	OperCommand()
+	: Registered_Command(CMD_OPER_NAME)
+	{ }
+
 	///////////////////////////////////////////////
 	// Inlined derivated serevr commands members //
 	///////////////////////////////////////////////
@@ -604,6 +650,12 @@ namespace NAMESPACE_IRC
 	: Registered_Command(CMD_REHASH_NAME)
 	{ }
 
+	inline
+	Server::AdminCommand::
+	AdminCommand()
+	: Registered_Command(CMD_ADMIN_NAME)
+	{ }
+
 	///////////////////
 	// Command utils //
 	///////////////////
@@ -636,6 +688,8 @@ namespace NAMESPACE_IRC
 		const Server::ServerCommand		serverCommand;
 		const Server::RestartCommand	restartCommand;
 		const Server::RestartCommand	rehashCommand;
+		const Server::OperCommand		operCommand;
+		const Server::AdminCommand		adminCommand;
 
 		Server::Command const*const	commands[] =
 		{
@@ -646,7 +700,8 @@ namespace NAMESPACE_IRC
 			&whoQuery,		 &nickCommand,	  &userCommand,
 			&versionCommand, &usersCommand,	  &timeCommand,
 			&statsCommand,	 &squitCommand,	  &serverCommand,
-			&restartCommand, &restartCommand
+			&restartCommand, &restartCommand, &operCommand,
+			&adminCommand
 		};
 	}
 

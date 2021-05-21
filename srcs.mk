@@ -21,12 +21,14 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				MOTD.cpp\
 				NICK.cpp\
 				NOTICE.cpp\
+				OPER.cpp\
 				PASS.cpp\
 				PRIVMSG.cpp\
 				USER.cpp\
 				WHO.cpp\
 			)\
 			$(addprefix server/,\
+				ADMIN.cpp\
 				REHASH.cpp\
 				RESTART.cpp\
 				SERVER.cpp\
@@ -48,6 +50,10 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				004-MyInfo.cpp\
 				005-Bounce.cpp\
 				221-UModeIs.cpp\
+				256-AdminMeReply.cpp\
+				257-AdminLoc1Reply.cpp\
+				258-AdminLoc2Reply.cpp\
+				259-AdminEmailReply.cpp\
 				301-Away.cpp\
 				302-UserHost.cpp\
 				315-EndOfWho.cpp\
@@ -71,6 +77,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				372-Motd.cpp\
 				375-MotdStart.cpp\
 				376-EndOfMotd.cpp\
+				381-YourOper.cpp\
 				391-Time.cpp\
 				TODO.cpp\
 			)\
@@ -96,6 +103,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				461-NeedMoreParams.cpp\
 				461-UserParams.cpp\
 				462-UserAlreadyRegistred.cpp\
+				464-PassMissMatch.cpp\
 				471-ChannelIsFull.cpp\
 				472-UnknownMode.cpp\
 				473-InviteOnlyChannel.cpp\

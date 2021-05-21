@@ -217,6 +217,10 @@ namespace NAMESPACE_IRC
 // 381     IRC_RPL_YOUREOPER
 //             ":You are now an IRC operator"
 
+	struct YoureOperReply
+	: NumericReply
+	{ YoureOperReply(const std::string& serverName); };
+
 // 382     IRC_RPL_REHASHING
 //             "<config file> :Rehashing"
 
@@ -297,12 +301,27 @@ namespace NAMESPACE_IRC
 
 // 256     IRC_RPL_ADMINME
 //             "<server> :Administrative info"
+	struct AdminMeReply
+	: NumericReply
+	{ AdminMeReply(const std::string& serverName, const std::string& admin_nick); };
+
 // 257     IRC_RPL_ADMINLOC1
 //             ":<admin info>"
+	struct AdminLoc1Reply
+	: NumericReply
+	{ AdminLoc1Reply(const std::string& serverName, const std::string& admin_info); };
+
 // 258     IRC_RPL_ADMINLOC2
 //             ":<admin info>"
+	struct AdminLoc2Reply
+	: NumericReply
+	{ AdminLoc2Reply(const std::string& serverName, const std::string& admin_info); };
+
 // 259     IRC_RPL_ADMINEMAIL
 //             ":<admin info>"
+	struct AdminEmailReply
+	: NumericReply
+	{ AdminEmailReply(const std::string& serverName, const std::string& admin_info); };
 
 // 263    IRC_RPL_TRYAGAIN
 //             "<command> :Please wait a while and try again."

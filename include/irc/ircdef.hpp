@@ -19,6 +19,17 @@
 /// Special IRC characters allowed outside of the alphanumerical set.
 #define IRC_CHARSET_SPECIAL    "-[]\\`^{}"
 
+/// Define default server admin nickname
+#define IRC_DFT_ADMIN_NICK "admin"
+/// Define default server admin password
+#define IRC_DFT_ADMIN_PASS "admin"
+/// Define default server admin data1
+#define IRC_DFT_ADMIN_DATA1 ":You're using ircserv! For assistance, please '/stats p' and message someone on the list"
+/// Define defualt server admin data2
+#define IRC_DFT_ADMIN_DATA2 ":For further assistance, please contact us by email"
+/// Define default server admin email
+#define IRC_DFT_ADMIN_EMAIL "admin@ircserv.42fr"
+
 /// IRC default TLS/SSL TCP-port (as defined in RFC7194).
 #define IRC_PORT_SSL 6697U
 /// Maximal length of IRC client nicknames (as defined in RFC1459 1.2).

@@ -10,5 +10,13 @@ namespace NAMESPACE_IRC
 		static_cast<void>(user);
 		static_cast<void>(arguments);
 		return (true);
+
+		static const char* const queries[] = {
+			"c", "h", "i", "k", "l", "m", "o", "y", "u"
+		};
+
+		static_cast<void>(queries);
+
+		// TO DO: Pointer functions responding for each query
 	}
 }

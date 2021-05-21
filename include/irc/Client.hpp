@@ -96,6 +96,9 @@ namespace NAMESPACE_IRC
 
 		virtual ~Client() throw();
 
+		void	become_operator();
+		bool	is_operator();
+
 		void	joinChannel(__Channel* const channel);
 		void	leaveChannel(__Channel* const channel);
 		void	leaveChannel(std::string const & channelName);
@@ -169,4 +172,12 @@ namespace NAMESPACE_IRC
 	inline void
 	Client::receiveMessage(Client* const client, std::string const &message)	// check if invisible ?
 	{ *this << PrivateMessage(client->nickname, message); }
+
+	inline void
+	Client::become_operator()
+	{ modes.binMode |= Mu_o; }
+
+	inline bool
+	Client::is_operator()
+	{ return (modes.binMode & Mu_o); }
 }
