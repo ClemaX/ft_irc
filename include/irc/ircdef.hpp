@@ -6,9 +6,6 @@
 /// Current version of the irc server
 #define SERVER_VERSION "2.0.0" // corrected 1 time
 
-/// Creation date of the irc server
-#define SERVER_CREATION_DATE "the 20 april of 2021"
-
 /// Get the array @p x size
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*x))
 

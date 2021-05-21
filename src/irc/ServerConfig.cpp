@@ -21,7 +21,8 @@ namespace NAMESPACE_IRC
 		{IRC_CONF_SSLCERT, ""},
 		{IRC_CONF_SSLKEY, ""},
 		{IRC_CONF_LOGFILE, "/dev/stderr"},
-		{IRC_CONF_LOGLEVEL, "INFO"}
+		{IRC_CONF_LOGLEVEL, "INFO"},
+		{IRC_CONF_CREATEDAT, "Tue Apr 20 2021 at 04:20:00 CEST"}
 	};
 
 	unsigned char const	ServerConfig::fieldCount =
