@@ -62,6 +62,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				347-EndOfInviteList.cpp\
 				348-ExceptionList.cpp\
 				349-EndOfExceptionList.cpp\
+				351-Version.cpp\
 				351-Who.cpp\
 				353-Names.cpp\
 				366-EndOfNames.cpp\
@@ -70,6 +71,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				372-Motd.cpp\
 				375-MotdStart.cpp\
 				376-EndOfMotd.cpp\
+				391-Time.cpp\
 				TODO.cpp\
 			)\
 			$(addprefix error/,\

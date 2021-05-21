@@ -157,6 +157,10 @@ namespace NAMESPACE_IRC
 	struct EndOfWhoReply	:	NumericReply
 	{ EndOfWhoReply(std::string const& serverName, std::string const &mask); };
 
+	struct Version
+	: NumericReply
+	{ Version(std::string const& serverName, const std::string& version); };
+
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
 	class Server;
@@ -218,6 +222,9 @@ namespace NAMESPACE_IRC
 
 // 391     IRC_RPL_TIME
 //             "<server> :<string showing server's local time>"
+	struct Time
+	: NumericReply
+	{ Time(const std::string& severName, const std::string& local_time); };
 
 // 392     IRC_RPL_USERSSTART
 //             ":UserID Terminal Host"

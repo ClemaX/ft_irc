@@ -50,6 +50,8 @@ namespace NAMESPACE_IRC
 
 		uint32_t	binMode;
 
+		ClientModes();
+
 	};
 
 	class	Client	:	public virtual SocketConnection
@@ -121,6 +123,11 @@ namespace NAMESPACE_IRC
 	////////////////////////////
 	// Inlined client members //
 	////////////////////////////
+
+	inline
+	ClientModes::ClientModes()
+	: binMode()
+	{ }
 
 	inline
 	Client::~Client()

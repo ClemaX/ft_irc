@@ -7,6 +7,8 @@
 
 #include <utils/Logger.hpp>
 
+# include <ctime>
+
 namespace irc
 {
 	std::string const& gHostname = "";
@@ -25,7 +27,8 @@ namespace irc
 		:	SocketServer(),
 			config(),
 			authRequired(false),
-			database(this)
+			database(this),
+			version(SERVER_VERSION)
 	{ Logger::instance() << Logger::DEBUG << "Creating empty server..." << std::endl; } // TODO: Maybe init hostname
 
 	Server::Server(ServerConfig const& config)
@@ -40,7 +43,8 @@ namespace irc
 			),
 			config(config),
 			authRequired(!config[IRC_CONF_PASS].empty()),
-			database(this)
+			database(this),
+			version(SERVER_VERSION)
 	{ }
 
 	Server::~Server()
@@ -161,5 +165,25 @@ namespace irc
 			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
 			user->registered = true;
 		}
+	}
+
+	std::string
+	Server::
+	get_local_time()
+	throw()
+	{
+		// Thursday May 20 2021 -- 19:36:00 +00:00
+
+		time_t now = time(NULL);
+		tm* const curr_time = localtime(&now);
+		return (
+			ft::itoa(curr_time->tm_mon) + " "
+			+ ft::itoa(curr_time->tm_mday) + " "
+			+ ft::itoa(curr_time->tm_year) + " -- "
+			+ ft::itoa(curr_time->tm_hour) + ":"
+			+ ft::itoa(curr_time->tm_min) + ":"
+			+ ft::itoa(curr_time->tm_sec) + " "
+			+ curr_time->tm_zone
+		);
 	}
 }
