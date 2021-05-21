@@ -89,8 +89,15 @@ void	SocketServer::checkActivity(int connectionFd)
 {
 	if (FD_ISSET(connectionFd, &connectionSet))
 	{
-		bool isOpen
-			= fdConnectionMap[connectionFd]->read(buffer, sizeof(buffer) - 1);
+		bool isOpen;
+		try {
+			isOpen = fdConnectionMap[connectionFd]->read(buffer, sizeof(buffer) - 1);
+		}
+		catch(SocketReadException const& e)
+		{
+			Logger::instance() << Logger::WARNING << e.what() << ": " << e.why() << std::endl;
+			isOpen = false;
+		}
 
 		if (isOpen)
 			onMessage(fdConnectionMap[connectionFd], buffer);

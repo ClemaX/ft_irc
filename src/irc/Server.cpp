@@ -139,7 +139,7 @@ namespace irc
 			client->readBuffer.clear();
 		}
 
-		if (ircMessage.command)
+		if (ircMessage.command != NULL)
 			ircMessage.command->payload(*this, client, ircMessage.arguments);
 	}
 
@@ -161,7 +161,7 @@ namespace irc
 			*user
 			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
 			<< YourHostReply(hostname, SERVER_VERSION)
-			<< CreatedReply(hostname, SERVER_CREATION_DATE)
+			<< CreatedReply(hostname, config[IRC_CONF_CREATEDAT])
 			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
 			user->registered = true;
 		}

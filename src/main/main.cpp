@@ -74,6 +74,7 @@ int			main(int ac, char const *av[])
 		signal(SIGHUP, &restart);
 		signal(SIGINT, &doNothing);
 		signal(SIGTERM, &doNothing);
+		signal(SIGPIPE, &doNothing);
 
 		try { server.start(); }
 		catch (SocketException const& e)
