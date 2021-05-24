@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::PassCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.empty())
 			*user << NeedMoreParamsError(server.hostname, name);

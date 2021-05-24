@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::WhoQuery::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (!user->registered)
 		{
@@ -14,7 +14,7 @@ namespace NAMESPACE_IRC
 
 		std::string mask = "";
 		if (!arguments.size() || !arguments[0].compare("0") || !arguments[0].compare("*"))
-			user->listAllVisibleUsersWhoQueryInfo();
+			user->listAllVisibleUsersWhoQueryInfo(server.database);
 		else
 		{
 			mask = arguments[0];
@@ -26,7 +26,7 @@ namespace NAMESPACE_IRC
 			if (channel)
 				user->listChannelWhoQueryInfo(channel, opFlag);
 			else
-				user->matchMaskWhoQueryInfo(mask);
+				user->matchMaskWhoQueryInfo(server.database, mask);
 		}
 		*user << EndOfWhoReply(gHostname, mask);
 		return true;

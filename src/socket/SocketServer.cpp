@@ -6,7 +6,7 @@
 #include <utils/Logger.hpp>
 
 void	SocketServer::addConnection(int fd,
-	SocketConnection* connection)
+	connection* connection)
 {
 	if (fd != listener.getFd() && fd)
 		fdConnectionMap[fd] = connection;
@@ -46,7 +46,6 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 
 	if (sslConnection != NULL)
 		connection = new SecureSocketConnection(sslConnection, connectionFd, address);
-
 	else
 		connection = new SocketConnection(connectionFd, address);
 

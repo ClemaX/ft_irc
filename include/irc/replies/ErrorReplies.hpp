@@ -4,10 +4,6 @@
 
 namespace NAMESPACE_IRC
 {
-	class	Client;
-	template <class __Server, class __Client>
-	class	Channel;
-
 // 401     IRC_ERR_NOSUCHNICK
 //             "<nickname> :No such nick/channel"
 	struct NoSuchNicknameError	:	NumericReply

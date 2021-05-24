@@ -18,7 +18,8 @@ namespace NAMESPACE_IRC
 	{
 		/* Member types */
 
-		typedef typename ::std::map<Server*, Server*>				databaseServersMap;
+		// TODO: Use custom comparators for Server and Channel maps
+		typedef typename ::std::map<std::string, Server*>			databaseServersMap;
 		typedef typename ::std::map<std::string, Channel*>			databaseChannelsMap;
 		typedef typename ::std::map<std::string, Client*, nickcmp>	databaseClientsMap;
 
@@ -83,7 +84,8 @@ namespace NAMESPACE_IRC
 	IRCDatabase<Server, Client, Channel>::
 	IRCDatabase(Server* const server)
 	{
-		dataServersMap[server] = server;
+		// TODO: Add servername
+		dataServersMap[server->get_hostname()] = server;
 		createModeFunctionsMap();
 	}	// Do we have to add the clients and channels of server ?
 
@@ -442,7 +444,7 @@ namespace NAMESPACE_IRC
 		template <class Map, class __Server>
 		inline void
 		send_client_data(const Map& m, __Server* const target)
-		{ for_each_in_map<handle_client<Server, Client> >(m, target); }
+		{ for_each_in_map<handle_client<Server, AClient> >(m, target); }
 
 		template <class Map, class __Server>
 		inline void

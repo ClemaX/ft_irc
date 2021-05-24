@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::KickCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		static_cast<void>(server);
 		if (arguments.size() < 2)
@@ -33,7 +33,7 @@ namespace NAMESPACE_IRC
 			const std::string clientNickname = usersQueue.front();
 			usersQueue.pop();
 
-			Server::__Channel *channel = user->getChannelGlobal(channelName);
+			Server::__Channel *channel = user->getChannelGlobal(server.database, channelName);
 			if (!channel || !channel->isVisibleForClient(user))
 				*user << NoSuchChannelError(gHostname, channelName);
 			else if (!user->isInChannel(channelName))
@@ -42,7 +42,7 @@ namespace NAMESPACE_IRC
 				*user << ChannelOperatorPrivilegiesError(gHostname, channelName);
 			else
 			{
-				Client *victim = channel->getUser(clientNickname);
+				AClient *victim = channel->getUser(clientNickname);
 				if (!victim)
 					*user << UserNotInChannelError(gHostname, clientNickname, channelName);
 				else

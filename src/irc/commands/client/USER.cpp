@@ -6,7 +6,7 @@ namespace NAMESPACE_IRC
 
 	bool
 	Server::UserCommand::
-	payload(Server& server, Client* const user,argumentList const& arguments) const
+	payload(Server& server, AClient* const user,argumentList const& arguments) const
 	{
 		// ERR_NEEDMOREPARAMS Bad amount of params
 		if (arguments.size() < 4)

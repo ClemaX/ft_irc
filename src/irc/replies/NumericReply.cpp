@@ -1,5 +1,5 @@
 #include <irc/replies/NumericReply.hpp>
-#include <irc/Client.hpp>
+#include <irc/AClient.hpp>
 
 namespace NAMESPACE_IRC
 {

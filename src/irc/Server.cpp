@@ -3,11 +3,12 @@
 #include <utils/atoi.hpp>
 #include <utils/strings.hpp>
 
-#include <irc/SecureClient.hpp>
+#include <irc/SocketClient.hpp>
+#include <irc/SecureSocketClient.hpp>
 
 #include <utils/Logger.hpp>
 
-# include <ctime>
+#include <ctime>
 
 namespace irc
 {
@@ -15,7 +16,7 @@ namespace irc
 
 	bool
 	Server::Registered_Command::
-	execute(Server& server, Client* const user, argumentList const& arguments)
+	execute(Server& server, AClient* const user, argumentList const& arguments)
 	{
 		if (user->authenticated == true)
 			return (payload(server, user, arguments));
@@ -92,19 +93,20 @@ namespace irc
 	}
 
 	Server::connection*	Server::onConnection(int connectionFd,
-		connection::address const& address, SSL* sslConnection)
+		SocketConnection::address const& address, SSL* sslConnection)
 	{
-		Client*	newClient = NULL;
+		SocketClient*	newClient = NULL;
 
 		try {
-			newClient = (sslConnection)
-				? new SecureClient(sslConnection, connectionFd, address, authRequired)
-				: new Client(connectionFd, address, authRequired);
+			if (sslConnection)
+				newClient = new SecureSocketClient(sslConnection, connectionFd, address, authRequired);
+			else
+				newClient = new SocketClient(connectionFd, address, authRequired);
 		}
 		catch (...)
 		{ stop(); throw; }
 
-		newClient->server = this;
+		//newClient->server = this;
 
 		newClient->username = "";
 		newClient->nickname = IRC_NICKNAME_DEFAULT;
@@ -123,8 +125,8 @@ namespace irc
 
 	void	Server::onMessage(connection* const connection, std::string const& message)
 	{
-		Client*	client = dynamic_cast<Client*>(connection);
-		Message	ircMessage;
+		AClient*	client = dynamic_cast<AClient*>(connection);
+		Message		ircMessage;
 
 		client->readBuffer.append(message);
 
@@ -148,12 +150,12 @@ namespace irc
 		// Flush messages
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
-			dynamic_cast<Client*>(it->second)->flush();
+			dynamic_cast<AClient*>(it->second)->flush();
 	}
 
 	void
 	Server::
-	announceWelcomeSequence(Client* const user)
+	announceWelcomeSequence(AClient* const user)
 	{
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
 		&& !user->username.empty() && user->authenticated)

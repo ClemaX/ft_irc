@@ -3,12 +3,13 @@
 #include <string> // using std::string
 
 #include <socket/socketdef.hpp> // using socketAddress
+#include <socket/IConnection.hpp> // using IConnection
 #include <socket/Socket.hpp> // using Socket
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
 
 // TODO: Check if Socket should be virtual
-class	SocketConnection	:	public Socket
+class	SocketConnection	:	public virtual IConnection, public Socket
 {
 public:
 	typedef	socketAddress	address;

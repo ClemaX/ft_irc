@@ -1,5 +1,4 @@
 #include <irc/PrivateMessage.hpp>
-#include <irc/Client.hpp>
 
 namespace NAMESPACE_IRC
 {

@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::PartCommand::
-	payload(Server& server, Client* const user,argumentList const& arguments) const
+	payload(Server& server, AClient* const user,argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
@@ -20,7 +20,7 @@ namespace NAMESPACE_IRC
 			const std::string channelName = ft::strToLower(channelsQueue.front());
 			channelsQueue.pop();
 
-			Server::__Channel *channel = server.getChannel(channelName);
+			Server::__Channel *channel = server.database.getChannel(channelName);
 
 			if (!channel)
 				*user << NoSuchChannelError(gHostname, channelName);

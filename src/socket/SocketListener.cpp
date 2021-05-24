@@ -11,7 +11,7 @@
 #include <utils/Logger.hpp>
 
 SocketListener::SocketListener() throw()
-	:	Socket()
+	:    listening(false)
 { Logger::instance() << Logger::DEBUG << "Constructing empty SocketListener..." << std::endl; }
 
 SocketListener::SocketListener(std::string const& hostname,

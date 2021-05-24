@@ -8,7 +8,7 @@ namespace NAMESPACE_IRC
 {
 	// What are the templates for if we still use the forward declarations?
 	class Server;
-	class Client;
+	class AClient;
 	template <class __Server, class __Client>
 	class Channel;
 
@@ -16,73 +16,73 @@ namespace NAMESPACE_IRC
 	// User modes //
 	////////////////
 
-	typedef Channel<Server, Client> __Channel;
+	typedef Channel<Server, AClient> __Channel;
 
-	bool	setUserInvisible(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetUserInvisible(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setUserInvisible(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetUserInvisible(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	setUserServerNotice(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetUserServerNotice(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setUserServerNotice(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetUserServerNotice(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	setUserWallops(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetUserWallops(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setUserWallops(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetUserWallops(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	setUserOperator(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetUserOperator(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setUserOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetUserOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
 	///////////////////
 	// Channel modes //
 	///////////////////
 
-	bool	addChannelCreator(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	addChannelCreator(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	addChannelOperator(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelOperator(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	addChannelOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	addChannelVoice(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelVoice(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-
-	bool	setChannelAnonymous(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelAnonymous(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelInviteOnly(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelInviteOnly(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelModerated(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelModerated(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelNoExternalMessage(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelNoExternalMessage(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelQuiet(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelQuiet(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelPrivate(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelPrivate(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelSecret(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelSecret(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelReop(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelReop(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelRestrictTopic(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelRestrictTopic(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	setChannelLimit(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	unsetChannelLimit(Client* const user, __Channel *const channel, const std::string& flagArguments);
-
-	bool	addChannelKey(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelKey(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	addChannelVoice(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelVoice(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
 
-	bool	addChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelBanned(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setChannelAnonymous(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelAnonymous(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	addChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelException(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setChannelInviteOnly(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelInviteOnly(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 
-	bool	addChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments);
-	bool	removeChannelInviteList(Client* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	setChannelModerated(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelModerated(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelNoExternalMessage(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelNoExternalMessage(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelQuiet(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelQuiet(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelPrivate(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelPrivate(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelSecret(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelSecret(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelReop(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelReop(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelRestrictTopic(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelRestrictTopic(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	setChannelLimit(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	unsetChannelLimit(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	addChannelKey(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelKey(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+
+	bool	addChannelBanned(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelBanned(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	addChannelException(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelException(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+
+	bool	addChannelInviteList(AClient* const user, __Channel *const channel, const std::string& flagArguments);
+	bool	removeChannelInviteList(AClient* const user, __Channel *const channel, const std::string& flagArguments);
 }

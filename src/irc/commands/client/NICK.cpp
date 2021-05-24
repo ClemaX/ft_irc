@@ -26,7 +26,7 @@ namespace NAMESPACE_IRC
 
 	bool
 	Server::NickCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		// ERR_NONICKNAMEGIVEN No nickname present as args
 		if (arguments.empty())
@@ -55,13 +55,13 @@ namespace NAMESPACE_IRC
 			goto error;
 		}
 
-		user->old_nickname = user->nickname;
+		user->oldNickname = user->nickname;
 		user->nickname = arguments.at(0);
 
-		if (user->old_nickname == IRC_NICKNAME_DEFAULT)
+		if (user->oldNickname == IRC_NICKNAME_DEFAULT)
 			server.database.addClient(user);
 		else
-			server.database.set_ClientNick(user->old_nickname, user->nickname);
+			server.database.set_ClientNick(user->oldNickname, user->nickname);
 
 		server.announceWelcomeSequence(user);
 

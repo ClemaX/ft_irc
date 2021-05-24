@@ -1,11 +1,11 @@
 #pragma once
 
-#include <irc/AMessage.hpp>
+#include <irc/replies/IReply.hpp>
 
 namespace NAMESPACE_IRC
 {
 	struct	PrivateMessage
-	: AMessage
+	: IReply
 	{
 		PrivateMessage(std::string const& serverName,
 			std::string const &message = "");

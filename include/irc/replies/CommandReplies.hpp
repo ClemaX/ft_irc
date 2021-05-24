@@ -1,15 +1,21 @@
 #pragma once
 
 #include <irc/replies/NumericReply.hpp>
+/*
+#include <irc/AClient.hpp>
+#include <irc/Channel.hpp> */
 
 namespace NAMESPACE_IRC
 {/*
 	struct	NumericReply;
-	class	Client;
-	class	Channel;
 	struct	AMessage; */
+	class	Server;
+	class	AClient;
+	template<typename __Server, typename __Client>
+	class	Channel;
+	typedef	std::vector<AClient const*> clientList;
 
-	//typedef	std::vector<Client const*> clientList;
+	typedef Channel<Server, AClient> __Channel;
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
@@ -151,7 +157,7 @@ namespace NAMESPACE_IRC
 // 352     IRC_RPL_WHOREPLY
 //             "<channel> <user> <host> <server> <nick> <H|G>[*][@|+] :<hopcount> <real name>"
 	struct WhoReply	:	NumericReply
-	{ WhoReply(std::string const& serverName, std::string const &mask, Client *client, int op); };
+	{ WhoReply(std::string const& serverName, std::string const &mask, AClient *client, int op); };
 // 315     IRC_RPL_ENDOFWHO
 //             "<name> :End of /WHO list"
 	struct EndOfWhoReply	:	NumericReply
@@ -163,9 +169,8 @@ namespace NAMESPACE_IRC
 
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
-	class Server;
 	struct ChannelNamesReply	:	NumericReply
-	{ ChannelNamesReply(std::string const& serverName, Channel<Server, Client> *channel); };
+	{ ChannelNamesReply(std::string const& serverName, __Channel *channel); };
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
 	struct EndOfNamesReply	:	NumericReply
