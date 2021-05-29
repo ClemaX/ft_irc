@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::JoinCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.empty())
 		{
@@ -37,7 +37,7 @@ namespace NAMESPACE_IRC
 				passwordsQueue.pop();
 			}
 
-			Server::__Channel *channel = server.getChannel(channelName);
+			__Channel *channel = server.database.getChannel(channelName);
 
 			if (user->channels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
@@ -50,7 +50,7 @@ namespace NAMESPACE_IRC
 			{
 				try
 				{
-					channel = new Server::__Channel(channelName);
+					channel = new __Channel(channelName);
 					server.database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
@@ -58,7 +58,7 @@ namespace NAMESPACE_IRC
 					channel->addServer(&server);		// add server to the channel servers list
 					channel->addClient(user, password, isOp);
 				}
-				catch(Server::__Channel::InvalidChannelNameException const& e)
+				catch(__Channel::InvalidChannelNameException const& e)
 				{*user << NoSuchChannelError(gHostname, name);}
 			}
 			else

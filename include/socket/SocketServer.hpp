@@ -50,8 +50,7 @@ protected:
 
 	void	sendMessage(connection* connection, std::string const& message);
 
-	virtual SocketConnection*	onConnection(int connectionFd,
-		connection::address const& address, SSL* sslConnection = NULL);
+	virtual connection*		onConnection(int connectionFd, SocketConnection::address const& address, SSL* sslConnection = NULL);
 	virtual void				onDisconnection(connection* connection);
 	virtual void				onMessage(connection* connection,
 		std::string const& message);

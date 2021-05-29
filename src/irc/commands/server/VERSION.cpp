@@ -6,12 +6,12 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::VersionCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		// No given args, use client's server
+		// FIXME: No given args, use client's server
 		if (arguments.empty())
 		{
-			*user << Version(server.hostname, user->server->version);
+			*user << Version(server.hostname, server.version);
 			return (true);
 		}
 

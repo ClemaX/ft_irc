@@ -1,5 +1,7 @@
 #include <irc/replies/CommandReplies.hpp>
 
+#include <irc/AClient.hpp>
+
 namespace NAMESPACE_IRC
 {
 // 302     IRC_RPL_USERHOST

@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::OperCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		// NOTE: I did not handle duplicates
 		//		any user knowing the good combination can be operator
@@ -22,7 +22,7 @@ namespace NAMESPACE_IRC
 				goto error;
 			}
 
-			user->become_operator();
+			user->becomeOperator();
 			*user << YoureOperReply(server.hostname);
 			return (true);
 		}

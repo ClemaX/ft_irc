@@ -1,4 +1,6 @@
-#include <irc/Client.hpp>
+#include <irc/AClient.hpp>
+
+#include <irc/Server.hpp>
 
 #include <utils/Logger.hpp>
 
@@ -11,43 +13,40 @@ namespace NAMESPACE_IRC
 	// forward refereneces and define those 2 in hpp ??
 
 	/* inline */ void
-	Client::joinChannel(__Channel* const channel)
-	{ channels.insert(clientChannelPair(channel->name, channel)); }
+	AClient::joinChannel(Channel* const channel)
+	{ channels.insert(channelPair(channel->name, channel)); }
 
 	/* inline */ bool
-	Client::isInChannel(__Channel* const channel) const
+	AClient::isInChannel(Channel* const channel) const
 	{ return (channels.find(ft::strToLower(channel->name)) != channels.end()); }
 
-// --- Client ---
-	Client::Client(int fd, socketAddress const& address, bool authRequired)
-		:	SocketConnection(fd, address),
-			authenticated(!authRequired),
+	AClient::AClient(bool authRequired)
+		:	authenticated(!authRequired),
 			registered(false)
 	{
 		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
-		readBuffer.reserve(IRC_MESSAGE_MAXLEN);
+		//readBuffer.reserve(IRC_MESSAGE_MAXLEN);
 	} // TODO: Maybe reserve writeBuffer
 
-
-	void	Client::leaveChannel(__Channel* const channel)
+	void	AClient::leaveChannel(Channel* const channel)
 	{
 		if (channels.find(channel->name) == channels.end())
 			return ;
 		channels.erase(ft::strToLower(channel->name));
 	}
 
-	void	Client::leaveChannel(std::string const & channelName)
+	void	AClient::leaveChannel(std::string const& channelName)
 	{
-		clientChannelMap::iterator it = channels.find(ft::strToLower(channelName));
+		channelMap::iterator it = channels.find(ft::strToLower(channelName));
 
 		if (it == channels.end())
 			return ;
 		channels.erase(ft::strToLower(channelName));
 	}
 
-	void	Client::leaveAllChannels()
+	void	AClient::leaveAllChannels()
 	{
-		clientChannelMap::iterator it;
+		channelMap::iterator it;
 
 		while (!channels.empty())
 		{
@@ -56,10 +55,10 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	bool	Client::isInSameChannel(Client* const client) const
+	bool	AClient::isInSameChannel(AClient const* client) const
 	{
-		clientChannelMap::const_iterator itb = channels.begin();
-		clientChannelMap::const_iterator ite = channels.end();
+		channelMap::const_iterator itb = channels.begin();
+		channelMap::const_iterator ite = channels.end();
 		while (itb != ite)
 		{
 			if (client->isInChannel(itb->first))
@@ -69,7 +68,7 @@ namespace NAMESPACE_IRC
 		return false;
 	}
 
-	Client::__Channel	*Client::getChannel(std::string const & channelName) const
+	AClient::Channel	*AClient::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
 			return channels.find(ft::strToLower(channelName))->second;
@@ -84,21 +83,20 @@ namespace NAMESPACE_IRC
 	 * 	NOTE: The search is done among all the channels in the database
 	*/
 
-	Client::__Channel	*Client::getChannelGlobal(std::string const & channelName) const
+	AClient::Channel	*AClient::getChannelGlobal(IRCDatabase const& db,
+		std::string const & channelName) const
 	{
-		__Channel *channel = getChannel(channelName);
+		Channel *channel = getChannel(channelName);
 		if (channel)
 			return channel;
 
-		channel = server->getChannel(channelName);
-		if (!channel)
-			return NULL;
-		if (!channel->isLocalChannelVisibleForClient(const_cast<Client*>(this)))
+		channel = db.getChannel(channelName);
+		if (channel && !channel->isLocalChannelVisibleForClient(this))
 			return NULL;
 		return channel;
 	}
 
-	bool	Client::listChannelInfo(__Channel* const channel)
+	bool	AClient::listChannelInfo(Channel* const channel)
 	{
 		if (!channel)
 			return false;
@@ -107,32 +105,32 @@ namespace NAMESPACE_IRC
 
 		if (!isInChannel(channelName))
 		{
-			if (channel->channelModes.binMode & M_s)
+			if (channel->channelModes & Channel::s)
 				return false;
-			else if (channel->channelModes.binMode & M_p)
+			else if (channel->channelModes & Channel::p)
 			{
 				*this << ListReply(gHostname, channelName, 0, "Prv");
 				return false;
 			}
 			else if (channel->isLocalChannelVisibleForClient(this))
 				*this << ListReply(gHostname, channelName, channel->clientsMap.size(), channel->topic);
-			return false;
+			return false; // TODO: Check if this should return true, or bool anyways
 		}
 		else
 			*this << ListReply(gHostname, channelName, channel->clientsMap.size(), channel->topic);
 		return true;
 	}
 
-	bool	Client::listAllChannelsListInfo(void)
+	bool	AClient::listAllChannelsListInfo(IRCDatabase const& db)
 	{
-		for (IRCDatabase::databaseChannelsMap::const_iterator it = server->database.dataChannelsMap.begin();
-			it != server->database.dataChannelsMap.end(); it++)
+		for (IRCDatabase::databaseChannelsMap::const_iterator it = db.dataChannelsMap.begin();
+			it != db.dataChannelsMap.end(); it++)
 			this->listChannelInfo(it->second);
 		return true;
 	}
 
 
-		bool	Client::listChannelWhoQueryInfo(__Channel* const channel, int opFlag)
+		bool	AClient::listChannelWhoQueryInfo(Channel* const channel, int opFlag)
 	{
 		if (!channel)
 			return false;
@@ -140,12 +138,12 @@ namespace NAMESPACE_IRC
 		std::string const &channelName = channel->name;
 
 		if (!isInChannel(channelName) &&
-			((channel->channelModes.binMode & M_s) || (channel->channelModes.binMode & M_p)))
+			((channel->channelModes & Channel::s) || (channel->channelModes & Channel::p)))
 				return false;
 		else
 		{
-			__Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
-			__Channel::channelClientMap::iterator ite = channel->clientsMap.end();
+			Channel::channelClientMap::iterator itb = channel->clientsMap.begin();
+			Channel::channelClientMap::iterator ite = channel->clientsMap.end();
 			while (itb != ite)
 			{
 				if (!opFlag || channel->isOperator(itb->first))
@@ -156,28 +154,28 @@ namespace NAMESPACE_IRC
 		return true;
 	}
 
-	bool	Client::listAllVisibleUsersWhoQueryInfo(void)
+	bool	AClient::listAllVisibleUsersWhoQueryInfo(IRCDatabase const& db)
 	{
-		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database.dataClientsMap.begin();
-			it != server->database.dataClientsMap.end(); it++)
+		for (IRCDatabase::databaseClientsMap::const_iterator it = db.dataClientsMap.begin();
+			it != db.dataClientsMap.end(); it++)
 		{
-			Client *client = it->second;
-			if (!(client->modes.binMode & Mu_i) && !this->isInSameChannel(client))
+			AClient*	client = it->second;
+			if (!client->modes[i] && !this->isInSameChannel(client))
 				*this << WhoReply(gHostname, "", client, -1);
 		}
 		return true;
 	}
 
-	bool	Client::matchMaskWhoQueryInfo(std::string const &mask)
+	bool	AClient::matchMaskWhoQueryInfo(IRCDatabase const& db, std::string const &mask)
 	{
 		// currently match with users' host, real name and nickname
 		// to do :
 		//		match with users' server
-		for (IRCDatabase::databaseClientsMap::const_iterator it = server->database.dataClientsMap.begin();
-			it != server->database.dataClientsMap.end(); it++)
+		for (IRCDatabase::databaseClientsMap::const_iterator it = db.dataClientsMap.begin();
+			it != db.dataClientsMap.end(); it++)
 		{
-			Client *client = it->second;
-			if (!(client->modes.binMode & Mu_i) &&
+			AClient*	client = it->second;
+			if (!client->modes[i] &&
 					(matchPattern_global(client->nickname, mask) ||
 					matchPattern_global(client->username, mask) ||
 					matchPattern_global(client->hostname, mask)))

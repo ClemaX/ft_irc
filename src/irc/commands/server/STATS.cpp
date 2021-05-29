@@ -79,7 +79,7 @@ namespace NAMESPACE_IRC
 
 	bool
 	Server::StatsCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.empty())
 		{

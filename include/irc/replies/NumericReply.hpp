@@ -13,10 +13,6 @@
 
 namespace NAMESPACE_IRC
 {
-	class	Client;
-	template <class __Server, class __Client>
-	class	Channel;
-
 	template<typename Cstart, typename Ccontent, typename Cend>
 	std::string	serializeReplyList(std::string const& serverName,
 		std::string const& nickName, std::string const& list, char delim = '\n',
@@ -53,8 +49,6 @@ namespace NAMESPACE_IRC
 	struct	NumericReply
 	: IReply
 	{
-		typedef	std::vector<Client const*> clientList;
-
 		Prefix		prefix;
 		int			code;
 		std::string	message;

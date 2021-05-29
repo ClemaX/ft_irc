@@ -17,7 +17,7 @@ public:
 
 	virtual void	close() throw(SocketCloseException);
 
-	inline bool	isOpen() const throw()									// definition autorisée dans le header ?
+	inline bool	isOpen() const throw()
 	{ return fd > 0; }
 
 	inline int	getFd() const throw()

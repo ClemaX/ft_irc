@@ -6,7 +6,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::TimeCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		// No given args, use client's server
 		if (arguments.empty())

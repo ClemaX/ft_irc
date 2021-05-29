@@ -4,7 +4,7 @@ namespace NAMESPACE_IRC
 {
 	bool
 	Server::NamesCommand::
-	payload(Server& server, Client* const user, argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
@@ -33,7 +33,7 @@ namespace NAMESPACE_IRC
 		{
 			const std::string channelName = ft::strToLower(channelsQueue.front());
 			channelsQueue.pop();
-			Server::__Channel *channel = user->getChannelGlobal(channelName);
+			Server::__Channel *channel = user->getChannelGlobal(server.database, channelName);
 
 			if (channel && channel->isVisibleForClient(user))
 			{

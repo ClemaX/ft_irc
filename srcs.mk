@@ -3,9 +3,9 @@ SRCDIR = src
 
 SRCS = $(addprefix $(SRCDIR)/,\
 	$(addprefix irc/,\
+		AClient.cpp\
 		AMessage.cpp\
 		ChannelModes.cpp\
-		Client.cpp\
 		$(addprefix commands/,\
 			$(addprefix channel/,\
 				INVITE.cpp\
@@ -118,7 +118,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			NumericReply.cpp\
 		)\
-		SecureClient.cpp\
+		SecureSocketClient.cpp\
 		ServerConfig.cpp\
 		Server.cpp\
 	)\
