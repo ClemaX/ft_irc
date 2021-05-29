@@ -144,7 +144,6 @@ void	SocketServer::start() throw(ServerException, SocketException)
 	socketAddress	clientAddr;
 	int				incomingFd;
 
-	// NOTE: Commented cause this bug af in linux arch
 	if (listener.isListening() || sslListener.isListening())
 		throw ServerRunningException();
 

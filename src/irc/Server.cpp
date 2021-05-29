@@ -15,9 +15,9 @@ namespace irc
 
 	bool
 	Server::Registered_Command::
-	execute(Server& server, Client* const user, argumentList const& arguments)
+	execute(Server& server, Client* const user, argumentList const& arguments) const
 	{
-		if (user->authenticated == true)
+		if (user->registered == true)
 			return (payload(server, user, arguments));
 		*user << ClientNotResgisteredYet(server.hostname);
 		return (false);
@@ -140,7 +140,7 @@ namespace irc
 		}
 
 		if (ircMessage.command != NULL)
-			ircMessage.command->payload(*this, client, ircMessage.arguments);
+			ircMessage.command->execute(*this, client, ircMessage.arguments);
 	}
 
 	void	Server::onFlush() const throw(SocketWriteException)

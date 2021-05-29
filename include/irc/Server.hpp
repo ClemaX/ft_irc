@@ -76,6 +76,7 @@ namespace NAMESPACE_IRC
 			const std::string& __email = IRC_DFT_ADMIN_DATA2)
 		: id(__id), data1(__data1), data2(__data2), email(__email)
 		{ }
+
 	};
 
 	class	Server
@@ -159,7 +160,7 @@ namespace NAMESPACE_IRC
 			virtual ~Command();
 
 			virtual bool	execute(Server& server, Client* const user,
-				argumentList const& arguments) = 0;
+				argumentList const& arguments) const = 0;
 			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
@@ -170,7 +171,7 @@ namespace NAMESPACE_IRC
 			Unregistered_Command(std::string const& name);
 
 			bool			execute(Server& server, Client* const user,
-				argumentList const& arguments);
+				argumentList const& arguments) const;
 			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
@@ -181,7 +182,7 @@ namespace NAMESPACE_IRC
 			Registered_Command(std::string const& name);
 
 			bool			execute(Server& server, Client* const user,
-				argumentList const& arguments);
+				argumentList const& arguments) const;
 			virtual bool	payload(Server& server, Client* const user,
 				argumentList const& arguments) const = 0;
 		};
@@ -485,7 +486,7 @@ namespace NAMESPACE_IRC
 
 	inline bool
 	Server::Unregistered_Command::
-	execute(Server& server, Client* const user, argumentList const& arguments)
+	execute(Server& server, Client* const user, argumentList const& arguments) const
 	{ return (payload(server, user, arguments)); }
 
 	inline
