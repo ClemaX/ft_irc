@@ -14,7 +14,7 @@ NO_COLOR='\033[0m'
 function build_test_files
 {
 	# $1 The dirrectory where the commands definion is located
-	# $2 to $+inf are ignored
+	# $N (1 < N < +inf) are ignored
 
 	for cmds in ${1}/*/*.cpp ; do
 		local BASENAME=`basename ${cmds%.*}`
@@ -29,12 +29,11 @@ function help_or_reset
 	# if $1 == "reset" user can rm $TEST_DIR
 	# if $1 != "reset" help is displayed
 
-	if [ "${1}" != "reset" ] && [ "${1}" != "-reset" ] \
-	&& [ "${1}" != "--reset" ] ; then # TO DO: Can do better this if
-		echo "USAGE: ${0} [ reset | -reset | --reset ]" # TO DO: Color this
+	if [ "${1//-}" != "reset" ] ; then
+		echo "USAGE: ${0} [[-[-]]reset]" # TO DO: Color this
 	elif [ -d $TEST_DIR ] ; then
 		local ANSWER
-		read -p "Do you want to delete $TEST_DIR ? [y/n]" -n1 -rs ANSWER
+		read -p "Do you want to delete $TEST_DIR ? [y/n]" -n1 -rs ANSWER # Color this ?
 		echo
 		if [[ $ANSWER =~ ^[Yy]$ ]] ; then
 			echo -e "${COLOR_RED}rm -rf ${TEST_DIR}${NO_COLOR}"
@@ -96,11 +95,11 @@ function gen_invite_test # Check if invite command exist, then call
 		a
 		another
 		test
-		that
+		to
 		show
 		if
 		i
-		though
+		thought
 		well
 	EOF
 }
@@ -117,7 +116,7 @@ if [ $# -gt 0 ] ; then
 	help_or_reset ${1}
 fi
 
-# Just copy paste each test function body and overide heredocs
+# Just copy paste each test function body and ovewrite heredocs
 
 build_test_files $ENTRY_POINT
 init_test_files
