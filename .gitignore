@@ -14,3 +14,6 @@ obj/
 # VSCode
 .vscode/*
 !.vscode/c_cpp_properties.json
+
+# Tests
+tests
