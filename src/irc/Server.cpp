@@ -16,7 +16,7 @@ namespace irc
 
 	bool
 	Server::Registered_Command::
-	execute(Server& server, AClient* const user, argumentList const& arguments)
+	execute(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (user->registered == true)
 			return (payload(server, user, arguments));

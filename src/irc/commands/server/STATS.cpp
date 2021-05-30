@@ -5,7 +5,7 @@ namespace NAMESPACE_IRC
 	namespace
 	{
 		bool
-		show_server_connextions(Server& server, Client* const user)
+		show_server_connextions(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -13,7 +13,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_hubs(Server& server, Client* const user)
+		show_server_hubs(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -21,7 +21,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_client_connextions(Server& server, Client* const user)
+		show_client_connextions(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -29,7 +29,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_banned(Server& server, Client* const user)
+		show_server_banned(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -37,7 +37,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_connextions_data(Server& server, Client* const user)
+		show_server_connextions_data(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -45,7 +45,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_commands(Server& server, Client* const user)
+		show_server_commands(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -53,7 +53,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_host_operators(Server& server, Client* const user)
+		show_server_host_operators(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -61,7 +61,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_config(Server& server, Client* const user)
+		show_server_config(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -69,7 +69,7 @@ namespace NAMESPACE_IRC
 		}
 
 		bool
-		show_server_running_time(Server& server, Client* const user)
+		show_server_running_time(Server& server, AClient* const user)
 		{
 			static_cast<void>(server);
 			static_cast<void>(user);
@@ -109,7 +109,7 @@ namespace NAMESPACE_IRC
 			"c", "h", "i", "k", "l", "m", "o", "y", "u"
 		};
 
-		static bool (*const handlers[])(Server&, Client* const) = {
+		static bool (*const handlers[])(Server&, AClient* const) = {
 			&show_server_connextions,
 			&show_server_hubs,
 			&show_client_connextions,
