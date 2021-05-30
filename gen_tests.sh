@@ -6,6 +6,8 @@ TEST_DIR="tests"
 TEST_DEFINITION_FILE="0"
 TEST_ANSWER_FILE="1"
 
+#IGNOREMISSING= #use it for ignore is_this_test_needed
+
 # Colors
 
 COLOR_RED='\033[0;31m'
@@ -24,21 +26,34 @@ function build_test_files
 	done
 }
 
+function usage
+{
+	echo -e "USAGE: ${0} [[-[-]]reset]" # TO DO: Color this
+}
+
+function reset_test_dir
+{
+	local ANSWER
+	read -p "Do you want to delete $TEST_DIR ? [y/n]" -n1 -rs ANSWER # Color this ?
+	echo
+	if [[ $ANSWER =~ ^[Yy]$ ]] ; then
+		echo -e "${COLOR_RED}rm -rf ${TEST_DIR}${NO_COLOR}"
+		rm -rf ${TEST_DIR}
+	fi
+}
+
+
 function help_or_reset
 {
 	# if $1 == "reset" user can rm $TEST_DIR
 	# if $1 != "reset" help is displayed
 
+	#echo "${1//-/*}" lol this works like sed
+
 	if [ "${1//-}" != "reset" ] || [ ${#1} -gt 7 ] ; then
-		echo "USAGE: ${0} [[-[-]reset]" # TO DO: Color this
+		usage
 	elif [ -d $TEST_DIR ] ; then
-		local ANSWER
-		read -p "Do you want to delete $TEST_DIR ? [y/n]" -n1 -rs ANSWER # Color this ?
-		echo
-		if [[ $ANSWER =~ ^[Yy]$ ]] ; then
-			echo -e "${COLOR_RED}rm -rf ${TEST_DIR}${NO_COLOR}"
-			rm -rf ${TEST_DIR}
-		fi
+		reset_test_dir
 	else
 		echo "Nothing to reset."
 	fi
@@ -54,7 +69,7 @@ function is_this_test_needed
 	local TESTNAME=${1:4}
 	CURR_COMMAND=${TESTNAME%_*}
 
-	if [ -d ${TEST_DIR}/${CURR_COMMAND} ] ; then
+	if [ ! -z ${IGNOREMISSING} ] || [ -d ${TEST_DIR}/${CURR_COMMAND} ] ; then
 		return 0
 	fi
 	return 1
