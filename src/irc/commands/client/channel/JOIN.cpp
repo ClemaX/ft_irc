@@ -52,7 +52,7 @@ namespace NAMESPACE_IRC
 				try
 				{
 					channel = new Channel(channelName);
-					database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
+					database.channels[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
 						isOp = false;

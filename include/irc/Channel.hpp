@@ -401,7 +401,7 @@ namespace irc
 		// FIXME
 /*
 		if (!serversMap.empty())
-			serversMap.begin()->second->database.dataChannelsMap.erase(name); */
+			serversMap.begin()->second->database.channels.erase(name); */
 		// delete this;
 		// I don't think we can delete ourselves
 		return (true);

@@ -26,9 +26,9 @@ namespace NAMESPACE_IRC
 		}
 /*
 		// Given args, search the database and output it version
-		Database::serversMap::const_iterator it = database.dataServersMap.begin();
+		Database::serversMap::const_iterator it = database.servers.begin();
 
-	 	while (it != database.dataServersMap.end())
+	 	while (it != database.servers.end())
 		{
 			// TODO: This should be servername
 			if (it->second->hostname == arguments.at(0))

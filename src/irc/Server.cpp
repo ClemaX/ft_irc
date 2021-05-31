@@ -120,7 +120,7 @@ namespace irc
 	Server::connection*	Server::onConnection(int connectionFd,
 		SocketConnection::address const& address, SSL* sslConnection)
 	{
-		SocketClient*	newClient = NULL;
+		ABufferedConnection*	newClient = NULL;
 
 		try {
 			if (sslConnection)
@@ -162,12 +162,14 @@ namespace irc
 		// TODO: Use template on SocketServer to avoid casts in implementation
 		ABufferedConnection *bufferedConnection = dynamic_cast<ABufferedConnection*>(connection);
 
-		Message<ABufferedConnection>	ircMessage;
+		if (bufferedConnection)
+		{
+			Message<ABufferedConnection>	ircMessage;
 
-		bufferedConnection->readBuffer += message;
+			bufferedConnection->readBuffer += message;
 
-		Logger::instance() << Logger::INFO << bufferedConnection->getUid() << ": " << bufferedConnection->readBuffer << std::flush;
-
+			Logger::instance() << Logger::INFO << bufferedConnection->getUid() << ": " << bufferedConnection->readBuffer << std::flush;
+		}
 /* 		if (client)
 		{
 

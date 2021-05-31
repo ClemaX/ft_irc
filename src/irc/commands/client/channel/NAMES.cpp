@@ -10,8 +10,8 @@ namespace NAMESPACE_IRC
 	{
 		if (!arguments.size())
 		{
-			Database::channelMap::iterator itb = database.dataChannelsMap.begin();
-			Database::channelMap::iterator ite = database.dataChannelsMap.end();
+			Database::channelMap::iterator itb = database.channels.begin();
+			Database::channelMap::iterator ite = database.channels.end();
 			while (itb != ite)
 			{
 				if (itb->second->isVisibleForClient(user))

@@ -119,8 +119,8 @@ namespace NAMESPACE_IRC
 
 	bool	AClient::listAllChannelsListInfo(Database const& db)
 	{
-		for (Database::channelMap::const_iterator it = db.dataChannelsMap.begin();
-			it != db.dataChannelsMap.end(); it++)
+		for (Database::channelMap::const_iterator it = db.channels.begin();
+			it != db.channels.end(); it++)
 			this->listChannelInfo(it->second);
 		return true;
 	}
@@ -151,8 +151,8 @@ namespace NAMESPACE_IRC
 
 	bool	AClient::listAllVisibleUsersWhoQueryInfo(Database const& db)
 	{
-		for (Database::clientMap::const_iterator it = db.dataClientsMap.begin();
-			it != db.dataClientsMap.end(); it++)
+		for (Database::clientMap::const_iterator it = db.clients.begin();
+			it != db.clients.end(); it++)
 		{
 			AClient*	client = it->second;
 			if (!client->modes[i] && !this->isInSameChannel(client))
@@ -166,8 +166,8 @@ namespace NAMESPACE_IRC
 		// currently match with users' host, real name and nickname
 		// to do :
 		//		match with users' server
-		for (Database::clientMap::const_iterator it = db.dataClientsMap.begin();
-			it != db.dataClientsMap.end(); it++)
+		for (Database::clientMap::const_iterator it = db.clients.begin();
+			it != db.clients.end(); it++)
 		{
 			AClient*	client = it->second;
 			if (!client->modes[i] &&

@@ -38,9 +38,9 @@ namespace NAMESPACE_IRC
 		std::string	createdAt;
 		std::string password;
 
-		serverMap	dataServersMap;
-		channelMap	dataChannelsMap;
-		clientMap	dataClientsMap;
+		serverMap	servers;
+		channelMap	channels;
+		clientMap	clients;
 		functionPointerMap	modeChannelFunctionsMap;
 		functionPointerMap	modeUserFunctionsMap;
 
@@ -123,22 +123,22 @@ namespace NAMESPACE_IRC
 	inline void
 	Database::
 	addServer(AServerConnection* const server)
-	{ dataServersMap[server->name] = server; }
+	{ servers[server->name] = server; }
 
 	inline void
 	Database::
 	addChannel(Channel* const channel)
-	{ dataChannelsMap[channel->name] = channel; }
+	{ channels[channel->name] = channel; }
 
 	inline void
 	Database::
 	addClient(AClient* const client)
-	{ dataClientsMap[client->nickname] = client; }
+	{ clients[client->nickname] = client; }
 
 	inline void
 	Database::
 	set_ClientNick(const std::string& previous, const std::string& current)
-	{ const_cast<std::string&>(dataClientsMap.find(previous)->first) = current; }
+	{ const_cast<std::string&>(clients.find(previous)->first) = current; }
 
 	///////////////////////////////////////////////////
 	// Inline IRCDatabase getters members definition //
@@ -158,14 +158,14 @@ namespace NAMESPACE_IRC
 	inline AClient*
 	Database::
 	getClient(const std::string& nickname) const
-	{ return (get_from_map(dataClientsMap, nickname)); }
+	{ return (get_from_map(clients, nickname)); }
 
 	// TODO: Use insensitive compare instead of tolower
 
 	inline Channel*
 	Database::
 	getChannel(const std::string& channelName) const
-	{ return (get_from_map(dataChannelsMap, ft::strToLower(channelName))); }
+	{ return (get_from_map(channels, ft::strToLower(channelName))); }
 
 	inline Channel*
 	Database::
@@ -456,8 +456,8 @@ namespace NAMESPACE_IRC
 	{
 		// Decompose the database into commands
 		// & send those commands to the target server
-		send_server_data(dataServersMap, target);
-		send_client_data(dataClientsMap, target);
+		send_server_data(servers, target);
+		send_client_data(clients, target);
 		send_channel_data(dataChannelsMap, target);
 	} */
 

@@ -8,9 +8,9 @@ namespace irc
 	{
 		if (this != &other)
 		{
-			dataServersMap = other.dataServersMap;
-			dataChannelsMap = other.dataChannelsMap;
-			dataClientsMap = other.dataClientsMap;
+			servers = other.servers;
+			channels = other.channels;
+			clients = other.clients;
 			modeChannelFunctionsMap = other.modeChannelFunctionsMap;
 			modeUserFunctionsMap = other.modeUserFunctionsMap;
 		}

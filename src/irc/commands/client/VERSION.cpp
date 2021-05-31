@@ -17,11 +17,11 @@ namespace NAMESPACE_IRC
 		}
 
 		// Given args, search the database and output it version
-		//Database::serverMap::const_iterator it = database.dataServersMap.begin();
+		//Database::serverMap::const_iterator it = database.servers.begin();
 
 		// TODO: These commands should only match the current server
 		// else we need to redirect the query to the correct ServerConnection
-		/* while (it != database.dataServersMap.end())
+		/* while (it != database.servers.end())
 		{
 			if (it->second->hostname == arguments.at(0))
 			{
