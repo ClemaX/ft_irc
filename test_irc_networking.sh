@@ -22,24 +22,33 @@ PURPLE_COLOR='\033[0;35m'
 NO_COLOR='\033[0m'
 PREFIX="${COLOR_ORANGE}[TEST NETWORKING]${NO_COLOR}" #Should be scaped
 
+trap 'bg $TEST' `kill -l TSTP`
+
 function background_client_exec_cmd
 {
 	# $1 is the target PID, others args are ignored
 
 	# Timeout that should send a SIGTSTP went the client is on the foreground
 	#	it should stop the client.
-	sleep 2 && kill -TSTP $1 && echo "[Debug] kill $1" & > /dev/null 2>&1
+	sleep 2 && kill -TSTP $$ && echo "[Debug] kill $$" & > /dev/null 2>&1
+	# NOTE: Currently i kill $$ not $1 (testing stuff)
 	CHILD=$!
 
-	# Pass the client to the background
-	wait ${1}
+	echo "[Debug] jobs -rp before:"
+	jobs -rp
+
+	# Pass the client to the
+
+	wait $1
 	echo -e "$PREFIX ${PURPLE_COLOR} Foreground: ${1}${NO_COLOR}"
 
 	# TO DO: Execute something in the client to test if the server still working
+	echo "[Debug] jobs -rp after:"
 	jobs -rp
 
 	# Resume the client in the background (like it was before fg)
-	bg ${1}
+	TEST=$1
+	bg $1
 	echo -e "$PREFIX ${PURPLE_COLOR} Backgound: ${1}${NO_COLOR}"
 }
 
