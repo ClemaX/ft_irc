@@ -1,12 +1,12 @@
 #pragma once
 
+#include <irc/ircdef.hpp>
+
 #include <string> // using std::string, std::strcmp
 #include <map> // using std::map
 #include <istream> // using std::istream, std::peek, std::skipws, std::getline
 #include <fstream> // using std::ifstream
 #include <algorithm> // using std::find
-
-# include <irc/ircdef.hpp>
 
 #define IRC_CONF_NAME		"ircserv.conf"
 #define IRC_CONF_DELIM		'='
@@ -32,7 +32,8 @@ namespace NAMESPACE_IRC
 	struct	ServerConfig
 	{
 	private:
-		std::map<std::string, std::string>	data;
+		typedef std::map<std::string, std::string>	dataMap;
+		dataMap	data;
 
 		void	serializeEntry(std::string& buffer, const char* key,
 			std::string const& value) const throw();
@@ -71,7 +72,7 @@ namespace NAMESPACE_IRC
 		std::string	operator[](std::string const& key) const
 			throw(std::out_of_range)
 		{
-			std::map<std::string, std::string>::const_iterator	it;
+			dataMap::const_iterator	it;
 			unsigned char										i;
 
 			for (i = 0; i != fieldCount && fields[i].key != key; i++);

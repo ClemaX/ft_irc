@@ -1,10 +1,10 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::ModeCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	ModeCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.size() < 2)
 		{
@@ -21,10 +21,10 @@ namespace NAMESPACE_IRC
 		if (arguments.size() > 2)
 			flagArgument = arguments[2];
 
-		if (!server.database.getClient(nameArgument))
-			return server.parseChannelMode(user, nameArgument, flags, flagArgument);
+		if (!database.getClient(nameArgument))
+			return database.parseChannelMode(user, nameArgument, flags, flagArgument);
 		if (!user->nickname.compare(nameArgument))
-			return server.parseUserMode(user, flags, flagArgument);
+			return database.parseUserMode(user, flags, flagArgument);
 		*user << UsersDontMatchError(gHostname);
 		return false;
 	}

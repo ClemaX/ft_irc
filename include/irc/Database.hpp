@@ -4,8 +4,14 @@
 #include <irc/ircdef.hpp>
 #include <utils/nickname.hpp>
 #include <utils/strings.hpp>
-#include <irc/Modes_functions.hpp>
+#include <irc/ModeFunctions.hpp>
 #include <stdint.h>
+
+#include <irc/AClient.hpp>
+#include <irc/AServerConnection.hpp>
+#include <irc/Channel.hpp>
+
+#include <irc/ServerConfig.hpp>
 
 namespace NAMESPACE_IRC
 {
@@ -13,48 +19,53 @@ namespace NAMESPACE_IRC
 	 * 	@brief Database used to map servers,
 	 * 	clients and chanels
 	*/
-	template <class Server, class Client, class Channel>
-	struct	IRCDatabase
+	struct	Database
 	{
 		/* Member types */
 
 		// TODO: Use custom comparators for Server and Channel maps
-		typedef typename ::std::map<std::string, Server*>			databaseServersMap;
-		typedef typename ::std::map<std::string, Channel*>			databaseChannelsMap;
-		typedef typename ::std::map<std::string, Client*, nickcmp>	databaseClientsMap;
+		typedef ::std::map<std::string, AServerConnection*>	serverMap;
+		typedef ::std::map<std::string, Channel*>			channelMap;
+		typedef ::std::map<std::string, AClient*, nickcmp>	clientMap;
 
-		typedef bool (*ptr_function)(Client *const user, Channel *const channel, const std::string & flagArguments);
-		typedef	typename std::map<char, ptr_function>				signedFunctionPointerMap;
-		typedef	typename std::map<char, signedFunctionPointerMap>	functionPointerMap;
+		typedef bool (*ptr_function)(AClient *const user, Channel *const channel, const std::string & flagArguments);
+		typedef std::map<char, ptr_function>				signedFunctionPointerMap;
+		typedef std::map<char, signedFunctionPointerMap>	functionPointerMap;
 
-		/* Members */
+		/* Members */ // TODO: Init in constructor
+		std::string	hostname;
+		std::string	motd;
+		std::string	createdAt;
+		std::string password;
 
-		databaseServersMap	dataServersMap;
-		databaseChannelsMap	dataChannelsMap;
-		databaseClientsMap	dataClientsMap;
+		serverMap	dataServersMap;
+		channelMap	dataChannelsMap;
+		clientMap	dataClientsMap;
 		functionPointerMap	modeChannelFunctionsMap;
 		functionPointerMap	modeUserFunctionsMap;
 
 		/* Member functions */
 
-		IRCDatabase();
-		IRCDatabase(Server* const server);
-		IRCDatabase(const IRCDatabase& other);
-		virtual ~IRCDatabase() throw();
+		Database();
+		Database(const ServerConfig& config);
+		Database(const Database& other);
+		virtual ~Database() throw();
 
-		IRCDatabase& operator=(const IRCDatabase& other);
+		Database& operator=(const Database& other);
 
 		/* Database seters */
 
-		void		addServer(Server* const server);
+		void		addServer(AServerConnection* const server);
 		void		addChannel(Channel* const channel);
-		void		addClient(Client* const client);
+		void		addClient(AClient* const client);
 		void		set_ClientNick(const std::string& previous, const std::string& current);
 
 		/* Database getters */
 
-		Client*		getClient(std::string const &nickname) const;
-		Channel*	getChannel(std::string const &channelName) const;
+		AClient*	getClient(std::string const& nickname) const;
+		Channel*	getChannel(std::string const& channelName) const;
+		Channel*	getJoinedChannel(AClient const*const user, std::string const& channelName) const;
+		Channel*	getVisibleChannel(AClient const*const user, std::string const& channelName) const;
 
 		/* Mode pointer functions */
 
@@ -64,99 +75,68 @@ namespace NAMESPACE_IRC
 		signedFunctionPointerMap	getPlusUserMap();
 		signedFunctionPointerMap	getMinusUserMap();
 
-		/* Share/Receive content between servers */
+		/* Parser functions */
+		bool	parseUserMode(AClient *user, std::string & flags,
+			std::string & flagArguments);
 
-		void	init_new_server_conextion(Server* const target);
+		bool	parseChannelMode(AClient *user, std::string const & channelName,
+				std::string & flags, std::string & flagArguments);
+
+		/* Share/Receive content between servers */
+		// FIXME
+		//void	init_new_server_conextion(Server* const target);
 	};
 
 	/////////////////////////////////////////////////
 	// Inline IRCDatabase basic members definition //
 	/////////////////////////////////////////////////
 
-	template <class Server, class Client, class Channel>
 	inline
-	IRCDatabase<Server, Client, Channel>::
-	IRCDatabase()
+	Database::
+	Database()
 	{ }
 
-	template <class Server, class Client, class Channel>
 	inline
-	IRCDatabase<Server, Client, Channel>::
-	IRCDatabase(Server* const server)
+	Database::
+	Database(ServerConfig const& config)
+		:	hostname(config[IRC_CONF_HOSTNAME]),
+			motd(config[IRC_CONF_MOTD]),
+			createdAt(config[IRC_CONF_CREATEDAT])
 	{
-		// TODO: Add servername
-		dataServersMap[server->get_hostname()] = server;
 		createModeFunctionsMap();
-	}	// Do we have to add the clients and channels of server ?
+	}
 
-	template <class Server, class Client, class Channel>
 	inline
-	IRCDatabase<Server, Client, Channel>::
-	IRCDatabase(const IRCDatabase& other)
+	Database::
+	Database(const Database& other)
 	{ *this = other; }
 
-	template <class Server, class Client, class Channel>
 	inline
-	IRCDatabase<Server, Client, Channel>::
-	~IRCDatabase() throw()
+	Database::
+	~Database() throw()
 	{ }	// erase all three maps ?
-
-	template <class Server, class Client, class Channel>
-	IRCDatabase<Server, Client, Channel>&
-	IRCDatabase<Server, Client, Channel>::
-	operator=(const IRCDatabase& other)
-	{
-		if (this != &other)
-		{
-			dataServersMap = other.dataServersMap;
-			dataChannelsMap = other.dataChannelsMap;
-			dataClientsMap = other.dataClientsMap;
-			modeChannelFunctionsMap = other.modeChannelFunctionsMap;
-			modeUserFunctionsMap = other.modeUserFunctionsMap;
-		}
-		return (*this);
-	}
 
 	///////////////////////////////////////////////////
 	// Inline IRCDatabase setters members definition //
 	///////////////////////////////////////////////////
 
-	namespace
-	{
-		/**
-		 * 	@brief uses operator[] @a Map
-		 *
-		 * 	@tparam Map a std::map.
-		 * 	@tparam Key the index in the map.
-		 * 	@tparam Value what will be inserted at @a Key
-		*/
-		template <typename Map, typename Key ,typename Value>
-		inline void
-		insert_value_at_key(Map& m, const Key& k, const Value& v)
-		{ m[k] = v; }
-	}
-
-	template <class Server, class Client, class Channel>
 	inline void
-	IRCDatabase<Server, Client, Channel>::
-	addServer(Server* const server)
-	{ insert_value_at_key(dataServersMap, server, server); }
+	Database::
+	addServer(AServerConnection* const server)
+	{ dataServersMap[server->name] = server; }
 
-	template <class Server, class Client, class Channel>
 	inline void
-	IRCDatabase<Server, Client, Channel>::
+	Database::
 	addChannel(Channel* const channel)
-	{ insert_value_at_key(dataChannelsMap, channel->name, channel); }
+	{ dataChannelsMap[channel->name] = channel; }
 
-	template <class Server, class Client, class Channel>
 	inline void
-	IRCDatabase<Server, Client, Channel>::
-	addClient(Client* const client)
-	{ insert_value_at_key(dataClientsMap, client->nickname, client); }
+	Database::
+	addClient(AClient* const client)
+	{ dataClientsMap[client->nickname] = client; }
 
-	template <class Server, class Client, class Channel>
 	inline void
-	IRCDatabase<Server, Client, Channel>::
+	Database::
 	set_ClientNick(const std::string& previous, const std::string& current)
 	{ const_cast<std::string&>(dataClientsMap.find(previous)->first) = current; }
 
@@ -166,26 +146,60 @@ namespace NAMESPACE_IRC
 
 	namespace
 	{
-		template <typename Value, typename Map, typename Key>
-		inline Value
-		get_from_map(const Map& m, const Key& k)
+		template <typename Map>
+		inline typename Map::mapped_type
+		get_from_map(const Map& m, const typename Map::key_type& k)
 		{
 			const typename Map::const_iterator& it = m.find(k);
 			return (it == m.end() ? NULL : it->second);
 		}
 	}
 
-	template <class Server, class Client, class Channel>
-	inline Client*
-	IRCDatabase<Server, Client, Channel>::
+	inline AClient*
+	Database::
 	getClient(const std::string& nickname) const
-	{ return (get_from_map<Client*>(dataClientsMap, nickname)); }
+	{ return (get_from_map(dataClientsMap, nickname)); }
 
-	template <class Server, class Client, class Channel>
+	// TODO: Use insensitive compare instead of tolower
+
 	inline Channel*
-	IRCDatabase<Server, Client, Channel>::
+	Database::
 	getChannel(const std::string& channelName) const
-	{ return (get_from_map<Channel*>(dataChannelsMap, ft::strToLower(channelName))); }
+	{ return (get_from_map(dataChannelsMap, ft::strToLower(channelName))); }
+
+	inline Channel*
+	Database::
+	getJoinedChannel(const AClient* const user, const std::string& channelName) const
+	{
+		Channel *channel = getChannel(channelName);
+
+		if (!channel->isInChannel(user->nickname))
+			channel = NULL;
+		return channel;
+	}
+
+	/**
+	 * 	@brief Return a pointer to the channel which name is channelName.
+	 *
+	 * 	@param channelName The name of the channel.
+	 *
+	 * 	NOTE: The search is done among all the channels in the database
+	*/
+	inline Channel*
+	Database::
+	getVisibleChannel(const AClient* const user, const std::string& channelName) const
+	{
+		Channel *channel = getJoinedChannel(user, channelName);
+
+		if (!channel)
+		{
+			channel = getChannel(channelName);
+
+			if (channel && !channel->isLocalChannelVisibleForClient(user))
+				channel = NULL;
+		}
+		return channel;
+	}
 
 	////////////////////////////
 	// Mode function pointers //
@@ -204,20 +218,8 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	template <class Server, class Client, class Channel>
-	void
-	IRCDatabase<Server, Client, Channel>::
-	createModeFunctionsMap()
-	{
-		modeChannelFunctionsMap['+'] = getPlusChannelMap();
-		modeChannelFunctionsMap['-'] = getMinusChannelMap();
-		modeUserFunctionsMap['+'] = getPlusUserMap();
-		modeUserFunctionsMap['-'] = getMinusUserMap();
-	}
-
-	template <class Server, class Client, class Channel>
-	inline typename IRCDatabase<Server, Client, Channel>::signedFunctionPointerMap
-	IRCDatabase<Server, Client, Channel>::
+	inline Database::signedFunctionPointerMap
+	Database::
 	getPlusChannelMap()
 	{
 		static const unsigned char indexes[] = {
@@ -248,9 +250,8 @@ namespace NAMESPACE_IRC
 		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
-	template <class Server, class Client, class Channel>
-	inline typename IRCDatabase<Server, Client, Channel>::signedFunctionPointerMap
-	IRCDatabase<Server, Client, Channel>::
+	inline Database::signedFunctionPointerMap
+	Database::
 	getMinusChannelMap()
 	{
 		static const unsigned char indexes[] = {
@@ -281,9 +282,8 @@ namespace NAMESPACE_IRC
 		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
-	template <class Server, class Client, class Channel>
-	inline typename IRCDatabase<Server, Client, Channel>::signedFunctionPointerMap
-	IRCDatabase<Server, Client, Channel>::
+	inline Database::signedFunctionPointerMap
+	Database::
 	getPlusUserMap()
 	{
 		static const unsigned char indexes[] = {
@@ -300,9 +300,8 @@ namespace NAMESPACE_IRC
 		return (for_each_assign_by_index<signedFunctionPointerMap>(f, indexes, ARRAY_SIZE(f)));
 	}
 
-	template <class Server, class Client, class Channel>
-	inline typename IRCDatabase<Server, Client, Channel>::signedFunctionPointerMap
-	IRCDatabase<Server, Client, Channel>::
+	inline Database::signedFunctionPointerMap
+	Database::
 	getMinusUserMap()
 	{
 		static const unsigned char indexes[] = {
@@ -325,26 +324,25 @@ namespace NAMESPACE_IRC
 
 	namespace
 	{
-		template <typename Exec, class Map, class __Server>
+		template <typename Exec, class Map, class __Target>
 		void
-		for_each_in_map(const Map& m, __Server* const target)
+		for_each_in_map(const Map& m, __Target* const target)
 		{
 			for (typename Map::const_iterator it = m.begin() ; it != m.end() ; it++)
 				Exec(*it, target);
 		}
 
-		template <class __Server>
 		inline void
-		handle_server(const __Server& src, __Server* const target)
+		handle_server(const AServerConnection& src, AServerConnection* const target)
 		{
-			// TO DO: RESEARCH ABOUT THE SERVER COMMAND
+			// TODO: RESEARCH ABOUT THE SERVER COMMAND
+			// TODO: Handle self sever name
 
-			*target << (std::string("SERVER ") + src.hostname + IRC_MESSAGE_SUFFIX);
+			*target << (std::string("SERVER ") + src.name + IRC_MESSAGE_SUFFIX);
 		}
 
-		template <class __Server, class __Channel>
 		inline void
-		handle_client_channels(const __Channel& src, __Server* const target)
+		handle_client_channels(Channel const& src, AServerConnection* const target)
 		{ *target << (std::string("JOIN ") + src.name + IRC_MESSAGE_SUFFIX); }
 
 		template <typename AddMode, size_t amount, class __Server, class __Channel>
@@ -383,20 +381,18 @@ namespace NAMESPACE_IRC
 
 			handle_mode<add_client_mode, ARRAY_SIZE(flags)>(flags, symbols,src, target);
 		}
-
-		template <class __Server, class __Client>
-		void
-		handle_client(const __Client& src, __Server* const target)
+/* 		void
+		handle_client(const AClient& src, AServerConnection* const target)
 		{
 			// TO DO: Add old_nickname member ?
 			// TO DO: PASS ?
 
 			*target << (std::string("NICK ") + src.nickname + IRC_MESSAGE_SUFFIX
-		/*	+ std::string("PASS ") + src.password + IRC_MESSAGE_SUFFIX */
+		//	+ std::string("PASS ") + src.password + IRC_MESSAGE_SUFFIX
 			+ std::string("USER") + src.username + " " + src.hostname + " "
 					+ src.servername + " " + src.realname + IRC_MESSAGE_SUFFIX);
 			handle_client_modes(src, target);
-			for_each_in_map<handle_client_channels<__Server, __Client> >(src.clientChannels, target);
+			for_each_in_map<handle_client_channels>(src.channels, target);
 		}
 
 		template <class __Server, class __Channel>
@@ -409,12 +405,11 @@ namespace NAMESPACE_IRC
 			handle_mode<add_channel_mode, ARRAY_SIZE(flags)>(flags, symbols, src, target);
 		}
 
-		template <class __Server, class __Channel>
 		void
-		handle_channel(const __Channel& src, __Server* const target)
+		handle_channel(const Channel& src, AServerConnection* const target)
 		{
-			static const uint32_t		flags[] = { /* 512,*/ 1024, 2048, 4096, 8192, 16384 };
-			static const char* const	symbols[] = { /*"O",*/ "o", "v", "b", "e", "I" };
+			static const uint32_t		flags[] = { 1024, 2048, 4096, 8192, 16384 }; //  512 -> O
+			static const char* const	symbols[] = { "o", "v", "b", "e", "I" };
 
 			// Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
 
@@ -439,24 +434,24 @@ namespace NAMESPACE_IRC
 		template <class Map, class __Server>
 		inline void
 		send_server_data(const Map& m, __Server* const target)
-		{ for_each_in_map<handle_server<Server> >(m, target); }
+		{ for_each_in_map<handle_server>(m, target); }
 
 		template <class Map, class __Server>
 		inline void
 		send_client_data(const Map& m, __Server* const target)
-		{ for_each_in_map<handle_client<Server, AClient> >(m, target); }
+		{ for_each_in_map<handle_client>(m, target); }
 
 		template <class Map, class __Server>
 		inline void
 		send_channel_data(const Map& m, __Server* const target)
-		{ for_each_in_map<handle_channel<Server, Channel> >(m, target); }
+		{ for_each_in_map<handle_channel>(m, target); }
+	*/
 
 	}
 
-	// TO DO: Need to add prefixes to simulte different clients
-	template <class Server, class Client, class Channel>
+/* 	// TO DO: Need to add prefixes to simulte different clients
 	void
-	IRCDatabase<Server, Client, Channel>::
+	Database::
 	init_new_server_conextion(Server* const target)
 	{
 		// Decompose the database into commands
@@ -464,6 +459,6 @@ namespace NAMESPACE_IRC
 		send_server_data(dataServersMap, target);
 		send_client_data(dataClientsMap, target);
 		send_channel_data(dataChannelsMap, target);
-	}
+	} */
 
 }

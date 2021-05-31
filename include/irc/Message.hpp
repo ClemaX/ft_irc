@@ -6,27 +6,29 @@
 #include <utils/parseField.hpp>
 
 #include <irc/AMessage.hpp>
-#include <irc/Server.hpp>
 
 namespace NAMESPACE_IRC
 {
+	template<typename _Cmd>
 	struct	Message	:	AMessage
 	{
-		Server::Command const*		command;
+		_Cmd const*					command;
 		std::vector<std::string>	arguments;
 
 		Message();
 		~Message();
 
-		Message(std::string& buffer) throw(MessageException);
+		Message(_Cmd const*const commands[], size_t commandCount, std::string& buffer) throw(MessageException);
 	};
 
+	template<typename _Cmd>
 	inline
-	Message::Message()
+	Message<_Cmd>::Message()
 		: command(NULL)
 	{ }
 
+	template<typename _Cmd>
 	inline
-	Message::~Message()
+	Message<_Cmd>::~Message()
 	{ }
 }

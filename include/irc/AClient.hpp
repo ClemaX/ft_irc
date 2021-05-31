@@ -2,9 +2,8 @@
 
 #include <irc/ircdef.hpp>
 
-#include <socket/ABufferedConnection.hpp>
+#include <irc/ABufferedConnection.hpp>
 
-#include <irc/Database.hpp>
 #include <irc/AMessage.hpp>
 
 #include <irc/PrivateMessage.hpp>
@@ -17,19 +16,20 @@
 #include <stdint.h>
 
 #include <utils/BitField.hpp>
+#include <utils/strings.hpp>
 
 #include <ostream>
 
 namespace NAMESPACE_IRC
 {
+	class Channel;
+	struct Database;
+
 	class AClient	:	public ABufferedConnection
 	{
 	private:
-		typedef	Channel<Server, AClient>				Channel;
 		typedef std::map<std::string, Channel*>			channelMap;
 		typedef std::pair<std::string, Channel*>		channelPair;
-		typedef IRCDatabase<Server, AClient, Channel>	IRCDatabase;
-
 
 	public:
 		enum	Mode
@@ -91,7 +91,8 @@ namespace NAMESPACE_IRC
 		 * @brief Send a message to the user using the underlying connection.
 		 */
 		AClient&	operator<<(IReply const& message)
-		{ ABufferedConnection::operator<<(message.serialize()); return *this; };
+		{ ABufferedConnection::operator<<(message); return *this; };
+
 		AClient&	operator<<(std::string const& message)
 		{ ABufferedConnection::operator<<(message); return *this; }
 
@@ -102,6 +103,8 @@ namespace NAMESPACE_IRC
 
 		bool	isOperator() const throw()
 		{ return modes[o]; }
+
+		void	welcome(Database const& database);
 
 		void	joinChannel(Channel* const channel);
 		void	leaveChannel(Channel* const channel);
@@ -115,18 +118,18 @@ namespace NAMESPACE_IRC
 		bool	isInSameChannel(AClient const* client) const;
 
 		Channel	*getChannel(std::string const& channelName) const;
-		Channel	*getChannelGlobal(IRCDatabase const& db, std::string const& channelName) const;
+//		Channel	*getChannelGlobal(Database const& db, std::string const& channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
 
 		void	receiveMessage(AClient const* client, std::string const &message)
 		{ *this << PrivateMessage(client->nickname, message); };
 
 		bool	listChannelInfo(Channel* const channel);
-		bool	listAllChannelsListInfo(IRCDatabase const& db);
+		bool	listAllChannelsListInfo(Database const& db);
 
 		bool	listChannelWhoQueryInfo(Channel* const channel, int opFlag);
-		bool	listAllVisibleUsersWhoQueryInfo(IRCDatabase const& db);
-		bool	matchMaskWhoQueryInfo(IRCDatabase const& db, std::string const &mask);
+		bool	listAllVisibleUsersWhoQueryInfo(Database const& db);
+		bool	matchMaskWhoQueryInfo(Database const& db, std::string const &mask);
 
 		//AClient&	operator<<(IReply const& str);
 	};

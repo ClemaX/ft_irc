@@ -1,14 +1,16 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
+
+#include <irc/commands/utils.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::ListCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	ListCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
-		(void)server;
+		(void)database;
 		if (!arguments.size())
-			user->listAllChannelsListInfo(server.database);
+			user->listAllChannelsListInfo(database);
 		else
 		{
 			std::queue<std::string> channelsQueue;
@@ -22,8 +24,7 @@ namespace NAMESPACE_IRC
 			{
 				const std::string channelName = ft::strToLower(channelsQueue.front());
 				channelsQueue.pop();
-				// TODO: Shouldn't this be a database function?
-				Server::__Channel *channel = user->getChannelGlobal(server.database, channelName);
+				Channel	*channel = database.getVisibleChannel(user, channelName);
 				user->listChannelInfo(channel);
 			}
 		}

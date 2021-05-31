@@ -1,20 +1,23 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
+
+#include <irc/commands/utils.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::NamesCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	NamesCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
-			IRCDatabase::databaseChannelsMap::iterator itb = server.database.dataChannelsMap.begin();
-			IRCDatabase::databaseChannelsMap::iterator ite = server.database.dataChannelsMap.end();
+			Database::channelMap::iterator itb = database.dataChannelsMap.begin();
+			Database::channelMap::iterator ite = database.dataChannelsMap.end();
 			while (itb != ite)
 			{
 				if (itb->second->isVisibleForClient(user))
 				{
 					*user << ChannelNamesReply(gHostname, itb->second);
+					// TODO: EndOfNamesReply should be after the loop (unique)
 					*user << EndOfNamesReply(gHostname, itb->first);
 				}
 				itb++;
@@ -33,11 +36,13 @@ namespace NAMESPACE_IRC
 		{
 			const std::string channelName = ft::strToLower(channelsQueue.front());
 			channelsQueue.pop();
-			Server::__Channel *channel = user->getChannelGlobal(server.database, channelName);
 
-			if (channel && channel->isVisibleForClient(user))
+			Channel *channel = database.getVisibleChannel(user, channelName);
+
+			if (channel)
 			{
 				*user << ChannelNamesReply(gHostname, channel);
+			// TODO: EndOfNamesReply should be after the loop (unique)
 				*user << EndOfNamesReply(gHostname, channelName);
 			}
 		}

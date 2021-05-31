@@ -5,35 +5,32 @@
 
 #include <iostream> // using std::cout // for testing for now
 
-//#include <irc/AClient.hpp>
+#include <irc/AClient.hpp>
 #include <irc/AMessage.hpp>
-#include <irc/Server.hpp>
+
 #include <utils/strings.hpp>
 
 #include <utils/BitField.hpp>
 
-#include <irc/replies/ErrorReplies.hpp>
-#include <irc/replies/NumericReply.hpp>
-#include <irc/replies/CommandReplies.hpp>
 #include <irc/PrivateMessage.hpp>
 
 #include <stdint.h> // fast, portable, secure types (C++11 cstdint)
 
+
 namespace NAMESPACE_IRC
 {
+	//class AClient;
 	/// global Host Name
 	extern std::string const&	gHostname;
 
 	// TODO: Reference to connection and add ChannelClient on JOIN command
-
-	template <class __Client>
 	struct	ChannelClient // IN WHICH WAY THIS CLASS CAN HAVE AN USE ?
 	{
-		__Client*	client;
+		AClient*	client;
 
 		ChannelClient();
-		ChannelClient(__Client* const client);
-		ChannelClient(__Client* const client, bool isOp);
+		ChannelClient(AClient* const client);
+		ChannelClient(AClient* const client, bool isOp);
 		ChannelClient(const ChannelClient& src);
 
 		~ChannelClient();
@@ -66,7 +63,6 @@ namespace NAMESPACE_IRC
  	 *	I - set/remove an invitation mask to automatically override the invite-only flag;
 	*/
 
-	template <class __Server, class __Client>
 	class Channel
 	{
 		/* Member types */
@@ -102,14 +98,15 @@ namespace NAMESPACE_IRC
 			size_t			l;
 			std::string		k;
 
-			ChannelModes();
+			ChannelModes()
+			{ };
 
 			ChannelModes& operator=(uint32_t modes)
 			{ BitField<Mode, uint32_t>::operator=(modes); return *this; }
 		};
 
-		typedef typename std::map<__Client*, ChannelClient<__Client> >	channelClientMap;
-		typedef typename std::map<__Server*, __Server*>					channelServerMap;
+		typedef std::map<AClient*, ChannelClient >	channelClientMap;
+		//typedef std::map<__Server*, __Server*>					channelServerMap;
 
 		struct ChannelException
 		: public std::exception
@@ -133,7 +130,7 @@ namespace NAMESPACE_IRC
 		public:
 
 		channelClientMap	clientsMap;
-		channelServerMap	serversMap;
+	//	channelServerMap	serversMap;
 		std::string			topic;
 		ChannelModes		channelModes;
 		const std::string	name;
@@ -150,7 +147,7 @@ namespace NAMESPACE_IRC
 		/* Getters */
 
 		const std::string&	getTopic() const;
-		__Client*			getUser(const std::string& clientNickname) const;
+		AClient*			getUser(const std::string& clientNickname) const;
 
 		/* Setters  */
 
@@ -160,40 +157,40 @@ namespace NAMESPACE_IRC
 
 		bool	checkChannelName(const std::string &str) const;
 
-		bool	isInChannel(__Client*const client) const;
+		bool	isInChannel(AClient*const client) const;
 		bool	isInChannel(const std::string& clientNickname) const;
 
-		bool	isVisibleForClient(__Client*const client) const;
+		bool	isVisibleForClient(AClient*const client) const;
 
-		bool	isOperator(__Client const* client) const;						// also check for Creators
+		bool	isOperator(AClient const* client) const;						// also check for Creators
 		bool	isOperator(const std::string& clientNickname) const;	// also check for Creators
 
-		bool	isCreator(__Client const* client) const;
+		bool	isCreator(AClient const* client) const;
 		bool	isCreator(const std::string& clientNickname) const;
 
-		bool	isStatusVoice(__Client const* user) const;
-		bool	isStatusBanned(__Client const* user) const;
-		bool	isStatusException(__Client const* user) const;
-		bool	isStatusInvite(__Client const* user) const;
+		bool	isStatusVoice(AClient const* user) const;
+		bool	isStatusBanned(AClient const* user) const;
+		bool	isStatusException(AClient const* user) const;
+		bool	isStatusInvite(AClient const* user) const;
 
 		bool	isLocalChannel(void) const;
 		bool	isNetworkChannel(void) const;
 		bool	isNetworkSafeChannel(void) const;
 		bool	isNetworkUnmoderatedChannel(void) const;
 
-		bool	isLocalChannelVisibleForClient(__Client const* client) const;
+		bool	isLocalChannelVisibleForClient(AClient const* client) const;
 
 		/* Message / Notice */
 
-		void	receiveMessage(__Client*const client, std::string const &message);
-		void	receiveNotice(__Client *const client, std::string const &message);
+		void	receiveMessage(AClient*const client, std::string const &message);
+		void	receiveNotice(AClient *const client, std::string const &message);
 
 		/* Modifiers */
 
-		bool	addClient(__Client*const client, std::string& password, bool isChannelOperator = false);
-		bool	addServer(__Server*const server);
+		bool	addClient(AClient*const client, std::string& password, bool isChannelOperator = false);
+		//bool	addServer(__Server*const server);
 
-		bool	removeClient(__Client*const client, std::string const &leaveMessage);
+		bool	removeClient(AClient*const client, std::string const &leaveMessage);
 
 		bool	close();
 
@@ -219,47 +216,47 @@ namespace NAMESPACE_IRC
 		bool	removeInviteList(const std::string& nickname);
 
 	};
+}
 
+#include <irc/replies/CommandReplies.hpp>
+#include <irc/replies/ErrorReplies.hpp>
+
+namespace irc
+{
 	///////////////////////////
 	// ChannelClient members //
 	///////////////////////////
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>::
+	ChannelClient::
 	ChannelClient()
 	{ }
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>::
-	ChannelClient(__Client* const client, bool isOp)
+	ChannelClient::
+	ChannelClient(AClient* const client, bool isOp)
 	: client(client)
 	{ static_cast<void>(isOp); }
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>::
-	ChannelClient(__Client* const client)
+	ChannelClient::
+	ChannelClient(AClient* const client)
 	: client(client)
 	{ }
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>::
+	ChannelClient::
 	ChannelClient(const ChannelClient& src)
 	{ *this = src; }
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>::
+	ChannelClient::
 	~ChannelClient()
 	{ }
 
-	template <class __Client>
 	inline
-	ChannelClient<__Client>&
-	ChannelClient<__Client>::
+	ChannelClient&
+	ChannelClient::
 	operator=(const ChannelClient& src)
 	{
 		client = src.client;
@@ -270,45 +267,17 @@ namespace NAMESPACE_IRC
 	// Channel members //
 	/////////////////////
 
-	template <class __Server, class __Client>
 	inline
-	Channel<__Server, __Client>::ChannelModes::ChannelModes()
-	{ }
-
-	template <class __Server, class __Client>
-	Channel<__Server, __Client>::
-	Channel(std::string const& channelName)
-	throw(InvalidChannelNameException)
-	: name(setChannelName(channelName))
-	{
-		if (checkChannelName(name) == false)
-			throw InvalidChannelNameException();
-		else if (isNetworkUnmoderatedChannel())
-			channelModes = Channel::m | Channel::t;
-	}
-
-	template <class __Server, class __Client>
-	inline
-	Channel<__Server, __Client>::
+	Channel::
 	~Channel()
 	{ }
 
-	template <class __Server, class __Client>
-	Channel<__Server, __Client> const&
-	Channel<__Server, __Client>::
-	operator<<(IReply const& message)
-	{
-		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
-			*it->first << message;
-		return (*this);
-	}
-
-	/* template <class __Server, class __Client>
-	Channel<__Server, __Client> const&
-	Channel<__Server, __Client>::
+	/* template <class __Server, class AClient>
+	Channel const&
+	Channel::
 	operator<<(PrivateMessage const& reply)
 	{
-		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		for (Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 			*it->first << reply;
 		return (*this);
 	} */
@@ -317,83 +286,26 @@ namespace NAMESPACE_IRC
 	// Getters //
 	/////////////
 
-	template <class __Server, class __Client>
 	inline const std::string&
-	Channel<__Server, __Client>::
+	Channel::
 	getTopic() const
 	{ return (topic); }
-
-	template <class __Server, class __Client>
-	__Client*
-	Channel<__Server, __Client>::
-	getUser(std::string const& clientNickname) const
-	{
-		for (typename channelClientMap::const_iterator it = clientsMap.begin()
-		; it != clientsMap.end(); it++)
-			if (it->first->nickname == clientNickname)
-				return (it->first);
-		return (NULL);
-	}
 
 	/////////////
 	// Setters //
 	/////////////
 
-	template <class __Server, class __Client>
 	inline void
-	Channel<__Server, __Client>::
+	Channel::
 	setTopic(const std::string& str)
 	{ topic = str; }
-
-	template <class __Server, class __Client>
-	std::string
-	Channel<__Server, __Client>::
-	setChannelName(const std::string& channelName)
-	{
-		if (!isNetworkSafeChannel())
-			return (ft::strToLower(channelName));
-
-		std::string str = ft::strToLower(channelName);
-		channelType = str.at(0);
-
-		std::string prefix;
-		srand (time(NULL));
-		static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz0123456789";
-		for (size_t i = 0 ; i < 5UL ; i++)
-			prefix.push_back(alphanum[rand() % ARRAY_SIZE(alphanum)]);
-		str.insert(1, prefix);
-		return (str);
-	}
-
 	//////////////
 	// Booleans //
 	//////////////
 
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	checkChannelName(const std::string& str) const
-	{
-		return (!((str.length() < 2UL || str.length() > 50UL)
-		|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
-		|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
-	}
-
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	isInChannel(std::string const& clientNickname) const
-	{
-		for (typename channelClientMap::const_iterator it = clientsMap.begin(); it != clientsMap.end(); it++)
-			if (it->first->nickname == clientNickname)
-				return (true);
-		return (false);
-	}
-
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isInChannel(__Client*const client) const
+	Channel::
+	isInChannel(AClient*const client) const
 	{ return (clientsMap.find(client) != clientsMap.end()); }
 
 	namespace
@@ -407,88 +319,74 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isOperator(__Client const* client) const
+	Channel::
+	isOperator(AClient const* client) const
 	{ return (check_user_mod(channelModes.channelModes, client->nickname, Channel::O | Channel::o)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isCreator(__Client const* client) const
+	Channel::
+	isCreator(AClient const* client) const
 	{ return (check_user_mod(channelModes.channelModes, client->nickname, Channel::O)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isStatusVoice(__Client const* user) const
+	Channel::
+	isStatusVoice(AClient const* user) const
 	{ return (check_user_mod(channelModes.channelModes, user->nickname, Channel::v)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isStatusBanned(__Client const* user) const
+	Channel::
+	isStatusBanned(AClient const* user) const
 	{ return (check_user_mod(channelModes.channelModes, user->nickname, Channel::b)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isStatusException(__Client const* user) const
+	Channel::
+	isStatusException(AClient const* user) const
 	{ return (check_user_mod(channelModes.channelModes, user->nickname, Channel::e)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isStatusInvite(__Client const* user) const
+	Channel::
+	isStatusInvite(AClient const* user) const
 	{ return (check_user_mod(channelModes.channelModes, user->nickname, Channel::i)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isLocalChannelVisibleForClient(__Client const* client) const
+	Channel::
+	isLocalChannelVisibleForClient(AClient const* client) const
 	{ return (!isLocalChannel() || client->isLocal()); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
-	isVisibleForClient(__Client*const client) const
+	Channel::
+	isVisibleForClient(AClient*const client) const
 	{ return (isInChannel(client) || (!(channelModes & (Channel::p | Channel::s))
 	&& isLocalChannelVisibleForClient(client))); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isOperator(const std::string& clientNickname) const
 	{ return (check_user_mod(channelModes.channelModes, clientNickname, Channel::O | Channel::o)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isCreator(const std::string& clientNickname) const
 	{ return (check_user_mod(channelModes.channelModes, clientNickname, Channel::O)); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isLocalChannel(void) const
 	{ return (channelType == '&'); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isNetworkChannel(void) const
 	{ return (channelType == '#'); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isNetworkSafeChannel(void) const
 	{ return (channelType == '!'); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	isNetworkUnmoderatedChannel(void) const
 	{ return (channelType == '+'); }
 
@@ -496,110 +394,16 @@ namespace NAMESPACE_IRC
 	// Message / Notice //
 	//////////////////////
 
-	template <class __Server, class __Client>
-	void
-	Channel<__Server, __Client>::
-	receiveMessage(__Client *const client, std::string const& message)
-	{
-		if ((!isInChannel(client) && channelModes & Channel::n)
-		|| (channelModes & Channel::m && !isStatusVoice(client) && !isOperator(client))
-		|| (isStatusBanned(client)))
-			*client << CannotSendToChanError(gHostname, name);
-		else
-			*this << PrivateMessage(client->nickname, message);
-	}
-
-	template <class __Server, class __Client>
-	void
-	Channel<__Server, __Client>::
-	receiveNotice(__Client*const client, std::string const& message)
-	{
-		if (!((!isInChannel(client) && channelModes & Channel::n)
-		|| (channelModes & Channel::m && !isStatusVoice(client) && !isOperator(client))
-		|| (isStatusBanned(client))))
-			*this << PrivateMessage(client->nickname, message);
-	}
-
-	///////////////
-	// Modifiers //
-	///////////////
-
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::addClient(__Client*const client, std::string& password, bool isChannelOperator)
-	{
-		if (clientsMap.find(client) != clientsMap.end())
-			return (false);
-		if (channelModes.l > 0 && clientsMap.size() >= channelModes.l)
-		{
-			*client << ChannelIsFullError(gHostname, name);
-			return (false);
-		}
-		if (isStatusBanned(client) && !isStatusException(client))
-		{
-			*client << BannedFromChanError(gHostname, name);
-			return (false);
-		}
-		if ((channelModes & Channel::i) && !isStatusInvite(client))
-		{
-			*client << InviteOnlyChanError(gHostname, name);
-			return (false);
-		}
-		if (channelModes.k.compare("") && channelModes.k == password)
-		{
-			*client << BadChannelKeyError(gHostname, name);
-			return (false);
-		}
-		clientsMap[client] = ChannelClient<AClient>(client, isChannelOperator); // NEED THIS ?!?!
-		channelModes.channelModes.insert(std::pair<std::string, uint32_t>(client->nickname, 0));
-		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
-			addCreator(client->nickname);
-		else if (isChannelOperator)
-			addOperator(client->nickname);
-		client->joinChannel(this);
-		*this << JoinChannelMessage(client->nickname, name);
-		*client << TopicReply(gHostname, name, topic);
-		*client << ChannelNamesReply(gHostname, this);
-
-		return true;
-	}
-
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	addServer(__Server* const server)
-	{
-		const typename Channel::channelServerMap::iterator& it = serversMap.find(server);
-		if (it != serversMap.end())
-			return (false);
-		serversMap[server] = server;
-		return (true);
-	}
-
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	removeClient(__Client* const client, std::string const& leaveMessage)
-	{
-		const typename Channel::channelClientMap::iterator& it = clientsMap.find(client);
-		if (it == clientsMap.end())
-			return (false);
-		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
-		client->leaveChannel(this);
-		clientsMap.erase(it);
-		if (clientsMap.empty())
-			return (close());
-		return (true);
-	}
-
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	close()
 	{
-		if (serversMap.empty() == false)
-			serversMap.begin()->second->database.dataChannelsMap.erase(name);
-		delete this;
+		// FIXME
+/*
+		if (!serversMap.empty())
+			serversMap.begin()->second->database.dataChannelsMap.erase(name); */
+		// delete this;
+		// I don't think we can delete ourselves
 		return (true);
 	}
 
@@ -609,9 +413,9 @@ namespace NAMESPACE_IRC
 
 	namespace
 	{
-		template <class __Reply, class __Channel>
+		template <class __Reply, class Channel>
 		inline bool
-		user_in_channel(const std::string& nickname, __Channel* const c)
+		user_in_channel(const std::string& nickname, Channel* const c)
 		{
 			if (!c->isInChannel(nickname))
 			{
@@ -621,9 +425,9 @@ namespace NAMESPACE_IRC
 			return (true);
 		}
 
-		template <class __Reply, class Map, class __Channel>
+		template <class __Reply, class Map, class Channel>
 		bool
-		add_mode(Map& m, __Channel* const c, const std::string& key, size_t mask,
+		add_mode(Map& m, Channel* const c, const std::string& key, size_t mask,
 		const char*const mode_msg)
 		{
 			const typename Map::iterator& it = m.find(key);
@@ -636,9 +440,9 @@ namespace NAMESPACE_IRC
 			return (false);
 		}
 
-		template <class __Reply, class Map, class __Channel>
+		template <class __Reply, class Map, class Channel>
 		bool
-		reset_mode(Map& m, __Channel* const c, const std::string& key, size_t mask,
+		reset_mode(Map& m, Channel* const c, const std::string& key, size_t mask,
 		const char*const mode_msg)
 		{
 			const typename Map::iterator& it = m.find(key);
@@ -652,93 +456,81 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addCreator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::O, "+O"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeCreator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::O, "-O"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addOperator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::o, "+o"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeOperator(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::o, "-o"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addVoice(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::v, "+v"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeVoice(const std::string& nickname)
 	{
 		return (user_in_channel<UserNotInChannelError>(nickname, this)
 		&& reset_mode<ChannelModeIsReply>(channelModes.channelModes, this, nickname, Channel::v, "-v"));
 	}
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addBanned(const std::string& nickname)
 	{ return (add_mode<BanListReply>(channelModes.channelModes, this, nickname, Channel::b, "+")); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeBanned(const std::string& nickname)
 	{ return (reset_mode<BanListReply>(channelModes.channelModes, this, nickname, Channel::b, "-")); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addException(const std::string& nickname)
 	{ return (add_mode<ExceptionListReply>(channelModes.channelModes, this, nickname, Channel::e, "+")); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeException(const std::string& nickname)
 	{ return (reset_mode<ExceptionListReply>(channelModes.channelModes, this, nickname, Channel::e, "-")); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	addInviteList(const std::string& nickname)
 	{ return (add_mode<InviteListReply>(channelModes.channelModes, this, nickname, Channel::I, "+")); }
 
-	template <class __Server, class __Client>
 	inline bool
-	Channel<__Server, __Client>::
+	Channel::
 	removeInviteList(const std::string& nickname)
 	{ return (reset_mode<InviteListReply>(channelModes.channelModes, this, nickname, Channel::I, "-")); }
 }

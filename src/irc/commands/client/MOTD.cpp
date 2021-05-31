@@ -1,27 +1,27 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 #include <utils/Logger.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::MotdCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	MotdCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (!user->registered)
 		{
-			*user << ClientNotResgisteredYet(server.hostname);
+			*user << ClientNotResgisteredYet(database.hostname);
 			return (false);
 		}
 
 		Logger::instance() << Logger::DEBUG << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
-			gHostname, user->nickname, server.config["MOTD"], '\n', 80);
+			gHostname, user->nickname, database.motd, '\n', 80);
 
 		if (arguments.size())
 		{
-			// TODO: Route to server
+			// TODO: Route to database
 			std::cout << "Arguments: ";
 			for (argumentList::const_iterator it = arguments.begin();
 				it != arguments.end(); it++)

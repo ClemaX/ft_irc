@@ -29,6 +29,8 @@
 
 /// IRC default TLS/SSL TCP-port (as defined in RFC7194).
 #define IRC_PORT_SSL 6697U
+/// Maximal length of IRC server names (as defined in RFC2813 2.1)
+#define IRC_SRVNAME_MAXLEN 63U
 /// Maximal length of IRC client nicknames (as defined in RFC1459 1.2).
 #define IRC_NICKNAME_MAXLEN 9U
 /// Default IRC client nickname to be assigned on connection.
@@ -51,7 +53,7 @@
 /// IRC message-prefix host-indicator-prefix (as defined in RFC1459 2.3.1)
 #define IRC_MESSAGE_PREFIX_HOST_PREFIX '@'
 /// IRC message suffix. (as defined in RFC1459 2.3)
-#define IRC_MESSAGE_SUFFIX "\r\n"				// How can we get the '\r' ?
+#define IRC_MESSAGE_SUFFIX "\r\n"
 /// Maximal length of IRC messages (as defined in RFC1459 2.3).
 #define IRC_MESSAGE_MAXLEN 512
 

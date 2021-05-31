@@ -1,8 +1,34 @@
 #include <irc/Message.hpp>
 
+#include <utils/strings.hpp>
+
 namespace NAMESPACE_IRC
 {
-	Message::Message(std::string& buffer) throw(MessageException)
+	template<typename _Cmd>
+	_Cmd const*	parseCommand(
+		_Cmd const*const commands[],
+		size_t commandCount,
+		std::string::const_iterator& it, std::string::const_iterator& last)
+	{
+		std::string	name;
+		unsigned	i = 0;
+
+		it = parseField(name, it, last);
+
+		if (name.length() == 0)
+			return NULL;
+
+		while (i < commandCount
+			&& ft::strcmpi(name.c_str(), commands[i]->name.c_str()))
+			i++;
+		if (i == commandCount)
+			return NULL;
+
+		return commands[i];
+	}
+
+	template<typename _Cmd>
+	Message<_Cmd>::Message(_Cmd const*const commands[], size_t commandCount, std::string& buffer) throw(MessageException)
 	{
 		static const unsigned		suffixLength = sizeof(IRC_MESSAGE_SUFFIX) - 1;
 		static const unsigned		maxLength = IRC_MESSAGE_MAXLEN - suffixLength;
@@ -38,7 +64,7 @@ namespace NAMESPACE_IRC
 			throw InvalidMessageException();
 
 		// Parse command
-		command = parseCommand(it, end);
+		command = parseCommand(commands, commandCount, it, end);
 
 		// str_arguments.copy(argument);
 		// Parse arguments

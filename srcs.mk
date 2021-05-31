@@ -5,18 +5,20 @@ SRCS = $(addprefix $(SRCDIR)/,\
 	$(addprefix irc/,\
 		AClient.cpp\
 		AMessage.cpp\
+		Channel.cpp\
 		ChannelModes.cpp\
 		$(addprefix commands/,\
-			$(addprefix channel/,\
-				INVITE.cpp\
-				JOIN.cpp\
-				KICK.cpp\
-				LIST.cpp\
-				NAMES.cpp\
-				PART.cpp\
-				TOPIC.cpp\
-			)\
 			$(addprefix client/,\
+				ADMIN.cpp\
+				$(addprefix channel/,\
+					INVITE.cpp\
+					JOIN.cpp\
+					KICK.cpp\
+					LIST.cpp\
+					NAMES.cpp\
+					PART.cpp\
+					TOPIC.cpp\
+				)\
 				MODE.cpp\
 				MOTD.cpp\
 				NICK.cpp\
@@ -24,25 +26,26 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				OPER.cpp\
 				PASS.cpp\
 				PRIVMSG.cpp\
+				REHASH.cpp\
+				RESTART.cpp\
+				STATS.cpp\
+				TIME.cpp\
 				USER.cpp\
+				USERS.cpp\
+				VERSION.cpp\
 				WHO.cpp\
 			)\
 			$(addprefix server/,\
-				ADMIN.cpp\
-				REHASH.cpp\
-				RESTART.cpp\
 				SERVER.cpp\
 				SQUIT.cpp\
-				STATS.cpp\
-				TIME.cpp\
-				USERS.cpp\
-				VERSION.cpp\
 			)\
 			utils.cpp\
 		)\
+		Database.cpp\
 		Message.cpp\
 		PrivateMessage.cpp\
 		$(addprefix replies/,\
+			Channel.cpp\
 			$(addprefix command/,\
 				001-Welcome.cpp\
 				002-YourHost.cpp\

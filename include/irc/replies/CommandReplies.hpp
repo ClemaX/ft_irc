@@ -1,21 +1,16 @@
 #pragma once
 
 #include <irc/replies/NumericReply.hpp>
-/*
-#include <irc/AClient.hpp>
-#include <irc/Channel.hpp> */
 
 namespace NAMESPACE_IRC
-{/*
-	struct	NumericReply;
-	struct	AMessage; */
+{
+	class	Channel;
 	class	Server;
 	class	AClient;
-	template<typename __Server, typename __Client>
-	class	Channel;
-	typedef	std::vector<AClient const*> clientList;
 
-	typedef Channel<Server, AClient> __Channel;
+	//typedef Channel<Server, AClient>	Channel;
+
+	typedef	std::vector<AClient const*> clientList;
 
 // 001     IRC_RPL_WELCOME
 //             "Welcome to the Internet Relay Network <nick>!<user>@<host>"
@@ -170,7 +165,7 @@ namespace NAMESPACE_IRC
 // 353     IRC_RPL_NAMREPLY
 //             "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
 	struct ChannelNamesReply	:	NumericReply
-	{ ChannelNamesReply(std::string const& serverName, __Channel *channel); };
+	{ ChannelNamesReply(std::string const& serverName, Channel *channel); };
 // 366     IRC_RPL_ENDOFNAMES
 //             "<channel> :End of /NAMES list"
 	struct EndOfNamesReply	:	NumericReply

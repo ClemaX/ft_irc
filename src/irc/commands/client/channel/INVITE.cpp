@@ -1,10 +1,10 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::InviteCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	InviteCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.size() < 2)
 		{
@@ -14,13 +14,13 @@ namespace NAMESPACE_IRC
 		std::string const nickname = arguments[0];
 		std::string const channelName = arguments[1];
 
-		AClient *client = server.database.getClient(nickname);
+		AClient *client = database.getClient(nickname);
 		if (!client)
 		{
 			*user << NoSuchNicknameError(gHostname, nickname);
 			return false;
 		}
-		__Channel *channel = server.database.getChannel(channelName);
+		Channel *channel = database.getChannel(channelName);
 		if (!channel)
 		{
 			*user << InvitingReply(gHostname, channelName, nickname);
@@ -28,13 +28,13 @@ namespace NAMESPACE_IRC
 		}
 		else if (!user->isInChannel(channelName))
 			*user << NotOnChannelError(gHostname, channelName);
-		else if ((channel->channelModes & __Channel::i) && !channel->isOperator(user))
+		else if ((channel->channelModes & Channel::i) && !channel->isOperator(user))
 			*user << ChannelOperatorPrivilegiesError(gHostname, channelName);
 		else if (client->isInChannel(channelName))
 			*user << UserOnChannelError(gHostname, nickname, channelName);
 		else
 		{
-			if (channel->channelModes & __Channel::i)
+			if (channel->channelModes & Channel::i)
 				channel->addInviteList(nickname);
 			*client << InviteChannelMessage(user->nickname, channelName);
 			*user << InvitingReply(gHostname, channelName, nickname);

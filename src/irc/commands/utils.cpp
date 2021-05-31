@@ -1,14 +1,17 @@
-#include <irc/Server.hpp>
+#include <irc/ircdef.hpp>
 
+#include <irc/commands/utils.hpp>
+
+#include <algorithm>
 
 namespace NAMESPACE_IRC
 {
-	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
+	/* SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
 	{
 		client << message.serialize();
 
 		return client;
-	}
+	} */
 
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue)

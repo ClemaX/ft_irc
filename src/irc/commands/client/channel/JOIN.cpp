@@ -1,14 +1,16 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
+
+#include <irc/commands/utils.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::JoinCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	JoinCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.empty())
 		{
-			*user << NeedMoreParamsError(gHostname, name);
+			*user << NeedMoreParamsError(database.hostname, name);
 			return false;
 		}
 
@@ -37,7 +39,7 @@ namespace NAMESPACE_IRC
 				passwordsQueue.pop();
 			}
 
-			__Channel *channel = server.database.getChannel(channelName);
+			Channel *channel = database.getChannel(channelName);
 
 			if (user->channels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
@@ -45,20 +47,20 @@ namespace NAMESPACE_IRC
 				return false;
 			}
 
-			if (!channel ||
-				!channel->isLocalChannelVisibleForClient(user))	// if channel not present in serverChannels map
+			if (!channel || !channel->isLocalChannelVisibleForClient(user))	// if channel not present in serverChannels map
 			{
 				try
 				{
-					channel = new __Channel(channelName);
-					server.database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
+					channel = new Channel(channelName);
+					database.dataChannelsMap[channel->name] = channel;	// Create the channel if it doesn't exist
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
 						isOp = false;
-					channel->addServer(&server);		// add server to the channel servers list
+					// TODO: Why are we adding server here
+					//channel->addServer(&database);		// add database to the channel servers list
 					channel->addClient(user, password, isOp);
 				}
-				catch(__Channel::InvalidChannelNameException const& e)
+				catch(Channel::InvalidChannelNameException const& e)
 				{*user << NoSuchChannelError(gHostname, name);}
 			}
 			else

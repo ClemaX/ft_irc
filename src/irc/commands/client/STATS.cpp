@@ -1,12 +1,12 @@
-# include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::StatsCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	StatsCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
-		static_cast<void>(server);
+		static_cast<void>(database);
 		static_cast<void>(user);
 		static_cast<void>(arguments);
 		return (true);

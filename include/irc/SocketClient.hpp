@@ -1,7 +1,7 @@
 #pragma once
 
 #include <socket/SocketConnection.hpp>
-#include <socket/ABufferedConnection.hpp>
+#include <irc/ABufferedConnection.hpp>
 
 #include <irc/AClient.hpp>
 
@@ -21,6 +21,7 @@ namespace irc
 		virtual ~SocketClient() throw()
 		{ }
 
+		// TODO: Implement hopcount
 		bool	isLocal() const throw()
 		{ return true; }
 /*

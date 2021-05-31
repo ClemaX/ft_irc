@@ -1,12 +1,12 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::TopicCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	TopicCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
-		(void)server;
+		(void)database;
 		if (!arguments.size())
 		{
 			*user <<  NeedMoreParamsError(gHostname, name);
@@ -14,7 +14,7 @@ namespace NAMESPACE_IRC
 		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
-		Server::__Channel	*channel = user->getChannel(channelName);
+		Channel	*channel = user->getChannel(channelName);
 
 		if (!channel)
 			*user <<  NotOnChannelError(gHostname, channelName);

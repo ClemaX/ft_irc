@@ -1,12 +1,14 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
+
+#include <irc/commands/utils.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::KickCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	KickCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
-		static_cast<void>(server);
+		static_cast<void>(database);
 		if (arguments.size() < 2)
 		{
 			*user << NeedMoreParamsError(gHostname, name);
@@ -33,7 +35,8 @@ namespace NAMESPACE_IRC
 			const std::string clientNickname = usersQueue.front();
 			usersQueue.pop();
 
-			Server::__Channel *channel = user->getChannelGlobal(server.database, channelName);
+			Channel *channel = database.getChannel(channelName);
+
 			if (!channel || !channel->isVisibleForClient(user))
 				*user << NoSuchChannelError(gHostname, channelName);
 			else if (!user->isInChannel(channelName))

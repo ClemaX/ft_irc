@@ -1,16 +1,16 @@
-#include <irc/Server.hpp>
+#include <irc/commands/UnidentifiedCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::PassCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	PassCommand::
+	payload(Database& database, ABufferedConnection* const connection, argumentList const& arguments) const
 	{
 		if (arguments.empty())
-			*user << NeedMoreParamsError(server.hostname, name);
-		else if (user->registered)
-			*user << UserAlreadyRegistred(server.hostname, user->nickname);
-		else if ((user->authenticated = arguments.at(0) == server.config[IRC_CONF_PASS]))
+			*connection << NeedMoreParamsError(database.hostname, name);
+		else if (connection->isRegistered())
+			*connection << UserAlreadyRegistred(database.hostname, connection->getUid());
+		else if ((connection->authenticated = arguments.at(0) == database.password))
 			return (true);
 		return (false);
 	}

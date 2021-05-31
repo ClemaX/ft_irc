@@ -1,10 +1,10 @@
-#include <irc/Server.hpp>
+#include <irc/commands/ClientCommands.hpp>
 
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::NoticeCommand::
-	payload(Server& server, AClient* const user, argumentList const& arguments) const
+	NoticeCommand::
+	payload(Database& database, AClient* const user, argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
@@ -22,12 +22,12 @@ namespace NAMESPACE_IRC
 		if (arguments.size() > 1)
 			message = arguments[1];
 
-		AClient *receiver = server.database.getClient(nameArgument);
+		AClient *receiver = database.getClient(nameArgument);
 		if (receiver)
 			receiver->receiveMessage(user, message);
 		else
 		{
-			Server::__Channel *channel = server.database.getChannel(nameArgument);
+			Channel *channel = database.getChannel(nameArgument);
 			if (channel)
 				channel->receiveNotice(user, message);
 			// else

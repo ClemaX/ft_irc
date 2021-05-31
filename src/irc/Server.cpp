@@ -6,29 +6,73 @@
 #include <irc/SocketClient.hpp>
 #include <irc/SecureSocketClient.hpp>
 
+#include <irc/ServerConnection.hpp>
+
 #include <utils/Logger.hpp>
 
 #include <ctime>
 
+
 namespace irc
 {
-	std::string const& gHostname = "";
-
-	bool
-	Server::Registered_Command::
-	execute(Server& server, AClient* const user, argumentList const& arguments)
+	namespace
 	{
-		if (user->authenticated == true)
-			return (payload(server, user, arguments));
-		*user << ClientNotResgisteredYet(server.hostname);
-		return (false);
+		const PRIVMSGCommand	privmsgCommand;
+		const NoticeCommand		noticeCommand;
+		const MotdCommand		motdCommand;
+		const WhoQuery			whoCommand;
+		const NickCommand		nickCommand;
+		const UserCommand		userCommand;
+		const OperCommand		operCommand;
+		const VersionCommand	versionCommand;
+		const JoinCommand		joinCommand;
+		const PartCommand		partCommand;
+		const ModeCommand		modeCommand;
+		const TopicCommand		topicCommand;
+		const NamesCommand		namesCommand;
+		const ListCommand		listCommand;
+		const InviteCommand		inviteCommand;
+		const KickCommand		kickCommand;
+		const TimeCommand		timeCommand;
+		const StatsCommand		statsCommand;
+		const AdminCommand		adminCommand;
+		const RestartCommand	restartCommand;
+		const RehashCommand		rehashCommand;
 	}
+
+	// cat include/irc/commands/ClientCommands.hpp | grep -v "^\s//" | grep struct | cut -d " " -f2 | grep -v "struct" | sed -e "s/$/(),/g" -e "s/^/\&/g"
+	irc::ClientCommand const*const	Server::clientCommands[] =
+	{
+		&privmsgCommand,
+		&noticeCommand,
+		&motdCommand,
+		&whoCommand,
+		&nickCommand,
+		&userCommand,
+		&operCommand,
+		&versionCommand,
+		&joinCommand,
+		&partCommand,
+		&modeCommand,
+		&topicCommand,
+		&namesCommand,
+		&listCommand,
+		&inviteCommand,
+		&kickCommand,
+		&timeCommand,
+		&statsCommand,
+		&adminCommand,
+		&restartCommand,
+		&rehashCommand,
+	};
+
+	std::string const& gHostname = "";
 
 	Server::Server()
 		:	SocketServer(),
 			config(),
 			authRequired(false),
-			database(this),
+			database(config),
 			version(SERVER_VERSION)
 	{ Logger::instance() << Logger::DEBUG << "Creating empty server..." << std::endl; } // TODO: Maybe init hostname
 
@@ -44,7 +88,7 @@ namespace irc
 			),
 			config(config),
 			authRequired(!config[IRC_CONF_PASS].empty()),
-			database(this),
+			database(config),
 			version(SERVER_VERSION)
 	{ }
 
@@ -72,26 +116,7 @@ namespace irc
 		authRequired = !config[IRC_CONF_PASS].empty();
 	}
 
-	Server::Command const*	parseCommand(
-		std::string::const_iterator& it, std::string::const_iterator& last)
-	{
-		std::string	name;
-		unsigned	i = 0;
-
-		it = parseField(name, it, last);
-
-		if (name.length() == 0)
-			return NULL;
-
-		while (i < commandCount
-			&& ft::strcmpi(name.c_str(), commands[i]->name.c_str()))
-			i++;
-		if (i == commandCount)
-			return NULL;
-
-		return commands[i];
-	}
-
+/*
 	Server::connection*	Server::onConnection(int connectionFd,
 		SocketConnection::address const& address, SSL* sslConnection)
 	{
@@ -121,28 +146,62 @@ namespace irc
 		// I moved this to the NICK command: database.addClient(newClient);
 
 		return newClient;
+	} */
+
+	void	Server::onClientMessage(AClient *client, Message<ClientCommand> const& message)
+	{
+		message.command->payload(database, client, message.arguments);
 	}
 
+	void	Server::onServerMessage(AServerConnection *server, Message<ServerCommand> const& message)
+	{
+		message.command->payload(database, server, message.arguments);
+	}
 	void	Server::onMessage(connection* const connection, std::string const& message)
 	{
-		AClient*	client = dynamic_cast<AClient*>(connection);
-		Message		ircMessage;
+		// TODO: Use template on SocketServer to avoid casts in implementation
+		ABufferedConnection *bufferedConnection = dynamic_cast<ABufferedConnection*>(connection);
 
-		client->readBuffer.append(message);
+		Message<ABufferedConnection>	ircMessage;
 
-		Logger::instance() << Logger::INFO << client->username << ": " << client->readBuffer << std::flush;
+		bufferedConnection->readBuffer += message;
 
-		try { ircMessage = Message(client->readBuffer); }
-		catch(Message::IncompleteMessageException const& e)
-		{ Logger::instance() << Logger::DEBUG << "Waiting for more input..." << std::endl; }
-		catch(Message::MessageException const& e)
+		Logger::instance() << Logger::INFO << bufferedConnection->getUid() << ": " << bufferedConnection->readBuffer << std::flush;
+
+/* 		if (client)
 		{
-			Logger::instance() << Logger::ERROR << e.what() << std::endl;
-			client->readBuffer.clear();
-		}
 
-		if (ircMessage.command != NULL)
-			ircMessage.command->payload(*this, client, ircMessage.arguments);
+
+			try { ircMessage = Message(client->readBuffer); }
+			catch(Message::IncompleteMessageException const& e)
+			{ Logger::instance() << Logger::DEBUG << "Waiting for more input..." << std::endl; }
+			catch(Message::MessageException const& e)
+			{
+				Logger::instance() << Logger::ERROR << e.what() << std::endl;
+				client->readBuffer.clear();
+			}
+
+			if (ircMessage.command != NULL)
+				onClientMessage(client, ircMessage);
+		}
+		else
+		{
+			AServerConnection*	server = dynamic_cast<AServerConnection*>(connection);
+
+			server->readBuffer += ircMessage;
+
+			Logger::instance() << Logger::INFO << server->name << ": " << server->readBuffer << std::flush;
+
+			try { ircMessage = Message(server->readBuffer); }
+			catch(Message::MessageException const& e)
+			{
+				Logger::instance() << Logger::ERROR << e.what() << std::endl;
+				server->readBuffer.clear();
+			}
+
+			if (ircMessage.command != NULL)
+				onServerMessage(client, ircMessage);
+		} */
 	}
 
 	void	Server::onFlush() const throw(SocketWriteException)
@@ -151,41 +210,5 @@ namespace irc
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
 			dynamic_cast<AClient*>(it->second)->flush();
-	}
-
-	void
-	Server::
-	announceWelcomeSequence(AClient* const user)
-	{
-		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
-		&& !user->username.empty() && user->authenticated)
-		{
-			*user
-			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
-			<< YourHostReply(hostname, SERVER_VERSION)
-			<< CreatedReply(hostname, config[IRC_CONF_CREATEDAT])
-			<< MyInfoReply(hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
-			user->registered = true;
-		}
-	}
-
-	std::string
-	Server::
-	get_local_time()
-	throw()
-	{
-		// Thursday May 20 2021 -- 19:36:00 +00:00
-
-		time_t now = time(NULL);
-		tm* const curr_time = localtime(&now);
-		return (
-			ft::itoa(curr_time->tm_mon + 1) + "/"
-			+ ft::itoa(curr_time->tm_mday) + "/"
-			+ ft::itoa(curr_time->tm_year + 1900) + " -- "
-			+ ft::itoa(curr_time->tm_hour) + ":"
-			+ ft::itoa(curr_time->tm_min) + ":"
-			+ ft::itoa(curr_time->tm_sec) + " "
-			+ curr_time->tm_zone
-		);
 	}
 }

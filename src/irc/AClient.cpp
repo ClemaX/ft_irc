@@ -1,6 +1,8 @@
 #include <irc/AClient.hpp>
 
-#include <irc/Server.hpp>
+#include <irc/Database.hpp>
+
+#include <irc/commands/utils.hpp>
 
 #include <utils/Logger.hpp>
 
@@ -12,16 +14,16 @@ namespace NAMESPACE_IRC
 	// It is worth to redo Client class with templates to avoid
 	// forward refereneces and define those 2 in hpp ??
 
-	/* inline */ void
+	void
 	AClient::joinChannel(Channel* const channel)
 	{ channels.insert(channelPair(channel->name, channel)); }
 
-	/* inline */ bool
+	bool
 	AClient::isInChannel(Channel* const channel) const
 	{ return (channels.find(ft::strToLower(channel->name)) != channels.end()); }
 
 	AClient::AClient(bool authRequired)
-		:	authenticated(!authRequired),
+		:	ABufferedConnection(!authRequired),
 			registered(false)
 	{
 		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
@@ -68,32 +70,26 @@ namespace NAMESPACE_IRC
 		return false;
 	}
 
-	AClient::Channel	*AClient::getChannel(std::string const & channelName) const
+	void	AClient::welcome(Database const& db)
+	{
+		if (!registered && nickname != IRC_NICKNAME_DEFAULT
+		&& !username.empty() && authenticated)
+		{
+			*this
+			<< WelcomeReply(db.hostname, nickname, username, hostname)
+			<< YourHostReply(db.hostname, SERVER_VERSION)
+			<< CreatedReply(db.hostname, db.createdAt)
+			<< MyInfoReply(db.hostname, SERVER_VERSION, MODES_CLIENT, MODES_CHANNEL);
+			registered = true;
+		}
+	}
+
+	/// Get a joined channel.
+	Channel	*AClient::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))
 			return channels.find(ft::strToLower(channelName))->second;
 		return NULL;
-	}
-
-	/**
-	 * 	@brief Return a pointer to the channel which name is channelName.
-	 *
-	 * 	@param channelName The name of the channel.
-	 *
-	 * 	NOTE: The search is done among all the channels in the database
-	*/
-
-	AClient::Channel	*AClient::getChannelGlobal(IRCDatabase const& db,
-		std::string const & channelName) const
-	{
-		Channel *channel = getChannel(channelName);
-		if (channel)
-			return channel;
-
-		channel = db.getChannel(channelName);
-		if (channel && !channel->isLocalChannelVisibleForClient(this))
-			return NULL;
-		return channel;
 	}
 
 	bool	AClient::listChannelInfo(Channel* const channel)
@@ -121,14 +117,13 @@ namespace NAMESPACE_IRC
 		return true;
 	}
 
-	bool	AClient::listAllChannelsListInfo(IRCDatabase const& db)
+	bool	AClient::listAllChannelsListInfo(Database const& db)
 	{
-		for (IRCDatabase::databaseChannelsMap::const_iterator it = db.dataChannelsMap.begin();
+		for (Database::channelMap::const_iterator it = db.dataChannelsMap.begin();
 			it != db.dataChannelsMap.end(); it++)
 			this->listChannelInfo(it->second);
 		return true;
 	}
-
 
 		bool	AClient::listChannelWhoQueryInfo(Channel* const channel, int opFlag)
 	{
@@ -154,9 +149,9 @@ namespace NAMESPACE_IRC
 		return true;
 	}
 
-	bool	AClient::listAllVisibleUsersWhoQueryInfo(IRCDatabase const& db)
+	bool	AClient::listAllVisibleUsersWhoQueryInfo(Database const& db)
 	{
-		for (IRCDatabase::databaseClientsMap::const_iterator it = db.dataClientsMap.begin();
+		for (Database::clientMap::const_iterator it = db.dataClientsMap.begin();
 			it != db.dataClientsMap.end(); it++)
 		{
 			AClient*	client = it->second;
@@ -166,12 +161,12 @@ namespace NAMESPACE_IRC
 		return true;
 	}
 
-	bool	AClient::matchMaskWhoQueryInfo(IRCDatabase const& db, std::string const &mask)
+	bool	AClient::matchMaskWhoQueryInfo(Database const& db, std::string const &mask)
 	{
 		// currently match with users' host, real name and nickname
 		// to do :
 		//		match with users' server
-		for (IRCDatabase::databaseClientsMap::const_iterator it = db.dataClientsMap.begin();
+		for (Database::clientMap::const_iterator it = db.dataClientsMap.begin();
 			it != db.dataClientsMap.end(); it++)
 		{
 			AClient*	client = it->second;
@@ -183,5 +178,4 @@ namespace NAMESPACE_IRC
 		}
 		return true;
 	}
-
 }
