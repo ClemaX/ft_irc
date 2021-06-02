@@ -51,6 +51,8 @@
 # define CMD_REHASH_NAME "REHASH"
 # define CMD_OPER_NAME "OPER"
 # define CMD_ADMIN_NAME "ADMIN"
+# define CMD_QUIT_NAME "QUIT"
+# define CMD_KILL_NAME "KILL"
 
 namespace NAMESPACE_IRC
 {
@@ -343,6 +345,24 @@ namespace NAMESPACE_IRC
 				argumentList const& arguments) const;
 		};
 
+		struct QuitCommand
+		: public Registered_Command
+		{
+			QuitCommand();
+
+			bool	payload(Server& server, AClient* const user,
+				argumentList const& arguments) const;
+		};
+
+		struct KillCommand
+		: public Registered_Command
+		{
+			KillCommand();
+
+			bool	payload(Server& server, AClient* const user,
+				argumentList const& arguments) const;
+		};
+
 		/* Server commands */
 
 		// TO DO: All Registered_Commads by default but need to test to be sure (but is the most logical)
@@ -368,30 +388,6 @@ namespace NAMESPACE_IRC
 		: Registered_Command
 		{
 			TimeCommand();
-			bool	payload(Server& server, AClient* const user,
-				argumentList const& arguments) const;
-		};
-
-		struct StatsCommand
-		: Registered_Command
-		{
-			StatsCommand();
-			bool	payload(Server& server, AClient* const user,
-				argumentList const& arguments) const;
-		};
-
-		struct SquitCommand
-		: Registered_Command
-		{
-			SquitCommand();
-			bool	payload(Server& server, AClient* const user,
-				argumentList const& arguments) const;
-		};
-
-		struct ServerCommand
-		: Registered_Command
-		{
-			ServerCommand();
 			bool	payload(Server& server, AClient* const user,
 				argumentList const& arguments) const;
 		};
@@ -600,6 +596,18 @@ namespace NAMESPACE_IRC
 	: Registered_Command(CMD_OPER_NAME)
 	{ }
 
+	inline
+	Server::QuitCommand::
+	QuitCommand()
+	: Registered_Command(CMD_QUIT_NAME)
+	{ }
+
+	inline
+	Server::KillCommand::
+	KillCommand()
+	: Registered_Command(CMD_KILL_NAME)
+	{ }
+
 	///////////////////////////////////////////////
 	// Inlined derivated serevr commands members //
 	///////////////////////////////////////////////
@@ -609,19 +617,20 @@ namespace NAMESPACE_IRC
 	VersionCommand()
 	: Registered_Command(CMD_VERSION_NAME)
 	{ }
-
+/*
 	inline
 	Server::UsersCommand::
 	UsersCommand()
 	: Registered_Command(CMD_USERS_NAME)
 	{ }
+*/
 
 	inline
 	Server::TimeCommand::
 	TimeCommand()
 	: Registered_Command(CMD_TIME_NAME)
 	{ }
-
+/*
 	inline
 	Server::StatsCommand::
 	StatsCommand()
@@ -633,13 +642,7 @@ namespace NAMESPACE_IRC
 	SquitCommand()
 	: Registered_Command(CMD_SQUIT_NAME)
 	{ }
-
-	inline
-	Server::ServerCommand::
-	ServerCommand()
-	: Registered_Command(CMD_SERVER_NAME)
-	{ }
-
+*/
 	inline
 	Server::RestartCommand::
 	RestartCommand()
@@ -683,27 +686,23 @@ namespace NAMESPACE_IRC
 		const Server::NickCommand		nickCommand;
 		const Server::UserCommand		userCommand;
 		const Server::VersionCommand	versionCommand;
-		const Server::UsersCommand		usersCommand;
 		const Server::TimeCommand		timeCommand;
-		const Server::StatsCommand		statsCommand;
-		const Server::SquitCommand		squitCommand;
-		const Server::ServerCommand		serverCommand;
 		const Server::RestartCommand	restartCommand;
 		const Server::RestartCommand	rehashCommand;
 		const Server::OperCommand		operCommand;
 		const Server::AdminCommand		adminCommand;
+		const Server::QuitCommand		quitComamnd;
+		const Server::KickCommand		killCommand;
 
-		Server::Command const*const	commands[] =
-		{
+		Server::Command const*const	commands[] = {
 			&passCommand,	 &privmsgCommand, &noticeCommand,
 			&joinCommand,	 &partCommand,	  &modeCommand,
 			&topicCommand,	 &namesCommand,	  &listCommand,
 			&inviteCommand,	 &kickCommand,	  &motdCommand,
 			&whoQuery,		 &nickCommand,	  &userCommand,
-			&versionCommand, &usersCommand,	  &timeCommand,
-			&statsCommand,	 &squitCommand,	  &serverCommand,
-			&restartCommand, &restartCommand, &operCommand,
-			&adminCommand
+			&versionCommand, &timeCommand,	  &restartCommand,
+			&rehashCommand,  &operCommand,    &adminCommand,
+			&quitComamnd, 	 &kickCommand
 		};
 	}
 

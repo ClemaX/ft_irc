@@ -3,7 +3,7 @@
 namespace NAMESPACE_IRC
 {
 	bool
-	Server::ServerCommand::
+	Server::KillCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		static_cast<void>(server);
@@ -11,4 +11,5 @@ namespace NAMESPACE_IRC
 		static_cast<void>(arguments);
 		return (true);
 	}
+
 }
