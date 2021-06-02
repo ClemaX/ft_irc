@@ -17,6 +17,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				TOPIC.cpp\
 			)\
 			$(addprefix client/,\
+				KILL.cpp\
 				MODE.cpp\
 				MOTD.cpp\
 				NICK.cpp\
@@ -24,6 +25,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				OPER.cpp\
 				PASS.cpp\
 				PRIVMSG.cpp\
+				QUIT.cpp\
 				USER.cpp\
 				WHO.cpp\
 			)\
@@ -31,11 +33,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				ADMIN.cpp\
 				REHASH.cpp\
 				RESTART.cpp\
-				SERVER.cpp\
-				SQUIT.cpp\
-				STATS.cpp\
 				TIME.cpp\
-				USERS.cpp\
 				VERSION.cpp\
 			)\
 			utils.cpp\
