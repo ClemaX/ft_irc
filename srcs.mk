@@ -109,6 +109,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				475-BadChannelKey.cpp\
 				476-BadChannelMask.cpp\
 				477-NoChannelModes.cpp\
+				481-NoPrivileges.cpp\
 				482-ChannelOperatorPrivileges.cpp\
 				501-UModeUnknownFlag.cpp\
 				502-UsersDontMatch.cpp\

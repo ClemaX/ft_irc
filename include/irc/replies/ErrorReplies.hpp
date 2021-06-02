@@ -228,6 +228,9 @@ struct NoTextToSendError	:	NumericReply
 
 // 481     IRC_ERR_NOPRIVILEGES
 //             ":Permission Denied- You're not an IRC operator"
+	struct NoprivilegesError
+	: NumericReply
+	{ NoprivilegesError(std::string const& serverName); };
 
 // 482     IRC_ERR_CHANOPRIVSNEEDED
 //             "<channel> :You're not channel operator"
