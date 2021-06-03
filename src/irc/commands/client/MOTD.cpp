@@ -14,6 +14,7 @@ namespace NAMESPACE_IRC
 			return (false);
 		}
 
+		// TODO: Remove these debug logs like this
 		Logger::instance() << Logger::DEBUG << user->username << " executes " << name << std::endl;
 
 		*user << serializeReplyList<MotdStartReply, MotdReply, EndOfMotdReply>(
