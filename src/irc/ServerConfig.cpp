@@ -37,9 +37,12 @@ namespace NAMESPACE_IRC
 	{ operator>>(is); }
 
 	ServerConfig::ServerConfig(std::string const& filepath)
-		throw(std::out_of_range)
+		throw(std::out_of_range, std::runtime_error)
 	{
 		std::ifstream	file(filepath.c_str());
+
+		if (!file.is_open())
+			throw std::runtime_error("Could not open " + filepath);
 
 		operator>>(file);
 		file.close();
@@ -71,14 +74,24 @@ namespace NAMESPACE_IRC
 	}
 
 	ServerConfig::ServerConfig(int ac, char const *av[])
-		throw(std::invalid_argument, std::out_of_range)
+		throw(std::invalid_argument, std::out_of_range, std::runtime_error)
 	{
+		static const char*	filepaths[] = {
+			IRC_CONF_NAME,
+			IRC_CONF_LOCATION"/"IRC_CONF_NAME,
+		};
+
 		int	i = 1;
 
 		if (ac <= i)
 		{
-			// TODO: Try to load from /etc/ first
-			std::ifstream	file(IRC_CONF_NAME);
+			std::ifstream	file;
+
+			for (unsigned j = 0; !file.is_open() && j < ARRAY_SIZE(filepaths); j++)
+				file.open(filepaths[j]);
+
+			if (!file.is_open())
+				throw std::runtime_error("Could not find "IRC_CONF_NAME" in "IRC_CONF_LOCATION"/ or working directory");
 
 			operator>>(file);
 			file.close();

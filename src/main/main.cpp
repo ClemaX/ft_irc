@@ -41,6 +41,8 @@ int			main(int ac, char const *av[])
 		{ std::cerr << "Invalid argument: " << e.what() << std::endl; printUsage(av[0]); err = 1; break; }
 		catch (std::out_of_range const& e)
 		{ std::cerr << "Invalid config key: " << e.what() << std::endl; err = 2; break; }
+		catch (std::runtime_error const& e)
+		{ std::cerr << e.what() << std::endl; err = 6; break; }
 		catch (std::exception const& e)
 		{ std::cerr << "Unexpected exception: " << e.what() << std::endl; err = 3; break; }
 		catch (...)
@@ -69,7 +71,7 @@ int			main(int ac, char const *av[])
 		catch (std::exception const& e)
 		{ logger << Logger::ERROR << "Unexpected exception: " << e.what() << std::endl; err = 3; break; }
 		catch (...)
-		{ logger << Logger::ERROR << "Unexpected exception!" << std::endl; err = 3; break; }
+		{ logger << Logger::ERROR << "Unexpected exception!" << std::endl; err = 3; break; };
 
 		signal(SIGHUP, &restart);
 		signal(SIGINT, &doNothing);
@@ -82,7 +84,7 @@ int			main(int ac, char const *av[])
 		catch (std::exception const& e)
 		{ logger << Logger::ERROR << "Unexpected exception: " << e.what() << std::endl; err = 3; break; }
 		catch (...)
-		{ logger << Logger::ERROR << "Unexpected exception!" << std::endl; err = 3; break; }
+		{ logger << Logger::ERROR << "Unexpected exception!" << std::endl; err = 3; break; };
 
 		ssl::cleanup();
 	}

@@ -8,6 +8,7 @@
 
 # include <irc/ircdef.hpp>
 
+#define IRC_CONF_LOCATION	"/etc"
 #define IRC_CONF_NAME		"ircserv.conf"
 #define IRC_CONF_DELIM		'='
 #define IRC_CONF_SEP		';'
@@ -60,8 +61,8 @@ namespace NAMESPACE_IRC
 		virtual ~ServerConfig();
 
 		ServerConfig(std::istream &is) throw(std::out_of_range);
-		ServerConfig(std::string const& filepath) throw(std::out_of_range);
-		ServerConfig(int ac, char const* av[]) throw(std::invalid_argument, std::out_of_range);
+		ServerConfig(std::string const& filepath) throw(std::out_of_range, std::runtime_error);
+		ServerConfig(int ac, char const* av[]) throw(std::invalid_argument, std::out_of_range, std::runtime_error);
 
 		bool	loadNetworkString(std::string const& network)
 			throw(std::invalid_argument);
