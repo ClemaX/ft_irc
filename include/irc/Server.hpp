@@ -20,12 +20,7 @@
 #include <irc/Database.hpp>
 #include <irc/ServerConfig.hpp>
 
-// TODO: Grammar rules
-// TODO: Handle nicknames containing {}| or []\ (as defined in RFC1459 2.2)
 // TODO: Handle message prefix and reject invalid occurences (as defined in RFC1459 2.3)
-// TODO: Handle message length including suffix
-// TODO: See section 7?
-
 # define CMD_INVITE_NAME "INVITE"
 # define CMD_JOIN_NAME "JOIN"
 # define CMD_KICK_NAME "KICK"
@@ -92,7 +87,7 @@ namespace NAMESPACE_IRC
 		/* Member types */
 
 		typedef Channel<Server, AClient>			__Channel;
-		// TODO: Map servers by name
+		// TODO: Map servers by name (not hostname)
 		typedef ::std::map<std::string, Server*>	serversMap;
 		typedef ::std::map<std::string, __Channel*>	channelsMap;
 		typedef IRCDatabase<Server, AClient, __Channel> IRCDatabase;

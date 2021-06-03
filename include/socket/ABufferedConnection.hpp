@@ -16,7 +16,6 @@ protected:
 	{ } // TODO: Maybe flush here
 
 public:
-	// TODO: Encapsulate readBuffer
 	std::string	readBuffer;
 
 

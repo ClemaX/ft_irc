@@ -25,8 +25,7 @@ namespace NAMESPACE_IRC
 			registered(false)
 	{
 		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
-		//readBuffer.reserve(IRC_MESSAGE_MAXLEN);
-	} // TODO: Maybe reserve writeBuffer
+	}
 
 	void	AClient::leaveChannel(Channel* const channel)
 	{

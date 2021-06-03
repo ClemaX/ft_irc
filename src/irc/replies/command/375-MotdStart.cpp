@@ -9,7 +9,7 @@ namespace NAMESPACE_IRC
 		: NumericReply(serverName, IRC_RPL_MOTDSTART, nickName)
 	{
 		if (motd.length() > 80)
-			throw (InvalidMessageException()); // TODO: Maybe use another (Reply-)exception type
+			throw (InvalidMessageException());
 
 		if (message.length())
 			message.push_back(IRC_MESSAGE_DELIM);

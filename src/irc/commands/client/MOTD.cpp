@@ -21,7 +21,7 @@ namespace NAMESPACE_IRC
 
 		if (arguments.size())
 		{
-			// TODO: Route to server
+			// TODO: Route to server / Since we only have one server just check matching servername
 			std::cout << "Arguments: ";
 			for (argumentList::const_iterator it = arguments.begin();
 				it != arguments.end(); it++)
