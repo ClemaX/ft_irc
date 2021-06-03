@@ -2,7 +2,7 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::OperCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
@@ -10,24 +10,20 @@ namespace NAMESPACE_IRC
 		//		any user knowing the good combination can be operator
 
 
-		if (arguments.size() > 1)
+		if (arguments.size() < 2)
+			*user << NeedMoreParamsError(server.hostname, name);
+		else
 		{
-			// TO DO: if is this host handles operators
+			// TODO: if is this host handles operators
 
-			// Missmatches with server admin data
 			if (std::pair<std::string, std::string>(arguments.at(0),
-			arguments.at(1)) != server.admin.id)
-			{
+			arguments.at(1)) != server.admin.id) // Missmatches with server admin data
 				*user << PassMissMatchError(server.hostname);
-				goto error;
+			else
+			{
+				user->becomeOperator();
+				*user << YoureOperReply(server.hostname);
 			}
-
-			user->becomeOperator();
-			*user << YoureOperReply(server.hostname);
-			return (true);
 		}
-		*user << NeedMoreParamsError(server.hostname, name);
-		error:
-		return (false);
 	}
 }

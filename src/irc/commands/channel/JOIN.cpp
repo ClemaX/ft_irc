@@ -2,20 +2,20 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::JoinCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.empty())
 		{
 			*user << NeedMoreParamsError(gHostname, name);
-			return false;
+			return;
 		}
 
 		if (!arguments[0].compare("0"))
 		{
 			user->leaveAllChannels();
-			return true;
+			return;
 		}
 
 		std::queue<std::string> channelsQueue;
@@ -42,7 +42,7 @@ namespace NAMESPACE_IRC
 			if (user->channels.size() >= IRC_MAX_JOINED_CHANNEL)
 			{
 				*user << TooManyChannelsError(gHostname, channelName);
-				return false;
+				return;
 			}
 
 			if (!channel ||
@@ -64,6 +64,5 @@ namespace NAMESPACE_IRC
 			else
 				channel->addClient(user, password, isOp);
 		}
-		return true;
 	}
 }

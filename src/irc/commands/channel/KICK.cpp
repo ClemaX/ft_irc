@@ -2,7 +2,7 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::KickCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
@@ -10,7 +10,7 @@ namespace NAMESPACE_IRC
 		if (arguments.size() < 2)
 		{
 			*user << NeedMoreParamsError(gHostname, name);
-			return false;
+			return;
 		}
 
 		std::queue<std::string> channelsQueue;
@@ -22,7 +22,7 @@ namespace NAMESPACE_IRC
 		if (channelsQueue.size() != usersQueue.size() && channelsQueue.size() != 1)
 		{
 			*user << NeedMoreParamsError(gHostname, name);
-			return false;
+			return;
 		}
 
 		while (usersQueue.size())
@@ -55,6 +55,5 @@ namespace NAMESPACE_IRC
 				}
 			}
 		}
-		return true;
 	}
 }

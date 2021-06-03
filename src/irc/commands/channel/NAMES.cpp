@@ -2,7 +2,7 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::NamesCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
@@ -19,7 +19,7 @@ namespace NAMESPACE_IRC
 				}
 				itb++;
 			}
-			return true;
+			return;
 		}
 
 		std::queue<std::string> channelsQueue;
@@ -41,6 +41,6 @@ namespace NAMESPACE_IRC
 				*user << EndOfNamesReply(gHostname, channelName);
 			}
 		}
-		return true;
+		return;
 	}
 }

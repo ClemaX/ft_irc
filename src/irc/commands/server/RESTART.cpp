@@ -2,13 +2,12 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::RestartCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		static_cast<void>(server);
 		static_cast<void>(user);
 		static_cast<void>(arguments);
-		return (true);
 	}
 }

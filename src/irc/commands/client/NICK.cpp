@@ -24,51 +24,42 @@ namespace NAMESPACE_IRC
 
 	}
 
-	bool
+	void
 	Server::NickCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		// ERR_NONICKNAMEGIVEN No nickname present as args
-		if (arguments.empty())
-		{
+
+		if (arguments.empty()) // ERR_NONICKNAMEGIVEN No nickname present as args
 			*user << NoNicknameGivenReply(server.hostname);
-			goto error;
-		}
-
-		// ERR_ERRONEUSNICKNAME If nickname doesn't follow the format in 2.3.1
-		if (nicknameValidator(arguments.at(0)) == 0)
-		{
-			*user << ErroneusNicknameReply(server.hostname, arguments.at(0));
-			goto error;
-		}
-
-		// ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
-		if (server.database.getClient(arguments.at(0)))
-		{
-			// ERR_NICKCOLLISION If registered nick is found in another server
-			if (user->nickname == IRC_NICKNAME_DEFAULT)
-				*user << NickCollisionReply(server.hostname, arguments.at(0),
-				user->username, user->hostname);
-			// ERR_NICKNAMEINUSE If attemps to change a nickname that is alreaddy in use
-			else
-				*user << NicknameInUseReply(server.hostname, arguments.at(0));
-			goto error;
-		}
-
-		user->oldNickname = user->nickname;
-		user->nickname = arguments.at(0);
-
-		if (user->oldNickname == IRC_NICKNAME_DEFAULT)
-			server.database.addClient(user);
 		else
-			server.database.set_ClientNick(user->oldNickname, user->nickname);
+		{
+			std::string const&	newNickname = arguments.at(0);
 
-		server.announceWelcomeSequence(user);
+			if (!nicknameValidator(newNickname)) // ERR_ERRONEUSNICKNAME If nickname doesn't follow the format in 2.3.1
+				*user << ErroneusNicknameReply(server.hostname, newNickname);
+			else if (server.database.getClient(newNickname)) // ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
+			{
+				// ERR_NICKCOLLISION If registered nick is found in another server
+				if (user->nickname == IRC_NICKNAME_DEFAULT)
+					*user << NickCollisionReply(server.hostname, newNickname,
+					user->username, user->hostname);
+				// ERR_NICKNAMEINUSE If attemps to change a nickname that is alreaddy in use
+				else
+					*user << NicknameInUseReply(server.hostname, newNickname);
+			}
+			else
+			{
+				user->oldNickname = user->nickname;
+				user->nickname = newNickname;
 
-		return (true);
+				if (user->oldNickname == IRC_NICKNAME_DEFAULT)
+					server.database.addClient(user);
+				else
+					server.database.set_ClientNick(user->oldNickname, user->nickname);
 
-		error:
-		return (false);
+				server.announceWelcomeSequence(user);
+			}
+		}
 	}
 }
 

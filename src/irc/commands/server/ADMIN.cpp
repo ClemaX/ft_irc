@@ -14,16 +14,16 @@ namespace NAMESPACE_IRC
 		}
 	}
 
-	bool
+	void
 	Server::AdminCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
+
+		// TODO: Get the user's server or check if this is handled by relay
 		if (arguments.empty())
-		{
-			// TODO: Get the user's server or check if this is handled by relay
 			display_admin_data(server, user);
-			return (true);
-		}
+		else // TODO: Handle local server name and reject others
+			*user << NoSuchServerError(arguments.at(0));
 /*
 		// Given args, search the server and output it version
 		Server::serversMap::const_iterator it = server.database.dataServersMap.begin();
@@ -39,8 +39,5 @@ namespace NAMESPACE_IRC
 			++it;
 		}
  */
-		// No match ?
-		*user << NoSuchServerError(arguments.at(0));
-		return (false);
 	}
 }

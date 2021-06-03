@@ -2,14 +2,14 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::PartCommand::
 	payload(Server& server, AClient* const user,argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
 			*user << NeedMoreParamsError(gHostname, name);
-			return false;
+			return;
 		}
 
 		std::queue<std::string> channelsQueue;
@@ -34,6 +34,5 @@ namespace NAMESPACE_IRC
 				channel->removeClient(user, leaveMessage);
 			}
 		}
-		return true;
 	}
 }

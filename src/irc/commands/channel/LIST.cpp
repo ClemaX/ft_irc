@@ -2,7 +2,7 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::ListCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
@@ -28,6 +28,6 @@ namespace NAMESPACE_IRC
 			}
 		}
 		*user << EndOfListReply(gHostname);
-		return true;
+		return;
 	}
 }

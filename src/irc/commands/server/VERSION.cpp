@@ -4,32 +4,31 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::VersionCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		// FIXME: No given args, use client's server
 		if (arguments.empty())
-		{
 			*user << Version(server.hostname, server.version);
-			return (true);
-		}
-
-		// Given args, search the server and output it version
-		Server::serversMap::const_iterator it = server.database.dataServersMap.begin();
-
-		while (it != server.database.dataServersMap.end())
+		else
 		{
-			if (it->second->hostname == arguments.at(0))
-			{
-				*user << Version(it->second->hostname, it->second->version);
-				return (true);
-			}
-			++it;
-		}
+			// TODO: Remove this if we do not use multiple servers
+			// Given args, search the server and output it version
+			Server::serversMap::const_iterator it = server.database.dataServersMap.begin();
 
-		// No match ?
-		*user << NoSuchServerError(arguments.at(0));
-		return (false);
+			while (it != server.database.dataServersMap.end())
+			{
+				if (it->second->hostname == arguments.at(0))
+				{
+					*user << Version(it->second->hostname, it->second->version);
+					return;
+				}
+				++it;
+			}
+
+			// No match ?
+			*user << NoSuchServerError(arguments.at(0));
+		}
 	}
 }

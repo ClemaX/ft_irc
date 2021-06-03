@@ -2,7 +2,7 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::TopicCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
@@ -10,7 +10,7 @@ namespace NAMESPACE_IRC
 		if (!arguments.size())
 		{
 			*user <<  NeedMoreParamsError(gHostname, name);
-			return false;
+			return;
 		}
 
 		const std::string channelName = ft::strToLower(arguments[0]);
@@ -34,6 +34,5 @@ namespace NAMESPACE_IRC
 			channel->setTopic(newTopic);
 			*user << TopicReply(gHostname, channelName, newTopic);
 		}
-		return true;
 	}
 }

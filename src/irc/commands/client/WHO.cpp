@@ -2,17 +2,12 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::WhoQuery::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		if (!user->registered)
-		{
-			*user << ClientNotResgisteredYet(server.hostname);
-			return (false);
-		}
-
 		std::string mask = "";
+
 		if (!arguments.size() || !arguments[0].compare("0") || !arguments[0].compare("*"))
 			user->listAllVisibleUsersWhoQueryInfo(server.database);
 		else
@@ -29,6 +24,5 @@ namespace NAMESPACE_IRC
 				user->matchMaskWhoQueryInfo(server.database, mask);
 		}
 		*user << EndOfWhoReply(gHostname, mask);
-		return true;
 	}
 }

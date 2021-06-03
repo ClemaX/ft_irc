@@ -14,14 +14,14 @@ namespace irc
 {
 	std::string const& gHostname = "";
 
-	bool
+	void
 	Server::Registered_Command::
 	execute(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		if (user->registered == true)
-			return (payload(server, user, arguments));
-		*user << ClientNotResgisteredYet(server.hostname);
-		return (false);
+		if (user->registered)
+			payload(server, user, arguments);
+		else
+			*user << ClientNotResgisteredYet(server.hostname);
 	}
 
 	Server::Server()

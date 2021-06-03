@@ -2,37 +2,37 @@
 
 namespace NAMESPACE_IRC
 {
-	bool
+	void
 	Server::NoticeCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (!arguments.size())
 		{
-			// *user << NoRecipientError(gHostname, "PRIVMSG");
-			return false;
+			// TODO: *user << NoRecipientError(gHostname, "PRIVMSG");
 		}
-		if (arguments.size() == 1)
+		else if (arguments.size() == 1)
 		{
-			// *user << NoTextToSendError(gHostname);
-			return false;
+			// TODO: *user << NoTextToSendError(gHostname);
 		}
-		std::string nameArgument = arguments[0];
-
-		std::string message = "";
-		if (arguments.size() > 1)
-			message = arguments[1];
-
-		AClient *receiver = server.database.getClient(nameArgument);
-		if (receiver)
-			receiver->receiveMessage(user, message);
 		else
 		{
-			Server::__Channel *channel = server.database.getChannel(nameArgument);
-			if (channel)
-				channel->receiveNotice(user, message);
-			// else
-			// 	*user << NoSuchNicknameError(gHostname, nameArgument);
+			std::string nameArgument = arguments[0];
+
+			std::string message = "";
+			if (arguments.size() > 1)
+				message = arguments[1];
+
+			AClient *receiver = server.database.getClient(nameArgument);
+			if (receiver)
+				receiver->receiveMessage(user, message);
+			else
+			{
+				Server::__Channel *channel = server.database.getChannel(nameArgument);
+				if (channel)
+					channel->receiveNotice(user, message);
+				// else
+				// 	TODO: *user << NoSuchNicknameError(gHostname, nameArgument);
+			}
 		}
-		return true;
 	}
 }
