@@ -6,5 +6,8 @@ namespace NAMESPACE_IRC
 //             "Try server <server name>, port <port number>"
 	BounceReply::BounceReply(const std::string& serverName, const std::string& portNB)
 	: NumericReply(serverName, IRC_RPL_BOUNCE)
-	{ std::cout << "Try server " << serverName << ", port " << portNB << std::endl; }
+	{
+		(void)portNB;
+		// TODO: std::cout << "Try server " << serverName << ", port " << portNB << std::endl;
+	}
 }
