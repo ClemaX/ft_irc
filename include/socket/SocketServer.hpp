@@ -50,9 +50,9 @@ protected:
 
 	void	sendMessage(connection* connection, std::string const& message);
 
-	virtual connection*		onConnection(int connectionFd, SocketConnection::address const& address, SSL* sslConnection = NULL);
-	virtual void				onDisconnection(connection* connection);
-	virtual void				onMessage(connection* connection,
+	virtual connection*	onConnection(int connectionFd, SocketConnection::address const& address, SSL* sslConnection = NULL);
+	virtual void		onDisconnection(connection* connection);
+	virtual void		onMessage(connection* connection,
 		std::string const& message);
 
 	virtual void				onFlush() const;

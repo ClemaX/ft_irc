@@ -21,7 +21,7 @@ SecureSocketConnection::SecureSocketConnection(SSL* sslConnection, int fd,
 	:	SocketConnection(fd, socketAddress),
 		sslConnection(sslConnection)
 {
-	Logger::instance() << Logger::DEBUG << "Constructing SecureSocketConnection..." << std::endl;
+	Logger::instance() << Logger::DEBUG << "Constructing SecureSocketConnection on fd " << fd << "..." << std::endl;
 	Logger::instance() << Logger::DEBUG << "Accepting SSL connection..." << std::endl;
 	SSL_set_fd(sslConnection, fd);
 

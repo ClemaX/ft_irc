@@ -24,8 +24,7 @@ public:
 
 	void			listen() throw(SocketListenException);
 
-	virtual int		accept(socketAddress& clientAddr)
-		const throw(SocketAcceptException);
+	virtual int		accept(socketAddress& clientAddr) const;
 
 	virtual void	close() throw(SocketCloseException);
 

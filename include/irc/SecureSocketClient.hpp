@@ -8,13 +8,10 @@
 namespace irc
 {
 	class	SecureSocketClient
-		:	public SecureSocketConnection, public SocketClient
+		:	public virtual SecureSocketConnection, public AClient
 	{
 	public:
 		SecureSocketClient(SSL* sslConnection, int fd,
 			socketAddress const& address, bool authRequired);
-
-		bool	isLocal() const throw()
-		{ return true; }
 	};
 }

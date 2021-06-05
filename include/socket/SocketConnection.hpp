@@ -8,7 +8,6 @@
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
 
-// TODO: Check if Socket should be virtual
 class	SocketConnection	:	public virtual IConnection, public Socket
 {
 public:

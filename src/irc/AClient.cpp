@@ -24,7 +24,7 @@ namespace NAMESPACE_IRC
 		:	authenticated(!authRequired),
 			registered(false)
 	{
-		Logger::instance() << Logger::DEBUG << "Constructing Client..." << std::endl;
+		Logger::instance() << Logger::DEBUG << "Constructing AClient..." << std::endl;
 	}
 
 	void	AClient::leaveChannel(Channel* const channel)

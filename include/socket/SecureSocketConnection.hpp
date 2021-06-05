@@ -10,7 +10,7 @@
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
 
-class	SecureSocketConnection	:	public virtual SocketConnection
+class	SecureSocketConnection	:	public SocketConnection
 {
 protected:
 	SSL		*sslConnection;

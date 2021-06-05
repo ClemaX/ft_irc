@@ -98,7 +98,7 @@ namespace NAMESPACE_IRC
 		/* Core members functions */
 
 		connection*	onConnection(int connectionFd,
-			SocketConnection::address const& address, SSL* sslConnection = NULL);
+			connection::address const& address, SSL* sslConnection = NULL);
 
 		void		onMessage(connection* const connection,
 			std::string const& message);

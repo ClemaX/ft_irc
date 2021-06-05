@@ -447,7 +447,10 @@ namespace NAMESPACE_IRC
 	inline bool
 	Channel<__Server, __Client>::
 	isLocalChannelVisibleForClient(__Client const* client) const
-	{ return (!isLocalChannel() || client->isLocal()); }
+	{
+		(void)client;
+		return (true); // !isLocalChannel() || client->isLocal()
+	}
 
 	template <class __Server, class __Client>
 	inline bool

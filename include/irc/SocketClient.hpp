@@ -16,13 +16,10 @@ namespace irc
 			bool authenticationRequired = false)
 			:	SocketConnection(fd, address),
 				AClient(authenticationRequired)
-		{ };
+		{ Logger::instance() << Logger::DEBUG << "Constructing SocketClient on fd " << fd << std::endl; };
 
 		virtual ~SocketClient() throw()
-		{ }
-
-		bool	isLocal() const throw()
-		{ return true; }
+		{ Logger::instance() << Logger::DEBUG << "Destructing SocketClient on fd " << fd << std::endl; }
 /*
 		void	close()
 		{ operator<<("TODO: QUIT"); Socket::close(); } */

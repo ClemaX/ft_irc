@@ -22,7 +22,7 @@
 
 namespace NAMESPACE_IRC
 {
-	class AClient	:	public ABufferedConnection
+	class AClient	:	public virtual ABufferedConnection
 	{
 	private:
 		typedef	Channel<Server, AClient>				Channel;
@@ -94,8 +94,6 @@ namespace NAMESPACE_IRC
 		{ ABufferedConnection::operator<<(message.serialize()); return *this; };
 		AClient&	operator<<(std::string const& message)
 		{ ABufferedConnection::operator<<(message); return *this; }
-
-		virtual bool	isLocal() const throw() = 0;
 
 		void	becomeOperator() throw()
 		{ modes.set(o); }
