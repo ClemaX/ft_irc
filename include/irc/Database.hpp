@@ -19,7 +19,6 @@ namespace NAMESPACE_IRC
 		/* Member types */
 
 		// TODO: Use custom comparators for Server and Channel maps
-		typedef typename ::std::map<std::string, Server*>			databaseServersMap;
 		typedef typename ::std::map<std::string, Channel*>			databaseChannelsMap;
 		typedef typename ::std::map<std::string, Client*, nickcmp>	databaseClientsMap;
 
@@ -29,7 +28,7 @@ namespace NAMESPACE_IRC
 
 		/* Members */
 
-		databaseServersMap	dataServersMap;
+		Server*				server;
 		databaseChannelsMap	dataChannelsMap;
 		databaseClientsMap	dataClientsMap;
 		functionPointerMap	modeChannelFunctionsMap;
@@ -82,10 +81,10 @@ namespace NAMESPACE_IRC
 	template <class Server, class Client, class Channel>
 	inline
 	IRCDatabase<Server, Client, Channel>::
-	IRCDatabase(Server* const server)
+	IRCDatabase(Server* const s)
 	{
 		// TODO: Add servername
-		dataServersMap[server->get_hostname()] = server;
+		server = s;
 		createModeFunctionsMap();
 	}	// Do we have to add the clients and channels of server ?
 
@@ -108,7 +107,7 @@ namespace NAMESPACE_IRC
 	{
 		if (this != &other)
 		{
-			dataServersMap = other.dataServersMap;
+			server = other.server;
 			dataChannelsMap = other.dataChannelsMap;
 			dataClientsMap = other.dataClientsMap;
 			modeChannelFunctionsMap = other.modeChannelFunctionsMap;
@@ -136,12 +135,13 @@ namespace NAMESPACE_IRC
 		{ m[k] = v; }
 	}
 
+/*
 	template <class Server, class Client, class Channel>
 	inline void
 	IRCDatabase<Server, Client, Channel>::
 	addServer(Server* const server)
 	{ insert_value_at_key(dataServersMap, server, server); }
-
+*/
 	template <class Server, class Client, class Channel>
 	inline void
 	IRCDatabase<Server, Client, Channel>::
@@ -461,7 +461,7 @@ namespace NAMESPACE_IRC
 	{
 		// Decompose the database into commands
 		// & send those commands to the target server
-		send_server_data(dataServersMap, target);
+		//send_server_data(dataServersMap, target);
 		send_client_data(dataClientsMap, target);
 		send_channel_data(dataChannelsMap, target);
 	}
