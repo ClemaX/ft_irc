@@ -8,11 +8,18 @@
 void	SocketServer::addConnection(int fd,
 	connection* connection)
 {
-	if (fd != listener.getFd() && fd)
+	if (connection != NULL)
+	{
 		fdConnectionMap[fd] = connection;
-
-	if (fd > highestFd)
-		highestFd = fd;
+		if (fd > highestFd)
+			highestFd = fd;
+		Logger::instance() << Logger::DEBUG << "Adding connection on fd " << fd << std::endl;
+	}
+	else
+	{
+		Logger::instance() << Logger::DEBUG << "Dropping connection on fd " << fd << std::endl;
+		close(fd);
+	}
 }
 
 void	SocketServer::removeConnection(int fd)
@@ -49,12 +56,15 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 	else
 		connection = new SocketConnection(connectionFd, address);
 
-	Logger::instance() << Logger::INFO << "New connection: "
-		<< std::endl << "\tfd: " << connectionFd
-		<< std::endl << "\tip: " << address.sin6_addr
-		<< std::endl << "\tport: " << address.sin6_port
-		<< std::endl << "\tsecure: " << (sslConnection != NULL)
-		<< std::endl;
+	if (connection)
+	{
+		Logger::instance() << Logger::INFO
+			<< "New connection: " << std::endl
+			<< "\tfd: " << connectionFd << std::endl
+			<< "\tip: " << address.sin6_addr << std::endl
+			<< "\tport: " << address.sin6_port << std::endl
+			<< "\tsecure: " << (sslConnection != NULL) << std::endl;
+	}
 
 	return (connection);
 }
@@ -62,23 +72,18 @@ SocketConnection*	SocketServer::onConnection(int connectionFd,
 void	SocketServer::onDisconnection(connection* connection)
 {
 	Logger::instance() << Logger::INFO << "Socket disconnected: "
-		<< "\n\tip: " << connection->getAddr()
-		<< "\n\tport: " << connection->getPort()
-		<< std::endl;
+		<< "\tfd: " << connection->getFd() << std::endl
+		<< "\tip: " << connection->getAddr() << std::endl
+		<< "\tport: " << connection->getPort() << std::endl;
 }
 
 void	SocketServer::onMessage(connection* connection,
 	std::string const& message)
 {
-	// std::cout << "Received message: "
-	// 	<< "ip: " << connection->getAddr()
-	// 	<< ", port: " << connection->getPort()
-	// 	<< '\'' << message << '\'' << std::endl;
-
 	Logger::instance() << Logger::INFO << "Received message: "
-		<< "\n\tip: " << connection->getAddr()
-		<< "\n\tport: " << connection->getPort()
-		<< "\n\t\'" << message << "\'" << std::endl;
+		<< "\tip: " << connection->getAddr() << std::endl
+		<< "\tport: " << connection->getPort() << std::endl
+		<< "\t'" << message << "'" << std::endl;
 }
 
 void	SocketServer::onFlush() const
