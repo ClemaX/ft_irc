@@ -93,9 +93,9 @@ namespace irc
 	}
 
 	Server::connection*	Server::onConnection(int connectionFd,
-		SocketConnection::address const& address, SSL* sslConnection)
+		Server::connection::address const& address, SSL* sslConnection)
 	{
-		SocketClient*	newClient = NULL;
+		AClient*	newClient = NULL;
 
 		try {
 			if (sslConnection)
@@ -103,24 +103,25 @@ namespace irc
 			else
 				newClient = new SocketClient(connectionFd, address, authRequired);
 		}
-		catch (...)
-		{ stop(); throw; }
+		catch (SocketException const& e)
+		{ Logger::instance() << Logger::ERROR << e.what() << ": " << e.why() << std::endl; }
 
-		//newClient->server = this;
+		if (newClient)
+		{
+			newClient->username = "";
+			newClient->nickname = IRC_NICKNAME_DEFAULT;
 
-		newClient->username = "";
-		newClient->nickname = IRC_NICKNAME_DEFAULT;
+			Logger::instance() << Logger::INFO << "New connection: "
+				<< "\n\tfd: " << connectionFd
+				<< "\n\tip: " << address.sin6_addr
+				<< "\n\tport: " << address.sin6_port
+				<< "\n\tsecure: " << ((sslConnection != NULL) ? "true" : "false")
+				<< std::endl;
 
-		Logger::instance() << Logger::INFO << "New connection: "
-			<< "\n\tfd: " << connectionFd
-			<< "\n\tip: " << address.sin6_addr
-			<< "\n\tport: " << address.sin6_port
-			<< "\n\tsecure: " << ((sslConnection != NULL) ? "true" : "false")
-			<< std::endl;
+			// I moved this to the NICK command: database.addClient(newClient);
+		}
 
-		// I moved this to the NICK command: database.addClient(newClient);
-
-		return newClient;
+		return dynamic_cast<Server::connection*>(newClient);
 	}
 
 	void	Server::onMessage(connection* const connection, std::string const& message)

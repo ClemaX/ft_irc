@@ -65,16 +65,16 @@ void	SocketListener::listen()
 	}
 }
 
-int		SocketListener::accept(socketAddress& clientAddr) const throw(SocketAcceptException)
+int		SocketListener::accept(socketAddress& clientAddr) const
 {
 	sockaddr*const	addr = reinterpret_cast<sockaddr*>(&clientAddr);
 	socklen_t		addrLen = sizeof(clientAddr);
 	const int		incomingFd = ::accept(fd, addr, &addrLen);
 
-	// TODO: Check if it is better to throw here or in Server
-	if (incomingFd < 0 && errno != EWOULDBLOCK)
-		throw SocketAcceptException(errno);
-
+	if (incomingFd < 0) // TODO: Check if we need to check for errno == EWOULDBLOCK
+		Logger::instance() << Logger::ERROR << "Could not accept connection: " << strerror(errno) << std::endl;
+	else
+		Logger::instance() << Logger::DEBUG << "Accepted socket on fd " << incomingFd << std::endl;
 	return incomingFd;
 }
 

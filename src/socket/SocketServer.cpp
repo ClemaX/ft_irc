@@ -49,12 +49,15 @@ void	SocketServer::clearConnections()
 SocketConnection*	SocketServer::onConnection(int connectionFd,
 	socketAddress const& address, SSL* sslConnection)
 {
-	SocketConnection*	connection;
+	SocketConnection*	connection = NULL;
 
-	if (sslConnection != NULL)
-		connection = new SecureSocketConnection(sslConnection, connectionFd, address);
-	else
-		connection = new SocketConnection(connectionFd, address);
+	try {
+		if (sslConnection != NULL)
+			connection = new SecureSocketConnection(sslConnection, connectionFd, address);
+		else
+			connection = new SocketConnection(connectionFd, address);
+	} catch (SocketException const& e)
+	{ Logger::instance() << Logger::ERROR << e.what() << ": " << e.why() << std::endl; };
 
 	if (connection)
 	{
