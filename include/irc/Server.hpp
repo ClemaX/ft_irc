@@ -100,6 +100,13 @@ namespace NAMESPACE_IRC
 		connection*	onConnection(int connectionFd,
 			connection::address const& address, SSL* sslConnection = NULL);
 
+		void	disconect_client(AClient* user)
+		{
+			//onDisconnection(user->)
+			database.delete_client(user);
+			delete user;
+		}
+
 		void		onMessage(connection* const connection,
 			std::string const& message);
 

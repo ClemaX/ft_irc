@@ -242,6 +242,14 @@ struct NoTextToSendError	:	NumericReply
 // 483     IRC_ERR_CANTKILLSERVER
 //             ":You cant kill a server!"
 
+	struct CanKillServerError
+	: NumericReply
+	{
+		CanKillServerError(const std::string& serverName)
+		: NumericReply(serverName, IRC_ERR_CANTKILLSERVER, ":You cant kill a server!")
+		{ }
+	};
+
 // 491     IRC_ERR_NOOPERHOST
 //             ":No O-lines for your host"
 

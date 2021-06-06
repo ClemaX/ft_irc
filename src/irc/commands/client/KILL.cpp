@@ -6,7 +6,7 @@ namespace NAMESPACE_IRC
 	Server::KillCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		AClient* target;
+		AClient* target = NULL;
 
 		if (arguments.size() < 2)
 			*user << NeedMoreParamsError(server.hostname, name);
@@ -17,11 +17,17 @@ namespace NAMESPACE_IRC
 			target = server.database.getClient(arguments.at(0));
 
 			if (!target)
-				*user << NoSuchNicknameError(server.hostname, arguments.at(0));
+			{
+				if (arguments.at(0) == server.hostname)
+					*user << CanKillServerError(server.hostname);
+				else
+					*user << NoSuchNicknameError(server.hostname, arguments.at(0));
+			}
 		}
-
-		// msg (arguments.at(1) sent to the target
-		// Disconnect the target
+		if (target)
+		{
+			*target << arguments.at(1);
+			server.disconect_client(target);
+		}
 	}
-
 }

@@ -6,10 +6,10 @@ namespace NAMESPACE_IRC
 	Server::QuitCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
-		// TODO: Implement QuitCommand
-		static_cast<void>(server);
-		static_cast<void>(user);
-		static_cast<void>(arguments);
+		if (arguments.empty())
+			*user << user->nickname;
+		else
+			*user << arguments.at(0);
+		server.disconect_client(user);
 	}
-
 }
