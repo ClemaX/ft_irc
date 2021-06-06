@@ -102,9 +102,8 @@ namespace NAMESPACE_IRC
 
 		void	disconect_client(AClient* user)
 		{
-			//onDisconnection(user->)
+			disconnectedFds.push(dynamic_cast<Socket*>(user)->getFd());
 			database.delete_client(user);
-			delete user;
 		}
 
 		void		onMessage(connection* const connection,
@@ -694,7 +693,7 @@ namespace NAMESPACE_IRC
 		const Server::OperCommand		operCommand;
 		const Server::AdminCommand		adminCommand;
 		const Server::QuitCommand		quitComamnd;
-		const Server::KickCommand		killCommand;
+		const Server::KillCommand		killCommand;
 
 		Server::Command const*const	commands[] = {
 			&passCommand,	 &privmsgCommand, &noticeCommand,
@@ -704,7 +703,7 @@ namespace NAMESPACE_IRC
 			&whoQuery,		 &nickCommand,	  &userCommand,
 			&versionCommand, &timeCommand,	  &restartCommand,
 			&rehashCommand,  &operCommand,    &adminCommand,
-			&quitComamnd, 	 &kickCommand
+			&quitComamnd, 	 &killCommand
 		};
 	}
 

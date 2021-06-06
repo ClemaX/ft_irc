@@ -17,12 +17,12 @@ public:
 
 	virtual void	close() throw(SocketCloseException);
 
-	inline bool	isOpen() const throw()
+	bool	isOpen() const throw()
 	{ return fd > 0; }
 
-	inline int	getFd() const throw()
+	int	getFd() const throw()
 	{ return fd; }
 
-	inline bool isInSet(fd_set const& connectionSet) const throw()
+	bool isInSet(fd_set const& connectionSet) const throw()
 	{ return FD_ISSET(fd, &connectionSet); }
 };
