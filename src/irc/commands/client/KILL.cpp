@@ -26,7 +26,7 @@ namespace NAMESPACE_IRC
 		}
 		if (target)
 		{
-			*target << arguments.at(1);
+			*target << arguments.at(1) + IRC_MESSAGE_SUFFIX;
 			server.disconect_client(target);
 		}
 	}

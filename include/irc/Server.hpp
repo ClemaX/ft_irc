@@ -73,7 +73,6 @@ namespace NAMESPACE_IRC
 			const std::string& __email = IRC_DFT_ADMIN_DATA2)
 		: id(__id), data1(__data1), data2(__data2), email(__email)
 		{ }
-
 	};
 
 	class	Server
@@ -100,10 +99,17 @@ namespace NAMESPACE_IRC
 		connection*	onConnection(int connectionFd,
 			connection::address const& address, SSL* sslConnection = NULL);
 
+		void	onDisconnection(connection* conn)
+		{
+			database.delete_client(dynamic_cast<AClient*>(conn));
+
+			SocketServer::onDisconnection(conn);
+		}
+
 		void	disconect_client(AClient* user)
 		{
+			Logger::instance() << Logger::INFO << user->nickname << ": QUIT" << std::endl;
 			disconnectedFds.push(dynamic_cast<Socket*>(user)->getFd());
-			database.delete_client(user);
 		}
 
 		void		onMessage(connection* const connection,
@@ -347,7 +353,7 @@ namespace NAMESPACE_IRC
 		};
 
 		struct QuitCommand
-		: public Registered_Command
+		: public Unregistered_Command
 		{
 			QuitCommand();
 
@@ -600,7 +606,7 @@ namespace NAMESPACE_IRC
 	inline
 	Server::QuitCommand::
 	QuitCommand()
-	: Registered_Command(CMD_QUIT_NAME)
+	: Unregistered_Command(CMD_QUIT_NAME)
 	{ }
 
 	inline

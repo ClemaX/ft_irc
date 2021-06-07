@@ -109,10 +109,7 @@ void	SocketServer::checkActivity(int connectionFd)
 		if (isOpen)
 			onMessage(fdConnectionMap[connectionFd], buffer);
 		else
-		{
-			onDisconnection(fdConnectionMap[connectionFd]);
 			disconnectedFds.push(connectionFd);
-		}
 	}
 }
 
@@ -227,6 +224,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		// Remove disconnected sockets
 		while (!disconnectedFds.empty())
 		{
+			onDisconnection(fdConnectionMap[disconnectedFds.front()]);
 			removeConnection(disconnectedFds.front());
 			disconnectedFds.pop();
 		}
