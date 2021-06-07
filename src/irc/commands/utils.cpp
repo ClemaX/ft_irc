@@ -3,12 +3,12 @@
 
 namespace NAMESPACE_IRC
 {
-	SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
-	{
-		client << message.serialize();
+	// SocketConnection const&	operator<<(SocketConnection const& client, IReply const& message)
+	// {
+	// 	client << message.serialize();
 
-		return client;
-	}
+	// 	return client;
+	// }
 
 
 	void	parseArgumentsQueue(std::string const &argument, std::queue<std::string> &argQueue)

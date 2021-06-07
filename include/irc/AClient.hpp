@@ -91,7 +91,7 @@ namespace NAMESPACE_IRC
 		 * @brief Send a message to the user using the underlying connection.
 		 */
 		AClient&	operator<<(IReply const& message)
-		{ ABufferedConnection::operator<<(message.serialize()); return *this; };
+		{ ABufferedConnection::operator<<(message.serialize(nickname)); return *this; };
 		AClient&	operator<<(std::string const& message)
 		{ ABufferedConnection::operator<<(message); return *this; }
 

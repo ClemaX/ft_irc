@@ -86,6 +86,7 @@ $(DEPS): $(OBJDIR)%.d:
 $(NAME): $(OBJS) $(LIBS) | $(BINDIR)
 	@echo "LD $@ $(LIBARS:lib%.a=-l%)"
 	$(COMPILE.o) $(OBJS) -o $@ $(LDLIBS)
+	$(openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost")
 
 # Remove temporary objects
 clean:

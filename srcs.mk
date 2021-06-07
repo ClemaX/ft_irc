@@ -6,6 +6,11 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		AClient.cpp\
 		AMessage.cpp\
 		ChannelModes.cpp\
+		Message.cpp\
+		PrivateMessage.cpp\
+		SecureSocketClient.cpp\
+		Server.cpp\
+		ServerConfig.cpp\
 		$(addprefix commands/,\
 			$(addprefix channel/,\
 				INVITE.cpp\
@@ -38,9 +43,8 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			utils.cpp\
 		)\
-		Message.cpp\
-		PrivateMessage.cpp\
 		$(addprefix replies/,\
+			NumericReply.cpp\
 			$(addprefix command/,\
 				001-Welcome.cpp\
 				002-YourHost.cpp\
@@ -115,29 +119,26 @@ SRCS = $(addprefix $(SRCDIR)/,\
 				502-UsersDontMatch.cpp\
 				TODO.cpp\
 			)\
-			NumericReply.cpp\
 		)\
-		SecureSocketClient.cpp\
-		ServerConfig.cpp\
-		Server.cpp\
 	)\
 	$(addprefix main/,\
 		main.cpp\
 	)\
 	$(addprefix socket/,\
-		bindAddress.cpp\
 		SecureSocketConnection.cpp\
-		SocketConnection.cpp\
 		Socket.cpp\
+		SocketConnection.cpp\
 		SocketListener.cpp\
 		SocketServer.cpp\
+		bindAddress.cpp\
 		ssl.cpp\
 	)\
 	$(addprefix utils/,\
+		Logger.cpp\
 		atoi.cpp\
 		crypto.cpp\
 		itoa.cpp\
-		Logger.cpp\
+		itoaReply.cpp\
 		nickcmp.cpp\
 		parseField.cpp\
 	)\

@@ -11,7 +11,7 @@ namespace NAMESPACE_IRC
 			std::string const &message = "");
 		virtual ~PrivateMessage();
 
-		std::string	serialize() const throw();
+		std::string	serialize(const std::string &nickname) const throw();
 
 		Prefix		prefix;
 		std::string	message;
@@ -42,9 +42,11 @@ namespace NAMESPACE_IRC
 
 	inline std::string
 	PrivateMessage::
-	serialize() const
+	serialize(const std::string &nickname = "") const
 	throw()
-	{ return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
+	{ 
+		(void)nickname;
+		return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
 
 	inline
 	JoinChannelMessage::

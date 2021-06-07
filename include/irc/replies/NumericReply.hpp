@@ -4,6 +4,7 @@
 #include <vector> // using std::vector
 
 #include <utils/itoa.hpp>
+#include <utils/itoaReply.hpp>
 
 #include <irc/ircdef.hpp>
 
@@ -26,7 +27,7 @@ namespace NAMESPACE_IRC
 		if (newPos > pos + maxLength)
 			newPos = maxLength;
 
-		message.append(Cstart(serverName, nickName, list.substr(pos, newPos)).serialize());
+		message.append(Cstart(serverName, nickName, list.substr(pos, newPos)).serialize(nickName));
 		while (newPos < list.length())
 		{
 			pos = newPos + 1;
@@ -37,10 +38,10 @@ namespace NAMESPACE_IRC
 			if (newPos > pos + maxLength)
 				newPos = pos + maxLength;
 
-			message.append(Ccontent(serverName, nickName, list.substr(pos, newPos)).serialize());
+			message.append(Ccontent(serverName, nickName, list.substr(pos, newPos)).serialize(nickName));
 		}
 
-		message.append(Cend(serverName, nickName).serialize());
+		message.append(Cend(serverName, nickName).serialize(nickName));
 		return (message);
 	}
 
@@ -56,7 +57,7 @@ namespace NAMESPACE_IRC
 
 		virtual ~NumericReply();
 
-		std::string	serialize() const throw();
+		std::string	serialize(const std::string &nickname) const throw();
 	};
 
 	///////////////////////////////////
@@ -65,10 +66,10 @@ namespace NAMESPACE_IRC
 
 	inline std::string
 	NumericReply::
-	serialize() const
+	serialize(const std::string &nickname) const
 	throw()
 	{
-		return (prefix.serialize() + IRC_MESSAGE_DELIM + ft::itoa(code)
+		return (prefix.serialize() + IRC_MESSAGE_DELIM + ft::itoaReply(code) + IRC_MESSAGE_DELIM + nickname
 		+ IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX);
 	}
 

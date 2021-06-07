@@ -9,6 +9,6 @@ namespace NAMESPACE_IRC
 		IReply() { };
 		virtual ~IReply() { };
 
-		virtual std::string	serialize() const throw() = 0;
+		virtual std::string	serialize(const std::string &nickname) const throw() = 0;
 	};
 }
