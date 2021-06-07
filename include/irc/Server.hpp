@@ -102,7 +102,7 @@ namespace NAMESPACE_IRC
 		void	onDisconnection(connection* conn)
 		{
 			database.delete_client(dynamic_cast<AClient*>(conn));
-
+			dynamic_cast<AClient*>(conn)->flush();
 			SocketServer::onDisconnection(conn);
 		}
 
