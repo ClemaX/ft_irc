@@ -24,5 +24,5 @@ public:
 	{ return fd; }
 
 	bool isInSet(fd_set const& connectionSet) const throw()
-	{ return FD_ISSET(fd, &connectionSet); }
+	{ return isOpen() && FD_ISSET(fd, &connectionSet); }
 };
