@@ -55,7 +55,10 @@ namespace NAMESPACE_IRC
 				if (user->oldNickname == IRC_NICKNAME_DEFAULT)
 					server.database.addClient(user);
 				else
+				{
 					server.database.set_ClientNick(user->oldNickname, user->nickname);
+					*user << NickMessage(user->oldNickname, newNickname);
+				}
 
 				server.announceWelcomeSequence(user);
 			}

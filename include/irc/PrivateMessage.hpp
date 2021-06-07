@@ -17,6 +17,26 @@ namespace NAMESPACE_IRC
 		std::string	message;
 	};
 
+
+	/////////////////////////////////////
+	// User //
+	/////////////////////////////////////
+
+	struct NickMessage
+	: AReply
+	{
+		NickMessage(std::string const &prefix, std::string const& newNickname)
+		:AReply(prefix)
+		{
+			message << std::string("NICK") + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + newNickname;
+		}
+	
+	};
+
+	/////////////////////////////////////
+	// Channel //
+	/////////////////////////////////////
+
 	struct JoinChannelMessage
 	: AReply
 	{ JoinChannelMessage(std::string const &servername, std::string const& channelName); };
@@ -58,6 +78,22 @@ namespace NAMESPACE_IRC
 		(void)nickname;
 		return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
 		// return (prefix.serialize() + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + message + IRC_MESSAGE_SUFFIX); }
+
+
+
+	/////////////////////////////////////
+	// User //
+	/////////////////////////////////////
+
+
+
+
+
+
+
+	/////////////////////////////////////
+	// Channel //
+	/////////////////////////////////////
 
 	inline
 	JoinChannelMessage::

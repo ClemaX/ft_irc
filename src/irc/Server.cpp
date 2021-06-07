@@ -136,7 +136,7 @@ namespace irc
 
 		client->readBuffer.append(message);
 
-		Logger::instance() << Logger::INFO << client->username << ": " << client->readBuffer << std::flush;
+		Logger::instance() << Logger::INFO << client->nickname << ": " << client->readBuffer << std::flush;
 
 		try { ircMessage = Message(client->readBuffer); }
 		catch(Message::IncompleteMessageException const& e)
