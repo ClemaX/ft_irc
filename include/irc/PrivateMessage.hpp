@@ -41,6 +41,17 @@ namespace NAMESPACE_IRC
 	: AReply
 	{ JoinChannelMessage(std::string const &servername, std::string const& channelName); };
 
+	struct PartChannelMessage
+	: AReply
+	{
+		PartChannelMessage(std::string const &prefix, std::string const& channelName)
+		:AReply(prefix)
+		{
+			message << std::string("PART") + IRC_MESSAGE_DELIM + channelName;
+		}
+	
+	};
+
 	struct PrivmsgChannelMessage
 	: AReply
 	{ PrivmsgChannelMessage(std::string const &servername, std::string const& channelName, std::string const& privateMessage); };

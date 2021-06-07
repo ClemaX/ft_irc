@@ -32,6 +32,7 @@ namespace NAMESPACE_IRC
 				if (arguments.size() > 1)
 					leaveMessage << user->nickname << " has left " << channelName << ": " << arguments[1];
 				channel->removeClient(user, leaveMessage);
+				*user << PartChannelMessage(user->nickname, channelName);
 			}
 		}
 	}
