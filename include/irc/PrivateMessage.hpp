@@ -52,6 +52,17 @@ namespace NAMESPACE_IRC
 	
 	};
 
+	struct TopicChannelMessage
+	: AReply
+	{
+		TopicChannelMessage(std::string const& channelName, std::string const& newTopic)
+		:AReply(channelName)
+		{
+			message << std::string("TOPIC") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + newTopic;
+		}
+	
+	};
+
 	struct PrivmsgChannelMessage
 	: AReply
 	{ PrivmsgChannelMessage(std::string const &servername, std::string const& channelName, std::string const& privateMessage); };

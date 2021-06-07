@@ -32,7 +32,8 @@ namespace NAMESPACE_IRC
 		{
 			const std::string newTopic = arguments[1];
 			channel->setTopic(newTopic);
-			*user << TopicReply(gHostname, channelName, newTopic);
+			// *user << TopicReply(gHostname, channelName, newTopic);
+			*user << TopicChannelMessage(channelName, newTopic);
 		}
 	}
 }

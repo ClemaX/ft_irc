@@ -8,6 +8,8 @@ namespace NAMESPACE_IRC
 							std::string const &topic)
 		: NumericReply(serverName, IRC_RPL_TOPIC)
 	{
-		message << channelName << " :" << topic;
+		// (void)serverName;
+		// message << std::string("TOPIC") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + topic;
+		message << channelName + IRC_MESSAGE_DELIM + topic;
 	}
 }
