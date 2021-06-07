@@ -10,6 +10,8 @@ private:
 	bin_t	modes;
 
 public:
+	BitField(): modes(0) {}
+	
 	bool	operator[](Mode mode) const
 	{ return modes & mode; }
 

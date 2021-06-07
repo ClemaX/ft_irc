@@ -22,7 +22,7 @@
 namespace NAMESPACE_IRC
 {
 	/// global Host Name
-	extern std::string const&	gHostname;
+	extern std::string gHostname;
 
 	// TODO: Reference to connection and add ChannelClient on JOIN command
 
@@ -145,6 +145,7 @@ namespace NAMESPACE_IRC
 		~Channel();
 
 		Channel const&	operator<<(IReply const& reply);
+		Channel const&	operator<<(PrivmsgChannelMessage const& reply);
 		//Channel const&	operator<<(PrivateMessage const& reply);
 
 		/* Getters */
@@ -300,6 +301,19 @@ namespace NAMESPACE_IRC
 	{
 		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 			*it->first << message;
+		return (*this);
+	}
+
+	template <class __Server, class __Client>
+	Channel<__Server, __Client> const&
+	Channel<__Server, __Client>::
+	operator<<(PrivmsgChannelMessage const& message)
+	{
+		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		{
+			if (message.prefix.name != it->first->nickname)
+				*it->first << message;
+		}
 		return (*this);
 	}
 
@@ -509,7 +523,7 @@ namespace NAMESPACE_IRC
 		|| (isStatusBanned(client)))
 			*client << CannotSendToChanError(gHostname, name);
 		else
-			*this << PrivateMessage(client->nickname, message);
+			*this << PrivmsgChannelMessage(client->nickname, name, message);
 	}
 
 	template <class __Server, class __Client>

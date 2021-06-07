@@ -12,7 +12,7 @@
 
 namespace irc
 {
-	std::string const& gHostname = "";
+	std::string gHostname = "";
 
 	void
 	Server::Registered_Command::
@@ -30,7 +30,10 @@ namespace irc
 			authRequired(false),
 			database(this),
 			version(SERVER_VERSION)
-	{ Logger::instance() << Logger::DEBUG << "Creating empty server..." << std::endl; } // TODO: Maybe init hostname
+	{
+		gHostname = hostname;
+		Logger::instance() << Logger::DEBUG << "Creating empty server..." << std::endl;
+	}
 
 	Server::Server(ServerConfig const& config)
 		throw(SSLContextException, SocketException)
@@ -46,7 +49,9 @@ namespace irc
 			authRequired(!config[IRC_CONF_PASS].empty()),
 			database(this),
 			version(SERVER_VERSION)
-	{ }
+	{
+		gHostname = hostname;
+	}
 
 	Server::~Server()
 	{ }

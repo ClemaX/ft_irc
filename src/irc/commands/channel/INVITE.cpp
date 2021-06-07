@@ -22,7 +22,7 @@ namespace NAMESPACE_IRC
 				if (!channel)
 				{
 					*user << InvitingReply(gHostname, channelName, nickname);
-					*client << InviteChannelMessage(user->nickname, channelName);
+					*client << InviteChannelMessage(server.hostname, user->nickname, channelName);
 				}
 				else if (!user->isInChannel(channelName))
 					*user << NotOnChannelError(gHostname, channelName);
@@ -34,7 +34,7 @@ namespace NAMESPACE_IRC
 				{
 					if (channel->channelModes & __Channel::i)
 						channel->addInviteList(nickname);
-					*client << InviteChannelMessage(user->nickname, channelName);
+					*client << InviteChannelMessage(server.hostname, user->nickname, channelName);
 					*user << InvitingReply(gHostname, channelName, nickname);
 				}
 			}

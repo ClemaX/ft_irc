@@ -1,6 +1,6 @@
 #pragma once
 
-#include <irc/replies/IReply.hpp>
+#include <irc/replies/AReply.hpp>
 
 namespace NAMESPACE_IRC
 {
@@ -17,23 +17,33 @@ namespace NAMESPACE_IRC
 		std::string	message;
 	};
 
-
 	struct JoinChannelMessage
-	: PrivateMessage
-	{ JoinChannelMessage(std::string const& nickname, std::string const& channelName); };
+	: AReply
+	{ JoinChannelMessage(std::string const &servername, std::string const& channelName); };
+
+	struct PrivmsgChannelMessage
+	: AReply
+	{ PrivmsgChannelMessage(std::string const &servername, std::string const& channelName, std::string const& privateMessage); };
 
 	struct LeaveChannelMessage
-	: PrivateMessage
-	{ LeaveChannelMessage(std::string const& nickname, std::string const& channelName,
+	: AReply
+	{ LeaveChannelMessage(std::string const &servername, std::string const& channelName,
 		std::string const &leaveMessage); };
 
 	struct InviteChannelMessage
-	: PrivateMessage
-	{ InviteChannelMessage(std::string const& nickname, std::string const& channelName); };
+	: AReply
+	{ InviteChannelMessage(std::string const &servername, std::string const& nickname, std::string const& channelName); };
 
 	/////////////////////////////////////
 	// Inlined private message members //
 	/////////////////////////////////////
+
+	inline
+	PrivateMessage::PrivateMessage(std::string const& nickname,
+		std::string const& message)
+		:	prefix(nickname),
+			message(message)
+	{ }
 
 	inline
 	PrivateMessage::
@@ -47,16 +57,34 @@ namespace NAMESPACE_IRC
 	{ 
 		(void)nickname;
 		return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
+		// return (prefix.serialize() + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + message + IRC_MESSAGE_SUFFIX); }
 
 	inline
 	JoinChannelMessage::
-	JoinChannelMessage(std::string const& nickname, std::string const& channelName)
-	: PrivateMessage(nickname)
-	{ message << "has joined " << channelName; }
+	JoinChannelMessage(std::string const &servername, std::string const& channelName)
+	: AReply(servername)
+	{ message << "JOIN " << channelName; }
+
+	inline
+	PrivmsgChannelMessage::
+	PrivmsgChannelMessage(std::string const &nickname, std::string const& channelName, std::string const& privateMessage)
+	: AReply(nickname)
+	{message << std::string("PRIVMSG") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + privateMessage;}
+
+	inline
+	LeaveChannelMessage::LeaveChannelMessage(std::string const &servername, std::string const& channelName,
+		std::string const &leaveMessage)
+		: AReply(servername)
+	{
+		if (leaveMessage.compare(""))
+			message << leaveMessage;
+		else
+			message << "has left " << channelName;
+	}
 
 	inline
 	InviteChannelMessage::
-	InviteChannelMessage(std::string const& nickname, std::string const& channelName)
-	: PrivateMessage(nickname)
-	{ message << nickname << " invites you to " << channelName; }
+	InviteChannelMessage(std::string const &servername, std::string const& nickname, std::string const& channelName)
+	: AReply(servername)
+	{ message << nickname << " INVITE " << channelName; }
 }

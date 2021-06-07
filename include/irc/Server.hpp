@@ -54,7 +54,7 @@ namespace NAMESPACE_IRC
 	template <class __Server, class __AClient>
 	class Channel;
 
-	extern std::string const&	gHostname;
+	extern std::string gHostname;
 
 	struct ServerAdmin
 	{

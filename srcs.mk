@@ -7,7 +7,6 @@ SRCS = $(addprefix $(SRCDIR)/,\
 		AMessage.cpp\
 		ChannelModes.cpp\
 		Message.cpp\
-		PrivateMessage.cpp\
 		SecureSocketClient.cpp\
 		Server.cpp\
 		ServerConfig.cpp\
