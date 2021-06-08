@@ -196,6 +196,7 @@ namespace NAMESPACE_IRC
 		bool	addServer(__Server*const server);
 
 		bool	removeClient(__Client*const client, std::string const &leaveMessage);
+		bool	kickClient(__Client* const kicker, __Client* const victim, std::string kickMessage);
 
 		bool	close();
 
@@ -604,6 +605,22 @@ namespace NAMESPACE_IRC
 			return (false);
 		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
 		client->leaveChannel(this);
+		clientsMap.erase(it);
+		if (clientsMap.empty())
+			return (close());
+		return (true);
+	}
+
+	template <class __Server, class __Client>
+	bool
+	Channel<__Server, __Client>::
+	kickClient(__Client* const kicker, __Client* const victim, std::string kickMessage)
+	{
+		const typename Channel::channelClientMap::iterator& it = clientsMap.find(victim);
+		if (it == clientsMap.end())
+			return (false);
+		*this << KickChannelMessage(kicker->nickname, victim->nickname, name, kickMessage);
+		victim->leaveChannel(this);
 		clientsMap.erase(it);
 		if (clientsMap.empty())
 			return (close());

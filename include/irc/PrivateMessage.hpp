@@ -70,7 +70,27 @@ namespace NAMESPACE_IRC
 		{
 			message << std::string("TOPIC") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + newTopic;
 		}
-	
+	};
+
+	struct InviteChannelMessage
+	: AReply
+	{
+		InviteChannelMessage(std::string const& senderNickname, std::string const& receiverNickname, std::string const& channelName)
+		:AReply(senderNickname)
+		{
+			message << std::string("INVITE") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + receiverNickname;
+		}
+	};
+
+	struct KickChannelMessage
+	: AReply
+	{
+		KickChannelMessage(std::string const& senderNickname, std::string const& receiverNickname,
+			std::string const& channelName, std::string const& kickMessage)
+		:AReply(senderNickname)
+		{
+			message << std::string("KICK") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + receiverNickname + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + kickMessage;
+		}
 	};
 
 	struct PrivmsgChannelMessage
@@ -82,9 +102,6 @@ namespace NAMESPACE_IRC
 	{ LeaveChannelMessage(std::string const &servername, std::string const& channelName,
 		std::string const &leaveMessage); };
 
-	struct InviteChannelMessage
-	: AReply
-	{ InviteChannelMessage(std::string const &servername, std::string const& nickname, std::string const& channelName); };
 
 	/////////////////////////////////////
 	// Inlined private message members //
@@ -151,9 +168,4 @@ namespace NAMESPACE_IRC
 			message << "has left " << channelName;
 	}
 
-	inline
-	InviteChannelMessage::
-	InviteChannelMessage(std::string const &servername, std::string const& nickname, std::string const& channelName)
-	: AReply(servername)
-	{ message << nickname << " INVITE " << channelName; }
 }

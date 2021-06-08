@@ -12,8 +12,8 @@ namespace NAMESPACE_IRC
 		else
 		{
 			std::string nameArgument = arguments[0];
-			std::string flags = "";
-			if (arguments.size() > 1)
+			// std::string flags = "";
+			// if (arguments.size() > 1)
 				std::string flags = arguments[1];
 			if (!flags.empty())
 			{
