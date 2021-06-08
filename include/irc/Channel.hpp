@@ -151,6 +151,9 @@ namespace NAMESPACE_IRC
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
 
+		std::string getChannelModes();
+		std::string getUserModes(const std::string& nickname);
+
 		Channel const&	operator<<(IReply const& reply);
 		Channel const&	operator<<(PrivmsgChannelMessage const& reply);
 		//Channel const&	operator<<(PrivateMessage const& reply);
