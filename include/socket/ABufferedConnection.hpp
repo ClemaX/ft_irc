@@ -28,7 +28,7 @@ public:
 	/// Flushes the write buffer.
 	void	flush()
 	{
-		write(writeBuffer.c_str(), writeBuffer.length());
-		writeBuffer.clear();
+		if (write(writeBuffer.c_str(), writeBuffer.length()))
+			writeBuffer.clear();
 	}
 };

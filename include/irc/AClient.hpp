@@ -44,7 +44,7 @@ namespace NAMESPACE_IRC
 		/**
 		 * @brief Binary user modes.
 		 */
-		BitField<Mode, uint32_t>	modes;
+		BitField<Mode, uint32_t, o>	modes;
 
 		/// An unique nickname acting as the user's identifier.
 		/// Only characters from the nickname charset are allowed.
@@ -111,6 +111,8 @@ namespace NAMESPACE_IRC
 		{ return channels.find(ft::strToLower(channelName)) != channels.end(); };
 
 		bool	isInSameChannel(AClient const* client) const;
+
+		std::string	getModes() const;
 
 		Channel	*getChannel(std::string const& channelName) const;
 		Channel	*getChannelGlobal(IRCDatabase const& db, std::string const& channelName) const;

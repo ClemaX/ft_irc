@@ -10,15 +10,16 @@ namespace NAMESPACE_IRC
 			*user << NeedMoreParamsError(gHostname, name);
 		else if (arguments.size() == 1)
 		{
-			if (server.database.getChannel(arguments.at(0)))
-				;//*user ChannelModeIsReply(server.hostname, ); // 324 plamtenz #plamtenz +ns
-
+			Channel<Server, AClient>const*const	channel = server.database.getChannel(arguments.at(0));
+			
+			if (channel)
+				*user << ChannelModeIsReply(server.hostname, arguments.at(0), channel->channelModes.toString(Channel<Server, AClient>::__modes)); // 324 plamtenz #plamtenz +ns
 			else if (server.database.getClient(arguments.at(0)))
 			{
 				if (arguments.at(0) != user->nickname)
 					*user << UsersDontMatchError(server.hostname);
 				else
-					;//*user << UModeIsReply(server.hostname); // 221 plamtenz +Ri
+					*user << UModeIsReply(server.hostname, user->getModes()); // 221 plamtenz +Ri
 			}
 			else
 				*user << NoSuchChannelError(server.hostname, arguments.at(0));

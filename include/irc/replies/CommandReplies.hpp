@@ -109,8 +109,8 @@ namespace NAMESPACE_IRC
 // 324     IRC_RPL_CHANNELMODEIS
 //             "<channel> <mode> <mode params>"
 	struct ChannelModeIsReply	:	NumericReply
-	{ ChannelModeIsReply(std::string const& serverName, std::string const &channelName,
-							std::string const &mode, std::string const &modeParams); };
+	{ ChannelModeIsReply(std::string const& prefix, std::string const &channelName,
+							 std::string const &mode, std::string const& modeParams = ""); };
 
 // 331     IRC_RPL_NOTOPIC
 //             "<channel> :No topic is set"

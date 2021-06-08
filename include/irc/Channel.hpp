@@ -71,10 +71,10 @@ namespace NAMESPACE_IRC
 	{
 		/* Member types */
 
-		public:
+	public:
+		static const char* const	__modes[];
 
-
-		enum ChannelMode
+		enum Mode
 		{
 			a = (1 << 0),
 			i = (1 << 1),
@@ -86,8 +86,9 @@ namespace NAMESPACE_IRC
 			r = (1 << 7),
 			t = (1 << 8)
 		};
+		typedef BitField<Mode, uint32_t, t> ModeField;
 
-		enum ChannelUserMode
+		enum UserMode
 		{
 			O = (1 << 0),
 			o = (1 << 1),
@@ -96,14 +97,15 @@ namespace NAMESPACE_IRC
 			e = (1 << 4),
 			I = (1 << 5)
 		};
-
-		struct	ChannelModes	: BitField<ChannelMode, uint32_t>
+		typedef BitField<UserMode, uint32_t, I> UserModeField;
+	
+		struct	ChannelModes	: BitField<Mode, uint32_t, t>
 		{
 		public:
-			typedef std::map<std::string, BitField<ChannelUserMode, uint32_t> > ModesMap;
+			typedef std::map<std::string, UserModeField> UserModesMap;
 
 			/// Modes by nickname
-			ModesMap		userModes;
+			UserModesMap	userModes;
 			/// Maximal users (0 means disabled)
 			size_t			l;
 			/// Channel password (empty means disabled)
@@ -112,7 +114,7 @@ namespace NAMESPACE_IRC
 			ChannelModes();
 
 			ChannelModes& operator=(uint32_t modes)
-			{ BitField<ChannelMode, uint32_t>::operator=(modes); return *this; }
+			{ ModeField::operator=(modes); return *this; }
 		};
 
 		typedef typename std::map<__Client*, ChannelClient<__Client> >	channelClientMap;
@@ -151,7 +153,6 @@ namespace NAMESPACE_IRC
 		Channel(std::string const& channelName) throw(InvalidChannelNameException);
 		~Channel();
 
-		std::string getChannelModes();
 		std::string getUserModes(const std::string& nickname);
 
 		Channel const&	operator<<(IReply const& reply);
@@ -230,6 +231,38 @@ namespace NAMESPACE_IRC
 		bool	addInviteList(const std::string& sender, const std::string& nickname);
 		bool	removeInviteList(const std::string& sender, const std::string& nickname);
 
+	};
+
+	// 10 chars* per line starting at {1, 1}
+	template<typename Server, typename Client>
+	const char* const Channel<Server, Client>::__modes[] = {
+		0,
+		"a", "i", 0, "m", 0, 0, 0, "n", 0, 0,
+		0, 0, 0, 0, 0, "q", 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, "p", 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, "s", 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, "r", 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, "t"
 	};
 
 	///////////////////////////
@@ -571,7 +604,7 @@ namespace NAMESPACE_IRC
 			return (false);
 		}
 		clientsMap[client] = ChannelClient<AClient>(client, isChannelOperator); // NEED THIS ?!?!
-		channelModes.userModes.insert(std::pair<std::string, BitField<ChannelUserMode, uint32_t> >(client->nickname, BitField<ChannelUserMode, uint32_t>()));
+		channelModes.userModes.insert(std::pair<std::string, UserModeField>(client->nickname, UserModeField()));
 		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
 			addCreator(client->nickname, client->nickname);
 		else if (isChannelOperator)
@@ -665,7 +698,7 @@ namespace NAMESPACE_IRC
 			if (it != m.end())
 				it->second |= mask;
 			else if (mask & Channel<Server, AClient>::I)
-				m.insert(std::pair<std::string, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t> >(key, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t>(mask)));
+				m.insert(std::pair<std::string, Channel<Server, AClient>::UserModeField>(key, Channel<Server, AClient>::UserModeField(mask)));
 			else
 				return (false);
 

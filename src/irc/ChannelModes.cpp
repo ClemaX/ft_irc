@@ -10,37 +10,6 @@ namespace NAMESPACE_IRC
 
 	namespace
 	{
-		// 10 chars* per line starting at {1, 1}
-		static const char* const __modes[] = {
-			0,
-			"a", "i", 0, "m", 0, 0, 0, "n", 0, 0,
-			0, 0, 0, 0, 0, "q", 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, "p", 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, "s", 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, "r", 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, "t"
-		};
-
 		template <class __Reply, class __Client, class __Channel>
 		inline bool
 		check_privileges(__Client* const user, __Channel *const channel)
@@ -72,7 +41,7 @@ namespace NAMESPACE_IRC
 		{
 			channel->channelModes |= mask;
 			// *channel << __Reply(gHostname, channel->name, std::string("+") + __modes[mask], "");
-			*channel << ModeChannelMessage(user->nickname, channel->name, '+', __modes[mask]);
+			*channel << ModeChannelMessage(user->nickname, channel->name, '+', __Channel::__modes[mask]);
 			return (true);
 		}
 
@@ -83,7 +52,7 @@ namespace NAMESPACE_IRC
 		{
 			channel->channelModes &= ~mask;
 			// *channel << __Reply(gHostname, channel->name, std::string("-") + __modes[mask], "");
-			*channel << ModeChannelMessage(user->nickname, channel->name, '-', __modes[mask]);
+			*channel << ModeChannelMessage(user->nickname, channel->name, '-', __Channel::__modes[mask]);
 			return (true);
 		}
 
@@ -102,41 +71,6 @@ namespace NAMESPACE_IRC
 			return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
 			&& reset_mode<__Client, __Channel>(user, channel, mask));
 		}
-
-		template <typename Modes>
-		std::string
-		getModes(const Modes& modes, size_t max, std::string symbols[])
-		{
-			std::string res;
-			for (size_t i = 1 ; i <= max ; i <<= 1)
-				if (modes & i)
-					res += symbols[i];
-			return (res);
-		}
-	}
-
-	template <typename __Server, typename __Client>
-	std::string
-	Channel<__Server, __Client>::getChannelModes()
-	{ return (getModes(channelModes, 1 << 8, __modes)); }
-
-	template <typename __Server, typename __Client>
-	std::string
-	Channel<__Server, __Client>::getUserModes(const std::string& nickname)
-	{
-		static const char* const __umodes[] = {
-			0,
-			"a", "i", 0, "m", 0, 0, 0, "n", 0, 0,
-			0, 0, 0, 0, 0, "q", 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, "p"
-		};
-
-		const typename Channel<__Server, __Client>::ChannelModes::ModesMap::const_iterator& it = channelModes.userModes.find(nickname);
-		if (it != channelModes.userModes.end())
-			return (getModes(it->second, 1 << 5, __umodes));
-		else
-			return (std::string());
 	}
 
 	bool

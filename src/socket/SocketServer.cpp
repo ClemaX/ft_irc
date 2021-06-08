@@ -26,6 +26,7 @@ void	SocketServer::removeConnection(int fd)
 {
 	if (fd > 0)
 	{
+		Logger::instance() << Logger::DEBUG << "Removing connection on fd " << fd << std::endl;
 		delete fdConnectionMap[fd];
 		fdConnectionMap.erase(fd);
 		if (fd == highestFd)

@@ -67,6 +67,17 @@ namespace NAMESPACE_IRC
 		return false;
 	}
 
+	std::string
+	AClient::getModes() const
+	{
+		static const char* const __umodes[] = {
+			0,
+			"i", "s", 0, "w", 0, 0, 0, "o",
+		};
+
+		return (modes.toString(__umodes));
+	}
+
 	AClient::Channel	*AClient::getChannel(std::string const & channelName) const
 	{
 		if (isInChannel(channelName))

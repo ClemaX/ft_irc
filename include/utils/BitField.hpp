@@ -1,6 +1,6 @@
 #pragma once
 
-template<typename Mode, typename uint_t>
+template<typename Mode, typename uint_t, uint_t modeMax>
 struct	BitField
 {
 public:
@@ -15,7 +15,18 @@ public:
 	BitField(bin_t initialModes)
 		: modes(initialModes)
 	{}
-	
+
+	std::string
+	toString(const char* const symbols[]) const
+	{
+		std::string res = "+";
+
+		for (size_t i = 1 ; i <= modeMax ; i <<= 1)
+			if (modes & i)
+				res += symbols[i];
+		return (res);
+	}
+
 	bool	operator[](Mode mode) const
 	{ return modes & mode; }
 
