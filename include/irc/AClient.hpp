@@ -116,8 +116,8 @@ namespace NAMESPACE_IRC
 		Channel	*getChannelGlobal(IRCDatabase const& db, std::string const& channelName) const;
 				// getChannel() + channel in the database if it's neither private nor secret
 
-		void	receiveMessage(AClient const* client, std::string const &message)
-		{ *this << PrivateMessage(client->nickname, message); };
+		void	receiveMessage(AClient const* sender, std::string const &message)
+		{ *this << PrivateMessage(sender->nickname, nickname, message); };
 
 		bool	listChannelInfo(Channel* const channel);
 		bool	listAllChannelsListInfo(IRCDatabase const& db);

@@ -7,7 +7,7 @@ namespace NAMESPACE_IRC
 	struct	PrivateMessage
 	: IReply
 	{
-		PrivateMessage(std::string const& serverName,
+		PrivateMessage(std::string const& senderNickname, std::string const& receiverNickname,
 			std::string const &message = "");
 		virtual ~PrivateMessage();
 
@@ -91,11 +91,12 @@ namespace NAMESPACE_IRC
 	/////////////////////////////////////
 
 	inline
-	PrivateMessage::PrivateMessage(std::string const& nickname,
-		std::string const& message)
-		:	prefix(nickname),
-			message(message)
-	{ }
+	PrivateMessage::PrivateMessage(std::string const& senderNickname, std::string const& receiverNickname,
+		std::string const& sentMessage)
+		:	prefix(senderNickname)
+	{
+		message << std::string("PRIVMSG") + IRC_MESSAGE_DELIM + receiverNickname + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + sentMessage;
+	}
 
 	inline
 	PrivateMessage::
