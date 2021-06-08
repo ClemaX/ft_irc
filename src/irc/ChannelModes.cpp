@@ -135,7 +135,7 @@ namespace NAMESPACE_IRC
 	removeChannelVoice(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addVoice(user->nickname, flagArguments));
+		&& channel->removeVoice(user->nickname, flagArguments));
 	}
 
 	bool

@@ -692,7 +692,8 @@ namespace NAMESPACE_IRC
 		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode(channelModes.userModes, nickname, Channel::O);
 		if (success)
-			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+			*this << ModeChannelMessage(sender, this->name, '+', "O", nickname);
+			// *this << ChannelModeIsReply(sender, nickname, this->name, "+O");
 		return success;
 	}
 
@@ -705,7 +706,7 @@ namespace NAMESPACE_IRC
 		&& reset_mode(channelModes.userModes, nickname, Channel::O);
 		static_cast<void>(sender);
 		// if (success)
-		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		// 	*this << ChannelModeIsReply(sender, this->name, nickname, sender);
 		return success;
 	}
 
@@ -717,7 +718,8 @@ namespace NAMESPACE_IRC
 		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode(channelModes.userModes, nickname, Channel::o);
 		if (success)
-			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+			*this << ModeChannelMessage(sender, this->name, '+', "o", nickname);
+			// *this << ChannelModeIsReply(sender, nickname, this->name, "+o");
 		return success;
 	}
 
@@ -730,7 +732,7 @@ namespace NAMESPACE_IRC
 		&& reset_mode(channelModes.userModes, nickname, Channel::o);
 		static_cast<void>(sender);
 		// if (success)
-		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		// 	*this << ChannelModeIsReply(sender, this->name, nickname, sender);
 		return success;
 	}
 
@@ -742,7 +744,8 @@ namespace NAMESPACE_IRC
 		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode(channelModes.userModes, nickname, Channel::v);
 		if (success)
-			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+			*this << ModeChannelMessage(sender, this->name, '+', "v", nickname);
+			// *this << ChannelModeIsReply(sender, nickname, this->name, "+v");
 		return success;
 	}
 
@@ -755,7 +758,7 @@ namespace NAMESPACE_IRC
 		&& reset_mode(channelModes.userModes, nickname, Channel::v);
 		static_cast<void>(sender);
 		// if (success)
-		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		// 	*this << ChannelModeIsReply(sender, this->name, nickname, sender);
 		return success;
 	}
 
