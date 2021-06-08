@@ -48,10 +48,11 @@ namespace NAMESPACE_IRC
 				else
 				{
 					std::string comment = "";
-					comment << clientNickname << " has been kicked from " << channelName;
 					if (arguments.size() > 2)
-						comment << ": " << arguments[2];
-					channel->removeClient(victim, comment);
+						comment << arguments[2];
+					else
+						comment << victim->nickname;
+					channel->kickClient(user, victim, comment);
 				}
 			}
 		}

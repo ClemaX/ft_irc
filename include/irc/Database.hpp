@@ -440,8 +440,8 @@ namespace NAMESPACE_IRC
 			handle_channel_modes(src, target);
 
 			// User in channel modes
-			for (const_iterator it = src.channelModes.channelModes.begin()
-			; it != src.channelModes.channelModes.end() ; it++)
+			for (const_iterator it = src.channelModes.userModes.begin()
+			; it != src.channelModes.userModes.end() ; it++)
 			{
 				// TO DO: Check if i need to remove 'O' for each iteration too
 				*target << (std::string("MODE ") + src.name + " -o " + it->first + IRC_MESSAGE_SUFFIX);

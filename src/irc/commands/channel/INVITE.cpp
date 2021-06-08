@@ -1,4 +1,5 @@
 #include <irc/Server.hpp>
+#include <irc/PrivateMessage.hpp>
 
 namespace NAMESPACE_IRC
 {
@@ -34,8 +35,9 @@ namespace NAMESPACE_IRC
 				{
 					if (channel->channelModes & __Channel::i)
 						channel->addInviteList(nickname);
-					*client << InviteChannelMessage(server.hostname, user->nickname, channelName);
-					*user << InvitingReply(gHostname, channelName, nickname);
+					*client << InviteChannelMessage(user->nickname, channelName, nickname);
+					// *user << InvitingReply(gHostname, channelName, nickname);
+					*user << InviteChannelMessage(user->nickname, channelName, nickname);
 				}
 			}
 		}

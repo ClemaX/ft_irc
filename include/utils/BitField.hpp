@@ -11,6 +11,10 @@ private:
 
 public:
 	BitField(): modes(0) {}
+
+	BitField(bin_t initialModes)
+		: modes(initialModes)
+	{}
 	
 	bool	operator[](Mode mode) const
 	{ return modes & mode; }
