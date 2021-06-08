@@ -2,6 +2,7 @@
 #include <irc/Channel.hpp>
 
 #include <irc/AClient.hpp>
+#include <irc/PrivateMessage.hpp>
 
 namespace NAMESPACE_IRC
 {
@@ -64,23 +65,25 @@ namespace NAMESPACE_IRC
 			return (true);
 		}
 
-		template <class __Reply, class __Channel>
+		template <class __Client, class __Channel>
 		inline bool
 		__attribute__ ((const)) // Always return the same, compiler preloads rax
-		add_mode(__Channel *const channel, size_t mask)
+		add_mode(__Client* const user, __Channel *const channel, size_t mask)
 		{
 			channel->channelModes |= mask;
-			*channel << __Reply(gHostname, channel->name, std::string("+") + __modes[mask], "");
+			// *channel << __Reply(gHostname, channel->name, std::string("+") + __modes[mask], "");
+			*channel << ModeChannelMessage(user->nickname, channel->name, '+', __modes[mask]);
 			return (true);
 		}
 
-		template <class __Reply, class __Channel>
+		template <class __Client, class __Channel>
 		inline bool
 		__attribute__ ((const)) // Always return the same, compiler preloads rax
-		reset_mode(__Channel *const channel, size_t mask)
+		reset_mode(__Client* const user, __Channel *const channel, size_t mask)
 		{
 			channel->channelModes &= ~mask;
-			*channel << __Reply(gHostname, channel->name, std::string("-") + __modes[mask], "");
+			// *channel << __Reply(gHostname, channel->name, std::string("-") + __modes[mask], "");
+			*channel << ModeChannelMessage(user->nickname, channel->name, '-', __modes[mask]);
 			return (true);
 		}
 
@@ -89,7 +92,7 @@ namespace NAMESPACE_IRC
 		handle_mode(__Client* const user, __Channel* const channel, size_t mask)
 		{
 			return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-			&& add_mode<ChannelModeIsReply>(channel, mask));
+			&& add_mode<__Client, __Channel>(user, channel, mask));
 		}
 
 		template <class __Client, class __Channel>
@@ -97,7 +100,7 @@ namespace NAMESPACE_IRC
 		handle_mode(__Client* const user, __Channel* const channel, size_t mask, int)
 		{
 			return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-			&& reset_mode<ChannelModeIsReply>(channel, mask));
+			&& reset_mode<__Client, __Channel>(user, channel, mask));
 		}
 	}
 
@@ -238,16 +241,20 @@ namespace NAMESPACE_IRC
 	setChannelReop(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
-		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
-		&& add_mode<ChannelModeIsReply>(channel, __Channel::r));
+		// return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
+		// && add_mode<ChannelModeIsReply>(channel, __Channel::r));
+		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
+		&& add_mode<AClient, __Channel>(user, channel, __Channel::r));
 	}
 
 	bool
 	unsetChannelReop(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		static_cast<void>(flagArguments);
-		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
-		&& reset_mode<ChannelModeIsReply>(channel, __Channel::r));
+		// return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
+		// && reset_mode<ChannelModeIsReply>(channel, __Channel::r));
+		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
+		&& reset_mode<AClient, __Channel>(user, channel, __Channel::r));
 	}
 
 	bool
@@ -418,6 +425,7 @@ namespace NAMESPACE_IRC
 			if (database.modeChannelFunctionsMap[sign].find(*it) == database.modeChannelFunctionsMap[sign].end())
 				return false;
 			database.modeChannelFunctionsMap[sign][*it](user, channel, flagArguments);
+			// *channel << ModeChannelMessage(user->nickname, channelName, sign, *it);
 		}
 		return true;
 	}

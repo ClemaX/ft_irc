@@ -52,6 +52,16 @@ namespace NAMESPACE_IRC
 	
 	};
 
+	struct ModeChannelMessage
+	: AReply
+	{
+		ModeChannelMessage(std::string const &prefix, std::string const& channelName, char sign, const char *const flag)
+		:AReply(prefix)
+		{
+			message << std::string("MODE") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + sign + flag;
+		}
+	};
+
 	struct TopicChannelMessage
 	: AReply
 	{

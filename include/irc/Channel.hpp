@@ -106,6 +106,7 @@ namespace NAMESPACE_IRC
 
 			ChannelModes& operator=(uint32_t modes)
 			{ BitField<Mode, uint32_t>::operator=(modes); return *this; }
+
 		};
 
 		typedef typename std::map<__Client*, ChannelClient<__Client> >	channelClientMap;
