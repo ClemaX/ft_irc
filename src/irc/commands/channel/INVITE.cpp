@@ -34,7 +34,7 @@ namespace NAMESPACE_IRC
 				else
 				{
 					if (channel->channelModes & __Channel::i)
-						channel->addInviteList(nickname);
+						channel->addInviteList(user->nickname, nickname);
 					*client << InviteChannelMessage(user->nickname, channelName, nickname);
 					// *user << InvitingReply(gHostname, channelName, nickname);
 					*user << InviteChannelMessage(user->nickname, channelName, nickname);

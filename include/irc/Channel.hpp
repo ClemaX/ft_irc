@@ -208,24 +208,24 @@ namespace NAMESPACE_IRC
 
 		/* Handle mods */
 
-		bool	addCreator(const std::string& nickname);
-		bool	removeCreator(const std::string& nickname);
+		bool	addCreator(const std::string& sender, const std::string& nickname);
+		bool	removeCreator(const std::string& sender, const std::string& nickname);
 
-		bool	addOperator(const std::string& nickname);
-		bool	removeOperator(const std::string& nickname);
+		bool	addOperator(const std::string& sender, const std::string& nickname);
+		bool	removeOperator(const std::string& sender, const std::string& nickname);
 
-		bool	addVoice(const std::string& nickname);
-		bool	removeVoice(const std::string& nickname);
+		bool	addVoice(const std::string& sender, const std::string& nickname);
+		bool	removeVoice(const std::string& sender, const std::string& nickname);
 
 
-		bool	addBanned(const std::string& nickname);
-		bool	removeBanned(const std::string& nickname);
+		bool	addBanned(const std::string& sender, const std::string& nickname);
+		bool	removeBanned(const std::string& sender, const std::string& nickname);
 
-		bool	addException(const std::string& nickname);
-		bool	removeException(const std::string& nickname);
+		bool	addException(const std::string& sender, const std::string& nickname);
+		bool	removeException(const std::string& sender, const std::string& nickname);
 
-		bool	addInviteList(const std::string& nickname);
-		bool	removeInviteList(const std::string& nickname);
+		bool	addInviteList(const std::string& sender, const std::string& nickname);
+		bool	removeInviteList(const std::string& sender, const std::string& nickname);
 
 	};
 
@@ -325,15 +325,6 @@ namespace NAMESPACE_IRC
 		return (*this);
 	}
 
-	/* template <class __Server, class __Client>
-	Channel<__Server, __Client> const&
-	Channel<__Server, __Client>::
-	operator<<(PrivateMessage const& reply)
-	{
-		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
-			*it->first << reply;
-		return (*this);
-	} */
 
 	/////////////
 	// Getters //
@@ -356,6 +347,8 @@ namespace NAMESPACE_IRC
 				return (it->first);
 		return (NULL);
 	}
+
+
 
 	/////////////
 	// Setters //
@@ -463,11 +456,7 @@ namespace NAMESPACE_IRC
 	inline bool
 	Channel<__Server, __Client>::
 	isStatusInvite(__Client const* user) const
-	{
-std::cout << "check I mode\n";			
-	
-		return (check_user_mod(channelModes.userModes, user->nickname, Channel::I));
-	}
+	{return (check_user_mod(channelModes.userModes, user->nickname, Channel::I));}
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
@@ -581,9 +570,9 @@ std::cout << "check I mode\n";
 		clientsMap[client] = ChannelClient<AClient>(client, isChannelOperator); // NEED THIS ?!?!
 		channelModes.userModes.insert(std::pair<std::string, BitField<ChannelUserMode, uint32_t> >(client->nickname, BitField<ChannelUserMode, uint32_t>()));
 		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
-			addCreator(client->nickname);
+			addCreator(client->nickname, client->nickname);
 		else if (isChannelOperator)
-			addOperator(client->nickname);
+			addOperator(client->nickname, client->nickname);
 		client->joinChannel(this);
 		*this << JoinChannelMessage(client->nickname, name);
 		*client << TopicReply(gHostname, name, topic);
@@ -665,37 +654,30 @@ std::cout << "check I mode\n";
 			return (true);
 		}
 
-		template <class __Reply, class Map>
+		template <class Map>
 		bool
-		add_mode(Map& m, Channel<Server, AClient>* const c, const std::string& key, uint32_t mask,
-		const char*const mode_msg)
+		add_mode(Map& m, const std::string& key, uint32_t mask)
 		{
 			const typename Map::iterator& it = m.find(key);
 			if (it != m.end())
 				it->second |= mask;
 			else if (mask & Channel<Server, AClient>::I)
-			{
-				c->channelModes.userModes.insert(std::pair<std::string, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t> >(key, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t>(mask)));
-
-std::cout << "if pas dans channel mode\n";			
-			
-			}
+				m.insert(std::pair<std::string, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t> >(key, BitField<Channel<Server, AClient>::ChannelUserMode, uint32_t>(mask)));
 			else
 				return (false);
-			*c << __Reply(gHostname, c->name, mode_msg, key);
+			
 			return (true);
 		}
 
-		template <class __Reply, class Map, class __Channel>
+		template <class Map>
 		bool
-		reset_mode(Map& m, __Channel* const c, const std::string& key, size_t mask,
-		const char*const mode_msg)
+		reset_mode(Map& m, const std::string& key, size_t mask)
 		{
 			const typename Map::iterator& it = m.find(key);
 			if (it != m.end())
 			{
 				it->second &= ~mask;
-				*c << __Reply(gHostname, c->name, mode_msg, key);
+				
 				return (true);
 			}
 			return (false);
@@ -705,90 +687,144 @@ std::cout << "if pas dans channel mode\n";
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addCreator(const std::string& nickname)
+	addCreator(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::O, "+O"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& add_mode(channelModes.userModes, nickname, Channel::O);
+		if (success)
+			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeCreator(const std::string& nickname)
+	removeCreator(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::O, "-O"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& reset_mode(channelModes.userModes, nickname, Channel::O);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addOperator(const std::string& nickname)
+	addOperator(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::o, "+o"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& add_mode(channelModes.userModes, nickname, Channel::o);
+		if (success)
+			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeOperator(const std::string& nickname)
+	removeOperator(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::o, "-o"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& reset_mode(channelModes.userModes, nickname, Channel::o);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addVoice(const std::string& nickname)
+	addVoice(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& add_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::v, "+v"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& add_mode(channelModes.userModes, nickname, Channel::v);
+		if (success)
+			*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeVoice(const std::string& nickname)
+	removeVoice(const std::string& sender, const std::string& nickname)
 	{
-		return (user_in_channel<UserNotInChannelError>(nickname, this)
-		&& reset_mode<ChannelModeIsReply>(channelModes.userModes, this, nickname, Channel::v, "-v"));
+		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
+		&& reset_mode(channelModes.userModes, nickname, Channel::v);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << ChannelModeIsReply(gHostname, this->name, nickname, sender);
+		return success;
 	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addBanned(const std::string& nickname)
-	{ return (add_mode<BanListReply>(channelModes.userModes, this, nickname, Channel::b, "+")); }
+	addBanned(const std::string& sender, const std::string& nickname)
+	{
+		bool success = add_mode(channelModes.userModes, nickname, Channel::b);
+		if (success)
+			*this << BanListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeBanned(const std::string& nickname)
-	{ return (reset_mode<BanListReply>(channelModes.userModes, this, nickname, Channel::b, "-")); }
+	removeBanned(const std::string& sender, const std::string& nickname)
+	{
+		bool success = reset_mode(channelModes.userModes, nickname, Channel::b);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << BanListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addException(const std::string& nickname)
-	{ return (add_mode<ExceptionListReply>(channelModes.userModes, this, nickname, Channel::e, "+")); }
+	addException(const std::string& sender, const std::string& nickname)
+	{
+		bool success = add_mode(channelModes.userModes, nickname, Channel::e);
+		if (success)
+			*this << ExceptionListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeException(const std::string& nickname)
-	{ return (reset_mode<ExceptionListReply>(channelModes.userModes, this, nickname, Channel::e, "-")); }
+	removeException(const std::string& sender, const std::string& nickname)
+	{
+		bool success = reset_mode(channelModes.userModes, nickname, Channel::e);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << ExceptionListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addInviteList(const std::string& nickname)
-	{return (add_mode<InviteListReply>(channelModes.userModes, this, nickname, Channel::I, "+"));}
+	addInviteList(const std::string& sender, const std::string& nickname)
+	{
+		bool success = add_mode(channelModes.userModes, nickname, Channel::I);
+		if (success)
+			*this << InviteListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	removeInviteList(const std::string& nickname)
-	{ return (reset_mode<InviteListReply>(channelModes.userModes, this, nickname, Channel::I, "-")); }
+	removeInviteList(const std::string& sender, const std::string& nickname)
+	{
+		bool success = reset_mode(channelModes.userModes, nickname, Channel::I);
+		static_cast<void>(sender);
+		// if (success)
+		// 	*this << InviteListReply(gHostname, this->name, nickname, sender);
+		return success;
+	}
 }

@@ -8,6 +8,6 @@ namespace NAMESPACE_IRC
 							std::string const &sign, std::string const &exceptionMask)
 		: NumericReply(serverName, IRC_RPL_EXCEPTLIST)
 	{
-		message << channelName << " " << sign << "e " << exceptionMask;
+		message << channelName << " " << sign << " " << exceptionMask;
 	}
 }

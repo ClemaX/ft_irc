@@ -8,6 +8,6 @@ namespace NAMESPACE_IRC
 							std::string const &sign, std::string const &inviteMask)
 		: NumericReply(serverName, IRC_RPL_INVITELIST)
 	{
-		message << channelName << " " << sign << "I " << inviteMask;
+		message << channelName << " " << sign << " " << inviteMask;
 	}
 }
