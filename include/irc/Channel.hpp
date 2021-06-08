@@ -85,6 +85,7 @@ namespace NAMESPACE_IRC
 			s = (1 << 6),
 			r = (1 << 7),
 			t = (1 << 8),
+
 			O = (1 << 9),
 			o = (1 << 10),
 			v = (1 << 11),
@@ -148,7 +149,7 @@ namespace NAMESPACE_IRC
 		Channel const&	operator<<(IReply const& reply);
 		Channel const&	operator<<(PrivmsgChannelMessage const& reply);
 		//Channel const&	operator<<(PrivateMessage const& reply);
-
+	
 		/* Getters */
 
 		const std::string&	getTopic() const;
