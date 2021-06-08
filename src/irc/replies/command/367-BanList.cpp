@@ -8,6 +8,6 @@ namespace NAMESPACE_IRC
 							std::string const &sign, std::string const &banid)
 		: NumericReply(serverName, IRC_RPL_BANLIST)
 	{
-		message << channelName << " " << sign << "b " << banid;
+		message << channelName << " " << sign << " " << banid;
 	}
 }

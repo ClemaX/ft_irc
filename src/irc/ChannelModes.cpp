@@ -143,34 +143,34 @@ namespace NAMESPACE_IRC
 	addChannelCreator(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_creator<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addCreator(flagArguments));
+		&& channel->addCreator(user->nickname, flagArguments));
 	}
 
 	bool
 	addChannelOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addOperator(flagArguments));
+		&& channel->addOperator(user->nickname, flagArguments));
 	}
 
 	bool
 	removeChannelOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->removeOperator(flagArguments));
+		&& channel->removeOperator(user->nickname, flagArguments));
 	}
 
 	bool	addChannelVoice(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addVoice(flagArguments));
+		&& channel->addVoice(user->nickname, flagArguments));
 	}
 
 	bool
 	removeChannelVoice(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addVoice(flagArguments));
+		&& channel->removeVoice(user->nickname, flagArguments));
 	}
 
 	bool
@@ -374,7 +374,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::b))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addBanned(flagArguments));
+		&& channel->addBanned(user->nickname, flagArguments));
 	}
 
 	bool
@@ -384,7 +384,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::b))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->removeBanned(flagArguments));
+		&& channel->removeBanned(user->nickname, flagArguments));
 	}
 
 	bool
@@ -394,7 +394,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::e))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addException(flagArguments));
+		&& channel->addException(user->nickname, flagArguments));
 	}
 
 	bool
@@ -404,7 +404,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::e))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->removeException(flagArguments));
+		&& channel->removeException(user->nickname, flagArguments));
 	}
 
 	bool
@@ -414,7 +414,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::I))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addInviteList(flagArguments));
+		&& channel->addInviteList(user->nickname, flagArguments));
 	}
 
 	bool
@@ -424,7 +424,7 @@ namespace NAMESPACE_IRC
 		flagArguments, channel->channelModes.userModes, __Channel::I))
 			return (true);
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->removeInviteList(flagArguments));
+		&& channel->removeInviteList(user->nickname, flagArguments));
 	}
 
 	////////////////////////
