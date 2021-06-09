@@ -44,9 +44,12 @@ public:
 			writeBuffer.clear();
 	}
 
-	inline internetAddress	getAddr() const throw()
+	internetAddress	getAddr() const throw()
 	{ return addr.sin6_addr; }
 
-	inline internetPort		getPort() const throw()
+	internetPort	getPort() const throw()
 	{ return addr.sin6_port; }
+
+	bool			hasBufferedData() const throw()
+	{ return !writeBuffer.empty(); }
 };

@@ -31,8 +31,11 @@ protected:
 	std::string			port;
 	std::string			sslPort;
 
-	unsigned			maxClients;
+	unsigned			maxQueuedActivity;
+
 	fd_set				readFds;
+	fd_set				writeFds;
+
 	connectionMap		fdConnectionMap;
 	connectionQueue		disconnectedFds;
 
@@ -52,10 +55,7 @@ protected:
 
 	virtual connection*	onConnection(int connectionFd, SocketConnection::address const& address, SSL* sslConnection = NULL);
 	virtual void		onDisconnection(connection* connection);
-	virtual void		onMessage(connection* connection,
-		std::string const& message);
-
-	virtual void				onFlush() const;
+	virtual void		onMessage(connection* connection, std::string const& message);
 
 public:
 	class	ServerException	:	public std::exception
@@ -70,7 +70,7 @@ public:
 
 	SocketServer(std::string const& hostname, std::string const& port,
 		std::string const& sslPort, std::string const& certFile,
-		std::string const& keyFile, unsigned maxClients)
+		std::string const& keyFile, unsigned maxQueuedActivity)
 			throw(SocketException);
 
 	SocketServer();

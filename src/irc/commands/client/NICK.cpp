@@ -39,6 +39,8 @@ namespace NAMESPACE_IRC
 				*user << ErroneusNicknameReply(server.hostname, newNickname);
 			else if (server.database.getClient(newNickname)) // ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
 			{
+				// FIXME: In NickCollisionReply we may need to use client from database and not user
+
 				// ERR_NICKCOLLISION If registered nick is found in another server
 				if (user->nickname == IRC_NICKNAME_DEFAULT)
 					*user << NickCollisionReply(server.hostname, newNickname,

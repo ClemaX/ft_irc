@@ -87,20 +87,12 @@ void	SocketServer::onDisconnection(connection* connection)
 		<< "\tport: " << connection->getPort() << std::endl;
 }
 
-void	SocketServer::onMessage(connection* connection,
-	std::string const& message)
+void	SocketServer::onMessage(connection* connection, std::string const& message)
 {
 	Logger::instance() << Logger::INFO << "Received message: "
 		<< "\tip: " << connection->getAddr() << std::endl
 		<< "\tport: " << connection->getPort() << std::endl
 		<< "\t'" << message << "'" << std::endl;
-}
-
-void	SocketServer::onFlush() const
-{
-	// Flush messages
-	for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
-		it->second->flush();
 }
 
 void	SocketServer::checkActivity(int connectionFd)
@@ -130,13 +122,13 @@ void	SocketServer::checkActivity(int connectionFd)
 SocketServer::SocketServer(
 	std::string const& hostname, std::string const& port,
 	std::string const& sslPort, std::string const& sslCert,
-	std::string const& sslKey, unsigned maxClients)
+	std::string const& sslKey, unsigned maxQueuedActivity)
 		throw(SocketException)
 	:	context(sslCert, sslKey),
 		hostname(hostname),
 		port(port),
 		sslPort(sslPort),
-		maxClients(maxClients)
+		maxQueuedActivity(maxQueuedActivity)
 {
 	FD_ZERO(&readFds);
 }
@@ -145,7 +137,7 @@ SocketServer::SocketServer()
 	:	context(),
 		hostname("::"),
 		port("2525"),
-		maxClients(10)
+		maxQueuedActivity(10)
 {
 	FD_ZERO(&readFds);
 }
@@ -190,23 +182,32 @@ void	SocketServer::start() throw(ServerException, SocketException)
 
 	while (true)
 	{
-		// Clear fd_set
+		// Clear fd_sets
 		FD_ZERO(&readFds);
+		FD_ZERO(&writeFds);
 
-		// Add listeners to fd_set
+		// Add listeners to readFds
 		if (listener.isListening())
 			FD_SET(listener.getFd(), &readFds);
 		if (sslListener.isListening())
 			FD_SET(sslListener.getFd(), &readFds);
 
-		// Add current connections to fd_set
-		for (connectionMap::const_iterator it = fdConnectionMap.begin();
-			it != fdConnectionMap.end(); ++it)
+		// TODO: Ensure that we do not add already closed conections to fd sets
+
+		// Add connections to readFds
+		for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
 			FD_SET(it->first, &readFds);
+
+		// Add connections with buffered data to writeFds
+		for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
+		{
+			if (it->second->hasBufferedData())
+				FD_SET(it->first, &writeFds);
+		}
 
 		// Wait for incoming data
 		Logger::instance() << Logger::DEBUG << "Waiting for activity..." << std::endl;
-		activity = select(highestFd + 1, &readFds, NULL, NULL, NULL);
+		activity = select(highestFd + 1, &readFds, &writeFds, NULL, NULL);
 
 		if (activity < 0)
 		{
@@ -243,6 +244,14 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		for (connectionMap::iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
 			checkActivity(it->first);
+		
+		// Write messages
+		Logger::instance() << Logger::DEBUG << "Sending outgoing messages!" << std::endl;
+		for (connectionMap::iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
+		{
+			if (FD_ISSET(it->first, &writeFds))
+				it->second->flush();
+		}
 
 		// Remove disconnected sockets
 		Logger::instance() << Logger::DEBUG << "Removing queued disconnected connections!" << std::endl;
@@ -252,10 +261,6 @@ void	SocketServer::start() throw(ServerException, SocketException)
 			removeConnection(disconnectedFds.front());
 			disconnectedFds.pop();
 		}
-
-		// Flush connections
-		Logger::instance() << Logger::DEBUG << "Flushing connections!" << std::endl;
-		onFlush();
 	}
 	// Stop server
 	stop();
@@ -267,7 +272,6 @@ void	SocketServer::stop() throw()
 	{
 		Logger::instance() << Logger::INFO << "Stopping server!" << std::endl;
 
-		onFlush();
 		clearConnections();
 		try {
 			listener.close();

@@ -73,7 +73,7 @@ namespace irc
 		sslPort = config[IRC_CONF_SSLPORT];
 		if (!sslPort.empty())
 			context.loadCertificate(config[IRC_CONF_SSLCERT], config[IRC_CONF_SSLKEY]);
-		maxClients = 10; // TODO: Rename to maxQueuedClients and check in man which value to set
+		maxQueuedActivity = 10; // TODO: Rename to maxQueuedClients and check in man which value to set
 		authRequired = !config[IRC_CONF_PASS].empty();
 	}
 
