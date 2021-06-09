@@ -6,7 +6,7 @@ namespace NAMESPACE_IRC
 
 	void
 	Server::UserCommand::
-	payload(Server& server, AClient* const user,argumentList const& arguments) const
+	payload(Server& server, AClient* const user, argumentList const& arguments) const
 	{
 		if (arguments.size() < 4) // ERR_NEEDMOREPARAMS Bad amount of params
 			*user << NeedMoreParamsError(server.hostname, name);
@@ -15,8 +15,8 @@ namespace NAMESPACE_IRC
 		else
 		{
 			user->username = arguments.at(0);
-			user->hostname = arguments.at(1);
-			user->servername = arguments.at(2);
+			user->hostname = user->getHostname();
+			user->servername = server.hostname;
 			user->realname = arguments.at(3);
 
 			server.announceWelcomeSequence(user);

@@ -20,17 +20,6 @@ std::ostream &operator<<(std::ostream &os, internetAddress const& addr)
 	return os;
 }
 
-SocketConnection::SocketConnection() throw()
-	:	Socket(), addr()
-{ Logger::instance() << Logger::DEBUG << "Constructing empty SocketConnection..." << std::endl; }
-
-SocketConnection::~SocketConnection() throw()
-{ Logger::instance() << Logger::DEBUG << "Destroying SocketConnection..." << std::endl; }
-
-SocketConnection::SocketConnection(int fd, address const& socketAddress)
-	:	Socket(fd), addr(socketAddress)
-{ Logger::instance() << Logger::DEBUG << "Constructing SocketConnection on fd " << fd << "..." << std::endl; }
-
 bool	SocketConnection::read(char *buffer, size_t n)
 	throw(SocketCloseException, SocketReadException)
 {

@@ -32,8 +32,6 @@ namespace NAMESPACE_IRC
 	public:
 		typedef std::map<std::string, Channel*>			channelMap;
 
-
-
 	public:
 		enum	Mode
 		{

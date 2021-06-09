@@ -6,6 +6,8 @@
 #include <socket/IConnection.hpp> // using IConnection
 #include <socket/Socket.hpp> // using Socket
 
+#include <netdb.h>
+
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
 
 class	SocketConnection	:	public virtual IConnection, public Socket
@@ -21,13 +23,20 @@ protected:
 public:
 	std::string	readBuffer;
 
-	SocketConnection() throw();
+	SocketConnection() throw()
+		:	Socket(), addr()
+	{ Logger::instance() << Logger::DEBUG << "Constructing empty SocketConnection..." << std::endl; }
+
+SocketConnection::SocketConnection(int fd, address const& socketAddress)
+	:	Socket(fd), addr(socketAddress)
+{ Logger::instance() << Logger::DEBUG << "Constructing SocketConnection on fd " << fd << "..." << std::endl; }
 
 	SocketConnection(int fd, address const& socketAddress);
 
-	virtual	~SocketConnection() throw();
+	virtual	~SocketConnection() throw()
+	{ Logger::instance() << Logger::DEBUG << "Destroying SocketConnection..." << std::endl; }
 
-	/// returns false when socket closed
+	/// returns false when socket close
 	virtual bool	read(char* buffer, size_t n) throw(SocketCloseException, SocketReadException);
 	virtual bool	write(char const* buffer, size_t n) const
 		throw(SocketWriteException);
@@ -46,6 +55,16 @@ public:
 
 	internetAddress	getAddr() const throw()
 	{ return addr.sin6_addr; }
+
+	socklen_t	getAddrLen() const throw()
+	{ return addr.sin6_len; }
+
+	std::string	getHostname() const
+	{ 
+		hostent const*const	entry = gethostbyaddr(&addr.sin6_addr, addr.sin6_len, AF_INET6);
+
+		return std::string((entry && entry->h_name) ? entry->h_name : "");
+	}
 
 	internetPort	getPort() const throw()
 	{ return addr.sin6_port; }
