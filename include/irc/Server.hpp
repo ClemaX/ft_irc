@@ -48,6 +48,7 @@
 # define CMD_REHASH_NAME "REHASH"
 # define CMD_OPER_NAME "OPER"
 # define CMD_ADMIN_NAME "ADMIN"
+# define CMD_PING_NAME "PING"
 # define CMD_QUIT_NAME "QUIT"
 # define CMD_KILL_NAME "KILL"
 
@@ -426,6 +427,14 @@ namespace NAMESPACE_IRC
 				argumentList const& arguments) const;
 		};
 
+		struct PingCommand
+		: Registered_Command
+		{
+			PingCommand();
+			void	payload(Server& server, AClient* const user,
+				argumentList const& arguments) const;
+		};
+
 		/* Mode parser */
 
 		bool	parseChannelMode(AClient* const user, std::string const & channelName,
@@ -671,6 +680,13 @@ namespace NAMESPACE_IRC
 	: Registered_Command(CMD_ADMIN_NAME)
 	{ }
 
+	inline
+	Server::PingCommand::
+	PingCommand()
+	: Registered_Command(CMD_PING_NAME)
+	{ }
+
+
 	///////////////////
 	// Command utils //
 	///////////////////
@@ -703,6 +719,7 @@ namespace NAMESPACE_IRC
 		const Server::AdminCommand		adminCommand;
 		const Server::QuitCommand		quitComamnd;
 		const Server::KillCommand		killCommand;
+		const Server::PingCommand		pingCommand;
 
 		Server::Command const*const	commands[] = {
 			&passCommand,	 &privmsgCommand, &noticeCommand,
@@ -712,7 +729,7 @@ namespace NAMESPACE_IRC
 			&whoQuery,		 &nickCommand,	  &userCommand,
 			&versionCommand, &timeCommand,	  &restartCommand,
 			&rehashCommand,  &operCommand,    &adminCommand,
-			&quitComamnd, 	 &killCommand
+			&quitComamnd, 	 &killCommand,	  &pingCommand,
 		};
 	}
 

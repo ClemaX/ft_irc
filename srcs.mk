@@ -35,6 +35,7 @@ SRCS = $(addprefix $(SRCDIR)/,\
 			)\
 			$(addprefix server/,\
 				ADMIN.cpp\
+				PING.cpp\
 				REHASH.cpp\
 				RESTART.cpp\
 				TIME.cpp\

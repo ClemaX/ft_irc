@@ -286,9 +286,9 @@ struct NoTextToSendError	:	NumericReply
 	const std::string& username, const std::string& hostname); };
 
 	 // Not enough parameters
-	struct UserNeedMoreParams
+	struct NeedMoreParamsReply
 	: public NumericReply
-	{ UserNeedMoreParams(const std::string& servername); };
+	{ NeedMoreParamsReply(const std::string& servername); };
 
 	 // <nickname> :You may not reregister
 	struct UserAlreadyRegistred
