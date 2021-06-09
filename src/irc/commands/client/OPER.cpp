@@ -16,8 +16,8 @@ namespace NAMESPACE_IRC
 		{
 			// TODO: if is this host handles operators
 
-			if (std::pair<std::string, std::string>(arguments.at(0),
-			arguments.at(1)) != server.admin.id) // Missmatches with server admin data
+			if (arguments.at(0) != server.config[IRC_DFT_ADMIN_NICK]
+			&& arguments.at(1) != server.config[IRC_DFT_ADMIN_PASS])
 				*user << PassMissMatchError(server.hostname);
 			else
 			{
