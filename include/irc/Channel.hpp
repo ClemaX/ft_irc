@@ -202,6 +202,8 @@ namespace NAMESPACE_IRC
 
 		/* Modifiers */
 
+		bool	setChannelModesOnCreation(void);
+
 		bool	addClient(__Client*const client, std::string& password, bool isChannelOperator = false, bool newChannel = false);
 		bool	addServer(__Server*const server);
 
@@ -576,6 +578,15 @@ namespace NAMESPACE_IRC
 	///////////////
 	// Modifiers //
 	///////////////
+
+	template <class __Server, class __Client>
+	bool
+	Channel<__Server, __Client>::setChannelModesOnCreation(void)
+	{
+		channelModes |= __Channel::n;
+		channelModes |= __Channel::s;
+		return true;
+	}
 
 	template <class __Server, class __Client>
 	bool

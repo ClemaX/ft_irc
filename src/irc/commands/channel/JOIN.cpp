@@ -56,6 +56,7 @@ namespace NAMESPACE_IRC
 					if (channel->isNetworkUnmoderatedChannel())
 						isOp = false;
 					channel->addServer(&server);		// add server to the channel servers list
+					channel->setChannelModesOnCreation();
 					channel->addClient(user, password, isOp, true);
 				}
 				catch(__Channel::InvalidChannelNameException const& e)
