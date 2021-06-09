@@ -4,7 +4,7 @@
             "name": "42",
             "includePath": [
                 "${workspaceRoot}/include",
-                "~/brew/brew/Cellar/openssl@1.1/1.1.1d/include"
+                "~/.brew/include/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
