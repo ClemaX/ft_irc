@@ -67,10 +67,3 @@ bool	SocketConnection::write(char const* buffer, size_t n) const
 
 	return open;
 }
-
-SocketConnection const&	SocketConnection::operator<<(std::string const& str) const
-	throw(SocketWriteException)
-{
-	write(str.c_str(), str.length());
-	return *this;
-}

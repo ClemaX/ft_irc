@@ -97,11 +97,15 @@ void	SocketServer::onMessage(connection* connection,
 }
 
 void	SocketServer::onFlush() const
-{ }
+{
+	// Flush messages
+	for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
+		it->second->flush();
+}
 
 void	SocketServer::checkActivity(int connectionFd)
 {
-	if (FD_ISSET(connectionFd, &connectionSet))
+	if (FD_ISSET(connectionFd, &readFds))
 	{
 		bool isOpen;
 		try {
@@ -134,7 +138,7 @@ SocketServer::SocketServer(
 		sslPort(sslPort),
 		maxClients(maxClients)
 {
-	FD_ZERO(&connectionSet);
+	FD_ZERO(&readFds);
 }
 
 SocketServer::SocketServer()
@@ -143,7 +147,7 @@ SocketServer::SocketServer()
 		port("2525"),
 		maxClients(10)
 {
-	FD_ZERO(&connectionSet);
+	FD_ZERO(&readFds);
 }
 
 SocketServer::~SocketServer()
@@ -187,22 +191,22 @@ void	SocketServer::start() throw(ServerException, SocketException)
 	while (true)
 	{
 		// Clear fd_set
-		FD_ZERO(&connectionSet);
+		FD_ZERO(&readFds);
 
 		// Add listeners to fd_set
 		if (listener.isListening())
-			FD_SET(listener.getFd(), &connectionSet);
+			FD_SET(listener.getFd(), &readFds);
 		if (sslListener.isListening())
-			FD_SET(sslListener.getFd(), &connectionSet);
+			FD_SET(sslListener.getFd(), &readFds);
 
 		// Add current connections to fd_set
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
-			FD_SET(it->first, &connectionSet);
+			FD_SET(it->first, &readFds);
 
 		// Wait for incoming data
 		Logger::instance() << Logger::DEBUG << "Waiting for activity..." << std::endl;
-		activity = select(highestFd + 1, &connectionSet, NULL, NULL, NULL);
+		activity = select(highestFd + 1, &readFds, NULL, NULL, NULL);
 
 		if (activity < 0)
 		{
@@ -213,7 +217,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		}
 
 		// Accept incoming connections
-		if (listener.isInSet(connectionSet))
+		if (listener.isInSet(readFds))
 		{
 			Logger::instance() << Logger::DEBUG << "Connection incoming..." << std::endl;
 
@@ -224,7 +228,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		}
 
 		// Accept incoming secure connections
-		if (sslListener.isInSet(connectionSet))
+		if (sslListener.isInSet(readFds))
 		{
 			Logger::instance() << Logger::DEBUG << "Secure connection incoming..." << std::endl;
 

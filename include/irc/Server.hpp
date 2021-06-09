@@ -20,6 +20,8 @@
 #include <irc/Database.hpp>
 #include <irc/ServerConfig.hpp>
 
+#include <utils/Logger.hpp>
+
 // TODO: Handle message prefix and reject invalid occurences (as defined in RFC1459 2.3)
 # define CMD_INVITE_NAME "INVITE"
 # define CMD_JOIN_NAME "JOIN"
@@ -92,7 +94,7 @@ namespace NAMESPACE_IRC
 		typedef IRCDatabase<Server, AClient, __Channel> IRCDatabase;
 
 
-		protected:
+	protected:
 
 		/* Core members functions */
 
@@ -115,11 +117,9 @@ namespace NAMESPACE_IRC
 		void		onMessage(connection* const connection,
 			std::string const& message);
 
-		void		onFlush() const throw(SocketWriteException);
-
 		/* Core database */
 
-		public:
+	public:
 
 		IRCDatabase			database;
 		ServerAdmin			admin;

@@ -2,7 +2,7 @@
 
 #include <irc/ircdef.hpp>
 
-#include <socket/ABufferedConnection.hpp>
+#include <socket/SocketConnection.hpp>
 
 #include <irc/Database.hpp>
 #include <irc/AMessage.hpp>
@@ -22,7 +22,7 @@
 
 namespace NAMESPACE_IRC
 {
-	class AClient	:	public virtual ABufferedConnection
+	class AClient	:	public virtual SocketConnection
 	{
 	private:
 		typedef	Channel<Server, AClient>				Channel;
@@ -91,9 +91,9 @@ namespace NAMESPACE_IRC
 		 * @brief Send a message to the user using the underlying connection.
 		 */
 		AClient&	operator<<(IReply const& message)
-		{ ABufferedConnection::operator<<(message.serialize(nickname)); return *this; };
+		{ SocketConnection::operator<<(message.serialize(nickname)); return *this; };
 		AClient&	operator<<(std::string const& message)
-		{ ABufferedConnection::operator<<(message); return *this; }
+		{ SocketConnection::operator<<(message); return *this; }
 
 		void	becomeOperator() throw()
 		{ modes.set(o); }

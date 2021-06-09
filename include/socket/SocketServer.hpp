@@ -32,7 +32,7 @@ protected:
 	std::string			sslPort;
 
 	unsigned			maxClients;
-	fd_set				connectionSet;
+	fd_set				readFds;
 	connectionMap		fdConnectionMap;
 	connectionQueue		disconnectedFds;
 

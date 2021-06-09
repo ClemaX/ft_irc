@@ -151,14 +151,6 @@ namespace irc
 			ircMessage.command->execute(*this, client, ircMessage.arguments);
 	}
 
-	void	Server::onFlush() const throw(SocketWriteException)
-	{
-		// Flush messages
-		for (connectionMap::const_iterator it = fdConnectionMap.begin();
-			it != fdConnectionMap.end(); ++it)
-			dynamic_cast<AClient*>(it->second)->flush();
-	}
-
 	void
 	Server::
 	announceWelcomeSequence(AClient* const user)

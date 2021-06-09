@@ -1,9 +1,10 @@
 #pragma once
 
 #include <socket/SocketConnection.hpp>
-#include <socket/ABufferedConnection.hpp>
 
 #include <irc/AClient.hpp>
+
+#include <utils/Logger.hpp>
 
 namespace irc
 {

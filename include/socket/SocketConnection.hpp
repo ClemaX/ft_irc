@@ -16,7 +16,11 @@ public:
 protected:
 	address	addr;
 
+	std::string	writeBuffer;
+
 public:
+	std::string	readBuffer;
+
 	SocketConnection() throw();
 
 	SocketConnection(int fd, address const& socketAddress);
@@ -28,8 +32,17 @@ public:
 	virtual bool	write(char const* buffer, size_t n) const
 		throw(SocketWriteException);
 
-	virtual SocketConnection const&	operator<<(std::string const& str) const
-		throw(SocketWriteException);
+	/// Add a message to the write buffer.
+	/// The messages need to be flushed by calling flush().
+	SocketConnection& operator<<(std::string const& message)
+	{ writeBuffer += message; return *this; }
+
+	/// Flushes the write buffer.
+	void	flush()
+	{
+		if (write(writeBuffer.c_str(), writeBuffer.length()))
+			writeBuffer.clear();
+	}
 
 	inline internetAddress	getAddr() const throw()
 	{ return addr.sin6_addr; }
