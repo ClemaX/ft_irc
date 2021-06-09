@@ -31,8 +31,14 @@ void	SocketServer::removeConnection(int fd)
 		fdConnectionMap.erase(fd);
 		if (fd == highestFd)
 		{
+			// This should be updated if there is a possibility that no listener is listening
 			if (fdConnectionMap.empty())
-				highestFd = sslListener.getFd();
+			{
+				if (sslListener.isListening() && sslListener.getFd() > listener.getFd())
+					highestFd = sslListener.getFd();
+				else
+					highestFd = listener.getFd();
+			}
 			else
 				highestFd = fdConnectionMap.rbegin()->first;
 		}
@@ -105,12 +111,15 @@ void	SocketServer::checkActivity(int connectionFd)
 		{
 			Logger::instance() << Logger::WARNING << e.what() << ": " << e.why() << std::endl;
 			isOpen = false;
-		}
+		} // TODO: Maybe close the socket here?
 
 		if (isOpen)
 			onMessage(fdConnectionMap[connectionFd], buffer);
 		else
+		{
+			Logger::instance() << Logger::DEBUG << "Adding " << connectionFd << " to disconnected queue..." << std::endl;
 			disconnectedFds.push(connectionFd);
+		}
 	}
 }
 
@@ -177,19 +186,27 @@ void	SocketServer::start() throw(ServerException, SocketException)
 
 	while (true)
 	{
+		// Clear fd_set
 		FD_ZERO(&connectionSet);
-		FD_SET(listener.getFd(), &connectionSet);
-		FD_SET(sslListener.getFd(), &connectionSet);
 
+		// Add listeners to fd_set
+		if (listener.isListening())
+			FD_SET(listener.getFd(), &connectionSet);
+		if (sslListener.isListening())
+			FD_SET(sslListener.getFd(), &connectionSet);
+
+		// Add current connections to fd_set
 		for (connectionMap::const_iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
 			FD_SET(it->first, &connectionSet);
 
 		// Wait for incoming data
+		Logger::instance() << Logger::DEBUG << "Waiting for activity..." << std::endl;
 		activity = select(highestFd + 1, &connectionSet, NULL, NULL, NULL);
 
 		if (activity < 0)
 		{
+			Logger::instance() << Logger::DEBUG << "Select was interrupted!" << std::endl;
 			if (errno == EINTR)
 				break;
 			int	err = errno; stop(); throw SocketSelectException(err);
@@ -218,11 +235,13 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		}
 
 		// Read messages
+		Logger::instance() << Logger::DEBUG << "Checking for incoming messages!" << std::endl;
 		for (connectionMap::iterator it = fdConnectionMap.begin();
 			it != fdConnectionMap.end(); ++it)
 			checkActivity(it->first);
 
 		// Remove disconnected sockets
+		Logger::instance() << Logger::DEBUG << "Removing queued disconnected connections!" << std::endl;
 		while (!disconnectedFds.empty())
 		{
 			onDisconnection(fdConnectionMap[disconnectedFds.front()]);
@@ -231,6 +250,7 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		}
 
 		// Flush connections
+		Logger::instance() << Logger::DEBUG << "Flushing connections!" << std::endl;
 		onFlush();
 	}
 	// Stop server
