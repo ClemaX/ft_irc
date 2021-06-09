@@ -14,7 +14,13 @@ namespace NAMESPACE_IRC
 
 		if (!arguments[0].compare("0"))
 		{
-			user->leaveAllChannels();
+			for (AClient::channelMap::iterator it = user->channels.begin() ; !user->channels.empty() ; it = user->channels.begin())
+			{
+				*(it->second) << PartChannelMessage(user->nickname, it->second->name);
+				server.database.delete_client_from_channel(it->second, user);
+				// *user << PartChannelMessage(user->nickname, channelToLeave->name);
+			}
+			user->channels.clear();
 			return;
 		}
 
@@ -55,7 +61,7 @@ namespace NAMESPACE_IRC
 					isOp = true;										// will set user as operator
 					if (channel->isNetworkUnmoderatedChannel())
 						isOp = false;
-					channel->addServer(&server);		// add server to the channel servers list
+					// channel->addServer(&server);		// add server to the channel servers list
 					channel->setChannelModesOnCreation();
 					channel->addClient(user, password, isOp, true);
 				}

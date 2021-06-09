@@ -43,16 +43,14 @@ namespace NAMESPACE_IRC
 		channels.erase(ft::strToLower(channelName));
 	}
 
-	void	AClient::leaveAllChannels()
-	{
-		channelMap::iterator it;
-
-		while (!channels.empty())
-		{
-			it = channels.begin();
-			it->second->removeClient(this, "");
-		}
-	}
+	// void	AClient::leaveAllChannels()
+	// {
+	// 	for (channelMap::iterator it = channels.begin() ; it != channels.end() ; it++)
+	// 	{
+	// 		it->second->removeClient(this, "");
+	// 	}
+	// 	channels.clear();
+	// }
 
 	bool	AClient::isInSameChannel(AClient const* client) const
 	{

@@ -52,9 +52,9 @@ OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
 # Flags
-CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3
+CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c++98 -Wno-c++11-long-long $(INCS:%=-I%) -g3 -fsanitize=address
 DFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.d
-LDFLAGS = $(LIBDIRS:%=-L%) -g3
+LDFLAGS = $(LIBDIRS:%=-L%) -g3 -fsanitize=address
 LDLIBS = $(LIBARS:lib%.a=-l%) -lssl -lcrypto
 
 # Compiling commands

@@ -67,16 +67,31 @@ namespace NAMESPACE_IRC
 
 		void	init_new_server_conextion(Server* const target);
 
+		void	delete_client_from_channel(Channel *channel, Client* target)
+		{
+			channel->removeClient(target);
+			if (channel->clientsMap.empty())
+			{
+				dataChannelsMap.erase(channel->name);
+				delete channel;
+			}
+		}
+
 		void	delete_client(Client* target)
 		{
 			// Erase target from all groups map
-			for (typename databaseChannelsMap::const_iterator it = dataChannelsMap.begin() ;
-			it != dataChannelsMap.end() ; it++)
-			{
-				const typename Channel::channelClientMap::iterator& c = it->second->clientsMap.find(target);
-				if (c != it->second->clientsMap.end())
-					it->second->clientsMap.erase(c);
-			}
+			// for (typename databaseChannelsMap::const_iterator it = dataChannelsMap.begin() ;
+			// it != dataChannelsMap.end() ; it++)
+			// {
+			// 	const typename Channel::channelClientMap::iterator& c = it->second->clientsMap.find(target);
+			// 	if (c != it->second->clientsMap.end())
+			// 		it->second->clientsMap.erase(c);
+			// }
+
+			for (typename Client::channelMap::iterator it = target->channels.begin() ; !target->channels.empty() ; it = target->channels.begin())
+				delete_client_from_channel(it->second, target);
+			target->channels.clear();
+
 			// Erase target from client map
 			const typename databaseClientsMap::iterator& it = dataClientsMap.find(target->nickname);
 			if (it != dataClientsMap.end())

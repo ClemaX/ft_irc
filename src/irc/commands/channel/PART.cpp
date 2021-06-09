@@ -30,9 +30,10 @@ namespace NAMESPACE_IRC
 			{
 				std::string leaveMessage = "";
 				if (arguments.size() > 1)
-					leaveMessage << user->nickname << " has left " << channelName << ": " << arguments[1];
-				channel->removeClient(user, leaveMessage);
-				*user << PartChannelMessage(user->nickname, channelName);
+					leaveMessage << arguments[1];
+				*channel << PartChannelMessage(user->nickname, channelName, leaveMessage);
+				server.database.delete_client_from_channel(channel, user);
+				// *user << PartChannelMessage(user->nickname, channelName, leaveMessage);
 			}
 		}
 	}

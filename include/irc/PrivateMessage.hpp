@@ -44,10 +44,12 @@ namespace NAMESPACE_IRC
 	struct PartChannelMessage
 	: AReply
 	{
-		PartChannelMessage(std::string const &prefix, std::string const& channelName)
+		PartChannelMessage(std::string const &prefix, std::string const& channelName, std::string const& leaveMessage = "")
 		:AReply(prefix)
 		{
 			message << std::string("PART") + IRC_MESSAGE_DELIM + channelName;
+			if (!leaveMessage.empty())
+				message << std::string(" ") + IRC_MESSAGE_PREFIX_PREFIX + leaveMessage;
 		}
 	
 	};
@@ -161,16 +163,5 @@ namespace NAMESPACE_IRC
 	PrivmsgChannelMessage(std::string const &nickname, std::string const& channelName, std::string const& privateMessage)
 	: AReply(nickname)
 	{message << std::string("PRIVMSG") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + privateMessage;}
-
-	inline
-	LeaveChannelMessage::LeaveChannelMessage(std::string const &servername, std::string const& channelName,
-		std::string const &leaveMessage)
-		: AReply(servername)
-	{
-		if (leaveMessage.compare(""))
-			message << leaveMessage;
-		else
-			message << "has left " << channelName;
-	}
 
 }
