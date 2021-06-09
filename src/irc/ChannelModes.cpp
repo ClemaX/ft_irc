@@ -84,7 +84,7 @@ namespace NAMESPACE_IRC
 	addChannelOperator(AClient* const user, __Channel *const channel, const std::string& flagArguments)
 	{
 		return (check_privileges<ChannelOperatorPrivilegiesError>(user, channel)
-		&& channel->addOperator(user->nickname, flagArguments));
+		&& channel->addOperator(user->nickname, flagArguments, true));
 	}
 
 	bool

@@ -202,7 +202,7 @@ namespace NAMESPACE_IRC
 
 		/* Modifiers */
 
-		bool	addClient(__Client*const client, std::string& password, bool isChannelOperator = false);
+		bool	addClient(__Client*const client, std::string& password, bool isChannelOperator = false, bool newChannel = false);
 		bool	addServer(__Server*const server);
 
 		bool	removeClient(__Client*const client, std::string const &leaveMessage);
@@ -215,7 +215,7 @@ namespace NAMESPACE_IRC
 		bool	addCreator(const std::string& sender, const std::string& nickname);
 		bool	removeCreator(const std::string& sender, const std::string& nickname);
 
-		bool	addOperator(const std::string& sender, const std::string& nickname);
+		bool	addOperator(const std::string& sender, const std::string& nickname, bool displayMessage);
 		bool	removeOperator(const std::string& sender, const std::string& nickname);
 
 		bool	addVoice(const std::string& sender, const std::string& nickname);
@@ -579,7 +579,7 @@ namespace NAMESPACE_IRC
 
 	template <class __Server, class __Client>
 	bool
-	Channel<__Server, __Client>::addClient(__Client*const client, std::string& password, bool isChannelOperator)
+	Channel<__Server, __Client>::addClient(__Client*const client, std::string& password, bool isChannelOperator, bool newChannel)
 	{
 		if (clientsMap.find(client) != clientsMap.end())
 			return (false);
@@ -608,11 +608,15 @@ namespace NAMESPACE_IRC
 		if (isNetworkSafeChannel() && clientsMap.size() == 1UL) // [WARNING!] THIS LINE WAS EDDITED
 			addCreator(client->nickname, client->nickname);
 		else if (isChannelOperator)
-			addOperator(client->nickname, client->nickname);
+			addOperator(client->nickname, client->nickname, newChannel == false);
 		client->joinChannel(this);
 		*this << JoinChannelMessage(client->nickname, name);
-		*client << TopicReply(gHostname, name, topic);
+		if (newChannel)
+			*client << ModeChannelMessage(gHostname, name, ' ', channelModes.toString(Channel<Server, AClient>::__modes));
+		else
+			*client << TopicReply(gHostname, name, topic);
 		*client << ChannelNamesReply(gHostname, this);
+		*client << EndOfNamesReply(gHostname, name);
 
 		return true;
 	}
@@ -749,11 +753,11 @@ namespace NAMESPACE_IRC
 	template <class __Server, class __Client>
 	inline bool
 	Channel<__Server, __Client>::
-	addOperator(const std::string& sender, const std::string& nickname)
+	addOperator(const std::string& sender, const std::string& nickname, bool displayMessage)
 	{
 		bool success = user_in_channel<UserNotInChannelError>(nickname, this)
 		&& add_mode(channelModes.userModes, nickname, Channel::o);
-		if (success)
+		if (success && displayMessage)
 			*this << ModeChannelMessage(sender, this->name, '+', "o", nickname);
 			// *this << ChannelModeIsReply(sender, nickname, this->name, "+o");
 		return success;
