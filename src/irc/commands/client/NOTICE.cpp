@@ -24,7 +24,7 @@ namespace NAMESPACE_IRC
 
 			AClient *receiver = server.database.getClient(nameArgument);
 			if (receiver)
-				receiver->receiveMessage(user, message);
+				receiver->receiveNotice(user, message);
 			else
 			{
 				Server::__Channel *channel = server.database.getChannel(nameArgument);

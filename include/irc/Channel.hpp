@@ -156,6 +156,7 @@ namespace NAMESPACE_IRC
 
 		Channel const&	operator<<(IReply const& reply);
 		Channel const&	operator<<(PrivmsgChannelMessage const& reply);
+		Channel const&	operator<<(NoticeChannelMessage const& reply);
 		//Channel const&	operator<<(PrivateMessage const& reply);
 
 		/* Getters */
@@ -353,6 +354,19 @@ namespace NAMESPACE_IRC
 	Channel<__Server, __Client> const&
 	Channel<__Server, __Client>::
 	operator<<(PrivmsgChannelMessage const& message)
+	{
+		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		{
+			if (message.prefix.name != it->first->nickname)
+				*it->first << message;
+		}
+		return (*this);
+	}
+
+	template <class __Server, class __Client>
+	Channel<__Server, __Client> const&
+	Channel<__Server, __Client>::
+	operator<<(NoticeChannelMessage const& message)
 	{
 		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
 		{
@@ -581,7 +595,7 @@ namespace NAMESPACE_IRC
 		if (!((!isInChannel(client) && channelModes & Channel::n)
 		|| (channelModes & Channel::m && !isStatusVoice(client) && !isOperator(client))
 		|| (isStatusBanned(client))))
-			*this << PrivateMessage(client->nickname, message);
+			*this << NoticeChannelMessage(client->nickname, name, message);
 	}
 
 	///////////////
