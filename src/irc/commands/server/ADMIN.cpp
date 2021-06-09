@@ -2,18 +2,6 @@
 
 namespace NAMESPACE_IRC
 {
-	namespace
-	{
-		inline void
-		display_admin_data(const Server& server, AClient* const user)
-		{
-			*user << AdminMeReply(server.get_hostname(), server.admin.id.first);
-			*user << AdminLoc1Reply(server.get_hostname(), server.admin.data1);
-			*user << AdminLoc2Reply(server.get_hostname(), server.admin.data2);
-			*user << AdminEmailReply(server.get_hostname(), server.admin.email);
-		}
-	}
-
 	void
 	Server::AdminCommand::
 	payload(Server& server, AClient* const user, argumentList const& arguments) const
@@ -21,7 +9,12 @@ namespace NAMESPACE_IRC
 
 		// TODO: Get the user's server or check if this is handled by relay
 		if (arguments.empty())
-			display_admin_data(server, user);
+		{
+			*user << AdminMeReply(server.get_hostname(), server.config[IRC_DFT_ADMIN_NICK]);
+			*user << AdminLoc1Reply(server.get_hostname(), server.config[IRC_CONF_ADMIN_DATA1_MSG]);
+			*user << AdminLoc2Reply(server.get_hostname(), server.config[IRC_CONF_ADMIN_DATA2_MSG]);
+			*user << AdminEmailReply(server.get_hostname(), server.config[IRC_CONF_ADMIN_EMAIL_MSG]);
+		}
 		else // TODO: Handle local server name and reject others
 			*user << NoSuchServerError(arguments.at(0));
 /*

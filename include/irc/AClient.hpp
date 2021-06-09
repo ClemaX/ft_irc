@@ -124,6 +124,9 @@ namespace NAMESPACE_IRC
 		void	receiveMessage(AClient const* sender, std::string const &message)
 		{ *this << PrivateMessage(sender->nickname, nickname, message); };
 
+		void	receiveNotice(AClient const* sender, std::string const &message)
+		{ *this << NoticeMessage(sender->nickname, nickname, message); };
+
 		bool	listChannelInfo(Channel* const channel);
 		bool	listAllChannelsListInfo(IRCDatabase const& db);
 

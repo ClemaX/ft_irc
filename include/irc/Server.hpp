@@ -60,25 +60,6 @@ namespace NAMESPACE_IRC
 
 	extern std::string gHostname;
 
-	struct ServerAdmin
-	{
-		typedef std::pair<std::string, std::string> pair_t;
-
-		// TO DO: Should be init in the config file
-
-		const pair_t		id;
-		const std::string	data1;
-		const std::string	data2;
-		const std::string	email;
-
-		ServerAdmin(const pair_t& __id = pair_t(IRC_DFT_ADMIN_NICK, IRC_DFT_ADMIN_PASS),
-			const std::string& __data1 = IRC_DFT_ADMIN_PASS,
-			const std::string& __data2 = IRC_DFT_ADMIN_DATA1,
-			const std::string& __email = IRC_DFT_ADMIN_DATA2)
-		: id(__id), data1(__data1), data2(__data2), email(__email)
-		{ }
-	};
-
 	class	Server
 	: public SocketServer
 	{
@@ -126,7 +107,6 @@ namespace NAMESPACE_IRC
 	public:
 
 		IRCDatabase			database;
-		ServerAdmin			admin;
 		const std::string	version;
 		// channelMap	serverChannels;
 		// serversMap	neighbourServers;

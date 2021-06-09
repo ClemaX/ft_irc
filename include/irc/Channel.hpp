@@ -156,6 +156,7 @@ namespace NAMESPACE_IRC
 
 		Channel const&	operator<<(IReply const& reply);
 		Channel const&	operator<<(PrivmsgChannelMessage const& reply);
+		Channel const&	operator<<(NoticeChannelMessage const& reply);
 		//Channel const&	operator<<(PrivateMessage const& reply);
 
 		/* Getters */
@@ -362,6 +363,19 @@ namespace NAMESPACE_IRC
 		return (*this);
 	}
 
+	template <class __Server, class __Client>
+	Channel<__Server, __Client> const&
+	Channel<__Server, __Client>::
+	operator<<(NoticeChannelMessage const& message)
+	{
+		for (typename Channel::channelClientMap::iterator it = clientsMap.begin() ; it != clientsMap.end() ; it++)
+		{
+			if (message.prefix.name != it->first->nickname)
+				*it->first << message;
+		}
+		return (*this);
+	}
+
 
 	/////////////
 	// Getters //
@@ -421,13 +435,23 @@ namespace NAMESPACE_IRC
 	// Booleans //
 	//////////////
 
+	// template <class __Server, class __Client>
+	// bool
+	// Channel<__Server, __Client>::
+	// checkChannelName(const std::string& str) const
+	// {
+	// 	return (!((str.length() < 2UL || str.length() > 50UL)
+	// 	|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
+	// 	|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
+	// }
+
 	template <class __Server, class __Client>
 	bool
 	Channel<__Server, __Client>::
 	checkChannelName(const std::string& str) const
 	{
 		return (!((str.length() < 2UL || str.length() > 50UL)
-		|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
+		|| (str.at(0) != '#')
 		|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
 	}
 
@@ -571,7 +595,7 @@ namespace NAMESPACE_IRC
 		if (!((!isInChannel(client) && channelModes & Channel::n)
 		|| (channelModes & Channel::m && !isStatusVoice(client) && !isOperator(client))
 		|| (isStatusBanned(client))))
-			*this << PrivateMessage(client->nickname, message);
+			*this << NoticeChannelMessage(client->nickname, name, message);
 	}
 
 	///////////////

@@ -27,6 +27,10 @@
 /// Define default server admin email
 #define IRC_DFT_ADMIN_EMAIL "admin@ircserv.42fr"
 
+#define IRC_CONF_ADMIN_DATA1_MSG "data1"
+#define IRC_CONF_ADMIN_DATA2_MSG "data2"
+#define IRC_CONF_ADMIN_EMAIL_MSG "email"
+
 /// IRC default TLS/SSL TCP-port (as defined in RFC7194).
 #define IRC_PORT_SSL 6697U
 /// Maximal length of IRC client nicknames (as defined in RFC1459 1.2).

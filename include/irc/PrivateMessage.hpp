@@ -17,6 +17,19 @@ namespace NAMESPACE_IRC
 		std::string	message;
 	};
 
+	struct	NoticeMessage
+	: IReply
+	{
+		NoticeMessage(std::string const& senderNickname, std::string const& receiverNickname,
+			std::string const &message = "");
+		virtual ~NoticeMessage();
+
+		std::string	serialize(const std::string &nickname) const throw();
+
+		Prefix		prefix;
+		std::string	message;
+	};
+
 
 	/////////////////////////////////////
 	// User //
@@ -104,6 +117,10 @@ namespace NAMESPACE_IRC
 	: AReply
 	{ PrivmsgChannelMessage(std::string const &servername, std::string const& channelName, std::string const& privateMessage); };
 
+	struct NoticeChannelMessage
+	: AReply
+	{ NoticeChannelMessage(std::string const &servername, std::string const& channelName, std::string const& noticeMessage); };
+
 	struct LeaveChannelMessage
 	: AReply
 	{ LeaveChannelMessage(std::string const &servername, std::string const& channelName,
@@ -136,6 +153,31 @@ namespace NAMESPACE_IRC
 		return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
 		// return (prefix.serialize() + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + message + IRC_MESSAGE_SUFFIX); }
 
+	/////////////////////////////////////
+	// Inlined notice message members //
+	/////////////////////////////////////
+
+	inline
+	NoticeMessage::NoticeMessage(std::string const& senderNickname, std::string const& receiverNickname,
+		std::string const& sentMessage)
+		:	prefix(senderNickname)
+	{
+		message << std::string("NOTICE") + IRC_MESSAGE_DELIM + receiverNickname + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + sentMessage;
+	}
+
+	inline
+	NoticeMessage::
+	~NoticeMessage()
+	{ }
+
+	inline std::string
+	NoticeMessage::
+	serialize(const std::string &nickname = "") const
+	throw()
+	{ 
+		(void)nickname;
+		return (prefix.serialize() + IRC_MESSAGE_DELIM + message + IRC_MESSAGE_SUFFIX); }
+		// return (prefix.serialize() + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + message + IRC_MESSAGE_SUFFIX); }
 
 
 	/////////////////////////////////////
@@ -163,5 +205,11 @@ namespace NAMESPACE_IRC
 	PrivmsgChannelMessage(std::string const &nickname, std::string const& channelName, std::string const& privateMessage)
 	: AReply(nickname)
 	{message << std::string("PRIVMSG") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + privateMessage;}
+
+	inline
+	NoticeChannelMessage::
+	NoticeChannelMessage(std::string const &nickname, std::string const& channelName, std::string const& noticeMessage)
+	: AReply(nickname)
+	{message << std::string("NOTICE") + IRC_MESSAGE_DELIM + channelName + IRC_MESSAGE_DELIM + IRC_MESSAGE_PREFIX_PREFIX + noticeMessage;}
 
 }
