@@ -142,7 +142,6 @@ namespace NAMESPACE_IRC
 		public:
 
 		channelClientMap	clientsMap;
-		channelServerMap	serversMap;
 		std::string			topic;
 		ChannelModes		channelModes;
 		const std::string	name;
@@ -207,7 +206,7 @@ namespace NAMESPACE_IRC
 		bool	addClient(__Client*const client, std::string& password, bool isChannelOperator = false, bool newChannel = false);
 		bool	addServer(__Server*const server);
 
-		bool	removeClient(__Client*const client, std::string const &leaveMessage);
+		bool	removeClient(__Client*const client);
 		bool	kickClient(__Client* const kicker, __Client* const victim, std::string kickMessage);
 
 		bool	close();
@@ -632,60 +631,32 @@ namespace NAMESPACE_IRC
 		return true;
 	}
 
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	addServer(__Server* const server)
-	{
-		const typename Channel::channelServerMap::iterator& it = serversMap.find(server);
-		if (it != serversMap.end())
-			return (false);
-		serversMap[server] = server;
-		return (true);
-	}
+	// template <class __Server, class __Client>
+	// bool
+	// Channel<__Server, __Client>::
+	// addServer(__Server* const server)
+	// {
+	// 	const typename Channel::channelServerMap::iterator& it = serversMap.find(server);
+	// 	if (it != serversMap.end())
+	// 		return (false);
+	// 	serversMap[server] = server;
+	// 	return (true);
+	// }
 
 	template <class __Server, class __Client>
 	bool
 	Channel<__Server, __Client>::
-	removeClient(__Client* const client, std::string const& leaveMessage)
+	removeClient(__Client* const client)
 	{
 		const typename Channel::channelClientMap::iterator& it = clientsMap.find(client);
 		if (it == clientsMap.end())
 			return (false);
-		*this << LeaveChannelMessage(client->nickname, name, leaveMessage);
 		client->leaveChannel(this);
 		clientsMap.erase(it);
-		if (clientsMap.empty())
-			return (close());
 		return (true);
 	}
 
-	template <class __Server, class __Client>
-	bool
-	Channel<__Server, __Client>::
-	kickClient(__Client* const kicker, __Client* const victim, std::string kickMessage)
-	{
-		const typename Channel::channelClientMap::iterator& it = clientsMap.find(victim);
-		if (it == clientsMap.end())
-			return (false);
-		*this << KickChannelMessage(kicker->nickname, victim->nickname, name, kickMessage);
-		victim->leaveChannel(this);
-		clientsMap.erase(it);
-		if (clientsMap.empty())
-			return (close());
-		return (true);
-	}
 
-	template <class __Server, class __Client>
-	inline bool
-	Channel<__Server, __Client>::
-	close()
-	{
-		if (serversMap.empty() == false)
-			serversMap.begin()->second->database.dataChannelsMap.erase(name);
-		delete this;
-		return (true);
-	}
 
 	/////////////////
 	// Handle mods //

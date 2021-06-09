@@ -24,11 +24,14 @@ namespace NAMESPACE_IRC
 {
 	class AClient	:	public virtual SocketConnection
 	{
-	private:
+	protected:
 		typedef	Channel<Server, AClient>				Channel;
-		typedef std::map<std::string, Channel*>			channelMap;
 		typedef std::pair<std::string, Channel*>		channelPair;
 		typedef IRCDatabase<Server, AClient, Channel>	IRCDatabase;
+
+	public:
+		typedef std::map<std::string, Channel*>			channelMap;
+
 
 
 	public:
@@ -85,7 +88,7 @@ namespace NAMESPACE_IRC
 
 
 		virtual ~AClient() throw()
-		{ leaveAllChannels(); };
+		{ };
 
 		/**
 		 * @brief Send a message to the user using the underlying connection.
@@ -104,7 +107,7 @@ namespace NAMESPACE_IRC
 		void	joinChannel(Channel* const channel);
 		void	leaveChannel(Channel* const channel);
 		void	leaveChannel(std::string const& channelName);
-		void	leaveAllChannels();
+		// void	leaveAllChannels();
 
 		bool	isInChannel(Channel* const channel) const;
 		bool	isInChannel(std::string const& channelName) const

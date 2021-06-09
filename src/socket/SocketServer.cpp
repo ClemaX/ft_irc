@@ -47,9 +47,8 @@ void	SocketServer::removeConnection(int fd)
 
 void	SocketServer::clearConnections()
 {
-	for (connectionMap::const_iterator it = fdConnectionMap.begin();
-		it != fdConnectionMap.end(); ++it)
-			delete(it->second);
+	for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
+		delete(it->second);
 	fdConnectionMap.clear();
 }
 
@@ -250,7 +249,10 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		for (connectionMap::iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
 		{
 			if (FD_ISSET(it->first, &writeFds))
+			{
+				std::cout << "Flushing fd " << it->first << std::endl;
 				it->second->flush();
+			}
 		}
 
 		// Remove disconnected sockets

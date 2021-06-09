@@ -129,26 +129,40 @@ namespace irc
 		return dynamic_cast<Server::connection*>(newClient);
 	}
 
+	void	Server::onClientMessage(AClient* const client, Message const& message)
+	{
+		if (message.command != NULL)
+			message.command->execute(*this, client, message.arguments);
+	}
+
 	void	Server::onMessage(connection* const connection, std::string const& message)
 	{
 		AClient*	client = dynamic_cast<AClient*>(connection);
 		Message		ircMessage;
+		bool		messagesLeft = true;
 
 		client->readBuffer.append(message);
 
 		Logger::instance() << Logger::INFO << client->nickname << ": " << client->readBuffer << std::flush;
 
-		try { ircMessage = Message(client->readBuffer); }
-		catch(Message::IncompleteMessageException const& e)
-		{ Logger::instance() << Logger::DEBUG << "Waiting for more input..." << std::endl; }
-		catch(Message::MessageException const& e)
+		while (messagesLeft)
 		{
-			Logger::instance() << Logger::ERROR << e.what() << std::endl;
-			client->readBuffer.clear();
+			try {
+				ircMessage = Message(client->readBuffer);
+				onClientMessage(client, ircMessage);
+			}
+			catch(Message::IncompleteMessageException const& e)
+			{
+				Logger::instance() << Logger::DEBUG << "Waiting for more input..." << std::endl;
+				messagesLeft = false;
+			}
+			catch(Message::MessageException const& e)
+			{
+				Logger::instance() << Logger::ERROR << e.what() << std::endl;
+				client->readBuffer.clear();
+				messagesLeft = false;
+			}
 		}
-
-		if (ircMessage.command != NULL)
-			ircMessage.command->execute(*this, client, ircMessage.arguments);
 	}
 
 	void
@@ -158,6 +172,7 @@ namespace irc
 		if (!user->registered && user->nickname != IRC_NICKNAME_DEFAULT
 		&& !user->username.empty() && user->authenticated)
 		{
+			//Logger::instance() << Logger::INFO << "Welcome to " << user->nickname << "!" << std::endl;
 			*user
 			<< WelcomeReply(hostname, user->nickname, user->username, user->hostname)
 			<< YourHostReply(hostname, SERVER_VERSION)

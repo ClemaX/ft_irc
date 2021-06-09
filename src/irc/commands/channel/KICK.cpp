@@ -52,7 +52,9 @@ namespace NAMESPACE_IRC
 						comment << arguments[2];
 					else
 						comment << victim->nickname;
-					channel->kickClient(user, victim, comment);
+					// channel->kickClient(user, victim, comment);
+					*channel << KickChannelMessage(user->nickname, victim->nickname, channelName, comment);
+					server.database.delete_client_from_channel(channel, victim);
 				}
 			}
 		}
