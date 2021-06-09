@@ -421,13 +421,23 @@ namespace NAMESPACE_IRC
 	// Booleans //
 	//////////////
 
+	// template <class __Server, class __Client>
+	// bool
+	// Channel<__Server, __Client>::
+	// checkChannelName(const std::string& str) const
+	// {
+	// 	return (!((str.length() < 2UL || str.length() > 50UL)
+	// 	|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
+	// 	|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
+	// }
+
 	template <class __Server, class __Client>
 	bool
 	Channel<__Server, __Client>::
 	checkChannelName(const std::string& str) const
 	{
 		return (!((str.length() < 2UL || str.length() > 50UL)
-		|| (str.at(0) != '&' && str.at(0) != '#' && str.at(0) != '+' && str.at(0) != '!')
+		|| (str.at(0) != '#')
 		|| (str.find(' ') != std::string::npos || str.find(',') != std::string::npos || str.find('\'') != std::string::npos)));
 	}
 
