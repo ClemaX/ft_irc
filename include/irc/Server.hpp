@@ -55,6 +55,7 @@ namespace NAMESPACE_IRC
 {
 	template <class __Server, class __AClient>
 	class Channel;
+	struct Message;
 
 	extern std::string gHostname;
 
@@ -116,6 +117,8 @@ namespace NAMESPACE_IRC
 
 		void		onMessage(connection* const connection,
 			std::string const& message);
+
+		void		onClientMessage(AClient* const connection, Message const& message);
 
 		/* Core database */
 

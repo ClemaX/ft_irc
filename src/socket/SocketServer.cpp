@@ -28,9 +28,7 @@ void	SocketServer::removeConnection(int fd)
 	{
 		Logger::instance() << Logger::DEBUG << "Removing connection on fd " << fd << std::endl;
 		delete fdConnectionMap[fd];
-		Logger::instance() << Logger::DEBUG << "Removing connection on fd - 2 - " << fd << std::endl;
 		fdConnectionMap.erase(fd);
-		Logger::instance() << Logger::DEBUG << "Removing connection on fd - 3 - " << fd << std::endl;
 		if (fd == highestFd)
 		{
 			// This should be updated if there is a possibility that no listener is listening
@@ -49,9 +47,8 @@ void	SocketServer::removeConnection(int fd)
 
 void	SocketServer::clearConnections()
 {
-	for (connectionMap::const_iterator it = fdConnectionMap.begin();
-		it != fdConnectionMap.end(); ++it)
-			delete(it->second);
+	for (connectionMap::const_iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
+		delete(it->second);
 	fdConnectionMap.clear();
 }
 
@@ -252,7 +249,10 @@ void	SocketServer::start() throw(ServerException, SocketException)
 		for (connectionMap::iterator it = fdConnectionMap.begin(); it != fdConnectionMap.end(); ++it)
 		{
 			if (FD_ISSET(it->first, &writeFds))
+			{
+				std::cout << "Flushing fd " << it->first << std::endl;
 				it->second->flush();
+			}
 		}
 
 		// Remove disconnected sockets
