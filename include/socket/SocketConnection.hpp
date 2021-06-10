@@ -6,6 +6,9 @@
 #include <socket/IConnection.hpp> // using IConnection
 #include <socket/Socket.hpp> // using Socket
 
+
+#include <utils/Logger.hpp>
+
 #include <netdb.h>
 
 std::ostream &operator<<(std::ostream &os, internetAddress const& addr);
@@ -27,11 +30,9 @@ public:
 		:	Socket(), addr()
 	{ Logger::instance() << Logger::DEBUG << "Constructing empty SocketConnection..." << std::endl; }
 
-SocketConnection::SocketConnection(int fd, address const& socketAddress)
-	:	Socket(fd), addr(socketAddress)
-{ Logger::instance() << Logger::DEBUG << "Constructing SocketConnection on fd " << fd << "..." << std::endl; }
-
-	SocketConnection(int fd, address const& socketAddress);
+	SocketConnection(int fd, address const& socketAddress)
+		:	Socket(fd), addr(socketAddress)
+	{ Logger::instance() << Logger::DEBUG << "Constructing SocketConnection on fd " << fd << "..." << std::endl; }
 
 	virtual	~SocketConnection() throw()
 	{ Logger::instance() << Logger::DEBUG << "Destroying SocketConnection..." << std::endl; }
@@ -53,15 +54,15 @@ SocketConnection::SocketConnection(int fd, address const& socketAddress)
 			writeBuffer.clear();
 	}
 
-	internetAddress	getAddr() const throw()
+	internetAddress const&	getAddr() const throw()
 	{ return addr.sin6_addr; }
 
-	socklen_t	getAddrLen() const throw()
+	socklen_t				getAddrLen() const throw()
 	{ return addr.sin6_len; }
 
-	std::string	getHostname() const
+	std::string				getHostname() const
 	{ 
-		hostent const*const	entry = gethostbyaddr(&addr.sin6_addr, addr.sin6_len, AF_INET6);
+		hostent const*const	entry = gethostbyaddr(&getAddr(), getAddrLen(), AF_INET6);
 
 		return std::string((entry && entry->h_name) ? entry->h_name : "");
 	}
