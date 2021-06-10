@@ -17,7 +17,7 @@ namespace
 	void	printUsage(std::string const& name, std::ostream& os = std::cerr)
 	{
 		os << "Usage: "
-			<< name << " [host:port_network:password_network] <port> <password>"
+			<< name << " [config file] | [host:port_network:password_network] <port> <password>"
 			<< std::endl;
 	}
 }

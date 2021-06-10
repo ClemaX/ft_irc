@@ -104,6 +104,17 @@ namespace NAMESPACE_IRC
 			operator>>(file);
 			file.close();
 		}
+		else if (ac == 2)
+		{
+			std::ifstream	file;
+
+			file.open(av[1]);
+
+			if (!file.is_open())
+				throw std::runtime_error(std::string("Could not find ") + av[1]);
+			operator>>(file);
+			file.close();
+		}
 		else
 		{
 			unsigned char	keyIndex = argReqStart;
