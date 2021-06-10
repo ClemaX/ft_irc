@@ -1,7 +1,5 @@
 #include <socket/bindAddress.hpp>
 
-#include <socket/SocketExceptions.hpp>
-
 #include <fcntl.h>
 
 #include <cerrno>
@@ -9,16 +7,9 @@
 #include <algorithm>
 #include <iostream>
 
-class SocketAddressException: public SocketException
-{
-public:
-	SocketAddressException(int err)
-		:	SocketException(err, gai_strerror(err))
-	{ }
-};
-
 int	bindAddress(std::string const &hostname, std::string const& port,
 	int socketType, int socketOptions, int socketProtocol)
+	throw(SocketAddressException, SocketBindException)
 {
 	int				err;
 	int				fd;

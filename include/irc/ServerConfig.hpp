@@ -17,16 +17,25 @@
 #define IRC_CONF_NETHOST	"NETHOST"
 #define IRC_CONF_NETPASS 	"NETPASS"
 #define IRC_CONF_NETPORT 	"NETPORT"
+
 #define IRC_CONF_HOSTNAME 	"HOSTNAME"
 #define IRC_CONF_PORT 		"PORT"
 #define IRC_CONF_PASS 		"PASS"
 #define IRC_CONF_MOTD 		"MOTD"
+#define IRC_CONF_CREATEDAT	"CREATEDAT"
+
 #define IRC_CONF_SSLPORT	"SSLPORT"
 #define IRC_CONF_SSLCERT	"SSLCERT"
 #define IRC_CONF_SSLKEY		"SSLKEY"
+
 #define IRC_CONF_LOGFILE	"LOGFILE"
 #define IRC_CONF_LOGLEVEL	"LOGLEVEL"
-#define IRC_CONF_CREATEDAT	"CREATEDAT"
+
+#define IRC_CONF_ADMIN_NICK		"ADMINNICK"
+#define IRC_CONF_ADMIN_PASS		"ADMINPASS"
+#define IRC_CONF_ADMIN_DATA1	"ADMINDATA1"
+#define IRC_CONF_ADMIN_DATA2	"ADMINDATA2"
+#define IRC_CONF_ADMIN_EMAIL	"ADMINEMAIL"
 
 namespace NAMESPACE_IRC
 {
@@ -66,6 +75,9 @@ namespace NAMESPACE_IRC
 
 		bool	loadNetworkString(std::string const& network)
 			throw(std::invalid_argument);
+
+		ServerConfig&	operator=(ServerConfig const& rhs)
+		{ if (this != &rhs) data = rhs.data; return *this; }
 
 		std::istream&	operator>>(std::istream& is) throw(std::out_of_range);
 

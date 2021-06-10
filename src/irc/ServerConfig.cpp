@@ -13,21 +13,24 @@ namespace NAMESPACE_IRC
 		{IRC_CONF_NETHOST, ""},
 		{IRC_CONF_NETPORT, ""},
 		{IRC_CONF_NETPASS, ""},
-		{IRC_CONF_PORT, "6666"},
-		{IRC_CONF_PASS, ""},
-		{IRC_CONF_MOTD, "Hello world!"},
+
+		{IRC_CONF_PORT, IRC_DFT_PORT},
+		{IRC_CONF_PASS, IRC_DFT_PASS},
+		{IRC_CONF_MOTD, IRC_DFT_MOTD},
 		{IRC_CONF_HOSTNAME, "localhost"},
+
 		{IRC_CONF_SSLPORT, ""},
 		{IRC_CONF_SSLCERT, ""},
 		{IRC_CONF_SSLKEY, ""},
 		{IRC_CONF_LOGFILE, "/dev/stderr"},
 		{IRC_CONF_LOGLEVEL, "INFO"},
-		{IRC_CONF_CREATEDAT, "Tue Apr 20 2021 at 04:20:00 CEST"},
-		{IRC_DFT_ADMIN_NICK, "admin"},
-		{IRC_DFT_ADMIN_PASS, "admin"},
-		{IRC_CONF_ADMIN_DATA1_MSG, IRC_DFT_ADMIN_DATA1},
-		{IRC_CONF_ADMIN_DATA2_MSG, IRC_DFT_ADMIN_DATA2},
-		{IRC_CONF_ADMIN_EMAIL_MSG, IRC_DFT_ADMIN_EMAIL}
+		{IRC_CONF_CREATEDAT, IRC_DFT_CREATEDAT},
+
+		{IRC_CONF_ADMIN_NICK, IRC_DFT_ADMIN_NICK},
+		{IRC_CONF_ADMIN_PASS, IRC_DFT_ADMIN_PASS},
+		{IRC_CONF_ADMIN_DATA1, IRC_DFT_ADMIN_DATA1},
+		{IRC_CONF_ADMIN_DATA2, IRC_DFT_ADMIN_DATA2},
+		{IRC_CONF_ADMIN_EMAIL, IRC_DFT_ADMIN_EMAIL}
 	};
 
 	unsigned char const	ServerConfig::fieldCount =
@@ -110,7 +113,7 @@ namespace NAMESPACE_IRC
 
 			while (keyIndex < argReqEnd && i != ac)
 			{
-				operator[](fields[keyIndex].key) = av[i];
+				data[fields[keyIndex].key] = av[i];
 				keyIndex++;
 				i++;
 			}

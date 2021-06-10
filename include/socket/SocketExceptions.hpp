@@ -5,6 +5,7 @@
 #include <cstring> // using strerror
 
 #include <openssl/err.h>
+#include <netdb.h>
 
 class	SocketException	:	public std::exception
 {
@@ -59,6 +60,14 @@ public:
 
 	virtual char const*	what() const throw()
 	{ return "Could not bind socket"; }
+};
+
+class SocketAddressException: public SocketException
+{
+public:
+	SocketAddressException(int err)
+		:	SocketException(err, gai_strerror(err))
+	{ }
 };
 
 class	SocketListenException		:	public SocketException

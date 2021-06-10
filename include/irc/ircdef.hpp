@@ -16,20 +16,25 @@
 /// Special IRC characters allowed outside of the alphanumerical set.
 #define IRC_CHARSET_SPECIAL    "-[]\\`^{}"
 
-/// Define default server admin nickname
-#define IRC_DFT_ADMIN_NICK "admin"
-/// Define default server admin password
-#define IRC_DFT_ADMIN_PASS "admin"
-/// Define default server admin data1
-#define IRC_DFT_ADMIN_DATA1 ":You're using ircserv! For assistance, please '/stats p' and message someone on the list"
-/// Define defualt server admin data2
-#define IRC_DFT_ADMIN_DATA2 ":For further assistance, please contact us by email"
-/// Define default server admin email
-#define IRC_DFT_ADMIN_EMAIL "admin@ircserv.42fr"
+/// Default server port
+#define IRC_DFT_PORT "6666"
+/// Default server password (empty means disabled)
+#define IRC_DFT_PASS ""
+/// Default server MOTD
+#define IRC_DFT_MOTD "Hello world!"
+/// Default server creation date-time
+#define IRC_DFT_CREATEDAT "Tue Apr 20 2021 at 04:20:00 CEST"
 
-#define IRC_CONF_ADMIN_DATA1_MSG "data1"
-#define IRC_CONF_ADMIN_DATA2_MSG "data2"
-#define IRC_CONF_ADMIN_EMAIL_MSG "email"
+/// Default server admin nickname
+#define IRC_DFT_ADMIN_NICK "admin"
+/// Default server admin password
+#define IRC_DFT_ADMIN_PASS "admin"
+/// Default server admin data1
+#define IRC_DFT_ADMIN_DATA1 ":You're using ircserv! For assistance, please '/stats p' and message someone on the list"
+/// Defualt server admin data2
+#define IRC_DFT_ADMIN_DATA2 ":For further assistance, please contact us by email"
+/// Default server admin email
+#define IRC_DFT_ADMIN_EMAIL "admin@ircserv.42fr"
 
 /// IRC default TLS/SSL TCP-port (as defined in RFC7194).
 #define IRC_PORT_SSL 6697U
@@ -62,7 +67,7 @@
 /// IRC message field-delimiter (as defined in RFC1459 2.3)
 #define IRC_MESSAGE_ARGUMENT_LIST_DELIM ','
 
-// Maximal number of channels that a user can join
+/// Maximal number of channels that a user can join
 #define IRC_MAX_JOINED_CHANNEL 10
 
 

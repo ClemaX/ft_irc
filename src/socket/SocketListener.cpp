@@ -16,7 +16,7 @@ SocketListener::SocketListener() throw()
 
 SocketListener::SocketListener(std::string const& hostname,
 	std::string const& service, int type, int opt, int proto)
-	throw(SocketBindException, SocketOpenException, SocketOptionException)
+	throw(SocketBindException, SocketOpenException, SocketOptionException, SocketAddressException)
 	:	Socket(bindAddress(hostname, service, type, opt, proto)),
 		listening(false)
 {
@@ -41,7 +41,7 @@ SocketListener::SocketListener(std::string const& hostname,
 
 void	SocketListener::bind(std::string const& hostname, std::string const& service,
 	int type, int opt, int proto)
-	throw(SocketBindException, SocketOpenException, SocketOptionException, SocketCloseException)
+	throw(SocketBindException, SocketOpenException, SocketOptionException, SocketCloseException, SocketAddressException)
 {
 	if (listening)
 		close();

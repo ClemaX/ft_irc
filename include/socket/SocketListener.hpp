@@ -16,11 +16,11 @@ public:
 
 	SocketListener(std::string const& hostname, std::string const& service,
 		int type = SOCK_STREAM, int opt = SOCK_NONBLOCK, int proto = IPPROTO_IP)
-		throw(SocketOpenException, SocketBindException, SocketOptionException);
+		throw(SocketOpenException, SocketBindException, SocketOptionException, SocketAddressException);
 
 	void			bind(std::string const& hostname, std::string const& service,
 		int type = SOCK_STREAM, int opt = SOCK_NONBLOCK, int proto = IPPROTO_IP)
-		throw(SocketCloseException, SocketOpenException, SocketBindException, SocketOptionException);
+		throw(SocketCloseException, SocketOpenException, SocketBindException, SocketOptionException, SocketAddressException);
 
 	void			listen() throw(SocketListenException);
 

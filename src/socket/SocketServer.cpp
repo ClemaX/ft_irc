@@ -129,7 +129,6 @@ SocketServer::SocketServer(
 		sslPort(sslPort),
 		maxQueuedActivity(maxQueuedActivity)
 {
-	FD_ZERO(&readFds);
 }
 
 SocketServer::SocketServer()
@@ -138,7 +137,6 @@ SocketServer::SocketServer()
 		port("2525"),
 		maxQueuedActivity(10)
 {
-	FD_ZERO(&readFds);
 }
 
 SocketServer::~SocketServer()
